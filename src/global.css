@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'LineSeedKr';
+  src: url('/public/fonts/LINESeedKR-Rg.woff2') format('woff2'); /* Regular 폰트 파일 경로 */
+  font-weight: 400; /* Regular */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'LineSeedKr';
+  src: url('/public/fonts/LINESeedKR-Bd.woff2') format('woff2'); /* Bold 폰트 파일 경로 */
+  font-weight: 700; /* Bold */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'LineSeedKr';
+  src: url('/public/fonts/LINESeedKR-Th.woff2') format('woff2'); /* Thin 폰트 파일 경로 */
+  font-weight: 100; /* Thin */
+  font-style: normal;
+}
+
+body {
+  font-family:
+    'LineSeedKr',
+    -apple-system,
+    Roboto,
+    BlinkMacSystemFont,
+    system-ui,
+    'Helvetica Neue',
+    'Segoe UI',
+    'Apple SD Gothic Neo',
+    'Noto Sans KR',
+    'Malgun Gothic',
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol',
+    sans-serif;
+}
+
+/* input 태그의 outline 제거 */
+input,
+textarea {
+  outline: none;
+}
+
+@layer utilities {
+  /* 글로벌 클래스 */
+  /* 최상위 컨테이너 */
+  .top-container {
+    @apply w-full flex min-h-screen justify-center;
+  }
+  /* max-width 1200px인 컨테이너 */
+  .max-w-1200 {
+    @apply w-full max-w-[1200px] px-2;
+  }
+  /* max-width 1000px인 컨테이너 */
+  .max-w-1000 {
+    @apply w-full max-w-[1000px] px-12;
+  }
+  
+  /* 사이드바 메뉴 item*/
+  .side-menu {
+    @apply flex w-full h-12 items-center justify-between p-2 text-sm whitespace-nowrap;
+  }
+
+  /* hover */
+  .gray-hover {
+    @apply hover:bg-gray-1 hover:border-gray-2 hover:shadow-sm
+  }
+
+  /* 1px 가로줄 */
+  .division {
+    @apply w-full h-[1px] bg-border-1 shrink-0;
+  }
+  /* 팝업 시 오버레이 */
+  .overlay {
+    @apply fixed w-screen h-screen bg-black bg-opacity-40 left-0 top-0 z-50;
+  }
+}
