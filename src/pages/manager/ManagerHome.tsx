@@ -13,7 +13,11 @@ export default function ManagerHome() {
           rightText="나의 티켓 관리 바로가기"
           linkTo="/manager/tickets"
         />
-        <Input element="input" size="sm" placeholder="현재 비밀번호를 입력해주세요" />
+        <div className="flex flex-col gap-4">
+          <Input element="input" size="lg" label="현재 비밀번호" placeholder="현재 비밀번호를 입력해주세요" />
+          <Input element="input" size="sm" label="현재 비밀번호" placeholder="현재 비밀번호를 입력해주세요" />
+          <Input element="textarea" size="sm" label="현재 비밀번호" placeholder="현재 비밀번호를 입력해주세요" />
+        </div>
       </div>
     </div>
   );
