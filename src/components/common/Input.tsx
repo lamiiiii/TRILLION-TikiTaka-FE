@@ -16,7 +16,7 @@ export default function Input({element, label, size, placeholder, required, maxL
           placeholder={placeholder}
           maxLength={maxLength}
           required={required}
-          className={` ${size === 'sm' ? 'mt-[10px]' : ''} w-full px-4 py-[9px] border border-gray-2 rounded-md focus:outline-none focus:border-main `}
+          className={` ${size === 'sm' ? 'mt-[10px]' : ''} text-subtitle-regular w-full px-4 py-[9px] border border-gray-2 rounded-md focus:outline-none focus:border-main `}
         />
       ) : (
         <textarea
