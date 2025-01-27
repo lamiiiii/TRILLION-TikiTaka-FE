@@ -3,6 +3,7 @@ import {useState} from 'react';
 export default function Pagenation() {
   const [currentPage, setCurrentPage] = useState(5);
   const totalPages = 20;
+
   return (
     <div className="flex justify-center items-center gap-2 mt-8">
       <button
@@ -18,7 +19,7 @@ export default function Pagenation() {
         <button
           key={index}
           onClick={() => setCurrentPage(index + 1)}
-          className={`px-3 py-[6px] rounded-lg hover:bg-gray-100 ${currentPage === index + 1 && 'bg-white-1 boder border-gray-200'}`}
+          className={`px-3 py-[6px] rounded-lg hover:bg-gray-100 ${currentPage === index + 1 ? 'bg-white-1 border border-gray-200' : ''}`}
         >
           {index + 1}
         </button>
