@@ -16,7 +16,6 @@ export default function CommentInput() {
           첨부파일 첨부
         </button>
       </div>
-
       <div className="relative">
         <div className="flex gap-2 mt-3 mb-2">
           <Profile name="yeon" size="sm" backgroundColor="manager" />
@@ -25,7 +24,6 @@ export default function CommentInput() {
             placeholder="댓글 추가"
           />
         </div>
-
         <button className="absolute right-0 main-button">저장</button>
       </div>
     </div>

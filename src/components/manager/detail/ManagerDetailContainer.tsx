@@ -22,13 +22,13 @@ export default function ManagerDetailContainer() {
       </button>
       <TopMenu boldBlackText="#113" regularText="[요청] 마이크로서비스 기반의 애플리케이션 컨테이너화" />
       <StatusBar priority="HIGH" status="진행 중" />
-      <section className="flex bg-gray-18 p-6 mt-3">
+      <section className="flex bg-gray-18 p-6 pb-[38px] mt-3">
         <div className="flex gap-4">
           <Profile name="honggildong" backgroundColor="user" size="lg" />
           <section className="w-[577px] flex flex-col">
             <TicketContent content={CONTAINERIZATION_REQUEST} />
             <CommentInput />
-            <CommentItem />
+            <CommentItem name="Yeon" content="댓글 내용" />
           </section>
         </div>
       </section>
