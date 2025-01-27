@@ -10,7 +10,7 @@ interface InputProps {
 export default function Input({element, label, size, placeholder, required, maxLength}: InputProps) {
   return (
     <div className={`flex ${element === 'input' ? ' items-center' : 'items-start '}`}>
-      <label className="text-subtitle mr-6">{label}</label>
+      <label className="text-subtitle mr-6 w-[108px]">{label}</label>
       {element === 'input' ? (
         <input
           placeholder={placeholder}
