@@ -6,7 +6,8 @@ interface DropdownProps {
   onSelect: (value: string) => void; // 선택 시 호출되는 함수
   defaultSelected?: string; // 기본 선택된 값
   paddingX?: string; // 드롭다운 버튼의 좌우 여백 (Tailwind 클래스)
-  border?: boolean;
+  border?: boolean; // 드롭다운 border 유무
+  textColor?: string; // 드롭다운 글씨 색상 (Tailwind 클래스)
 }
 
 export default function DropDown({
@@ -16,6 +17,7 @@ export default function DropDown({
   defaultSelected = label,
   paddingX = 'px-4', // 기본 여백 값
   border = true,
+  textColor = 'text-gray-15',
 }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(defaultSelected);
@@ -30,7 +32,7 @@ export default function DropDown({
     <div className="relative inline-block">
       {/* 드롭다운 버튼 */}
       <button
-        className={`${border ? 'border border-gray-6' : 'border-none'} rounded-md py-1 ${paddingX} text-gray-6 text-body-regular flex items-center gap-3`}
+        className={`${border ? 'border border-gray-6' : 'border-none'} ${textColor === 'white' ? 'text-white' : 'text-gray-15'} rounded-md py-1 ${paddingX} text-gray-6 text-body-regular flex items-center gap-3`}
         onClick={() => setIsOpen(!isOpen)}
       >
         <span className="flex items-center leading-none">{selected}</span>
@@ -56,9 +58,9 @@ export default function DropDown({
               key={option}
               className={`px-4 py-1.5 text-center cursor-pointer leading-none m-2 ${
                 selected === option
-                  ? 'bg-gray-1 text-caption-bold rounded-md mx-2'
+                  ? 'bg-gray-1 text-caption-bold rounded-md mx-2 border border-gray-2 text-gray-15'
                   : 'text-gray-700 text-caption-regular hover:bg-gray-1 rounded-md'
-              } ${border ? ' border border-gray-2' : ''}`}
+              } `}
               onClick={() => handleSelect(option)}
             >
               {option}
