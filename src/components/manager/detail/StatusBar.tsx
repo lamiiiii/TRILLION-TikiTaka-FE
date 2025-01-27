@@ -3,7 +3,7 @@ import DropDown from '../../common/Dropdown';
 
 interface StatusBarProps {
   priority: 'HIGH' | 'MEDIUM' | 'LOW';
-  status: '대기 중' | '진행 중' | '진행 완료';
+  status: (typeof STATUS_OPTIONS)[number];
 }
 
 const STATUS_OPTIONS = ['대기 중', '진행 중', '진행 완료'];
