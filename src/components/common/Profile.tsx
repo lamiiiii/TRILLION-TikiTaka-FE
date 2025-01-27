@@ -21,7 +21,7 @@ export default function Profile({name, size = 'sm', backgroundColor}: ProfileIni
 
   return (
     <div
-      className={`${sizeClasses[size]} ${colorClasses[backgroundColor]} ${backgroundColor} text-white text-[16px] p-4 rounded-full flex items-center justify-center font-bold `}
+      className={`${sizeClasses[size]} ${colorClasses[backgroundColor]} ${backgroundColor} text-white text-[16px] p-3 rounded-full flex items-center justify-center font-bold `}
     >
       {initial}
     </div>

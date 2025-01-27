@@ -24,12 +24,12 @@ export default function StatusBar({priority, status}: StatusBarProps) {
         <label className="text-body-bold">Status</label>
 
         {STATUS_OPTIONS.map((option) => (
-          <button
+          <div
             key={option}
-            className={`${status === option ? 'bg-main text-white' : 'bg-white-100'} rounded-md py-1 px-6 text-body-regular border border-main`}
+            className={`${status === option ? 'bg-main text-white' : 'bg-white-100'} rounded-md py-1 px-6 text-caption-regular border border-main`}
           >
             {option}
-          </button>
+          </div>
         ))}
       </div>
     </div>

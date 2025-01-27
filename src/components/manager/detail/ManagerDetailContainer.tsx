@@ -24,7 +24,7 @@ export default function ManagerDetailContainer() {
       <StatusBar priority="HIGH" status="진행 중" />
       <section className="flex bg-gray-18 p-6 mt-3">
         <div className="flex gap-4">
-          <Profile name="josh" backgroundColor="manager" size="lg" />
+          <Profile name="honggildong" backgroundColor="user" size="lg" />
           <section className="w-[577px] flex flex-col">
             <TicketContent content={CONTAINERIZATION_REQUEST} />
             <CommentInput />
