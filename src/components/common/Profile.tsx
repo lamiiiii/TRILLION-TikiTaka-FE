@@ -1,3 +1,6 @@
+import {useState} from 'react';
+import ProfilePopup from './ProfilePopup';
+
 interface ProfileInitialProps {
   name: string;
   size?: 'sm' | 'md' | 'lg';
@@ -17,13 +20,26 @@ const colorClasses = {
 };
 
 export default function Profile({name, size = 'sm', backgroundColor}: ProfileInitialProps) {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
   const initial = name.charAt(0).toUpperCase();
 
+  const togglePopup = () => {
+    setIsPopupOpen(!isPopupOpen);
+  };
+
   return (
-    <div
-      className={`${sizeClasses[size]} ${colorClasses[backgroundColor]} ${backgroundColor} text-white text-[16px] p-3 rounded-full flex items-center justify-center font-bold `}
-    >
-      {initial}
+    <div className="relative">
+      {isPopupOpen && (
+        <div className="absolute right-full mr-3">
+          <ProfilePopup />
+        </div>
+      )}
+      <div
+        className={`${sizeClasses[size]} ${colorClasses[backgroundColor]} ${backgroundColor} text-white text-[16px] p-3 rounded-full flex items-center justify-center font-bold cursor-pointer`}
+        onClick={togglePopup}
+      >
+        {initial}
+      </div>
     </div>
   );
 }
