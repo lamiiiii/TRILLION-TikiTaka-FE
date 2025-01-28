@@ -43,5 +43,10 @@ export interface TokenStore {
   setIsTokenSet: (state: boolean) => void;
 }
 
+export interface TicketStore {
+  priority: PriorityType;
+  setPriority: (priority: string) => void;
+}
+
 // 기타 interface
 export type PriorityType = (typeof PRIORITY)[number];

@@ -23,7 +23,7 @@ export default function ManagerDetailContainer() {
       </button>
 
       <TopMenu boldBlackText="#113" regularText="[요청] 마이크로서비스 기반의 애플리케이션 컨테이너화" />
-      <StatusBar priority="HIGH" status="진행 중" />
+      <StatusBar status="진행 중" />
 
       <section className="flex bg-gray-18 p-6 pb-[38px] mt-3 mb-[100px]">
         <div className="flex gap-4 mr-10">
