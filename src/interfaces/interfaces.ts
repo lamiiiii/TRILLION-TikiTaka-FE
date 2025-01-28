@@ -45,7 +45,9 @@ export interface TokenStore {
 
 export interface TicketStore {
   priority: PriorityType;
+  isReviewNeeded: boolean;
   setPriority: (priority: string) => void;
+  setIsReviewNeeded: (isReviewRequired: boolean) => void;
 }
 
 // 기타 interface

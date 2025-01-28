@@ -9,8 +9,12 @@ import TicketDetail from './TicketDetail';
 import TicketSetting from './TicketSetting';
 import TicketTask from './TicketTask';
 import {CONTAINERIZATION_REQUEST} from '../../../constants/constants';
+import TicketReview from './TicketReview';
+import {useTicketStore} from '../../../store/store';
 
 export default function ManagerDetailContainer() {
+  const {isReviewNeeded} = useTicketStore();
+
   const navigate = useNavigate();
   const handleGoBack = () => {
     navigate(-1);
@@ -36,6 +40,7 @@ export default function ManagerDetailContainer() {
         </div>
 
         <section className="flex flex-col gap-5 w-full">
+          {isReviewNeeded && <TicketReview />}
           <TicketDetail />
           <TicketSetting />
           <TicketTask />
