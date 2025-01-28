@@ -1,24 +1,23 @@
 import {useState} from 'react';
 import DropDown from '../../common/Dropdown';
+import {PRIORITY, STATUS_OPTIONS} from '../../../constants/constants';
+import {PriorityType} from '../../../interfaces/interfaces';
 
 interface StatusBarProps {
-  priority: 'HIGH' | 'MEDIUM' | 'LOW';
+  priority: PriorityType;
   status: (typeof STATUS_OPTIONS)[number];
 }
-
-const STATUS_OPTIONS = ['대기 중', '진행 중', '진행 완료'];
-
 export default function StatusBar({priority, status}: StatusBarProps) {
-  const [selectedPriority, setSelectedPriority] = useState<'HIGH' | 'MEDIUM' | 'LOW'>(priority);
+  const [selectedPriority, setSelectedPriority] = useState<PriorityType>(priority);
   const handleStatusSelect = (selectedOption: string) => {
-    setSelectedPriority(selectedOption as 'HIGH' | 'MEDIUM' | 'LOW');
+    setSelectedPriority(selectedOption as PriorityType);
   };
 
   return (
     <div className="flex items-center gap-2 mt-2">
       <div className="flex items-center gap-2 mr-2">
         <label className="text-body-bold">Priority</label>
-        <DropDown label="Priority" options={['HIGH', 'MEDIUM', 'LOW']} defaultSelected={selectedPriority} onSelect={handleStatusSelect} />
+        <DropDown label="Priority" options={PRIORITY} defaultSelected={selectedPriority} onSelect={handleStatusSelect} />
       </div>
       <div className="flex items-center gap-2">
         <label className="text-body-bold">Status</label>
