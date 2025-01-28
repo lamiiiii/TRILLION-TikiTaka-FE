@@ -1,15 +1,21 @@
 import DropDown from '../../common/Dropdown';
 import {PRIORITY, STATUS_OPTIONS} from '../../../constants/constants';
 import {useTicketStore} from '../../../store/store';
+import {useState} from 'react';
 
 interface StatusBarProps {
   status: (typeof STATUS_OPTIONS)[number];
 }
 export default function StatusBar({status}: StatusBarProps) {
+  const [currentStatus, setCurrentStatus] = useState(status);
   const priority = useTicketStore((state) => state.priority);
   const setPriority = useTicketStore((state) => state.setPriority);
   const handlePrioritySelect = (selectedOption: string) => {
     setPriority(selectedOption);
+  };
+
+  const handleStatusClick = (option: string) => {
+    setCurrentStatus(option);
   };
 
   return (
@@ -22,12 +28,15 @@ export default function StatusBar({status}: StatusBarProps) {
         <label className="text-body-bold">Status</label>
 
         {STATUS_OPTIONS.map((option) => (
-          <div
+          <button
             key={option}
-            className={`${status === option ? 'bg-main text-white' : 'bg-white-100'} rounded-md py-1 px-6 text-caption-regular border border-main`}
+            onClick={() => handleStatusClick(option)}
+            className={`${
+              currentStatus === option ? 'bg-main text-white' : 'bg-white-100'
+            } rounded-md py-1 px-6 text-caption-regular border border-main`}
           >
             {option}
-          </div>
+          </button>
         ))}
       </div>
     </div>
