@@ -4,7 +4,7 @@ import {Link, useLocation} from 'react-router-dom';
 import {motion} from 'framer-motion';
 import { MenuItemProps } from "../../interfaces/interfaces";
 
-// 메뉴 컴포넌트
+// 사이드바 내부 메뉴 컴포넌트
 export default function MenuItem({icon: Icon, text, to, children}: MenuItemProps) {
   const location = useLocation();
   const subPaths = React.Children.map(children, (child) => (React.isValidElement<{to: string}>(child) ? child.props.to : null)) || [];
