@@ -61,15 +61,20 @@ textarea {
   .max-w-1000 {
     @apply w-full max-w-[1000px] px-12;
   }
-  
+
   /* 사이드바 메뉴 item*/
   .side-menu {
-    @apply flex w-full h-12 items-center justify-between p-2 text-sm whitespace-nowrap;
+    @apply flex w-full h-12 items-center justify-between p-2 whitespace-nowrap;
   }
 
   /* hover */
   .gray-hover {
-    @apply hover:bg-gray-1 hover:border-gray-2 hover:shadow-sm
+    @apply hover:bg-gray-1 hover:border-gray-2 hover:shadow-sm;
+  }
+
+  /* 사이드바 활성화 */
+  .active-menu {
+    @apply bg-gray-1 border-gray-2 shadow-sm;
   }
 
   /* 1px 가로줄 */

@@ -5,7 +5,7 @@
 export interface MenuItemProps {
   icon: React.ComponentType<{strokeColor: string}>;
   text: string;
-  to?: string;
+  to: string;
   children?: React.ReactNode;
 }
 
