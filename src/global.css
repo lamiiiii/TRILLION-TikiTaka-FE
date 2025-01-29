@@ -2,6 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 스크롤바 넓이 지정 */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* 스크롤바 트랙 꾸미기 */
+::-webkit-scrollbar-track {
+  z-index: 100;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background: #ffffff;
+  border-radius: 5px;
+}
+
+/* 스크롤바 손잡이 꾸미기 */
+::-webkit-scrollbar-thumb {
+  background: #c7c7cc;
+  border-radius: 5px;
+  height: 20%;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hidden {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
 @font-face {
   font-family: 'LineSeedKr';
   src: url('/public/fonts/LINESeedKR-Rg.woff2') format('woff2'); /* Regular 폰트 파일 경로 */
