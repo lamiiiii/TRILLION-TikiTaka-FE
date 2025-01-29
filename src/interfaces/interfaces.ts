@@ -40,3 +40,13 @@ export interface TokenStore {
   isTokenSet: boolean;
   setIsTokenSet: (state: boolean) => void;
 }
+
+// 기타 interface
+// -----------------------------
+export interface InquiryData {
+  type: string;
+  title: string;
+  content: string;
+  date: string;
+  status: string;
+}
