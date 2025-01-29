@@ -1,4 +1,5 @@
 interface InputProps {
+  type?: string;
   element: 'input' | 'textarea';
   label?: string;
   size: 'sm' | 'lg';
@@ -7,12 +8,13 @@ interface InputProps {
   maxLength?: number;
 }
 
-export default function Input({element, label, size, placeholder, required, maxLength}: InputProps) {
+export default function Input({type, element, label, size, placeholder, required, maxLength}: InputProps) {
   return (
     <div className={`flex ${element === 'input' ? ' items-center' : 'items-start '}`}>
       <label className="text-subtitle mr-6 w-[108px]">{label}</label>
       {element === 'input' ? (
         <input
+          type={type}
           placeholder={placeholder}
           maxLength={maxLength}
           required={required}
