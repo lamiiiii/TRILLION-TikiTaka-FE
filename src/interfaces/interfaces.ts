@@ -49,4 +49,7 @@ export interface InquiryData {
   content: string;
   date: string;
   status: string;
+  answer?: {
+    content: string;
+  };
 }
