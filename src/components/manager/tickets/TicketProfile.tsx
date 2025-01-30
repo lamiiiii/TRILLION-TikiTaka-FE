@@ -26,7 +26,6 @@ export default function TicketProfile() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsEditing(false);
-    // Here you would typically send the updated info to a server
   };
 
   return (
