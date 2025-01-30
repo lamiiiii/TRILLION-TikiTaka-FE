@@ -34,7 +34,7 @@ function App() {
     {path: 'tickets', element: <ManagerTickets />},
     {path: 'detail', element: <ManagerTicketDetail />},
     {path: 'inquiry', element: <ManagerInquiry />},
-    {path: 'pwdChange', element: <ManagerPwdChange />}, //todo 명칭?
+    {path: 'pwdChange', element: <ManagerPwdChange />}, //todo 명칭 변경하셔도 됩니다!
   ];
 
   const userRoutes = [{path: '', element: <UserHome />}];

@@ -94,7 +94,7 @@ textarea {
 
   /* 사이드바 메뉴 item*/
   .side-menu {
-    @apply flex w-full h-12 items-center justify-between p-2 text-sm whitespace-nowrap;
+    @apply flex w-full h-12 items-center justify-between p-2 whitespace-nowrap;
   }
 
   /* hover */
@@ -102,9 +102,22 @@ textarea {
     @apply hover:bg-gray-1 hover:border-gray-2 hover:shadow-sm;
   }
 
-  /* 남색 버튼 lg*/
-  .main-button-lg {
-    @apply bg-main hover:bg-gray-15 text-subtitle text-white py-3 px-3 rounded;
+  /* 사이드바 활성화 */
+  .active-menu {
+    @apply bg-gray-1 border-gray-2 shadow-sm;
+  }
+
+  /* 모달 버튼 */
+  .modal-btn {
+    @apply flex justify-center items-center px-4 py-3 text-xs font-bold text-white whitespace-nowrap;
+  }
+  /* 취소 버튼 */
+  .btn-back {
+    @apply modal-btn bg-gray-6 rounded;
+  }
+  /* 확인 버튼 */
+  .btn-check {
+    @apply modal-btn bg-main rounded;
   }
 
   /* 1px 가로줄 */
@@ -113,16 +126,16 @@ textarea {
   }
   /* 팝업 시 오버레이 */
   .overlay {
-    @apply fixed w-screen h-screen bg-black bg-opacity-40 left-0 top-0 z-50;
+    @apply flex items-center justify-center fixed w-screen h-screen bg-ol bg-opacity-60 left-0 top-0 z-50;
   }
   /* 남색 버튼 sm*/
-  .main-button {
-    @apply bg-main hover:bg-gray-15 text-body-regular text-white py-1 px-3 rounded-[4px];
+  .main-btn {
+    @apply bg-main hover:bg-gray-15 text-body-regular text-white py-1 px-3 rounded;
   }
 
   /* 남색 버튼 lg*/
-  .main-button-lg {
-    @apply bg-main hover:bg-gray-15 text-subtitle text-white py-3 px-3 rounded-[4px];
+  .main-btn-lg {
+    @apply bg-main hover:bg-gray-15 text-subtitle text-white py-3 px-3 rounded;
   }
 
   /* 팝업 시 오버레이 */
