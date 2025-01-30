@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import InitialTopBar from './InitialTopBar';
 
+// Todo 비밀번호 재설정과 로그인후 최초 비밀번호 변경 로직 분리 필요
 // todo 연속 5회 설정한 비밀번호가 틀렸을 경우 30분간 잠금
 // todo 최초 비밀번호 재설정 title 조건 추가 및 경고 메세지
 

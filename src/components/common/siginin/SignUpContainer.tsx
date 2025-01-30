@@ -42,7 +42,7 @@ export default function SignUpContainer() {
     setId(value);
 
     if (value === '') {
-      setEmailError('아이디를 입력해주세요.');
+      setIdError('아이디를 입력해주세요.');
     } else if (!validateId(value)) {
       setIdError('아이디는 영어 소문자와 점(.)을 포함한 3~15자여야 합니다.');
     } else {
