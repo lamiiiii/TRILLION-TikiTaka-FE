@@ -7,7 +7,7 @@ module.exports = {
         title: ['16px', {lineHeight: '18px', fontWeight: '700'}],
         'title-regular': ['16px', {lineHeight: '16px', fontWeight: '400'}],
         subtitle: ['14px', {lineHeight: '16px', fontWeight: '700'}],
-        'subtitle-regular': ['14px', {lineHeight: '16px', fontWeight: '400'}],
+        'subtitle-regular': ['14px', {lineHeight: '24px', fontWeight: '400'}],
         'subtitle-medium': ['14px', {lineHeight: '16px', fontWeight: '500'}],
         'title-bold': ['16px', {lineHeight: '18px', fontWeight: '700'}],
         'body-bold': ['12px', {lineHeight: '20px', fontWeight: '700'}],

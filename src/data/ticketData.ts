@@ -54,7 +54,7 @@ export const ticketDummy: TicketDataProps[] = [
     deadline: "2025-02-09 14:00",
     assignee: "yeon",
     assigneeOptions: ["alex", "jojo", "hohoho"],
-    isUrgent: false,
+    isUrgent: true,
   },
   {
     id: "6",

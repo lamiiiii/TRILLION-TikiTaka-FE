@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { ticketDummy } from "../../../data/ticketData";
-import DropDown from "../common/DropDown";
+import Dropdown from "../../common/Dropdown";
 import Ticket from "../common/Ticket";
 
 const dropdownData: { label: string; options: string[] }[] = [
@@ -10,8 +11,10 @@ const dropdownData: { label: string; options: string[] }[] = [
 ];
 
 export default function TicketList() {
+  const [selectedFilters, setSelectedFilters] = useState<{ [key: string]: string }>({});
+
   const handleSelect = (label: string, value: string) => {
-    console.log(`${label}에서 ${value} 선택`);
+    setSelectedFilters((prev) => ({ ...prev, [label]: value }));
   };
 
   const handleAssigneeChange = (id: string, newAssignee: string) => {
@@ -19,7 +22,7 @@ export default function TicketList() {
   };
 
   const handleApprove = (id: string) => {
-    console.log(`티켓 ${id} 승인`);
+    console.log(`티켓 ${id} 진행`);
   };
 
   const handleReject = (id: string) => {
@@ -40,7 +43,14 @@ export default function TicketList() {
         {/* 드롭다운 필터 리스트 */}
         <div className="flex items-center gap-4 leading-none mt-4 px-2">
           {dropdownData.map((data) => (
-            <DropDown key={data.label} label={data.label} options={data.options} onSelect={(value) => handleSelect(data.label, value)} />
+            <Dropdown
+            key={data.label}
+            label={data.label}
+            options={data.options}
+            value={selectedFilters[data.label]}
+            onSelect={(value) => handleSelect(data.label, value)}
+            paddingX="px-3"
+          />
           ))}
           <div className="ml-auto text-gray-700 text-subtitle ">
             조회 건수 <span className="text-black text-title-bold ml-1">{ticketDummy.length}건</span>
