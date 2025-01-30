@@ -295,7 +295,7 @@ export function WhiteCheckIcon() {
   );
 }
 
-export function AlertIcon({ className = "" }: { className?: string }) {
+export function AlertIcon({className = ''}: {className?: string}) {
   return (
     <svg
       className={`w-4 h-4 ${className}`} // ✅ className을 받아서 적용

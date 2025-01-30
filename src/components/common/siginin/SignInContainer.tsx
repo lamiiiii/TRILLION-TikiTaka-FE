@@ -80,6 +80,7 @@ export default function SignInContainer() {
     console.log(requestData);
 
     // 로그인 성공 여부 로직 -> setRole 후 페이지 이동
+    // 최초 로그인 여부에 따라 다른 페이지 이동
     navigate(`/${role}`);
   };
 

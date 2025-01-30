@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import InitialTopBar from './InitialTopBar';
-import {CheckIcon, SmRightIcon} from '../Icon';
+import {SmRightIcon, WhiteCheckIcon} from '../Icon';
+import Modal from '../Modal';
 
 export default function SignUpContainer() {
   const [email, setEmail] = useState('');
@@ -11,6 +12,8 @@ export default function SignUpContainer() {
 
   const [checked, setChecked] = useState(false);
   const [termsError, setTermsError] = useState('');
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // 이메일 유효성 검사 정규식
@@ -76,10 +79,12 @@ export default function SignUpContainer() {
 
     const requestData = {
       email,
+      id,
       acceptedTerms: checked,
     };
 
     // todo 신청 완료 모달 추가 및 페이지 이동
+    setIsModalOpen(true);
     console.log(requestData);
   };
 
@@ -130,14 +135,14 @@ export default function SignUpContainer() {
                   <p className="text-sm font-bold">이용 정보 동의</p>
                   <label
                     className={`flex items-center justify-center w-4 h-4 border border-gray-2 rounded-md cursor-pointer 
-                    ${checked ? 'bg-main' : 'hover:border-main'}`}
+                    ${checked ? 'bg-main border-main' : 'hover:border-main'}`}
                   >
                     <input type="checkbox" checked={checked} onChange={checkboxChange} className="hidden" />
-                    {checked && <CheckIcon />}
+                    {checked && <WhiteCheckIcon />}
                   </label>
                 </div>
 
-                {/* todo 이용약관 추가 */}
+                {/* todo 이용약관 자세히 보기 (모달/페이지) 추가 */}
                 <div
                   className="flex px-2 text-xs text-gray-6 gap-2 focus:outline-none hover:text-main cursor-pointer"
                   onClick={() => console.log('이용 정보 자세히 보기')}
@@ -149,11 +154,22 @@ export default function SignUpContainer() {
               <div className={`flex relative left-[101px] text-error text-xs mt-1 ${termsError ? '' : 'hidden'}`}>{termsError}</div>
             </div>
           </div>
-          <button onClick={onClickSubmit} className="main-button-lg w-20">
-            신청하기
+          <button onClick={onClickSubmit} className="main-btn-lg w-20">
+            신청 완료
           </button>
         </div>
       </div>
+      {isModalOpen && (
+        <Modal
+          title="계정 등록 신청이 정상적으로 접수되었습니다."
+          content={`등록 신청하신 이메일 주소로 결과를 안내드릴 예정입니다.`}
+          backBtn="확인"
+          onBackBtnClick={() => {
+            setIsModalOpen(false);
+            window.location.href = '/';
+          }}
+        />
+      )}
     </div>
   );
 }
