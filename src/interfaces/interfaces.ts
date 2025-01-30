@@ -51,4 +51,16 @@ export interface TicketStore {
 }
 
 // 기타 interface
+
 export type PriorityType = (typeof PRIORITY)[number];
+
+export interface InquiryData {
+  type: string;
+  title: string;
+  content: string;
+  date: string;
+  status: string;
+  answer?: {
+    content: string;
+  };
+}

@@ -19,7 +19,7 @@ export default function Pagenation() {
         <button
           key={index}
           onClick={() => setCurrentPage(index + 1)}
-          className={`px-3 py-[6px] rounded-lg hover:bg-gray-100 ${currentPage === index + 1 ? 'bg-white-1 border border-gray-200' : ''}`}
+          className={`px-3 py-[6px] rounded-lg hover:bg-gray-100 ${currentPage === index + 1 ? 'bg-white border border-gray-200' : ''}`}
         >
           {index + 1}
         </button>

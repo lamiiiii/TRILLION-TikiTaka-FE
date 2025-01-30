@@ -7,7 +7,6 @@ export default function TicketSetting() {
   const [selectedAssignee, setSelectedAssignee] = useState('Yeon');
   const priority = useTicketStore((state) => state.priority);
   const setPriority = useTicketStore((state) => state.setPriority);
-  console.log(priority);
   const handlePrioritySelect = (selectedOption: string) => {
     setPriority(selectedOption);
   };
