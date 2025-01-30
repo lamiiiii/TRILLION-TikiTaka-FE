@@ -1,0 +1,50 @@
+interface PagenationProps {
+    currentPage: number;
+    totalPages: number;
+    onPageChange: (page: number) => void;
+  }
+  
+  export default function PageNations({ currentPage, totalPages, onPageChange }: PagenationProps) {
+    return (
+      <div className="flex justify-center items-center gap-2 mt-8">
+        {/* 이전 페이지 버튼 */}
+        <button
+          type="button"
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg hover:bg-gray-100"
+        >
+          <img src="/icons/ic-arrow-left.svg" alt="왼쪽 화살표" />
+        </button>
+  
+        {/* 페이지 숫자 버튼 (최대 10개까지 표시) */}
+        {[...Array(Math.min(10, totalPages))].map((_, index) => {
+          const pageNumber = index + 1;
+          return (
+            <button
+              key={index}
+              onClick={() => onPageChange(pageNumber)}
+              className={`px-3 py-[6px] rounded-lg hover:bg-gray-100 ${
+                currentPage === pageNumber ? 'bg-white border border-gray-200' : ''
+              }`}
+            >
+              {pageNumber}
+            </button>
+          );
+        })}
+  
+        {/* 다음 페이지 버튼 */}
+        {totalPages > 1 && (
+          <button
+            type="button"
+            onClick={() => onPageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg hover:bg-gray-100"
+          >
+            <img src="/icons/ic-arrow-right.svg" alt="오른쪽 화살표" />
+          </button>
+        )}
+      </div>
+    );
+  }
+  
