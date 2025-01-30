@@ -15,13 +15,13 @@ export default function LandingContainer() {
       >
         <p className="text-black text-4xl font-bold">WELCOME</p>
         <div className="flex flex-col gap-6 w-80">
-          <Link to="/signin" className="main-button-lg text-left">
+          <Link to="/signin" className="main-btn-lg text-left">
             회원 로그인
           </Link>
-          <Link to="/signup" className="main-button-lg text-left">
+          <Link to="/signup" className="main-btn-lg text-left">
             계정 등록 신청
           </Link>
-          <Link to="/resetpwd" className="main-button-lg text-left">
+          <Link to="/resetpwd" className="main-btn-lg text-left">
             비밀번호 재설정
           </Link>
         </div>

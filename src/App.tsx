@@ -15,6 +15,7 @@ import SignIn from './pages/common/signin/SignIn';
 import SignUp from './pages/common/signin/SignUp';
 import ResetPwd from './pages/common/signin/ResetPwd';
 import ManagerTicketDetail from './pages/manager/ManagerTicketDetail';
+import ManagerHistories from './pages/manager/ManagerHistories';
 
 function Layout() {
   return (
@@ -32,6 +33,7 @@ function App() {
     {path: '', element: <ManagerHome />},
     {path: 'statistics', element: <ManagerStatistics />},
     {path: 'tickets', element: <ManagerTickets />},
+    {path: 'histories', element: <ManagerHistories/>},
     {path: 'detail', element: <ManagerTicketDetail />},
     {path: 'inquiry', element: <ManagerInquiry />},
     {path: 'pwdChange', element: <ManagerPwdChange />}, //todo 명칭 변경하셔도 됩니다!
@@ -45,13 +47,15 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          {/* 랜딩페이지 */}
+          {/* 레이아웃 없음 */}
           <Route path="/" element={<Landing />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/resetpwd" element={<ResetPwd />} />
-          {/* 404 페이지 설정 */}
-          <Route path="*" element={<NotFound />} /> {/* 이 부분에서 모든 잘못된 경로를 처리 */}
+          
+          <Route path="*" element={<NotFound />} />
+
+          {/* 레이아웃 있음 */}
           <Route element={<Layout />}>
             {/* 담당자 */}
             <Route path="/manager">

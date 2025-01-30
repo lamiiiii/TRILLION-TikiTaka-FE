@@ -1,10 +1,15 @@
 import {useState} from 'react';
 import InitialTopBar from './InitialTopBar';
 import ToggleBtn from '../ToggleBtn';
+import {useNavigate} from 'react-router-dom';
+import {useUserStore} from '../../../store/store';
 
 // todo 연속 5회 설정한 비밀번호가 틀렸을 경우 30분간 잠금
 
 export default function SignInContainer() {
+  const navigate = useNavigate();
+  const {role} = useUserStore();
+
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
   const [pwd, setPwd] = useState('');
@@ -73,6 +78,9 @@ export default function SignInContainer() {
 
     // todo 로그인 모달 추가 및 페이지 이동
     console.log(requestData);
+
+    // 로그인 성공 여부 로직 -> setRole 후 페이지 이동
+    navigate(`/${role}`);
   };
 
   return (
@@ -127,7 +135,7 @@ export default function SignInContainer() {
             </div>
           </div>
           {/* 버튼 */}
-          <button onClick={onClickLogin} className="main-button-lg w-20">
+          <button onClick={onClickLogin} className="main-btn-lg w-20">
             로그인
           </button>
         </div>

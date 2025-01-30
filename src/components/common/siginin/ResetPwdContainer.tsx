@@ -212,7 +212,7 @@ export default function ResetPwdContainer() {
             </div>
           </div>
           {/* 버튼 */}
-          <button onClick={onClickLogin} className="main-button-lg w-20">
+          <button onClick={onClickLogin} className="main-btn-lg w-20">
             변경 완료
           </button>
         </div>
