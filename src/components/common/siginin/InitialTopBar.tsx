@@ -22,7 +22,7 @@ export default function InitialTopBar() {
             .map((path, index, array) => (
               <React.Fragment key={path}>
                 <Link to={path} className="hover:text-gray-2">
-                  {path === '/signup' ? '회원가입' : path === '/signin' ? '로그인' : '비밀번호 변경'}
+                  {path === '/signup' ? '회원가입' : path === '/signin' ? '로그인' : '비밀번호 재설정'}
                 </Link>
                 {index < array.length - 1 && <div className="border-r border-gray-4 h-2.5" />}
               </React.Fragment>

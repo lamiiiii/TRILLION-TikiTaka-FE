@@ -94,7 +94,7 @@ export default function SignInContainer() {
                   onChange={emailChange}
                   placeholder="이메일을 입력하세요"
                   required
-                  className={`py-3 px-4 text-subtitle-regular w-[328px] border border-gray-2 rounded-md focus:outline-none 
+                  className={`py-3 px-4 text-subtitle-regular w-[328px] border rounded-md focus:outline-none 
                 ${emailError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
                 />
               </div>
@@ -112,7 +112,7 @@ export default function SignInContainer() {
                   onChange={pwdChange}
                   placeholder="비밀번호를 입력하세요"
                   required
-                  className={`py-3 px-4 text-subtitle-regular w-[328px] border border-gray-2 rounded-md focus:outline-none 
+                  className={`py-3 px-4 text-subtitle-regular w-[328px] border rounded-md focus:outline-none 
                 ${pwdError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
                 />
               </div>

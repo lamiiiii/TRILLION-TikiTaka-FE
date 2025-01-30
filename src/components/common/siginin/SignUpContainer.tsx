@@ -101,7 +101,7 @@ export default function SignUpContainer() {
                   onChange={emailChange}
                   placeholder="user@tikitaka.com"
                   required
-                  className={`py-3 px-4 text-subtitle-regular w-[328px] border border-gray-2 rounded-md focus:outline-none 
+                  className={`py-3 px-4 text-subtitle-regular w-[328px] border rounded-md focus:outline-none 
                 ${emailError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
                 />
               </div>
@@ -118,7 +118,7 @@ export default function SignUpContainer() {
                   onChange={idChange}
                   placeholder="3~15자리/영문 소문자, 점(.) 조합"
                   required
-                  className={`py-3 px-4 text-subtitle-regular w-[328px] border border-gray-2 rounded-md focus:outline-none 
+                  className={`py-3 px-4 text-subtitle-regular w-[328px] border rounded-md focus:outline-none 
                 ${idError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
                 />
               </div>
