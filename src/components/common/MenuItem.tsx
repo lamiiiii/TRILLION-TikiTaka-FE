@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import { SmRightIcon } from "./Icon";
 import {Link, useLocation} from 'react-router-dom';
 import {motion} from 'framer-motion';
-import { MenuItemProps } from "../../interfaces/interfaces";
+
+interface MenuItemProps {
+  icon: React.ComponentType<{strokeColor: string}>;
+  text: string;
+  to: string;
+  children?: React.ReactNode;
+}
 
 // 사이드바 내부 메뉴 컴포넌트
 export default function MenuItem({icon: Icon, text, to, children}: MenuItemProps) {

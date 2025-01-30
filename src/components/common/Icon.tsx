@@ -1,5 +1,3 @@
-// import {IconProps} from '../interfaces/interfaces';
-
 import {useUserStore} from '../../store/store';
 
 // 알림 아이콘 (상단바)

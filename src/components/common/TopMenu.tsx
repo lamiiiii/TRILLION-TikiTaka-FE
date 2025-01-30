@@ -1,6 +1,15 @@
 import {Link} from 'react-router-dom';
 import {LinkIcon} from './Icon';
-import {TopMenuProps} from '../../interfaces/interfaces';
+export interface TopMenuProps {
+  boldBlackText?: string; // 좌측 요소 (검정색 bold)
+  boldGrayText?: string; // 좌측 요소 (gray-12 bold)
+  boldSmText?: string; // 좌측 요소 (gray-12 10px bold)
+  regularText?: string; // 좌측 요소 (gray-12 regular)
+  btnText?: string; // 좌측 요소
+  onBtnClick?: () => void;
+  rightText?: string;
+  linkTo?: string;
+}
 
 export default function TopMenu({
   boldBlackText,
