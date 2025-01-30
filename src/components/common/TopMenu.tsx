@@ -16,14 +16,14 @@ export default function TopMenu({
     <div className="flex flex-col w-full gap-3 mt-6 whitespace-nowrap">
       <div className="flex justify-between w-full h-8 px-4 py-1 text-base">
         {/* 메뉴 좌측 요소 */}
-        <div className="flex gap-4 font-bold text-gray-12">
+        <div className="flex gap-4 text-gray-12">
           {/* 볼드 폰트 요소 */}
-          <p className=" text-black">{boldBlackText}</p>
-          <p>{boldGrayText}</p>
-          <p>{boldSmText}</p>
+          <p className="text-black font-bold">{boldBlackText}</p>
+          <p className="font-bold">{boldGrayText}</p>
+          <p className="font-bold">{boldSmText}</p>
 
           {/* 레귤러 폰트 요소 */}
-          <p className="font-regular">{regularText}</p>
+          <p className="subtitle-regular">{regularText}</p>
           {/* 버튼 */}
           {btnText && onBtnClick && (
             <button onClick={onBtnClick} className="h-full items-center px-4 bg-main font-regular text-white text-xs rounded">
