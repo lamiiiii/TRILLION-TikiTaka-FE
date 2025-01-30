@@ -7,14 +7,14 @@ export default function LandingContainer() {
     <InitialLayout size="wide">
       {/* 우측 */}
       <motion.div
-        className="absolute right-0 top-0 flex flex-col min-h-screen justify-center items-start gap-16 pl-28"
+        className="absolute right-0 top-0 flex flex-col min-h-screen justify-center items-start gap-16 pl-40"
         style={{width: 'calc(100% - 800px)'}}
         initial={{opacity: 0, x: 100}}
         animate={{opacity: 1, x: 0}}
         transition={{type: 'tween', duration: 0.5, ease: 'easeInOut'}}
       >
         <p className="text-black text-4xl font-bold">WELCOME</p>
-        <div className="flex flex-col gap-6 w-72">
+        <div className="flex flex-col gap-6 w-80">
           <Link to="/signin" className="main-button-lg text-left">
             회원 로그인
           </Link>
