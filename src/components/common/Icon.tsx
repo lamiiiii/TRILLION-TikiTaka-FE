@@ -242,6 +242,24 @@ export function LinkIcon() {
   );
 }
 
+export function AlertIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      className={`w-4 h-4 ${className}`} // ✅ className을 받아서 적용
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 2L2 22h20L12 2z" />
+      <line x1="12" y1="9" x2="12" y2="13" />
+      <line x1="12" y1="17" x2="12.01" y2="17" />
+    </svg>
+  );
+}
 // 체크 아이콘
 export function CheckIcon() {
   return (
