@@ -1,6 +1,8 @@
 // props 관련 Interface
 // -----------------------------
 
+import {PRIORITY} from '../constants/constants';
+
 // 사이드바 메뉴 props
 export interface MenuItemProps {
   icon: React.ComponentType<{strokeColor: string}>;
@@ -40,3 +42,13 @@ export interface TokenStore {
   isTokenSet: boolean;
   setIsTokenSet: (state: boolean) => void;
 }
+
+export interface TicketStore {
+  priority: PriorityType;
+  isReviewNeeded: boolean;
+  setPriority: (priority: string) => void;
+  setIsReviewNeeded: (isReviewRequired: boolean) => void;
+}
+
+// 기타 interface
+export type PriorityType = (typeof PRIORITY)[number];
