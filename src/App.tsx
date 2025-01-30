@@ -10,12 +10,14 @@ import ManagerStatistics from './pages/manager/ManagerStatistics';
 import NotFound from './pages/NotFound';
 import ManagerInquiry from './pages/manager/ManagerInquiry';
 import ManagerPwdChange from './pages/manager/ManagerPwdChange';
+import ManagerTicketDetail from './pages/manager/ManagerTicketDetail';
 
 function App() {
   const managerRoutes = [
     {path: '', element: <ManagerHome />},
     {path: 'statistics', element: <ManagerStatistics />},
     {path: 'tickets', element: <ManagerTickets />},
+    {path: 'detail', element: <ManagerTicketDetail />},
     {path: 'inquiry', element: <ManagerInquiry />},
     {path: 'pwdChange', element: <ManagerPwdChange />}, //todo 명칭 변경하셔도 됩니다!
   ];

@@ -128,4 +128,18 @@ textarea {
   .overlay {
     @apply flex items-center justify-center fixed w-screen h-screen bg-ol bg-opacity-60 left-0 top-0 z-50;
   }
+  /* 남색 버튼 sm*/
+  .main-button {
+    @apply bg-main hover:bg-gray-15 text-body-regular text-white py-1 px-3 rounded-[4px];
+  }
+
+  /* 남색 버튼 lg*/
+  .main-button-lg {
+    @apply bg-main hover:bg-gray-15 text-subtitle text-white py-3 px-3 rounded-[4px];
+  }
+
+  /* 팝업 시 오버레이 */
+  .overlay {
+    @apply flex items-center justify-center fixed w-screen h-screen bg-opacity-40 left-0 top-0 z-50;
+  }
 }
