@@ -102,6 +102,11 @@ textarea {
     @apply hover:bg-gray-1 hover:border-gray-2 hover:shadow-sm;
   }
 
+  /* 남색 버튼 lg*/
+  .main-button-lg {
+    @apply bg-main hover:bg-gray-15 text-subtitle text-white py-3 px-3 rounded;
+  }
+
   /* 1px 가로줄 */
   .division {
     @apply w-full h-[1px] bg-border-1 shrink-0;
