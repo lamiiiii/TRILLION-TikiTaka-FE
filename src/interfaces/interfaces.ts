@@ -1,6 +1,7 @@
 // props 관련 Interface
 // -----------------------------
 
+import {ReactElement} from 'react';
 import {PRIORITY} from '../constants/constants';
 
 // 사이드바 메뉴 props
@@ -8,7 +9,7 @@ export interface MenuItemProps {
   icon: React.ComponentType<{strokeColor: string}>;
   text: string;
   to?: string;
-  children?: React.ReactNode;
+  children?: ReactElement<MenuItemProps>[];
 }
 
 // Top Menu props

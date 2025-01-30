@@ -7,7 +7,7 @@ import {Link, useLocation} from 'react-router-dom';
 // 메뉴 컴포넌트
 function MenuItem({icon: Icon, text, to, children}: MenuItemProps) {
   const location = useLocation();
-  const isActive = location.pathname === to;
+  const isActive = location.pathname === to || (children?.some((child) => child.props.to === location.pathname) ?? false);
 
   const [isExpanded, setIsExpanded] = useState(false);
 
