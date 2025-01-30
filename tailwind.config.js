@@ -79,6 +79,7 @@ module.exports = {
 
         // System 색상
         red: '#D93438',
+        orange: '#FFAE00',
         yellow: '#F8D753',
         blue: '#2A54D2',
         green: '#67C451',

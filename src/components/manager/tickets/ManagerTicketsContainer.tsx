@@ -3,6 +3,7 @@
 import TopMenu from '../../common/TopMenu';
 import TicketAnalytics from './TicketAnalytics';
 import TicketAwaitingList from './TicketAwaitingList';
+import TicketPersonalManageList from './TicketPersonalManageList';
 import TicketProfile from './TicketProfile';
 
 export default function ManagerTicketsContainer() {
@@ -15,6 +16,7 @@ export default function ManagerTicketsContainer() {
       </div>
 
       <TicketAwaitingList />
+      <TicketPersonalManageList />
     </div>
   );
 }
