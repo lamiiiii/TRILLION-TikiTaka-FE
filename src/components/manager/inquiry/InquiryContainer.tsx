@@ -1,4 +1,5 @@
 import {InquiryData} from '../../../interfaces/interfaces';
+import Pagenation from '../../common/Pagenation';
 import Inquiry from './Inquiry';
 
 // 임시 데이터
@@ -37,6 +38,7 @@ export default function InquiryContainer() {
         <Inquiry data={inquiryData} />
         <Inquiry data={inquiryData} />
         <Inquiry data={inquiryDataWithAnswer} />
+        <Pagenation />
       </section>
     </>
   );

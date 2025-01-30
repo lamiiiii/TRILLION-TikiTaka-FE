@@ -27,7 +27,7 @@ export default function Inquiry({data}: InquiryProps) {
 
           {data.status === '답변 완료' && (
             <div
-              className="absolute top-[-4px] left-16"
+              className="absolute top-0 left-16"
               style={{
                 color: 'black',
                 transform: isAnswerVisible ? 'rotate(180deg)' : 'rotate(0deg)',
