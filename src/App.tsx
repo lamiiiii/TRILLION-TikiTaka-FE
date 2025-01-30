@@ -14,6 +14,7 @@ import Landing from './pages/common/signin/Landing';
 import SignIn from './pages/common/signin/SignIn';
 import SignUp from './pages/common/signin/SignUp';
 import ResetPwd from './pages/common/signin/ResetPwd';
+import ManagerTicketDetail from './pages/manager/ManagerTicketDetail';
 
 function Layout() {
   return (
@@ -31,6 +32,7 @@ function App() {
     {path: '', element: <ManagerHome />},
     {path: 'statistics', element: <ManagerStatistics />},
     {path: 'tickets', element: <ManagerTickets />},
+    {path: 'detail', element: <ManagerTicketDetail />},
     {path: 'inquiry', element: <ManagerInquiry />},
     {path: 'pwdChange', element: <ManagerPwdChange />}, //todo 명칭?
   ];

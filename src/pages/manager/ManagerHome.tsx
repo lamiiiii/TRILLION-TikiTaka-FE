@@ -1,5 +1,6 @@
 // 담당자 - 티켓 관리 대시보드 (전체)
 
+import ManagerHomeContainer from '../../components/manager/home/ManagerHomeContainer';
 import TopMenu from '../../components/common/TopMenu';
 
 export default function ManagerHome() {
@@ -12,6 +13,7 @@ export default function ManagerHome() {
           rightText="나의 티켓 관리 바로가기"
           linkTo="/manager/tickets"
         />
+        <ManagerHomeContainer />
       </div>
     </div>
   );
