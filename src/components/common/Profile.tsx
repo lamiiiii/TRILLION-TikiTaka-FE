@@ -35,7 +35,7 @@ export default function Profile({name, size = 'sm', backgroundColor}: ProfileIni
         </div>
       )}
       <div
-        className={`${sizeClasses[size]} ${colorClasses[backgroundColor]} ${backgroundColor} text-white text-[16px] p-3 rounded-full flex items-center justify-center font-bold cursor-pointer`}
+        className={`${sizeClasses[size]} ${colorClasses[backgroundColor]} ${backgroundColor} text-white text-base p-3 rounded-full flex items-center justify-center font-bold cursor-pointer`}
         onClick={togglePopup}
       >
         {initial}
