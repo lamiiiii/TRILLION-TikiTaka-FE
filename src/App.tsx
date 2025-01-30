@@ -11,6 +11,9 @@ import NotFound from './pages/NotFound';
 import ManagerInquiry from './pages/manager/ManagerInquiry';
 import ManagerPwdChange from './pages/manager/ManagerPwdChange';
 import ManagerTicketDetail from './pages/manager/ManagerTicketDetail';
+import AdminAccounts from './pages/admin/AdminAccounts';
+import AdminCategory from './pages/admin/AdminCategory';
+import AdminInquiry from './pages/admin/AdminInquiry';
 
 function App() {
   const managerRoutes = [
@@ -24,7 +27,11 @@ function App() {
 
   const userRoutes = [{path: '', element: <UserHome />}];
 
-  const adminRoutes = [{path: '', element: <AdminHome />}];
+  const adminRoutes = [{path: '', element: <AdminHome />},
+    {path: 'accounts', element: <AdminAccounts />},
+    {path: 'categories', element: <AdminCategory />},
+    {path: 'inquiries', element: <AdminInquiry />},
+  ];
 
   return (
     <Router>
