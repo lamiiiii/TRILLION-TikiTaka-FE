@@ -32,7 +32,7 @@ function FilterItem({type, count, isSelected, onClick}: {type: string; count: nu
 
 // 전체 필터 컴포넌트
 export default function TicketFilter() {
-  const [selectedType, setSelectedType] = useState('전체');
+  const [selectedType, setSelectedType] = useState('전체 요청');
   const [indicatorStyle, setIndicatorStyle] = useState({left: 0, width: 0});
   const containerRef = useRef<HTMLDivElement>(null);
 

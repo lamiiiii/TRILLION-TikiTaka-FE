@@ -34,18 +34,9 @@ export default function TicketProfile() {
       <div className="flex flex-col items-start">
         {isEditing ? (
           <form onSubmit={handleSubmit} className="w-[400px] flex flex-col gap-2">
-            <h1 className="text-title-bold mb-2">프로필 수정</h1>
-            <Input element="input" size="sm" type="text" label="이름" name="name" value={userInfo.name} onChange={handleChange} />
-            <Input element="input" size="sm" type="email" label="이메일" name="email" value={userInfo.email} onChange={handleChange} />
-            <Input
-              element="input"
-              size="sm"
-              type="url"
-              label="카카오워크"
-              name="kakaowork"
-              value={userInfo.website}
-              onChange={handleChange}
-            />
+            <Input element="input" size="sm" type="text" name="name" value={userInfo.name} onChange={handleChange} />
+            <Input element="input" size="sm" type="email" name="email" value={userInfo.email} onChange={handleChange} />
+            <Input element="input" size="sm" type="url" name="kakaowork" value={userInfo.website} onChange={handleChange} />
             <div className="flex justify-center mt-3">
               <button type="submit" className="main-button w-fit">
                 완료
