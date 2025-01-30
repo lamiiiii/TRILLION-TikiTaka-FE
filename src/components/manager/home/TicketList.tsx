@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ticketDummy } from "../../../data/ticketData";
 import Dropdown from "../../common/Dropdown";
 import Ticket from "../common/Ticket";
+import PageNations from "../common/PageNations";
 
 const dropdownData: { label: string; options: string[] }[] = [
   { label: "담당자", options: ["곽서연", "김규리", "김낙도"] },
@@ -12,6 +13,40 @@ const dropdownData: { label: string; options: string[] }[] = [
 
 export default function TicketList() {
   const [selectedFilters, setSelectedFilters] = useState<{ [key: string]: string }>({});
+  const [filteredTickets, setFilteredTickets] = useState([...ticketDummy]); // ✅ useState로 filteredTickets 관리
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const ticketsPerPage = 5;
+
+  // ✅ 필터 & 정렬 적용
+  useEffect(() => {
+    let updatedTickets = [...ticketDummy];
+
+    // 🔹 긴급 티켓이 가장 위로, 기한이 오래된 순으로 정렬
+    updatedTickets.sort((a, b) => {
+      if (a.isUrgent !== b.isUrgent) {
+        return b.isUrgent ? 1 : -1; // 긴급 티켓이 먼저 오도록
+      }
+      return new Date(a.deadline).getTime() - new Date(b.deadline).getTime(); // 기한이 빠른 순 정렬
+    });
+
+    setFilteredTickets(updatedTickets);
+  }, [selectedFilters]);
+
+  // ✅ 페이지네이션 적용: 현재 페이지에 해당하는 티켓만 표시
+  const indexOfLastTicket = currentPage * ticketsPerPage;
+  const indexOfFirstTicket = indexOfLastTicket - ticketsPerPage;
+  const currentTickets = filteredTickets.slice(indexOfFirstTicket, indexOfLastTicket);
+
+  // ✅ 총 페이지 수 계산
+  const totalPages = Math.ceil(filteredTickets.length / ticketsPerPage);
+
+  // ✅ 페이지 변경 핸들러
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
 
   const handleSelect = (label: string, value: string) => {
     setSelectedFilters((prev) => ({ ...prev, [label]: value }));
@@ -29,14 +64,6 @@ export default function TicketList() {
     console.log(`티켓 ${id} 반려`);
   };
 
-  // 🔹 긴급 티켓이 가장 위로, 기한이 오래된 순으로 정렬
-  const sortedTickets = [...ticketDummy].sort((a, b) => {
-    if (a.isUrgent !== b.isUrgent) {
-      return b.isUrgent ? 1 : -1; // 긴급 티켓이 먼저 오도록
-    }
-    return new Date(a.deadline).getTime() - new Date(b.deadline).getTime(); // 기한이 빠른 순 정렬
-  });
-
   return (
     <div className="w-full mt-[20px] px-4 relative mb-[100px]">
       <div className="bg-gray-18 h-full shadow-[0px_1px_3px_1px_rgba(0,0,0,0.15)] flex flex-col justify-start p-4">
@@ -44,18 +71,19 @@ export default function TicketList() {
         <div className="flex items-center gap-4 leading-none mt-4 px-2">
           {dropdownData.map((data) => (
             <Dropdown
-            key={data.label}
-            label={data.label}
-            options={data.options}
-            value={selectedFilters[data.label]}
-            onSelect={(value) => handleSelect(data.label, value)}
-            paddingX="px-3"
-          />
+              key={data.label}
+              label={data.label}
+              options={data.options}
+              value={selectedFilters[data.label]}
+              onSelect={(value) => handleSelect(data.label, value)}
+              paddingX="px-3"
+            />
           ))}
-          <div className="ml-auto text-gray-700 text-subtitle ">
-            조회 건수 <span className="text-black text-title-bold ml-1">{ticketDummy.length}건</span>
+          <div className="ml-auto text-gray-700 text-subtitle">
+            조회 건수 <span className="text-black text-title-bold ml-1">{filteredTickets.length}건</span>
           </div>
         </div>
+
         {/* 테이블 헤더 */}
         <div className="flex gap-4 py-2 text-gray-700 text-title-regular mt-5 mb-5 px-2">
           <div className="w-[6%]">티켓 ID</div>
@@ -65,18 +93,26 @@ export default function TicketList() {
           <div className="w-[10%]">담당자</div>
           <div className="w-[15%]">승인 여부</div>
         </div>
-        {/* 티켓 리스트 */}
+
+        {/* ✅ 현재 페이지에 맞는 티켓만 표시 */}
         <div className="flex flex-col gap-4">
-          {sortedTickets.map((ticket) => (
-            <Ticket
-              key={ticket.id}
-              {...ticket}
-              onAssigneeChange={(newAssignee) => handleAssigneeChange(ticket.id, newAssignee)}
-              onApprove={() => handleApprove(ticket.id)}
-              onReject={() => handleReject(ticket.id)}
-            />
-          ))}
+          {currentTickets.length > 0 ? (
+            currentTickets.map((ticket) => (
+              <Ticket
+                key={ticket.id}
+                {...ticket}
+                onAssigneeChange={(newAssignee) => handleAssigneeChange(ticket.id, newAssignee)}
+                onApprove={() => handleApprove(ticket.id)}
+                onReject={() => handleReject(ticket.id)}
+              />
+            ))
+          ) : (
+            <div className="text-gray-500 text-center py-4">해당 상태의 티켓이 없습니다.</div>
+          )}
         </div>
+
+        {/* ✅ 페이지네이션 컴포넌트 추가 */}
+        <PageNations currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
       </div>
     </div>
   );
