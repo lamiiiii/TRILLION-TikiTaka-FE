@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TicketProps } from "../../../interfaces/ticket";
+import { TicketProps, TicketStatusType } from "../../../interfaces/ticket";
 import Dropdown from "../../common/Dropdown";
 import { AlertIcon } from "../../common/Icon";
 
@@ -16,7 +16,7 @@ export default function Ticket({
   
 }: TicketProps) {
   const [selectedAssignee, setSelectedAssignee] = useState(assignee); // 담당자 상태
-  const [status, setStatus] = useState<"대기" | "진행중" | "완료" | "반려">("대기"); // ✅ 티켓 상태 관리
+  const [status, setStatus] = useState<TicketStatusType>("대기"); // ✅ 티켓 상태 관리
 
   const handleAssigneeSelect = (selectedOption: string) => {
     setSelectedAssignee(selectedOption);
