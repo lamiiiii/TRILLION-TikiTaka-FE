@@ -1,5 +1,5 @@
+import PwdChangeContainer from '../../components/common/PwdChangeContainer';
 import TopMenu from '../../components/common/TopMenu';
-import PwdChangeContainer from '../../components/manager/PwdChangeContainer';
 
 export default function ManagerPwdChange() {
   return (
