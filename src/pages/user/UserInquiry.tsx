@@ -4,7 +4,7 @@ import InquiryContainer from '../../components/manager/inquiry/InquiryContainer'
 import InquiryModal from '../../components/manager/inquiry/InquiryModal';
 import {INQUIRY_DATA} from '../../constants/constants';
 
-export default function ManagerInquiry() {
+export default function UserInquiry() {
   const [showModal, setShowModal] = useState(false);
 
   const handleOpenModal = () => {
