@@ -21,6 +21,7 @@ export default function UserCompleteAnalytics() {
                   <Cell key={`cell-${index}-${entry}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
+
               <Tooltip
                 contentStyle={{
                   backgroundColor: '#fff',
@@ -34,7 +35,7 @@ export default function UserCompleteAnalytics() {
           </ResponsiveContainer>
         </section>
 
-        <section className="grid grid-cols-2 gap-3 text-body-bold">
+        <section className="grid grid-cols-2 gap-3 text-subtitle">
           <div className="space-y-4">
             <div>미완료</div>
             <div>완료</div>

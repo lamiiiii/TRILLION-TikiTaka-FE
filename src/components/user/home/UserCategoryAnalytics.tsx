@@ -38,7 +38,7 @@ export default function UserCategoryAnalytics() {
           </ResponsiveContainer>
         </section>
 
-        <section className="grid grid-cols-2 gap-0 text-body-bold">
+        <section className="grid grid-cols-2 gap-0 text-subtitle">
           <div className="space-y-4">
             {sortedData.map((item) => (
               <div key={item.name} className="truncate whitespace-nowrap">
