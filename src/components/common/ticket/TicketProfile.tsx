@@ -2,14 +2,15 @@ import React, {useState} from 'react';
 import {EditIcon} from '../../common/Icon';
 import Profile from '../../common/Profile';
 import Input from '../../common/Input';
+import {UserInfo} from '../../../interfaces/interfaces';
 
-export default function TicketProfile() {
+interface TicketProfileProps {
+  userInfo: UserInfo;
+  onUserInfoChange: (newUserInfo: UserInfo) => void;
+}
+
+export default function TicketProfile({userInfo, onUserInfoChange}: TicketProfileProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [userInfo, setUserInfo] = useState({
-    name: 'Yeon',
-    email: 'yeonii@gmail.com',
-    website: 'https://www.kakaowork.com/',
-  });
 
   const handleEdit = () => {
     setIsEditing(!isEditing);
@@ -17,10 +18,10 @@ export default function TicketProfile() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const {name, value} = e.target;
-    setUserInfo((prevState) => ({
-      ...prevState,
+    onUserInfoChange({
+      ...userInfo,
       [name]: value,
-    }));
+    });
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -30,7 +31,7 @@ export default function TicketProfile() {
 
   return (
     <div className="flex items-center gap-6 w-full bg-gray-18 p-5">
-      <Profile name={userInfo.name} size="lg" backgroundColor="manager" />
+      <Profile name={userInfo.name} size="lg" backgroundColor={userInfo.role} />
       <div className="flex flex-col items-start">
         {isEditing ? (
           <form onSubmit={handleSubmit} className="w-[400px] flex flex-col gap-2">
