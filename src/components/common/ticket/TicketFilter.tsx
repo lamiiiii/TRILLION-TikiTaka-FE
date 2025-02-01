@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import {TicketViewType} from '../../../interfaces/ticket'; // 외부에서 TicketViewType 가져오기
 
 // 상태와 티켓 개수 데이터 정의
@@ -56,8 +56,10 @@ export default function TicketFilter({role}: TicketFilterProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   // role이 사용자일 경우
-  const filteredTicketData =
-    role === 'user' ? ticketData.filter((item) => ['전체', '대기중', '진행중', '완료', '긴급'].includes(item.type)) : ticketData;
+  const filteredTicketData = useMemo(
+    () => (role === 'user' ? ticketData.filter((item) => ['전체', '대기중', '진행중', '완료', '긴급'].includes(item.type)) : ticketData),
+    [role] // role이 변경될 때만 재계산
+  );
 
   useEffect(() => {
     if (containerRef.current) {
@@ -71,7 +73,7 @@ export default function TicketFilter({role}: TicketFilterProps) {
         });
       }
     }
-  }, [selectedType, filteredTicketData]);
+  }, [selectedType]);
 
   return (
     <div className="w-full mt-10 relative">

@@ -30,11 +30,11 @@ export default function TicketProfile({userInfo, onUserInfoChange}: TicketProfil
   };
 
   return (
-    <div className="flex items-center gap-6 w-full bg-gray-18 p-5">
+    <div className="flex items-center gap-6 w-full bg-gray-18 p-5 px-0">
       <Profile name={userInfo.name} size="lg" backgroundColor={userInfo.role} />
       <div className="flex flex-col items-start">
         {isEditing ? (
-          <form onSubmit={handleSubmit} className="w-[400px] flex flex-col gap-2">
+          <form onSubmit={handleSubmit} className="w-full flex flex-col gap-2">
             <Input element="input" size="sm" type="text" name="name" value={userInfo.name} onChange={handleChange} />
             <Input element="input" size="sm" type="email" name="email" value={userInfo.email} onChange={handleChange} />
             <Input element="input" size="sm" type="url" name="kakaowork" value={userInfo.website} onChange={handleChange} />
