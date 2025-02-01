@@ -30,9 +30,9 @@ export default function TicketProfile({userInfo, onUserInfoChange}: TicketProfil
   };
 
   return (
-    <div className="flex items-center gap-6 w-full bg-gray-18 p-5 px-0">
+    <div className="flex items-center gap-6 w-full bg-gray-18 p-5 px-9">
       <Profile name={userInfo.name} size="lg" backgroundColor={userInfo.role} />
-      <div className="flex flex-col items-start">
+      <div className="w-full flex flex-col items-start">
         {isEditing ? (
           <form onSubmit={handleSubmit} className="w-full flex flex-col gap-2">
             <Input element="input" size="sm" type="text" name="name" value={userInfo.name} onChange={handleChange} />
