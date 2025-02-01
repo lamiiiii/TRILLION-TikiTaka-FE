@@ -1,18 +1,22 @@
-import { useEffect, useState } from "react";
-import { ticketDummy } from "../../../data/ticketData";
-import Dropdown from "../../common/Dropdown";
-import Ticket from "../common/Ticket";
-import PageNations from "../common/PageNations";
+import {useEffect, useState} from 'react';
+import {ticketDummy} from '../../../data/ticketData';
+import Dropdown from '../../common/Dropdown';
+import Ticket from '../common/Ticket';
+import PageNations from '../common/PageNations';
 
-const dropdownData: { label: string; options: string[] }[] = [
-  { label: "담당자", options: ["곽서연", "김규리", "김낙도"] },
-  { label: "1차 카테고리", options: ["카테고리1", "카테고리2", "카테고리3"] },
-  { label: "2차 카테고리", options: ["서브1", "서브2", "서브3"] },
-  { label: "요청", options: ["요청1", "요청2", "요청3", "요청4", "요청5", "요청6"] },
+const dropdownData: {label: string; options: string[]}[] = [
+  {label: '담당자', options: ['곽서연', '김규리', '김낙도']},
+  {label: '1차 카테고리', options: ['카테고리1', '카테고리2', '카테고리3']},
+  {label: '2차 카테고리', options: ['서브1', '서브2', '서브3']},
+  {label: '요청', options: ['요청1', '요청2', '요청3', '요청4', '요청5', '요청6']},
 ];
 
-export default function TicketList() {
-  const [selectedFilters, setSelectedFilters] = useState<{ [key: string]: string }>({});
+interface TicketListProps {
+  role: 'manager' | 'user' | 'admin';
+}
+
+export default function TicketList({role}: TicketListProps) {
+  const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
   const [filteredTickets, setFilteredTickets] = useState([...ticketDummy]); // ✅ useState로 filteredTickets 관리
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -49,7 +53,7 @@ export default function TicketList() {
   };
 
   const handleSelect = (label: string, value: string) => {
-    setSelectedFilters((prev) => ({ ...prev, [label]: value }));
+    setSelectedFilters((prev) => ({...prev, [label]: value}));
   };
 
   const handleAssigneeChange = (id: string, newAssignee: string) => {
@@ -88,10 +92,10 @@ export default function TicketList() {
         <div className="flex gap-4 py-2 text-gray-700 text-title-regular mt-5 mb-5 px-2">
           <div className="w-[6%]">티켓 ID</div>
           <div className="w-[12%]">카테고리</div>
-          <div className="w-[36%]">요청 내용</div>
+          <div className={role === 'user' ? 'w-[51%]' : 'w-[36%]'}>요청 내용</div>
           <div className="w-[12%]">기한</div>
           <div className="w-[10%]">담당자</div>
-          <div className="w-[15%]">승인 여부</div>
+          {role !== 'user' && <div className="w-[15%]">승인 여부</div>}
         </div>
 
         {/* ✅ 현재 페이지에 맞는 티켓만 표시 */}
@@ -99,6 +103,7 @@ export default function TicketList() {
           {currentTickets.length > 0 ? (
             currentTickets.map((ticket) => (
               <Ticket
+                role={role}
                 key={ticket.id}
                 {...ticket}
                 onAssigneeChange={(newAssignee) => handleAssigneeChange(ticket.id, newAssignee)}

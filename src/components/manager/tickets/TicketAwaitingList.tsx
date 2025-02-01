@@ -35,7 +35,7 @@ export default function TicketAwaitingList() {
         {isListVisible && (
           <motion.div initial={{opacity: 0, height: 0, y: -20}} animate={{opacity: 1, height: 'auto', y: 0}} transition={{duration: 0.3}}>
             <TicketFilter />
-            <TicketList />
+            <TicketList role="manager" />
           </motion.div>
         )}
       </AnimatePresence>
