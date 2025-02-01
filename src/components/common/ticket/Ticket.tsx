@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {TicketProps, TicketStatusType} from '../../../interfaces/ticket';
-import Dropdown from '../../common/Dropdown';
-import {AlertIcon} from '../../common/Icon';
+import Dropdown from '../Dropdown';
+import {AlertIcon} from '../Icon';
 
 export default function Ticket({
   id,

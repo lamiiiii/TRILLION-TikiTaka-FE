@@ -1,8 +1,8 @@
 import {useEffect, useState} from 'react';
 import {ticketDummy} from '../../../data/ticketData';
-import Dropdown from '../../common/Dropdown';
-import Ticket from '../common/Ticket';
-import PageNations from '../common/PageNations';
+import Dropdown from '../Dropdown';
+import Ticket from './Ticket';
+import PageNations from '../../manager/common/PageNations';
 
 const dropdownData: {label: string; options: string[]}[] = [
   {label: '담당자', options: ['곽서연', '김규리', '김낙도']},

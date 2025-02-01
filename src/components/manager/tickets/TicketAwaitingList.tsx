@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {AlertIcon, DownIcon} from '../../common/Icon';
-import TicketList from '../home/TicketList';
+import TicketList from '../../common/ticket/TicketList';
 import TicketFilter from './TicketFilter';
 import {motion, AnimatePresence} from 'framer-motion';
 

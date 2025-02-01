@@ -1,7 +1,7 @@
 // 담당자 - 티켓 관리 대시보드 (전체)
 
 import TicketFilter from '../../common/ticket/TicketFilter';
-import TicketList from './TicketList';
+import TicketList from '../../common/ticket/TicketList';
 
 export default function ManagerHomeContainer() {
   return (

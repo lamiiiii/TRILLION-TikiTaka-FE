@@ -3,7 +3,7 @@ import TicketProfile from '../../common/ticket/TicketProfile';
 import TopMenu from '../../common/TopMenu';
 import {UserInfo} from '../../../interfaces/interfaces';
 import TicketFilter from '../../common/ticket/TicketFilter';
-import TicketList from '../../manager/home/TicketList';
+import TicketList from '../../common/ticket/TicketList';
 
 export default function UserHomeContainer() {
   const [userInfo, setUserInfo] = useState<UserInfo>({
