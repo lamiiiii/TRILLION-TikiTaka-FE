@@ -5,7 +5,7 @@ import {motion} from 'framer-motion';
 interface ModalProps {
   title?: string;
   content?: string;
-  backBtn: string;
+  backBtn?: string;
   onBackBtnClick: () => void;
   checkBtn?: string;
   onBtnClick?: () => void;
