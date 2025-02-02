@@ -6,27 +6,27 @@ interface RequestFormDetailProps {
   title: string;
   requiredFields: string;
   description: string;
-  onClose: () => void; // 뒤로가기 버튼 클릭 시 실행할 함수
+  onClose: () => void; // 뒤로가기
 }
 
 export default function RequestFormDetail({title, requiredFields, description, onClose}: RequestFormDetailProps) {
   const [isClosing, setIsClosing] = useState(false);
 
   const handleClose = () => {
-    setIsClosing(true); // ✅ 애니메이션 실행
+    setIsClosing(true); 
     setTimeout(() => {
-      onClose(); // ✅ 애니메이션이 끝난 후 상태 변경
-    }, 300); // ✅ framer-motion 애니메이션 시간과 맞추기 (0.3s)
+      onClose(); 
+    }, 300); 
   };
 
   return (
     <AnimatePresence>
       {!isClosing && (
         <motion.div
-          initial={{x: '100%'}} // 시작 위치 (오른쪽 밖)
-          animate={{x: 0}} // 나타날 때
-          exit={{x: '100%'}} // 사라질 때 (부드럽게)
-          transition={{duration: 0.3, ease: 'easeInOut'}} // 부드러운 애니메이션
+          initial={{x: '100%'}} 
+          animate={{x: 0}} 
+          exit={{x: '100%'}} 
+          transition={{duration: 0.3, ease: 'easeInOut'}} 
           className="fixed top-0 right-0 w-[900px] h-full bg-white shadow-lg z-50 p-6 flex flex-col"
         >
           {/* 뒤로가기 버튼 */}

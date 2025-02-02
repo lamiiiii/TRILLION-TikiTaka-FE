@@ -8,8 +8,8 @@ interface CategoryCardProps {
   isRegistered: boolean;
   onEdit: (id: number) => void;
   onDelete: (id: number) => void;
-  onRegister: () => void; // ✅ 요청 양식 등록 핸들러
-  onViewDetail: () => void; // ✅ 요청 양식 상세 보기 핸들러
+  onRegister: () => void; // 요청 양식 등록 핸들러
+  onViewDetail: () => void; // 요청 양식 상세 보기 핸들러
 }
 
 export default function CategoryCard({
@@ -72,7 +72,7 @@ export default function CategoryCard({
           className={`w-[72px] px-2 py-1 rounded flex justify-center items-center leading-5 cursor-pointer ${
             isRegistered ? "border border-gray-8 text-gray-15 text-body-bold w-[60px]" : "bg-main text-white text-body-bold"
           }`}
-          onClick={isRegistered ? onViewDetail : onRegister} // ✅ "상세" 또는 "등록하기"
+          onClick={isRegistered ? onViewDetail : onRegister} // "상세" 또는 "등록하기"
         >
           {isRegistered ? "상세" : "등록하기"}
         </div>

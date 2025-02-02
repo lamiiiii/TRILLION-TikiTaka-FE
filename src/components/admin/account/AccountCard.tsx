@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import Dropdown from '../../common/Dropdown';
-import {DotIcon} from '../../common/Icon'; // ... 아이콘 추가
+import {DotIcon} from '../../common/Icon'; 
 
 interface AccountCardProps {
   id: string;
@@ -8,12 +8,12 @@ interface AccountCardProps {
   department: string;
   affiliation: string;
   role: string;
-  status: string; // ✅ 부모로부터 현재 승인 상태를 받음
+  status: string; 
   onDepartmentChange: (id: string, newDepartment: string) => void;
   onAffiliationChange: (id: string, newAffiliation: string) => void;
   onRoleChange: (id: string, newRole: string) => void;
   onStatusChange: (id: string, newStatus: string) => void;
-  onDelete: (id: string) => void; // ✅ 계정 삭제 핸들러 추가
+  onDelete: (id: string) => void;
 }
 
 export default function AccountCard({
@@ -36,7 +36,7 @@ export default function AccountCard({
       <div className="w-[10%]">{id}</div>
       <div className="w-[12%]">{name}</div>
 
-      {/* ✅ 부서 드롭다운 */}
+      {/* 부서 드롭다운 */}
       <div className="w-[22%]">
         {' '}
         <Dropdown
@@ -54,7 +54,7 @@ export default function AccountCard({
         <Dropdown label={role} options={['사용자', '담당자', '관리자']} onSelect={(value) => onRoleChange(id, value)} />
       </div>
 
-      {/* ✅ 승인/거절 상태 */}
+      {/* 승인/거절 상태 */}
       <div className="w-[24%] flex gap-2 relative">
         {status === '대기중' ? (
           <>
@@ -69,7 +69,7 @@ export default function AccountCard({
           <span className={`px-4 py-1 text-subtitle-regular rounded ${status === '승인됨' ? 'text-blue-600 ' : 'text-red-600'}`}>{status}</span>
         )}
 
-        {/* ✅ 승인된 경우 메뉴 버튼 (삭제 가능) */}
+        {/* 승인된 경우 메뉴 버튼 (삭제 가능) */}
         {status === '승인됨' && (
           <div className="ml-[120px] mt-1">
             <button onClick={() => setShowMenu(!showMenu)}>

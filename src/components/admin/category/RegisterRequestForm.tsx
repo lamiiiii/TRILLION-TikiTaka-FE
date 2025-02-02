@@ -3,27 +3,27 @@ import { useState } from "react";
 import { PlusCircle, RightArrowIcon } from "../../common/Icon";
 
 interface RegisterRequestFormProps {
-  onClose: () => void; // 뒤로가기 버튼 클릭 시 실행할 함수
+  onClose: () => void; // 뒤로가기 
 }
 
 export default function RegisterRequestForm({ onClose }: RegisterRequestFormProps) {
   const [isClosing, setIsClosing] = useState(false);
 
   const handleClose = () => {
-    setIsClosing(true); // ✅ 애니메이션 실행
+    setIsClosing(true); 
     setTimeout(() => {
-      onClose(); // ✅ 애니메이션이 끝난 후 상태 변경
-    }, 300); // ✅ framer-motion 애니메이션 시간과 맞추기 (0.3s)
+      onClose(); 
+    }, 300); 
   };
 
   return (
     <AnimatePresence>
-      {!isClosing && ( // ✅ 닫힘 상태가 아닐 때만 렌더링
+      {!isClosing && ( // 닫힘 상태가 아닐 때만 렌더링
         <motion.div
-          initial={{ x: "100%" }} // 시작 위치 (오른쪽 밖)
-          animate={{ x: 0 }} // 나타날 때
-          exit={{ x: "100%" }} // 사라질 때 (부드럽게)
-          transition={{ duration: 0.3, ease: "easeInOut" }} // 부드러운 애니메이션
+          initial={{ x: "100%" }} 
+          animate={{ x: 0 }} 
+          exit={{ x: "100%" }} 
+          transition={{ duration: 0.3, ease: "easeInOut" }} 
           className="fixed top-0 right-0 w-[900px] h-full bg-white shadow-lg z-50 p-6 flex flex-col"
         >
           {/* 뒤로가기 버튼 */}
@@ -54,7 +54,7 @@ export default function RegisterRequestForm({ onClose }: RegisterRequestFormProp
                 rows={5}
                 className="w-full h-[320px] px-3 py-2 border border-gray-300 rounded mt-1 text-body-regular"
                 placeholder="요청 내용을 입력해주세요"
-                style={{ resize: "none", outline: "none" }} // ✅ 검은색 선 제거
+                style={{ resize: "none", outline: "none" }}
               />
             </div>
 
