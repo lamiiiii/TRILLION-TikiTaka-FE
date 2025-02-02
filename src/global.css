@@ -124,7 +124,6 @@ textarea {
   .division {
     @apply w-full h-[1px] bg-border-1 shrink-0;
   }
-
   /* 남색 버튼 sm*/
   .main-btn {
     @apply bg-main hover:bg-gray-15 text-body-regular text-white py-1 px-3 rounded;

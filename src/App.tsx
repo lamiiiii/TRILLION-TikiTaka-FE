@@ -17,6 +17,8 @@ import ResetPwd from './pages/common/signin/ResetPwd';
 import ManagerTicketDetail from './pages/manager/ManagerTicketDetail';
 import ManagerHistories from './pages/manager/ManagerHistories';
 import ChangePwd from './pages/common/signin/ChangePwd';
+import UserInquiry from './pages/user/UserInquiry';
+import UserPwdChange from './pages/user/UserPwdChange';
 
 function Layout() {
   return (
@@ -40,7 +42,11 @@ function App() {
     {path: 'pwdChange', element: <ManagerPwdChange />}, //todo 명칭 변경하셔도 됩니다!
   ];
 
-  const userRoutes = [{path: '', element: <UserHome />}];
+  const userRoutes = [
+    {path: '', element: <UserHome />},
+    {path: 'inquiry', element: <UserInquiry />},
+    {path: 'pwdChange', element: <UserPwdChange />},
+  ];
 
   const adminRoutes = [{path: '', element: <AdminHome />}];
 
