@@ -14,6 +14,8 @@ import ManagerTicketDetail from './pages/manager/ManagerTicketDetail';
 import AdminAccounts from './pages/admin/AdminAccounts';
 import AdminCategory from './pages/admin/AdminCategory';
 import AdminInquiry from './pages/admin/AdminInquiry';
+import UserInquiry from './pages/user/UserInquiry';
+import UserPwdChange from './pages/user/UserPwdChange';
 
 function App() {
   const managerRoutes = [
@@ -25,7 +27,11 @@ function App() {
     {path: 'pwdChange', element: <ManagerPwdChange />}, //todo 명칭 변경하셔도 됩니다!
   ];
 
-  const userRoutes = [{path: '', element: <UserHome />}];
+  const userRoutes = [
+    {path: '', element: <UserHome />},
+    {path: 'inquiry', element: <UserInquiry />},
+    {path: 'pwdChange', element: <UserPwdChange />},
+  ];
 
   const adminRoutes = [{path: '', element: <AdminHome />},
     {path: 'accounts', element: <AdminAccounts />},

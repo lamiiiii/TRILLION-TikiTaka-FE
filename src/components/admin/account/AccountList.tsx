@@ -1,11 +1,15 @@
 import { useState } from "react";
-import { ACCOUNT_TUPLE, ROLE } from "../../../constants/admin";
+import { ACCOUNT_MENU} from "../../../constants/admin";
+import { ROLE } from "../../../constants/constants"
 import Dropdown from "../../common/Dropdown";
 import AccountCard from "./AccountCard";
-import { accountDummy } from "../../../data/admin"; // ✅ 더미 데이터 추가
+import { accountDummy } from "../../../data/admin";
+import Modal from "../../common/Modal";
 
 export default function AccountList() {
-  const [accounts, setAccounts] = useState(accountDummy); // ✅ 상태 관리
+  const [accounts, setAccounts] = useState(accountDummy);
+  const [filterStatus, setFilterStatus] = useState("전체");
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null); // ✅ 삭제할 계정 ID 저장
 
   // 부서 변경 핸들러
   const handleDepartmentChange = (id: string, newDepartment: string) => {
@@ -28,26 +32,42 @@ export default function AccountList() {
     );
   };
 
-  // 승인 핸들러
-  const handleApprove = (id: string) => {
-    console.log(`계정 ${id} 승인`);
+  // 승인/거절 상태 변경 핸들러
+  const handleStatusChange = (id: string, newStatus: string) => {
+    setAccounts((prev) =>
+      prev.map((acc) => (acc.id === id ? { ...acc, status: newStatus } : acc))
+    );
   };
 
-  // 거절 핸들러
-  const handleReject = (id: string) => {
-    console.log(`계정 ${id} 거절`);
+  
+
+   // ✅ 삭제 모달 열기
+   const openDeleteModal = (id: string) => {
+    setDeleteTarget(id);
   };
+
+  // ✅ 계정 삭제 핸들러
+  const handleDelete = () => {
+    if (deleteTarget) {
+      setAccounts(accounts.filter((acc) => acc.id !== deleteTarget));
+      setDeleteTarget(null); // ✅ 모달 닫기
+    }
+  };
+
+  // ✅ 선택된 승인 상태에 따른 필터링
+  const filteredAccounts =
+    filterStatus === "전체" ? accounts : accounts.filter((acc) => acc.status === filterStatus);
 
   return (
-    <div className="w-full mt-[20px]  relative mb-[100px]">
+    <div className="w-full mt-[20px] relative mb-[100px]">
       <div className="bg-gray-18 h-full shadow-[0px_1px_3px_1px_rgba(0,0,0,0.15)] flex flex-col justify-start p-4">
         {/* ✅ 필터 및 사용자 정보 */}
         <div className="flex items-center justify-between px-2">
           {/* 승인 상태 드롭다운 */}
           <Dropdown
             label="승인 상태"
-            options={["전체", "승인", "거절", "대기중"]}
-            onSelect={(value) => console.log(`승인 상태: ${value}`)}
+            options={["전체", "승인됨", "거절됨", "대기중"]}
+            onSelect={setFilterStatus}
             paddingX="px-3"
           />
 
@@ -67,33 +87,40 @@ export default function AccountList() {
 
         {/* 테이블 헤더 */}
         <div className="flex gap-4 py-2 text-gray-700 text-title-regular mt-5 mb-5 px-4">
-          <div className="w-[10%]">{ACCOUNT_TUPLE[0]}</div>
-          <div className="w-[12%]">{ACCOUNT_TUPLE[1]}</div>
-          <div className="w-[22%]">{ACCOUNT_TUPLE[2]}</div>
-          <div className="w-[22%]">{ACCOUNT_TUPLE[3]}</div>
-          <div className="w-[12%]">{ACCOUNT_TUPLE[4]}</div>
-          <div className="w-[24%]">{ACCOUNT_TUPLE[5]}</div>
+          <div className="w-[10%]">{ACCOUNT_MENU[0]}</div>
+          <div className="w-[12%]">{ACCOUNT_MENU[1]}</div>
+          <div className="w-[22%]">{ACCOUNT_MENU[2]}</div>
+          <div className="w-[22%]">{ACCOUNT_MENU[3]}</div>
+          <div className="w-[12%]">{ACCOUNT_MENU[4]}</div>
+          <div className="w-[24%]">{ACCOUNT_MENU[5]}</div>
         </div>
 
         {/* 계정 리스트 */}
         <div className="flex flex-col gap-4">
-          {accounts.map((account) => (
+          {filteredAccounts.map((account) => (
             <AccountCard
               key={account.id}
-              id={account.id}
-              name={account.name}
-              department={account.department}
-              affiliation={account.affiliation}
-              role={account.role}
+              {...account}
               onDepartmentChange={handleDepartmentChange}
               onAffiliationChange={handleAffiliationChange}
               onRoleChange={handleRoleChange}
-              onApprove={handleApprove}
-              onReject={handleReject}
+              onStatusChange={handleStatusChange} // ✅ 승인/거절 상태 변경
+              onDelete={openDeleteModal}
             />
           ))}
         </div>
       </div>
+      {/* ✅ 계정 삭제 모달 */}
+      {deleteTarget && (
+        <Modal
+          title="해당 사용자의 계정을 삭제하시겠습니까?"
+          content={`"${deleteTarget}"님의 계정이 삭제됩니다.\n해당 계정은 복구가 불가능합니다.`}
+          backBtn="취소"
+          onBackBtnClick={() => setDeleteTarget(null)} // ✅ 모달 닫기
+          checkBtn="삭제"
+          onBtnClick={handleDelete} // ✅ 계정 삭제 실행
+        />
+      )}
     </div>
   );
 }

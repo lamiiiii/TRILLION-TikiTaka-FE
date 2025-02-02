@@ -1,5 +1,6 @@
-import { useState } from "react";
-import Dropdown from "../../common/Dropdown"; // 공용 드롭다운 사용
+import {useState} from 'react';
+import Dropdown from '../../common/Dropdown';
+import {DotIcon} from '../../common/Icon'; // ... 아이콘 추가
 
 interface AccountCardProps {
   id: string;
@@ -7,11 +8,12 @@ interface AccountCardProps {
   department: string;
   affiliation: string;
   role: string;
+  status: string; // ✅ 부모로부터 현재 승인 상태를 받음
   onDepartmentChange: (id: string, newDepartment: string) => void;
   onAffiliationChange: (id: string, newAffiliation: string) => void;
   onRoleChange: (id: string, newRole: string) => void;
-  onApprove: (id: string) => void;
-  onReject: (id: string) => void;
+  onStatusChange: (id: string, newStatus: string) => void;
+  onDelete: (id: string) => void; // ✅ 계정 삭제 핸들러 추가
 }
 
 export default function AccountCard({
@@ -20,83 +22,68 @@ export default function AccountCard({
   department,
   affiliation,
   role,
+  status,
   onDepartmentChange,
   onAffiliationChange,
   onRoleChange,
-  onApprove,
-  onReject,
+  onStatusChange,
+  onDelete,
 }: AccountCardProps) {
-  const [selectedDepartment, setSelectedDepartment] = useState(department);
-  const [selectedAffiliation, setSelectedAffiliation] = useState(affiliation);
-  const [selectedRole, setSelectedRole] = useState(role);
-
-  const handleDepartmentSelect = (value: string) => {
-    setSelectedDepartment(value);
-    onDepartmentChange(id, value);
-  };
-
-  const handleAffiliationSelect = (value: string) => {
-    setSelectedAffiliation(value);
-    onAffiliationChange(id, value);
-  };
-
-  const handleRoleSelect = (value: string) => {
-    setSelectedRole(value);
-    onRoleChange(id, value);
-  };
+  const [showMenu, setShowMenu] = useState(false);
 
   return (
-    <div className="flex gap-4 py-3 px-4 border border-gray-2 bg-white items-center rounded hover:bg-gray-1 cursor-pointer">
-      {/* ID */}
-      <div className="w-[10%] text-body-regular text-gray-700">{id}</div>
+    <div className="flex gap-4 py-3 px-4 border border-gray-2 bg-white items-center rounded cursor-pointer">
+      <div className="w-[10%]">{id}</div>
+      <div className="w-[12%]">{name}</div>
 
-      {/* 이름 */}
-      <div className="w-[12%] text-body-regular text-gray-700">{name}</div>
-
-      {/* 부서 드롭다운 */}
+      {/* ✅ 부서 드롭다운 */}
       <div className="w-[22%]">
+        {' '}
         <Dropdown
-          label={selectedDepartment}
-          options={["인프라 엔지니어링", "소프트웨어 개발", "보안"]}
-          onSelect={handleDepartmentSelect}
-          paddingX="px-3"
+          label={department}
+          options={['인프라 엔지니어링', '소프트웨어 개발', '보안']}
+          onSelect={(value) => onDepartmentChange(id, value)}
         />
       </div>
-
-      {/* 소속 드롭다운 */}
       <div className="w-[22%]">
-        <Dropdown
-          label={selectedAffiliation}
-          options={["인프라 엔지니어링 1팀", "인프라 엔지니어링 2팀", "보안팀"]}
-          onSelect={handleAffiliationSelect}
-          paddingX="px-3"
-        />
+        {' '}
+        <Dropdown label={affiliation} options={['인프라 팀', '보안팀', '개발팀']} onSelect={(value) => onAffiliationChange(id, value)} />
       </div>
-
-      {/* 역할 드롭다운 */}
       <div className="w-[12%]">
-        <Dropdown
-          label={selectedRole}
-          options={["사용자", "담당자", "관리자"]}
-          onSelect={handleRoleSelect}
-          paddingX="px-3"
-        />
+        {' '}
+        <Dropdown label={role} options={['사용자', '담당자', '관리자']} onSelect={(value) => onRoleChange(id, value)} />
       </div>
 
-      {/* 승인 상태 버튼 */}
-      <div className="w-[24%] flex gap-2">
-        <button
-          className="px-5 py-1 text-subtitle-regular border border-gray-6 rounded-md hover:bg-gray-8 hover:text-white"
-          onClick={() => onApprove(id)}
-        >
-          승인
-        </button>
-        <button
-          className="px-5 py-1 text-subtitle-regular border border-gray-6 rounded-md hover:bg-red-5 hover:text-red"
-          onClick={() => onReject(id)}
-        >
-          거절
-        </button>
+      {/* ✅ 승인/거절 상태 */}
+      <div className="w-[24%] flex gap-2 relative">
+        {status === '대기중' ? (
+          <>
+            <button onClick={() => onStatusChange(id, '승인됨')} className="px-4 py-1 text-subtitle-regular border rounded hover:bg-gray-8 hover:text-white">
+              승인
+            </button>
+            <button onClick={() => onStatusChange(id, '거절됨')} className="px-4 py-1 text-subtitle-regular border rounded hover:bg-red/80 hover:text-white">
+              거절
+            </button>
+          </>
+        ) : (
+          <span className={`px-4 py-1 text-subtitle-regular rounded ${status === '승인됨' ? 'text-blue-600 ' : 'text-red-600'}`}>{status}</span>
+        )}
+
+        {/* ✅ 승인된 경우 메뉴 버튼 (삭제 가능) */}
+        {status === '승인됨' && (
+          <div className="ml-[120px] mt-1">
+            <button onClick={() => setShowMenu(!showMenu)}>
+              <DotIcon />
+            </button>
+            {showMenu && (
+              <div className="absolute right-0 mt-2 w-[100px] bg-white shadow-md rounded border text-center">
+                <button onClick={() => onDelete(id)} className="w-full rounded px-3 py-2 text-[12px] font-semibold hover:bg-gray-1">
+                  계정 삭제
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
