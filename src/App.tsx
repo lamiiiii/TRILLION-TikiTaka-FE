@@ -10,6 +10,9 @@ import ManagerStatistics from './pages/manager/ManagerStatistics';
 import NotFound from './pages/NotFound';
 import ManagerInquiry from './pages/manager/ManagerInquiry';
 import ManagerPwdChange from './pages/manager/ManagerPwdChange';
+import UserNewTicket from './pages/user/UserNewTicket';
+import UserInquiry from './pages/user/UserInquiry';
+import UserPwdChange from './pages/user/UserPwdChange';
 
 function App() {
   const managerRoutes = [
@@ -20,7 +23,12 @@ function App() {
     {path: 'pwdChange', element: <ManagerPwdChange />}, //todo 명칭?
   ];
 
-  const userRoutes = [{path: '', element: <UserHome />}];
+  const userRoutes = [
+    {path: '', element: <UserHome />},
+    {path: 'newTicket', element: <UserNewTicket />},
+    {path: 'inquiry', element: <UserInquiry />},
+    {path: 'pwdChange', element: <UserPwdChange />},
+  ];
 
   const adminRoutes = [{path: '', element: <AdminHome />}];
 

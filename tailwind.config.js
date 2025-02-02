@@ -3,6 +3,20 @@ module.exports = {
   content: ['./src/**/*.{html,css,js,jsx,ts,tsx}', './src/components/**/*.{js,ts,jsx,tsx,mdx}', './public/index.html'],
   theme: {
     extend: {
+      fontSize: {
+        title: ['16px', {lineHeight: '18px', fontWeight: '700'}],
+        'title-regular': ['16px', {lineHeight: '16px', fontWeight: '400'}],
+        subtitle: ['14px', {lineHeight: '16px', fontWeight: '700'}],
+        'subtitle-regular': ['14px', {lineHeight: '16px', fontWeight: '400'}],
+        'subtitle-medium': ['14px', {lineHeight: '16px', fontWeight: '500'}],
+        'title-bold': ['16px', {lineHeight: '18px', fontWeight: '700'}],
+        'body-bold': ['12px', {lineHeight: '20px', fontWeight: '700'}],
+        'body-regular': ['12px', {lineHeight: '20px', fontWeight: '400'}],
+        'caption-bold': ['10px', {lineHeight: '12px', fontWeight: '700'}],
+        'caption-regular': ['10px', {lineHeight: '16px', fontWeight: '400'}],
+        'caption3-bold': ['8px', {lineHeight: '16px', fontWeight: '700'}],
+        'caption3-regular': ['8px', {lineHeight: '16px', fontWeight: '400'}],
+      },
       colors: {
         // Theme 색상
         main: '#354052', // 네이비

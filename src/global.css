@@ -55,13 +55,13 @@ textarea {
   }
   /* max-width 1200px인 컨테이너 */
   .max-w-1200 {
-    @apply w-full max-w-[1200px] px-2;
+    @apply w-full max-w-[1200px] px-6;
   }
   /* max-width 1000px인 컨테이너 */
   .max-w-1000 {
     @apply w-full max-w-[1000px] px-12;
   }
-  
+
   /* 사이드바 메뉴 item*/
   .side-menu {
     @apply flex w-full h-12 items-center justify-between p-2 text-sm whitespace-nowrap;
@@ -69,7 +69,12 @@ textarea {
 
   /* hover */
   .gray-hover {
-    @apply hover:bg-gray-1 hover:border-gray-2 hover:shadow-sm
+    @apply hover:bg-gray-1 hover:border-gray-2 hover:shadow-sm;
+  }
+
+  /* 메인 버튼 */
+  .btn {
+    @apply items-center bg-main text-body-bold text-white rounded px-4 py-1 whitespace-nowrap;
   }
 
   /* 1px 가로줄 */
@@ -79,5 +84,25 @@ textarea {
   /* 팝업 시 오버레이 */
   .overlay {
     @apply fixed w-screen h-screen bg-black bg-opacity-40 left-0 top-0 z-50;
+  }
+
+  /* 티켓 미리보기 */
+  .preview {
+    @apply flex flex-col w-full p-5 gap-2 bg-white border border-gray-2 rounded-lg whitespace-nowrap;
+  }
+
+  /* 티켓 생성 선택지 */
+  .selection {
+    @apply flex items-center gap-9;
+  }
+
+  /* 티켓 생성 선택지 text */
+  .selection-text {
+    @apply text-body-regular text-gray-6;
+  }
+
+  /* 티켓 생성 선택지 드롭다운 버튼 */
+  .dropBtn {
+    @apply flex h-6 items-center justify-between border border-gray-6 rounded pl-4 pr-2 py-1;
   }
 }
