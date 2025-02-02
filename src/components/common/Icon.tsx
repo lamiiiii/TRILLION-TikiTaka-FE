@@ -273,7 +273,7 @@ export function LinkIcon() {
   );
 }
 
-export function AlertIcon({ className = "" }: { className?: string }) {
+export function AlertIcon({className = ''}: {className?: string}) {
   return (
     <svg
       className={`w-4 h-4 ${className}`} // ✅ className을 받아서 적용
@@ -305,6 +305,15 @@ export function XIcon() {
   return (
     <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M9 1L1 9M1 1L9 9" stroke="#1E1E1E" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+// 체크 박스 속 체크
+export function WhiteCheckIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M13.3337 4L6.00033 11.3333L2.66699 8" stroke="#F5F5F5" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

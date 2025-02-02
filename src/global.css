@@ -162,4 +162,11 @@ textarea {
   .dropBtn {
     @apply flex h-6 items-center justify-between border border-gray-6 rounded pl-4 pr-2 py-1;
   }
+
+  /* 내용 길면 ...  */
+  .truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
