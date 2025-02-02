@@ -1,19 +1,21 @@
 import {useState} from 'react';
 import InitialTopBar from './InitialTopBar';
-
-// Todo 비밀번호 재설정과 로그인후 최초 비밀번호 변경 로직 분리 필요
-// todo 연속 5회 설정한 비밀번호가 틀렸을 경우 30분간 잠금
-// todo 최초 비밀번호 재설정 title 조건 추가 및 경고 메세지
+import Modal from '../Modal';
 
 export default function ResetPwdContainer() {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
-  const [pwd, setPwd] = useState('');
-  const [pwdError, setPwdError] = useState('');
+  const [isAuthSent, setIsAuthSent] = useState(false);
+  const [authCode, setAuthCode] = useState('');
+  const [authCodeError, setAuthCodeError] = useState('');
+  const [isVerified, setIsVerified] = useState(false);
+
   const [newPwd, setNewPwd] = useState('');
   const [newPwdError, setNewPwdError] = useState('');
   const [newPwdCheck, setNewPwdCheck] = useState('');
   const [newPwdCheckError, setNewPwdCheckError] = useState('');
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // 이메일 유효성 검사 정규식
@@ -39,17 +41,8 @@ export default function ResetPwdContainer() {
     }
   };
 
-  const pwdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setPwd(value);
-
-    if (value === '') {
-      setPwdError('비밀번호를 입력해주세요.');
-    } else if (!validatePwd(value)) {
-      setPwdError('비밀번호는 영문, 숫자, 특수문자가 조합된 6~32자여야 합니다.');
-    } else {
-      setPwdError('');
-    }
+  const authCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAuthCode(e.target.value);
   };
 
   const newPwdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,7 +73,7 @@ export default function ResetPwdContainer() {
     }
   };
 
-  const onClickLogin = () => {
+  const sendAuthCode = () => {
     if (email === '') {
       setEmailError('이메일 주소를 입력해주세요.');
       return;
@@ -89,14 +82,27 @@ export default function ResetPwdContainer() {
       return;
     }
 
-    if (pwd === '') {
-      setPwdError('비밀번호를 입력해주세요.');
-      return;
-    } else if (!validatePwd(pwd)) {
-      setPwdError('비밀번호는 영문, 숫자, 특수문자가 조합된 6~32자여야 합니다.');
+    if (!validateEmail(email)) {
+      setEmailError('잘못된 이메일 주소입니다.');
       return;
     }
+    setIsAuthSent(true);
+    // 인증번호 전송 API
+    console.log('카카오워크로 인증번호 전송:', email);
+  };
 
+  const verifyAuthCode = () => {
+    // 인증번호 일치 확인 API
+    const responseCode = 200;
+    if (responseCode == 200) {
+      setIsVerified(true);
+      setAuthCodeError('');
+    } else {
+      setAuthCodeError('인증번호가 일치하지 않습니다.');
+    }
+  };
+
+  const onClickResetPwd = () => {
     if (newPwd === '') {
       setNewPwdError('새 비밀번호를 입력해주세요.');
       return;
@@ -112,18 +118,18 @@ export default function ResetPwdContainer() {
       setNewPwdCheckError('비밀번호가 일치하지 않습니다.');
       return;
     } else if (!validatePwd(newPwdCheck)) {
-      setPwdError('비밀번호는 영문, 숫자, 특수문자가 조합된 6~32자여야 합니다.');
+      setNewPwdCheckError('비밀번호는 영문, 숫자, 특수문자가 조합된 6~32자여야 합니다.');
       return;
     }
 
     const requestData = {
       email,
-      pwd,
-      newPwd
+      newPwd,
     };
 
-    // todo 로그인 모달 추가 및 페이지 이동
+    // todo 비밀번호 재설정 완료 모달 추가 및 페이지 이동
     console.log(requestData);
+    setIsModalOpen(true);
   };
 
   return (
@@ -131,92 +137,119 @@ export default function ResetPwdContainer() {
       <InitialTopBar />
       <div className="top-container items-center">
         <div className="flex flex-col items-center gap-10">
-          <div className="flex flex-col items-center gap-4">
-            <p className="text-black text-2xl font-bold">비밀번호 재설정</p>
-            <p className="text-error text-sm font-bold">임시 비밀번호 유출 방지를 위해 최초 로그인 시 반드시 비밀번호를 변경해 주세요.</p>
-          </div>
+          <p className="text-black text-2xl font-bold">비밀번호 재설정</p>
           <div className="flex w-[500px] flex-col gap-5 p-5">
             {/* 이메일 */}
-            <div className="email">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-bold">이메일</p>
-                <input
-                  id="email"
-                  autoComplete="email"
-                  type="email"
-                  value={email}
-                  onChange={emailChange}
-                  placeholder="이메일을 입력하세요"
-                  required
-                  className={`py-3 px-4 text-subtitle-regular w-[328px] border rounded-md focus:outline-none 
+            {!isVerified && (
+              <div className="email">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-bold">이메일</p>
+                  <input
+                    id="email"
+                    autoComplete="email"
+                    type="email"
+                    value={email}
+                    onChange={emailChange}
+                    placeholder="이메일을 입력하세요"
+                    required
+                    className={`py-3 px-4 text-subtitle-regular w-[328px] border rounded-md focus:outline-none 
                 ${emailError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
-                />
+                  />
+                </div>
+                <div className={`flex relative left-[132px] text-error text-xs mt-1 ${emailError ? '' : 'hidden'}`}>{emailError}</div>
               </div>
-              <div className={`flex relative left-[132px] text-error text-xs mt-1 ${emailError ? '' : 'hidden'}`}>{emailError}</div>
-            </div>
-            {/* 현재 비밀번호 */}
-            <div className="currentPwd">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-bold">현재 비밀번호</p>
-                <input
-                  id="currentPwd"
-                  autoComplete="currentPwd"
-                  type="password"
-                  value={pwd}
-                  onChange={pwdChange}
-                  placeholder="현재 비밀번호를 입력하세요"
-                  required
-                  className={`py-3 px-4 text-subtitle-regular w-[328px] border rounded-md focus:outline-none 
-                ${pwdError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
-                />
+            )}
+            {/* 인증번호 입력 (이메일 전송 후 표시) */}
+            {!isVerified && isAuthSent && (
+              <div className="authCode">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-bold">인증번호</p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={authCode}
+                      onChange={authCodeChange}
+                      placeholder="인증번호 입력"
+                      className={`py-3 px-4 text-subtitle-regular w-[328px] border rounded-md focus:outline-none ${
+                        authCodeError ? 'border-error' : 'border-gray-2 focus:border-main'
+                      }`}
+                    />
+                  </div>
+                  {authCodeError && <p className="text-error text-xs mt-1">{authCodeError}</p>}
+                </div>
               </div>
-              <div className={`flex relative left-[132px] text-error text-xs mt-1 ${pwdError ? '' : 'hidden'}`}>{pwdError}</div>
-            </div>
-            {/* 새 비밀번호 */}
-            <div className="newPwd">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-bold">새 비밀번호</p>
-                <input
-                  id="newPwd"
-                  autoComplete="newPwd"
-                  type="password"
-                  value={newPwd}
-                  onChange={newPwdChange}
-                  placeholder="새 비밀번호를 입력하세요"
-                  required
-                  className={`py-3 px-4 text-subtitle-regular w-[328px] border rounded-md focus:outline-none 
+            )}
+
+            {isVerified && (
+              <>
+                {/* 새 비밀번호 */}
+                <div className="newPwd">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-bold">새 비밀번호</p>
+                    <input
+                      id="newPwd"
+                      autoComplete="newPwd"
+                      type="password"
+                      value={newPwd}
+                      onChange={newPwdChange}
+                      placeholder="새 비밀번호를 입력하세요"
+                      required
+                      className={`py-3 px-4 text-subtitle-regular w-[328px] border rounded-md focus:outline-none 
                 ${newPwdError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
-                />
-              </div>
-              <div className={`flex relative left-[132px] text-error text-xs mt-1 ${newPwdError ? '' : 'hidden'}`}>{newPwdError}</div>
-            </div>
-            {/* 새 비밀번호 확인*/}
-            <div className="newPwdCheck">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-bold">새 비밀번호 확인</p>
-                <input
-                  id="newPwdCheck"
-                  autoComplete="newPwdCheck"
-                  type="password"
-                  value={newPwdCheck}
-                  onChange={newPwdCheckChange}
-                  placeholder="새 비밀번호를 다시 입력하세요"
-                  required
-                  className={`py-3 px-4 text-subtitle-regular w-[328px] border rounded-md focus:outline-none 
+                    />
+                  </div>
+                  <div className={`flex relative left-[132px] text-error text-xs mt-1 ${newPwdError ? '' : 'hidden'}`}>{newPwdError}</div>
+                </div>
+                {/* 새 비밀번호 확인*/}
+                <div className="newPwdCheck">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-bold">새 비밀번호 확인</p>
+                    <input
+                      id="newPwdCheck"
+                      autoComplete="newPwdCheck"
+                      type="password"
+                      value={newPwdCheck}
+                      onChange={newPwdCheckChange}
+                      placeholder="새 비밀번호를 다시 입력하세요"
+                      required
+                      className={`py-3 px-4 text-subtitle-regular w-[328px] border rounded-md focus:outline-none 
                 ${newPwdCheckError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
-                />
-              </div>
-              <div className={`flex relative left-[132px] text-error text-xs mt-1 ${newPwdCheckError ? '' : 'hidden'}`}>
-                {newPwdCheckError}
-              </div>
-            </div>
+                    />
+                  </div>
+                  <div className={`flex relative left-[132px] text-error text-xs mt-1 ${newPwdCheckError ? '' : 'hidden'}`}>
+                    {newPwdCheckError}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
           {/* 버튼 */}
-          <button onClick={onClickLogin} className="main-btn-lg w-20">
-            변경 완료
+          <button
+            onClick={!isVerified ? (isAuthSent ? verifyAuthCode : sendAuthCode) : onClickResetPwd}
+            disabled={
+              !isVerified
+                ? isAuthSent
+                  ? authCode.trim() === ''
+                  : email.trim() === '' || emailError !== ''
+                : newPwd.trim() === '' || newPwdCheck.trim() === '' || newPwdError !== '' || newPwdCheckError !== ''
+            }
+            className="main-btn-lg disabled:bg-gray-2 disabled:cursor-not-allowed w-32"
+          >
+            {!isVerified ? (isAuthSent ? '인증번호 확인' : '인증하기') : '재설정 완료'}
           </button>
         </div>
       </div>
+      {isModalOpen && (
+        <Modal
+          title="비밀번호 재설정 완료"
+          content="비밀번호가 성공적으로 변경되었습니다. 다시 로그인해주세요."
+          backBtn="로그인하러 가기"
+          onBackBtnClick={() => {
+            setIsModalOpen(false);
+            window.location.href = '/signin';
+          }}
+        />
+      )}
     </div>
   );
 }
