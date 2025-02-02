@@ -16,6 +16,7 @@ import SignUp from './pages/common/signin/SignUp';
 import ResetPwd from './pages/common/signin/ResetPwd';
 import ManagerTicketDetail from './pages/manager/ManagerTicketDetail';
 import ManagerHistories from './pages/manager/ManagerHistories';
+import ChangePwd from './pages/common/signin/ChangePwd';
 
 function Layout() {
   return (
@@ -33,7 +34,7 @@ function App() {
     {path: '', element: <ManagerHome />},
     {path: 'statistics', element: <ManagerStatistics />},
     {path: 'tickets', element: <ManagerTickets />},
-    {path: 'histories', element: <ManagerHistories/>},
+    {path: 'histories', element: <ManagerHistories />},
     {path: 'detail', element: <ManagerTicketDetail />},
     {path: 'inquiry', element: <ManagerInquiry />},
     {path: 'pwdChange', element: <ManagerPwdChange />}, //todo 명칭 변경하셔도 됩니다!
@@ -52,7 +53,8 @@ function App() {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/resetpwd" element={<ResetPwd />} />
-          
+          <Route path="/changepwd" element={<ChangePwd />} />
+
           <Route path="*" element={<NotFound />} />
 
           {/* 레이아웃 있음 */}

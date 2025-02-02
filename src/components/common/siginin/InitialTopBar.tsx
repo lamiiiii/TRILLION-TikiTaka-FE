@@ -16,18 +16,20 @@ export default function InitialTopBar() {
           <p className="text-white font-regular text-xs whitespace-nowrap">Ticket Management System</p>
         </Link>
         {/* 우측 메뉴 */}
-        <div className="flex items-center gap-3 text-white font-bold text-[13px]">
-          {['/signup', '/signin', '/resetpwd']
-            .filter((path) => path !== location.pathname) // 현재 경로 제외
-            .map((path, index, array) => (
-              <React.Fragment key={path}>
-                <Link to={path} className="hover:text-gray-2">
-                  {path === '/signup' ? '회원가입' : path === '/signin' ? '로그인' : '비밀번호 재설정'}
-                </Link>
-                {index < array.length - 1 && <div className="border-r border-gray-4 h-2.5" />}
-              </React.Fragment>
-            ))}
-        </div>
+        {location.pathname !== '/changepwd' && (
+          <div className="flex items-center gap-3 text-white font-bold text-[13px]">
+            {['/signup', '/signin', '/resetpwd']
+              .filter((path) => path !== location.pathname) // 현재 경로 제외
+              .map((path, index, array) => (
+                <React.Fragment key={path}>
+                  <Link to={path} className="hover:text-gray-2">
+                    {path === '/signup' ? '회원가입' : path === '/signin' ? '로그인' : '비밀번호 재설정'}
+                  </Link>
+                  {index < array.length - 1 && <div className="border-r border-gray-4 h-2.5" />}
+                </React.Fragment>
+              ))}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import {useNavigate} from 'react-router-dom';
 import {useUserStore} from '../../../store/store';
 
 // todo 연속 5회 설정한 비밀번호가 틀렸을 경우 30분간 잠금
-
+// 토큰값 있으면 리다이렉트
 export default function SignInContainer() {
   const navigate = useNavigate();
   const {role} = useUserStore();
@@ -80,8 +80,13 @@ export default function SignInContainer() {
     console.log(requestData);
 
     // 로그인 성공 여부 로직 -> setRole 후 페이지 이동
-    // 최초 로그인 여부에 따라 다른 페이지 이동
-    navigate(`/${role}`);
+    // 최초 로그인 여부에 따라 페이지 이동 -> 비밀번호 변경은 토큰 값 필요
+    const isFirstLogin = true;
+    if (isFirstLogin) {
+      navigate('/changepwd');
+    } else {
+      navigate(`/${role}`, {replace: true});
+    }
   };
 
   return (
