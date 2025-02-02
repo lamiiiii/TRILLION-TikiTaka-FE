@@ -65,3 +65,17 @@ export const accountDummy = [
     status: "대기중",
   },
 ];
+
+export const categoryDummy = [
+  { id: 1, primary: "Beyond Compute Service", secondary: "Virtual Machine", isRegistered: false },
+  { id: 2, primary: "Beyond Compute Service", secondary: "Bare Metal Server", isRegistered: false },
+  { id: 3, primary: "Beyond Compute Service", secondary: "GPU", isRegistered: true },
+  { id: 4, primary: "Beyond Networking Service", secondary: "VPC", isRegistered: false },
+  { id: 5, primary: "Beyond Networking Service", secondary: "Load Balancing", isRegistered: false },
+  { id: 6, primary: "Beyond Networking Service", secondary: "CDN", isRegistered: false },
+  { id: 7, primary: "Beyond Networking Service", secondary: "DNS", isRegistered: true },
+  { id: 8, primary: "Beyond Networking Service", secondary: "Transit Gateway", isRegistered: false },
+  { id: 9, primary: "Container Pack", secondary: "Kubernetes Engine", isRegistered: false },
+  { id: 10, primary: "Container Pack", secondary: "Container Registry", isRegistered: true },
+];
+
