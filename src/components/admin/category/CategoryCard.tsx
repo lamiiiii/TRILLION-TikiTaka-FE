@@ -37,7 +37,7 @@ export default function CategoryCard({
           <VerticalDotIcon />
         </button>
         {activeMenuId === id && (
-          <div className="absolute left-0 top-full mt-2 w-[100px] bg-white shadow-md border rounded text-center z-10">
+          <div className="absolute left-[200px] top-full mt-2 w-[100px] bg-white shadow-md border rounded text-center z-10">
             <button onClick={() => onEdit(id)} className="w-full px-3 py-2 hover:bg-gray-1">
               수정
             </button>
@@ -55,7 +55,7 @@ export default function CategoryCard({
           <VerticalDotIcon />
         </button>
         {activeMenuId === id + 1000 && (
-          <div className="absolute left-0 top-full mt-2 w-[100px] bg-white shadow-md border rounded text-center z-10">
+          <div className="absolute left-[150px] top-full mt-2 w-[100px] bg-white shadow-md border rounded text-center z-10">
             <button onClick={() => onEdit(id)} className="w-full px-3 py-2 hover:bg-gray-1">
               수정
             </button>
