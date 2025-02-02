@@ -357,3 +357,38 @@ export function VerticalDotIcon() {
     </svg>
   );
 }
+
+export function RightArrowIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <path
+        d="M10.8333 14.1673L15 10.0007L10.8333 5.83398M5 14.1673L9.16667 10.0007L5 5.83398"
+        stroke="#43454F"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function PlusCircle() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <g clip-path="url(#clip0_238_4096)">
+        <path
+          d="M10.0001 6.66602V13.3327M6.66675 9.99935H13.3334M18.3334 9.99935C18.3334 14.6017 14.6025 18.3327 10.0001 18.3327C5.39771 18.3327 1.66675 14.6017 1.66675 9.99935C1.66675 5.39698 5.39771 1.66602 10.0001 1.66602C14.6025 1.66602 18.3334 5.39698 18.3334 9.99935Z"
+          stroke="#1E1E1E"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_238_4096">
+          <rect width="20" height="20" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+}

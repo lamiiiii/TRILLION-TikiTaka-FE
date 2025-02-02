@@ -1,17 +1,26 @@
-import { useState } from "react";
-import { categoryDummy } from "../../../data/admin";
-import CategoryCard from "./CategoryCard";
-import Modal from "../../common/Modal";
-import { CATEGORY_MENU } from "../../../constants/admin";
+import {useState} from 'react';
+import {categoryDummy} from '../../../data/admin';
+import CategoryCard from './CategoryCard';
+import Modal from '../../common/Modal';
+import {CATEGORY_MENU} from '../../../constants/admin';
+import RegisterRequestForm from './RegisterRequestForm';
+import RequestFormDetail from './RequestFormDetail';
 
 export default function CategoryList() {
   const [categories, setCategories] = useState(categoryDummy);
   const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
+  const [showRequestForm, setShowRequestForm] = useState(false); // ✅ 패널 상태 추가
+  const [selectedRequestForm, setSelectedRequestForm] = useState<{
+    title: string;
+    requiredFields: string;
+    description: string;
+  } | null>(null);
+   // ✅ 요청 양식 상세 보기 상태
 
   // ✅ 카테고리 추가 모달 상태
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [newPrimary, setNewPrimary] = useState("");
-  const [newSecondary, setNewSecondary] = useState("");
+  const [newPrimary, setNewPrimary] = useState('');
+  const [newSecondary, setNewSecondary] = useState('');
 
   // ✅ 카테고리 삭제 핸들러
   const handleDelete = () => {
@@ -29,15 +38,28 @@ export default function CategoryList() {
         primary: newPrimary,
         secondary: newSecondary,
         isRegistered: false, // 기본값은 '등록하기' 상태
+        requestForm: null,
       };
 
       setCategories([...categories, newCategory]);
 
       // 모달 닫기 및 입력 필드 초기화
       setIsAddModalOpen(false);
-      setNewPrimary("");
-      setNewSecondary("");
+      setNewPrimary('');
+      setNewSecondary('');
     }
+  };
+
+  // ✅ 요청 양식 상세 보기 열기
+  const handleViewDetail = (requestForm: { title: string; requiredFields: string; description: string } | null) => {
+    if (requestForm) {
+      setSelectedRequestForm(requestForm);
+    }
+  };
+
+  // ✅ 요청 양식 상세 보기 닫기
+  const handleCloseDetail = () => {
+    setSelectedRequestForm(null);
   };
 
   return (
@@ -63,6 +85,8 @@ export default function CategoryList() {
               {...category}
               onEdit={(id) => console.log(`수정할 ID: ${id}`)}
               onDelete={(id) => setDeleteTarget(id)}
+              onRegister={() => setShowRequestForm(true)}
+              onViewDetail={() => handleViewDetail(category.requestForm)}
             />
           ))}
         </div>
@@ -80,7 +104,7 @@ export default function CategoryList() {
         >
           <div className="flex flex-col gap-4">
             <div>
-              <label className="text-sm text-gray-700 font-bold">1차 카테고리</label>
+              <label className="text-sm text-gray-700 font-bold">{CATEGORY_MENU[0]}</label>
               <input
                 type="text"
                 className="w-full px-3 py-2 border border-gray-300 rounded mt-1"
@@ -90,7 +114,7 @@ export default function CategoryList() {
               />
             </div>
             <div>
-              <label className="text-sm text-gray-700 font-bold">2차 카테고리</label>
+              <label className="text-sm text-gray-700 font-bold">{CATEGORY_MENU[1]}</label>
               <input
                 type="text"
                 className="w-full px-3 py-2 border border-gray-300 rounded mt-1"
@@ -112,6 +136,19 @@ export default function CategoryList() {
           onBackBtnClick={() => setDeleteTarget(null)}
           checkBtn="삭제"
           onBtnClick={handleDelete}
+        />
+      )}
+
+      {/* 요청 양식 등록 패널 */}
+      {showRequestForm && <RegisterRequestForm onClose={() => setShowRequestForm(false)} />}
+
+      {/* ✅ 요청 양식 상세 보기 패널 */}
+      {selectedRequestForm && (
+        <RequestFormDetail
+          title={selectedRequestForm.title}
+          requiredFields={selectedRequestForm.requiredFields}
+          description={selectedRequestForm.description}
+          onClose={handleCloseDetail}
         />
       )}
     </div>

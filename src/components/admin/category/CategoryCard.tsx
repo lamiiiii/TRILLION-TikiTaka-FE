@@ -8,9 +8,20 @@ interface CategoryCardProps {
   isRegistered: boolean;
   onEdit: (id: number) => void;
   onDelete: (id: number) => void;
+  onRegister: () => void; // ✅ 요청 양식 등록 핸들러
+  onViewDetail: () => void; // ✅ 요청 양식 상세 보기 핸들러
 }
 
-export default function CategoryCard({ id, primary, secondary, isRegistered, onEdit, onDelete }: CategoryCardProps) {
+export default function CategoryCard({
+  id,
+  primary,
+  secondary,
+  isRegistered,
+  onEdit,
+  onDelete,
+  onRegister,
+  onViewDetail,
+}: CategoryCardProps) {
   const [activeMenuId, setActiveMenuId] = useState<number | null>(null);
 
   const toggleMenu = (clickedId: number) => {
@@ -26,7 +37,7 @@ export default function CategoryCard({ id, primary, secondary, isRegistered, onE
           <VerticalDotIcon />
         </button>
         {activeMenuId === id && (
-          <div className="absolute left-[200px] top-full mt-2 w-[100px] bg-white shadow-md border rounded text-center z-10">
+          <div className="absolute left-0 top-full mt-2 w-[100px] bg-white shadow-md border rounded text-center z-10">
             <button onClick={() => onEdit(id)} className="w-full px-3 py-2 hover:bg-gray-1">
               수정
             </button>
@@ -44,7 +55,7 @@ export default function CategoryCard({ id, primary, secondary, isRegistered, onE
           <VerticalDotIcon />
         </button>
         {activeMenuId === id + 1000 && (
-          <div className="absolute left-[150px] top-full mt-2 w-[100px] bg-white shadow-md border rounded text-center z-10">
+          <div className="absolute left-0 top-full mt-2 w-[100px] bg-white shadow-md border rounded text-center z-10">
             <button onClick={() => onEdit(id)} className="w-full px-3 py-2 hover:bg-gray-1">
               수정
             </button>
@@ -55,12 +66,13 @@ export default function CategoryCard({ id, primary, secondary, isRegistered, onE
         )}
       </div>
 
-      {/* 요청양식 버튼 */}
+      {/* 요청 양식 버튼 */}
       <div className="w-[18%]">
         <div
           className={`w-[72px] px-2 py-1 rounded flex justify-center items-center leading-5 cursor-pointer ${
             isRegistered ? "border border-gray-8 text-gray-15 text-body-bold w-[60px]" : "bg-main text-white text-body-bold"
           }`}
+          onClick={isRegistered ? onViewDetail : onRegister} // ✅ "상세" 또는 "등록하기"
         >
           {isRegistered ? "상세" : "등록하기"}
         </div>
