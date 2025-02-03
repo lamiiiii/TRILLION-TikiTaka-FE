@@ -9,6 +9,7 @@ export interface TopMenuProps {
   onBtnClick?: () => void;
   rightText?: string;
   linkTo?: string;
+  onClick?: () => void;
 }
 
 export default function TopMenu({
@@ -20,22 +21,23 @@ export default function TopMenu({
   onBtnClick,
   rightText,
   linkTo,
+  onClick,
 }: TopMenuProps) {
   return (
     <div className="flex flex-col w-full gap-3 mt-6 whitespace-nowrap">
-      <div className="flex justify-between w-full h-8 px-4 py-1 text-base">
+      <div className="flex justify-between w-full h-8 px-4 items-center ">
         {/* 메뉴 좌측 요소 */}
-        <div className="flex gap-4 text-gray-12">
+        <div className="flex gap-4 text-title-bold text-gray-12 items-center">
           {/* 볼드 폰트 요소 */}
-          <p className="text-black font-bold">{boldBlackText}</p>
-          <p className="font-bold">{boldGrayText}</p>
-          <p className="font-bold">{boldSmText}</p>
+          {boldBlackText && <p className="text-black">{boldBlackText}</p>}
+          {boldGrayText && <p>{boldGrayText}</p>}
+          {boldSmText && <p>{boldSmText}</p>}
 
           {/* 레귤러 폰트 요소 */}
-          <p className="subtitle-regular">{regularText}</p>
+          {regularText && <p className="text-subtitle-regular">{regularText}</p>}
           {/* 버튼 */}
           {btnText && onBtnClick && (
-            <button onClick={onBtnClick} className="h-full items-center px-4 bg-main font-regular text-white text-xs rounded">
+            <button onClick={onBtnClick} className="h-full btn">
               {btnText}
             </button>
           )}
@@ -43,10 +45,16 @@ export default function TopMenu({
 
         {/* 메뉴 우측 요소 */}
         {linkTo && rightText && (
-          <Link to={linkTo} className="flex items-center gap-2 font-bold text-gray-12">
+          <Link to={linkTo} className="flex items-center gap-2 text-title-bold text-gray-12">
             {rightText}
             <LinkIcon />
           </Link>
+        )}
+        {onClick && rightText && (
+          <div className="flex items-center gap-2 text-title-bold text-gray-12 cursor-pointer" onClick={onClick}>
+            {rightText}
+            <LinkIcon />
+          </div>
         )}
       </div>
       {/* 구분선 */}
