@@ -56,11 +56,20 @@ export function SmProfileIcon() {
   );
 }
 
-// 아래 토글 아이콘 (상단바)
+// 아래 토글 아이콘 - white (상단바)
 export function DownIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+// 아래 토글 아이콘 - gray
+export function SmDownIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 6L8 10L12 6" stroke="#727586" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -360,6 +369,20 @@ export function DotIcon() {
   );
 }
 
+// 템플릿 닫기 아이콘
+export function CloseIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M10.8333 14.1663L15 9.99967L10.8333 5.83301M5 14.1663L9.16667 9.99967L5 5.83301"
+        stroke="#43454F"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 //세로 점 3개 아이콘
 export function VerticalDotIcon() {
   return (
@@ -384,11 +407,11 @@ export function VerticalDotIcon() {
         stroke-width="1.6"
         stroke-linecap="round"
         stroke-linejoin="round"
-        />
-        </svg>
-      );
-    }
-    
+      />
+    </svg>
+  );
+}
+
 // 닫기 아이콘
 export function EditIcon() {
   return (
@@ -413,11 +436,11 @@ export function RightArrowIcon() {
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"
-        />
-        </svg>
-        );
-      }
-      
+      />
+    </svg>
+  );
+}
+
 // 캘린더 아이콘
 export function CalendarIcon() {
   return (
@@ -426,6 +449,36 @@ export function CalendarIcon() {
         d="M10.1667 1.33301V3.99967M4.83333 1.33301V3.99967M1.5 6.66634H13.5M2.83333 2.66634H12.1667C12.903 2.66634 13.5 3.26329 13.5 3.99967V13.333C13.5 14.0694 12.903 14.6663 12.1667 14.6663H2.83333C2.09695 14.6663 1.5 14.0694 1.5 13.333V3.99967C1.5 3.26329 2.09695 2.66634 2.83333 2.66634Z"
         stroke="#D0D4E7"
         strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+// 추가 아이콘
+export function PlusIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M9.99984 4.16602V15.8327M4.1665 9.99935H15.8332"
+        stroke="#43454F"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+// 목록 아이콘
+export function ListIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M14.1667 8.33333H2.5M17.5 5H2.5M17.5 11.6667H2.5M14.1667 15H2.5"
+        stroke="#1E1E1E"
+        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -450,7 +503,7 @@ export function PlusCircle() {
           <rect width="20" height="20" fill="white" />
         </clipPath>
       </defs>
-      </svg>
+    </svg>
   );
 }
 
