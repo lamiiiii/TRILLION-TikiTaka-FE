@@ -43,7 +43,7 @@ export default function CategoryTicketStatus() {
     <div className="flex flex-col w-full h-[500px] bg-gray-18 p-5">
       <h1 className="text-title-bold">카테고리별 티켓 생성 현황</h1>
       <div className="flex flex-col bg-white rounded border border-gray-2 p-10 mt-4">
-        <div className="flex items-center gap-10 w-full bg-gray-18 p-5">
+        <div className="flex items-start gap-10 w-full bg-gray-18 p-5">
           <div className="flex flex-col gap-8">
             <div className="flex items-center justify-center text-subtitle bg-main text-white rounded-full px-3 py-2 w-fit">
               1차 카테고리
@@ -88,35 +88,40 @@ export default function CategoryTicketStatus() {
 
           {/* 2차 카테고리 파이 차트 */}
           {selectedCategory && (
-            <section className="ml-10 grid grid-cols-2 text-subtitle">
-              <div className="flex flex-col items-center gap-4">
-                <PieChart width={200} height={200}>
-                  <Pie
-                    data={secondaryData[selectedCategory as keyof typeof secondaryData]}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    innerRadius={30}
-                    dataKey="value"
-                  >
-                    {secondaryData[selectedCategory as keyof typeof secondaryData].map((_, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                </PieChart>
-                <div className="text-main2-3 text-center">{selectedCategory} 세부 분류</div>
+            <div className="flex flex-col gap-8">
+              <div className="flex items-center justify-center text-subtitle bg-main text-white rounded-full px-3 py-2 w-fit">
+                2차 카테고리
               </div>
+              <section className="ml-10 grid grid-cols-2 text-subtitle">
+                <div className="flex flex-col items-center gap-4">
+                  <PieChart width={200} height={200}>
+                    <Pie
+                      data={secondaryData[selectedCategory as keyof typeof secondaryData]}
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={80}
+                      innerRadius={30}
+                      dataKey="value"
+                    >
+                      {secondaryData[selectedCategory as keyof typeof secondaryData].map((_, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                  <div className="text-main2-3 text-center">{selectedCategory} 세부 분류</div>
+                </div>
 
-              <div className="flex flex-col justify-center gap-3 ml-10">
-                {secondaryData[selectedCategory as keyof typeof secondaryData].map((item, index) => (
-                  <div key={item.name} className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full" style={{backgroundColor: COLORS[index % COLORS.length]}} />
-                    <span>{item.name}</span>
-                    <span className="ml-auto">{item.value}%</span>
-                  </div>
-                ))}
-              </div>
-            </section>
+                <div className="flex flex-col justify-center gap-3 ml-10">
+                  {secondaryData[selectedCategory as keyof typeof secondaryData].map((item, index) => (
+                    <div key={item.name} className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full" style={{backgroundColor: COLORS[index % COLORS.length]}} />
+                      <span>{item.name}</span>
+                      <span className="ml-auto">{item.value}%</span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </div>
           )}
         </div>
       </div>
