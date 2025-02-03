@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { DotIcon } from "../../common/Icon";
-import RoleDropdown from "./RoleDropdown";
+import {useState} from 'react';
+import {DotIcon} from '../../common/Icon';
+import RoleDropdown from './RoleDropdown';
 
 interface AccountCardProps {
   id: string;
@@ -33,21 +33,21 @@ export default function AccountCard({
       <div className="w-[16%]">{name}</div>
       <div className="w-[44%]">{affiliation}</div>
       <div className="w-[16%]">
-        <RoleDropdown label={role} options={["사용자", "담당자", "관리자"]} onSelect={(value) => onRoleChange(id, value)} />
+        <RoleDropdown label={role} options={['사용자', '담당자', '관리자']} onSelect={(value) => onRoleChange(id, value)} />
       </div>
-      
+
       {/* 승인/거절 상태 */}
       <div className="w-[20%] flex gap-2 relative">
-        {status === "대기중" ? (
+        {status === '대기중' ? (
           <>
             {/* ✅ 승인 버튼 → 승인 대기 목록에서 계정 목록으로 이동 */}
             <button
-              onClick={() => onStatusChange(id, "승인")}
+              onClick={() => onStatusChange(id, '승인')}
               className="px-4 py-1 text-subtitle-regular border rounded hover:bg-gray-8 hover:text-white whitespace-nowrap"
             >
               승인
             </button>
-            
+
             {/* ✅ 거절 버튼 → 즉시 계정 삭제 */}
             <button
               onClick={() => onReject(id)} // ✅ onReject 실행
@@ -57,21 +57,19 @@ export default function AccountCard({
             </button>
           </>
         ) : (
-          <span className={`px-4 py-1 text-subtitle-regular rounded ${status === "승인" ? "text-blue-600 " : "text-red-600"}`}>
-            {status}
-          </span>
+          <div className={`px-4 py-1 text-subtitle-regular rounded whitespace-nowrap`}>{status}</div>
         )}
 
         {/* ✅ 승인된 경우 메뉴 버튼 (삭제 가능) */}
-        {status === "승인" && (
+        {status === '승인' && (
           <div className="ml-[120px] mt-1">
             <button onClick={() => setShowMenu(!showMenu)}>
               <DotIcon />
             </button>
             {showMenu && (
-              <div className="absolute right-0 mt-2 w-[100px] bg-white shadow-md rounded border text-center">
-                <button onClick={() => onDelete(id)} className="w-full rounded px-3 py-2 text-[12px] font-semibold hover:bg-gray-1">
-                  계정 삭제
+              <div className="absolute right-0 mt-1 w-[100px] bg-white shadow-md rounded border text-center">
+                <button onClick={() => onDelete(id)} className="w-full rounded py-2 text-[12px] font-semibold">
+                  <div className='hover:bg-gray-1  text-[12px] rounded-md mx-2 hover:border hover:border-gray-2 text-gray-15'>계정 삭제</div>
                 </button>
               </div>
             )}
