@@ -1,0 +1,59 @@
+import {useMemo} from 'react';
+import {Cell, Pie, PieChart, ResponsiveContainer, Tooltip} from 'recharts';
+
+// 임시 데이터 - 당일 완료 티켓 건수
+const data = [
+  {name: '인프라', ticket: 100},
+  {name: '시스템', ticket: 30},
+  {name: '네트워크', ticket: 80},
+  {name: '공통 플랫폼', ticket: 60},
+];
+
+const COLORS = ['#F6D47A', '#FFDF5F', '#F0C000', '#D2AB0F'];
+
+export default function UserCategoryAnalytics() {
+  const sortedData = useMemo(() => [...data].sort((b, a) => a.ticket - b.ticket), []);
+  return (
+    <div className="flex flex-col w-full bg-gray-18 p-5">
+      <h1 className="text-subtitle">주 요청 카테고리</h1>
+      <div className="flex items-center gap-6 ">
+        <section className="w-[200px] h-[200px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie data={data} cx="50%" cy="50%" labelLine={false} outerRadius={80} fill="#8884d8" dataKey="ticket">
+                {data.map((entry, index) => (
+                  <Cell key={`cell-${index}-${entry}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: '#fff',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '8px',
+                  padding: '12px',
+                }}
+                formatter={(value, name) => [`${value}건`, name]}
+              />
+            </PieChart>
+          </ResponsiveContainer>
+        </section>
+
+        <section className="grid grid-cols-2 gap-0 text-subtitle">
+          <div className="space-y-4">
+            {sortedData.map((item) => (
+              <div key={item.name} className="truncate whitespace-nowrap">
+                {item.name}
+              </div>
+            ))}
+          </div>
+
+          <div className="text-right text-main2-3 space-y-4">
+            {sortedData.map((item) => (
+              <div key={item.name}>{item.ticket}건</div>
+            ))}
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+}
