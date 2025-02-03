@@ -1,5 +1,27 @@
 import {useUserStore} from '../../store/store';
 
+// 로고 아이콘 (Landing)
+export function LogoIcon() {
+  return (
+    <svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="6.32451" cy="1.76926" rx="1.7249" ry="1.76926" fill="white" />
+      <path
+        d="M1.60571 11.6281C0.7189 10.8842 0.60327 9.56258 1.34744 8.67606L4.42691 5.00753C5.17108 4.12101 6.49325 4.00533 7.38006 4.74916V4.74916C8.26687 5.49299 8.3825 6.81465 7.63833 7.70117L4.55886 11.3697C3.81468 12.2562 2.49252 12.3719 1.60571 11.6281V11.6281Z"
+        fill="white"
+      />
+      <path
+        d="M4.6648 4.65932C5.55161 3.91549 6.87378 4.03117 7.61795 4.91769L10.6974 8.58622C11.4416 9.47274 11.326 10.7944 10.4392 11.5382V11.5382C9.55234 12.2821 8.23017 12.1664 7.486 11.2799L4.40653 7.61133C3.66236 6.72481 3.77799 5.40315 4.6648 4.65932V4.65932Z"
+        fill="#FFD942"
+      />
+      <ellipse cx="13.2239" cy="1.77708" rx="1.7249" ry="1.76926" fill="white" />
+      <path
+        d="M7.95922 11.7687C7.07242 11.0249 6.95679 9.70321 7.70096 8.81669L10.7804 5.14815C11.5246 4.26163 12.8468 4.14596 13.7336 4.88978V4.88978C14.6204 5.63361 14.736 6.95527 13.9918 7.84179L10.9124 11.5103C10.1682 12.3969 8.84603 12.5125 7.95922 11.7687V11.7687Z"
+        fill="white"
+      />
+    </svg>
+  );
+}
+
 // 알림 아이콘 (상단바)
 export function PushIcon() {
   return (
@@ -264,6 +286,15 @@ export function LinkIcon() {
   );
 }
 
+// 체크 박스 속 체크
+export function WhiteCheckIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M13.3337 4L6.00033 11.3333L2.66699 8" stroke="#F5F5F5" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export function AlertIcon({className = ''}: {className?: string}) {
   return (
     <svg
@@ -324,6 +355,54 @@ export function DotIcon() {
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"
+      />
+    </svg>
+  );
+}
+
+// 닫기 아이콘
+export function EditIcon() {
+  return (
+    <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M8 14.2707H14M11 3.27066C11.2652 3.00544 11.6249 2.85645 12 2.85645C12.1857 2.85645 12.3696 2.89303 12.5412 2.9641C12.7128 3.03517 12.8687 3.13934 13 3.27066C13.1313 3.40198 13.2355 3.55788 13.3066 3.72946C13.3776 3.90104 13.4142 4.08494 13.4142 4.27066C13.4142 4.45638 13.3776 4.64027 13.3066 4.81185C13.2355 4.98344 13.1313 5.13934 13 5.27066L4.66667 13.604L2 14.2707L2.66667 11.604L11 3.27066Z"
+        stroke="#727586"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+// 캘린더 아이콘
+export function CalendarIcon() {
+  return (
+    <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M10.1667 1.33301V3.99967M4.83333 1.33301V3.99967M1.5 6.66634H13.5M2.83333 2.66634H12.1667C12.903 2.66634 13.5 3.26329 13.5 3.99967V13.333C13.5 14.0694 12.903 14.6663 12.1667 14.6663H2.83333C2.09695 14.6663 1.5 14.0694 1.5 13.333V3.99967C1.5 3.26329 2.09695 2.66634 2.83333 2.66634Z"
+        stroke="#D0D4E7"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+// 중요도 (별표) 아이콘
+interface StarIconProps {
+  color?: string;
+}
+export function StarIcon({color = '#727586'}: StarIconProps) {
+  return (
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M7.49998 1.33301L9.55998 5.50634L14.1666 6.17967L10.8333 9.42634L11.62 14.013L7.49998 11.8463L3.37998 14.013L4.16665 9.42634L0.833313 6.17967L5.43998 5.50634L7.49998 1.33301Z"
+        stroke={color}
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

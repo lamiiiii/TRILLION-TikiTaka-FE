@@ -1,12 +1,13 @@
 import {useUserStore} from '../../store/store';
 import {AccountIcon, CategoryIcon, DbIcon, InquiryIcon, LgRightIcon, LogoutIcon, MyIcon, NewTicketIcon, StatIcon, TicketIcon} from './Icon';
-import {Link, useLocation} from 'react-router-dom';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
 import MenuItem from './MenuItem';
 import SubMenuItem from './SubMenuItem';
 
 export default function SideBar() {
   const location = useLocation();
   const role = useUserStore((state) => state.role);
+  const navigate = useNavigate();
 
   const getDashboardLink = () => {
     switch (role) {
@@ -19,6 +20,12 @@ export default function SideBar() {
       default:
         return '/';
     }
+  };
+
+  const onClickLogout = () => {
+    // 토큰 삭제
+    console.log('로그아웃');
+    navigate('/');
   };
 
   return (
@@ -44,7 +51,10 @@ export default function SideBar() {
         {role === 'manager' && (
           <>
             <MenuItem icon={StatIcon} text="통계 관리" to="/manager/statistics" />
-            <MenuItem icon={TicketIcon} text="티켓 관리" to="/manager/tickets" />
+            <MenuItem icon={TicketIcon} text="티켓 관리" to="/manager/tickets">
+              <SubMenuItem to="/manager/tickets" text="티켓 관리" />
+              <SubMenuItem to="/manager/histories" text="티켓 이력 관리" />
+            </MenuItem>
             <MenuItem icon={MyIcon} text="마이페이지" to="/manager/inquiry">
               <SubMenuItem to="/manager/inquiry" text="문의내역 확인" />
               <SubMenuItem to="/manager/pwdChange" text="비밀번호 변경" />
@@ -76,10 +86,7 @@ export default function SideBar() {
       {/* 하단 로그아웃 */}
       <div className="">
         <button
-          onClick={() => {
-            //todo 로그아웃 처리 로직 (store 상태 초기화, 로그아웃 API 호출 등)
-            console.log('로그아웃');
-          }}
+          onClick={onClickLogout}
           className="
           flex w-full h-12 items-center p-2 rounded-lg border border-bg-1 font-regular text-sm text-gray-8 gap-5
           gray-hover"
