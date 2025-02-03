@@ -331,12 +331,15 @@ export function CalendarIcon() {
 }
 
 // 중요도 (별표) 아이콘
-export function StarIcon() {
+interface StarIconProps {
+  color?: string;
+}
+export function StarIcon({color = '#727586'}: StarIconProps) {
   return (
     <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M7.49998 1.33301L9.55998 5.50634L14.1666 6.17967L10.8333 9.42634L11.62 14.013L7.49998 11.8463L3.37998 14.013L4.16665 9.42634L0.833313 6.17967L5.43998 5.50634L7.49998 1.33301Z"
-        stroke="#727586"
+        stroke={color}
         strokeWidth="1.6"
         strokeLinecap="round"
         strokeLinejoin="round"
