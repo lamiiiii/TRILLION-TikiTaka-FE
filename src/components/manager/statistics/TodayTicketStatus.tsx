@@ -7,6 +7,7 @@ const data = [
   {name: '완료', ticket: 30},
 ];
 
+// 임시 색상
 const COLORS = ['#F6D47A', '#FFDF5F', '#F0C000'];
 
 export default function TodayTicketStatus() {
@@ -15,7 +16,7 @@ export default function TodayTicketStatus() {
   const formattedDate = `${today.getMonth() + 1}월 ${today.getDate()}일`;
 
   return (
-    <div className="flex flex-col w-full h-full bg-gray-18 p-5">
+    <div className="flex flex-col w-full h-[500px] bg-gray-18 p-5">
       <h1 className="text-title-bold">금일 티켓 처리 현황</h1>
       <div className="flex flex-col bg-white rounded border border-gray-2 p-10 mt-4">
         <div className="flex items-center justify-center text-subtitle bg-main text-white rounded-full px-3 py-2 w-fit">
