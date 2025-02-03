@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import Dropdown from '../../common/Dropdown';
-import {DotIcon} from '../../common/Icon'; 
+import {DotIcon} from '../../common/Icon';
 
 interface AccountCardProps {
   id: string;
@@ -8,7 +8,7 @@ interface AccountCardProps {
   department: string;
   affiliation: string;
   role: string;
-  status: string; 
+  status: string;
   onDepartmentChange: (id: string, newDepartment: string) => void;
   onAffiliationChange: (id: string, newAffiliation: string) => void;
   onRoleChange: (id: string, newRole: string) => void;
@@ -38,7 +38,6 @@ export default function AccountCard({
 
       {/* 부서 드롭다운 */}
       <div className="w-[22%]">
-        {' '}
         <Dropdown
           label={department}
           options={['인프라 엔지니어링', '소프트웨어 개발', '보안']}
@@ -46,11 +45,9 @@ export default function AccountCard({
         />
       </div>
       <div className="w-[22%]">
-        {' '}
         <Dropdown label={affiliation} options={['인프라 팀', '보안팀', '개발팀']} onSelect={(value) => onAffiliationChange(id, value)} />
       </div>
       <div className="w-[12%]">
-        {' '}
         <Dropdown label={role} options={['사용자', '담당자', '관리자']} onSelect={(value) => onRoleChange(id, value)} />
       </div>
 
@@ -58,15 +55,23 @@ export default function AccountCard({
       <div className="w-[24%] flex gap-2 relative">
         {status === '대기중' ? (
           <>
-            <button onClick={() => onStatusChange(id, '승인됨')} className="px-4 py-1 text-subtitle-regular border rounded hover:bg-gray-8 hover:text-white">
+            <button
+              onClick={() => onStatusChange(id, '승인됨')}
+              className="px-4 py-1 text-subtitle-regular border rounded hover:bg-gray-8 hover:text-white"
+            >
               승인
             </button>
-            <button onClick={() => onStatusChange(id, '거절됨')} className="px-4 py-1 text-subtitle-regular border rounded hover:bg-red/80 hover:text-white">
+            <button
+              onClick={() => onStatusChange(id, '거절됨')}
+              className="px-4 py-1 text-subtitle-regular border rounded hover:bg-red/80 hover:text-white"
+            >
               거절
             </button>
           </>
         ) : (
-          <span className={`px-4 py-1 text-subtitle-regular rounded ${status === '승인됨' ? 'text-blue-600 ' : 'text-red-600'}`}>{status}</span>
+          <span className={`px-4 py-1 text-subtitle-regular rounded ${status === '승인됨' ? 'text-blue-600 ' : 'text-red-600'}`}>
+            {status}
+          </span>
         )}
 
         {/* 승인된 경우 메뉴 버튼 (삭제 가능) */}
