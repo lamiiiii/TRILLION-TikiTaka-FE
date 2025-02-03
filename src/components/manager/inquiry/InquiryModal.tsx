@@ -47,7 +47,7 @@ export default function InquiryModal({onClose}: InquiryModalProps) {
             </div>
 
             <div className="flex justify-center mt-3">
-              <button className="w-fit main-button">문의 등록</button>
+              <button className="w-fit main-btn">문의 등록</button>
             </div>
           </motion.div>
         </motion.div>
