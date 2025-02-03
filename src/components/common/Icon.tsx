@@ -331,6 +331,64 @@ export function XIcon() {
   );
 }
 
+//점 3개 메뉴 아이콘
+export function DotIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <path
+        d="M10.0007 10.8327C10.4609 10.8327 10.834 10.4596 10.834 9.99935C10.834 9.53911 10.4609 9.16602 10.0007 9.16602C9.54041 9.16602 9.16732 9.53911 9.16732 9.99935C9.16732 10.4596 9.54041 10.8327 10.0007 10.8327Z"
+        stroke="#354052"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M15.834 10.8327C16.2942 10.8327 16.6673 10.4596 16.6673 9.99935C16.6673 9.53911 16.2942 9.16602 15.834 9.16602C15.3737 9.16602 15.0007 9.53911 15.0007 9.99935C15.0007 10.4596 15.3737 10.8327 15.834 10.8327Z"
+        stroke="#354052"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M4.16732 10.8327C4.62756 10.8327 5.00065 10.4596 5.00065 9.99935C5.00065 9.53911 4.62756 9.16602 4.16732 9.16602C3.70708 9.16602 3.33398 9.53911 3.33398 9.99935C3.33398 10.4596 3.70708 10.8327 4.16732 10.8327Z"
+        stroke="#354052"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  );
+}
+
+//세로 점 3개 아이콘
+export function VerticalDotIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path
+        d="M7.99992 8.66602C8.36811 8.66602 8.66659 8.36754 8.66659 7.99935C8.66659 7.63116 8.36811 7.33268 7.99992 7.33268C7.63173 7.33268 7.33325 7.63116 7.33325 7.99935C7.33325 8.36754 7.63173 8.66602 7.99992 8.66602Z"
+        stroke="#1E1E1E"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M7.99992 3.99935C8.36811 3.99935 8.66659 3.70087 8.66659 3.33268C8.66659 2.96449 8.36811 2.66602 7.99992 2.66602C7.63173 2.66602 7.33325 2.96449 7.33325 3.33268C7.33325 3.70087 7.63173 3.99935 7.99992 3.99935Z"
+        stroke="#1E1E1E"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M7.99992 13.3327C8.36811 13.3327 8.66659 13.0342 8.66659 12.666C8.66659 12.2978 8.36811 11.9993 7.99992 11.9993C7.63173 11.9993 7.33325 12.2978 7.33325 12.666C7.33325 13.0342 7.63173 13.3327 7.99992 13.3327Z"
+        stroke="#1E1E1E"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        />
+        </svg>
+      );
+    }
+    
 // 닫기 아이콘
 export function EditIcon() {
   return (
@@ -346,6 +404,20 @@ export function EditIcon() {
   );
 }
 
+export function RightArrowIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <path
+        d="M10.8333 14.1673L15 10.0007L10.8333 5.83398M5 14.1673L9.16667 10.0007L5 5.83398"
+        stroke="#43454F"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        />
+        </svg>
+        );
+      }
+      
 // 캘린더 아이콘
 export function CalendarIcon() {
   return (
@@ -358,6 +430,27 @@ export function CalendarIcon() {
         strokeLinejoin="round"
       />
     </svg>
+  );
+}
+
+export function PlusCircle() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <g clip-path="url(#clip0_238_4096)">
+        <path
+          d="M10.0001 6.66602V13.3327M6.66675 9.99935H13.3334M18.3334 9.99935C18.3334 14.6017 14.6025 18.3327 10.0001 18.3327C5.39771 18.3327 1.66675 14.6017 1.66675 9.99935C1.66675 5.39698 5.39771 1.66602 10.0001 1.66602C14.6025 1.66602 18.3334 5.39698 18.3334 9.99935Z"
+          stroke="#1E1E1E"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_238_4096">
+          <rect width="20" height="20" fill="white" />
+        </clipPath>
+      </defs>
+      </svg>
   );
 }
 

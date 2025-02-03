@@ -32,3 +32,5 @@ export const INQUIRY_DATA = [
     },
   },
 ];
+
+export const ROLE = ['사용자', '담당자', '관리자'];

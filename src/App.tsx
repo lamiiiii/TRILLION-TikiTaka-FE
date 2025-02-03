@@ -15,6 +15,9 @@ import SignIn from './pages/common/signin/SignIn';
 import SignUp from './pages/common/signin/SignUp';
 import ResetPwd from './pages/common/signin/ResetPwd';
 import ManagerTicketDetail from './pages/manager/ManagerTicketDetail';
+import AdminAccounts from './pages/admin/AdminAccounts';
+import AdminCategory from './pages/admin/AdminCategory';
+import AdminInquiry from './pages/admin/AdminInquiry';
 import ManagerHistories from './pages/manager/ManagerHistories';
 import ChangePwd from './pages/common/signin/ChangePwd';
 import UserInquiry from './pages/user/UserInquiry';
@@ -48,7 +51,11 @@ function App() {
     {path: 'pwdChange', element: <UserPwdChange />},
   ];
 
-  const adminRoutes = [{path: '', element: <AdminHome />}];
+  const adminRoutes = [{path: '', element: <AdminHome />},
+    {path: 'accounts', element: <AdminAccounts />},
+    {path: 'categories', element: <AdminCategory />},
+    {path: 'inquiries', element: <AdminInquiry />},
+  ];
 
   return (
     <div className="App">
