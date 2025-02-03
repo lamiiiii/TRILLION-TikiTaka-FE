@@ -77,6 +77,9 @@ module.exports = {
           1: '#F7F7F9', // 사이드바, 내용 배경
         },
 
+        // overlay 색상
+        ol: '#D9D9D9',
+
         // System 색상
         red: '#D93438',
         orange: '#FFAE00',

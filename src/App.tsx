@@ -11,6 +11,8 @@ import NotFound from './pages/NotFound';
 import ManagerInquiry from './pages/manager/ManagerInquiry';
 import ManagerPwdChange from './pages/manager/ManagerPwdChange';
 import ManagerTicketDetail from './pages/manager/ManagerTicketDetail';
+import UserInquiry from './pages/user/UserInquiry';
+import UserPwdChange from './pages/user/UserPwdChange';
 
 function App() {
   const managerRoutes = [
@@ -19,10 +21,14 @@ function App() {
     {path: 'tickets', element: <ManagerTickets />},
     {path: 'detail', element: <ManagerTicketDetail />},
     {path: 'inquiry', element: <ManagerInquiry />},
-    {path: 'pwdChange', element: <ManagerPwdChange />}, //todo 명칭?
+    {path: 'pwdChange', element: <ManagerPwdChange />}, //todo 명칭 변경하셔도 됩니다!
   ];
 
-  const userRoutes = [{path: '', element: <UserHome />}];
+  const userRoutes = [
+    {path: '', element: <UserHome />},
+    {path: 'inquiry', element: <UserInquiry />},
+    {path: 'pwdChange', element: <UserPwdChange />},
+  ];
 
   const adminRoutes = [{path: '', element: <AdminHome />}];
 
