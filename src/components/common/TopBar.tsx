@@ -1,4 +1,4 @@
-import {Link} from 'react-router-dom';
+// import {Link} from 'react-router-dom';
 import {DownIcon, SmProfileIcon} from './Icon';
 
 export default function TopBar() {
@@ -7,11 +7,7 @@ export default function TopBar() {
       {/* 상단바 */}
       <div className="relative w-full h-14 shrink-0 flex justify-between pl-16 pr-24 py-4">
         {/* 좌측 로고 */}
-        <div className="flex items-center">
-          <Link to="/" className="text-white font-bold text-lg">
-            TIKITAKA
-          </Link>
-        </div>
+        <div className="flex items-center text-white font-bold text-lg ">TIKITAKA</div>
         {/* 우측 메뉴 */}
         <div className="flex items-center gap-4">
           {/* <PushIcon /> */}
