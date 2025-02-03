@@ -1,5 +1,5 @@
 import TopMenu from '../../common/TopMenu';
-import TicketStatusByManager from './TicketStatusByManager';
+import ManagerTicketStatus from './ManagerTicketStatus';
 import TodayTicketStatus from './TodayTicketStatus';
 
 export default function ManagerStatisticsContainer() {
@@ -9,7 +9,7 @@ export default function ManagerStatisticsContainer() {
       <section className="flex bg-gray-18 p-6 pb-[38px] mt-3 mb-[100px]">
         <div className="w-full grid grid-cols-2">
           <TodayTicketStatus />
-          <TicketStatusByManager />
+          <ManagerTicketStatus />
         </div>
       </section>
     </div>
