@@ -6,7 +6,7 @@ import {TicketStore, TokenStore, UserStore} from '../interfaces/interfaces';
 // 역할 임시 전달 - user, manager, admin (추후 로그인시 전달 받아와서 저장)
 // 시스템 사용자 정보 저장 전역변수
 export const useUserStore = create<UserStore>((set) => ({
-  role: 'admin',
+  role: 'manager',
   setRole: (role) => set({role}),
 }));
 

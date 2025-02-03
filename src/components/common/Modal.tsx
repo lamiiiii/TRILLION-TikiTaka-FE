@@ -32,11 +32,11 @@ export default function Modal({title, content, backBtn, onBackBtnClick, checkBtn
           </div>
           <div className="flex gap-4">
             <button onClick={onBackBtnClick} className="btn-back w-full">
-              {backBtn}
+              {backBtn || '취소'}
             </button>
             {checkBtn && (
               <button onClick={onBtnClick} className="btn-check w-full">
-                {checkBtn}
+                {checkBtn || '확인'}
               </button>
             )}
           </div>
