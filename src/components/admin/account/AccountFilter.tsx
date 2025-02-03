@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 
-// 필터 타입
 type AccountViewType = "승인 대기" | "계정 목록";
 
 // 필터 데이터
@@ -45,7 +44,7 @@ export default function AccountFilter({ onFilterChange }: { onFilterChange: (typ
           </div>
         ))}
       </div>
-
+      
       {/* 하단 이동 Bar */}
       <div
         className="absolute bottom-0 h-0.5 bg-gray-7 transition-all duration-300"
