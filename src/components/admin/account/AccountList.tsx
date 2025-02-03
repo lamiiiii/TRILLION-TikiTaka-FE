@@ -5,10 +5,13 @@ import AccountCard from './AccountCard';
 import {accountDummy} from '../../../data/admin';
 import Modal from '../../common/Modal';
 import Dropdown from '../../common/Dropdown';
+import PageNations from '../../manager/common/PageNations';
 
 export default function AccountList({selectedTab}: {selectedTab: '승인 대기' | '계정 목록'}) {
   const [accounts, setAccounts] = useState(accountDummy);
-  const [deleteTarget, setDeleteTarget] = useState<string | null>(null); // 삭제할 계정 ID 저장
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8; // 한 페이지당 5개 표시
 
   // 역할 변경
   const handleRoleChange = (id: string, newRole: string) => {
@@ -43,6 +46,17 @@ export default function AccountList({selectedTab}: {selectedTab: '승인 대기'
   // 현재 선택된 탭에 따라 계정 필터링
   const filteredAccounts =
     selectedTab === '승인 대기' ? accounts.filter((acc) => acc.status === '대기중') : accounts.filter((acc) => acc.status === '승인');
+
+  const totalPages = Math.ceil(filteredAccounts.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentAccounts = filteredAccounts.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
 
   return (
     <div className="w-full mt-[20px] relative mb-[100px]">
@@ -80,7 +94,7 @@ export default function AccountList({selectedTab}: {selectedTab: '승인 대기'
 
         {/* 계정 리스트 */}
         <div className="flex flex-col gap-4">
-          {filteredAccounts.map((account) => (
+          {currentAccounts.map((account) => (
             <AccountCard
               key={account.id}
               {...account}
@@ -91,6 +105,7 @@ export default function AccountList({selectedTab}: {selectedTab: '승인 대기'
             />
           ))}
         </div>
+        <PageNations currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
       </div>
 
       {/* 계정 삭제 모달 */}
