@@ -43,7 +43,7 @@ export default function CommentInput() {
             placeholder="댓글 추가"
           />
         </div>
-        <button className="absolute right-0 main-button">저장</button>
+        <button className="absolute right-0 main-btn">저장</button>
       </div>
     </div>
   );
