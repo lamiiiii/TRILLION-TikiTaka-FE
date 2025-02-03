@@ -78,6 +78,7 @@ export default function SideBar() {
           <>
             <MenuItem icon={AccountIcon} text="계정 관리" to="/admin/accounts" />
             <MenuItem icon={CategoryIcon} text="카테고리 관리" to="/admin/categories" />
+            <MenuItem icon={StatIcon} text="통계 관리" to="/admin/statistics" />
             <MenuItem icon={InquiryIcon} text="문의/요청 관리" to="/admin/inquiries" />
           </>
         )}

@@ -10,6 +10,7 @@ import ManagerStatistics from './pages/manager/ManagerStatistics';
 import NotFound from './pages/NotFound';
 import ManagerInquiry from './pages/manager/ManagerInquiry';
 import ManagerPwdChange from './pages/manager/ManagerPwdChange';
+import UserNewTicket from './pages/user/UserNewTicket';
 import Landing from './pages/common/signin/Landing';
 import SignIn from './pages/common/signin/SignIn';
 import SignUp from './pages/common/signin/SignUp';
@@ -22,6 +23,7 @@ import ManagerHistories from './pages/manager/ManagerHistories';
 import ChangePwd from './pages/common/signin/ChangePwd';
 import UserInquiry from './pages/user/UserInquiry';
 import UserPwdChange from './pages/user/UserPwdChange';
+import AdminStatistics from './pages/admin/AdminStatistics';
 
 function Layout() {
   return (
@@ -47,6 +49,7 @@ function App() {
 
   const userRoutes = [
     {path: '', element: <UserHome />},
+    {path: 'newTicket', element: <UserNewTicket />},
     {path: 'inquiry', element: <UserInquiry />},
     {path: 'pwdChange', element: <UserPwdChange />},
   ];
@@ -54,6 +57,7 @@ function App() {
   const adminRoutes = [{path: '', element: <AdminHome />},
     {path: 'accounts', element: <AdminAccounts />},
     {path: 'categories', element: <AdminCategory />},
+    {path: 'statistics', element: <AdminStatistics/>},
     {path: 'inquiries', element: <AdminInquiry />},
   ];
 
