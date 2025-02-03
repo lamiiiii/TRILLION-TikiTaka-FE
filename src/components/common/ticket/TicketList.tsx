@@ -1,9 +1,8 @@
 import {useEffect, useState} from 'react';
 import {ticketDummy} from '../../../data/ticketData';
-import Dropdown from '../../common/Dropdown';
-import Ticket from '../common/Ticket';
-import PageNations from '../common/PageNations';
-import {Link} from 'react-router-dom';
+import Dropdown from '../Dropdown';
+import Ticket from './Ticket';
+import PageNations from '../../manager/common/PageNations';
 
 const dropdownData: {label: string; options: string[]}[] = [
   {label: '담당자', options: ['곽서연', '김규리', '김낙도']},
@@ -12,7 +11,11 @@ const dropdownData: {label: string; options: string[]}[] = [
   {label: '요청', options: ['요청1', '요청2', '요청3', '요청4', '요청5', '요청6']},
 ];
 
-export default function TicketList() {
+interface TicketListProps {
+  role: 'manager' | 'user' | 'admin';
+}
+
+export default function TicketList({role}: TicketListProps) {
   const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
   const [filteredTickets, setFilteredTickets] = useState([...ticketDummy]); // ✅ useState로 filteredTickets 관리
 
@@ -89,25 +92,24 @@ export default function TicketList() {
         <div className="flex gap-4 py-2 text-gray-700 text-title-regular mt-5 mb-5 px-2">
           <div className="w-[6%]">티켓 ID</div>
           <div className="w-[12%]">카테고리</div>
-          <div className="w-[36%]">요청 내용</div>
+          <div className={role === 'user' ? 'w-[51%]' : 'w-[36%]'}>요청 내용</div>
           <div className="w-[12%]">기한</div>
           <div className="w-[10%]">담당자</div>
-          <div className="w-[15%]">승인 여부</div>
+          {role !== 'user' && <div className="w-[15%]">승인 여부</div>}
         </div>
 
         {/* ✅ 현재 페이지에 맞는 티켓만 표시 */}
         <div className="flex flex-col gap-4">
           {currentTickets.length > 0 ? (
             currentTickets.map((ticket) => (
-              <Link to="/manager/detail">
-                <Ticket
-                  key={ticket.id}
-                  {...ticket}
-                  onAssigneeChange={(newAssignee) => handleAssigneeChange(ticket.id, newAssignee)}
-                  onApprove={() => handleApprove(ticket.id)}
-                  onReject={() => handleReject(ticket.id)}
-                />
-              </Link>
+              <Ticket
+                role={role}
+                key={ticket.id}
+                {...ticket}
+                onAssigneeChange={(newAssignee) => handleAssigneeChange(ticket.id, newAssignee)}
+                onApprove={() => handleApprove(ticket.id)}
+                onReject={() => handleReject(ticket.id)}
+              />
             ))
           ) : (
             <div className="text-gray-500 text-center py-4">해당 상태의 티켓이 없습니다.</div>

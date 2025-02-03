@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {AlertIcon, DownIcon} from '../../common/Icon';
-import TicketList from '../home/TicketList';
+import TicketList from '../../common/ticket/TicketList';
 import TicketFilter from './TicketFilter';
 import {motion, AnimatePresence} from 'framer-motion';
 
@@ -35,7 +35,7 @@ export default function TicketAwaitingList() {
         {isListVisible && (
           <motion.div initial={{opacity: 0, height: 0, y: -20}} animate={{opacity: 1, height: 'auto', y: 0}} transition={{duration: 0.3}}>
             <TicketFilter />
-            <TicketList />
+            <TicketList role="manager" />
           </motion.div>
         )}
       </AnimatePresence>
