@@ -23,6 +23,7 @@ import ManagerHistories from './pages/manager/ManagerHistories';
 import ChangePwd from './pages/common/signin/ChangePwd';
 import UserInquiry from './pages/user/UserInquiry';
 import UserPwdChange from './pages/user/UserPwdChange';
+import AdminStatistics from './pages/admin/AdminStatistics';
 
 function Layout() {
   return (
@@ -56,6 +57,7 @@ function App() {
   const adminRoutes = [{path: '', element: <AdminHome />},
     {path: 'accounts', element: <AdminAccounts />},
     {path: 'categories', element: <AdminCategory />},
+    {path: 'statistics', element: <AdminStatistics/>},
     {path: 'inquiries', element: <AdminInquiry />},
   ];
 
