@@ -4,6 +4,7 @@ export type TicketStatusType = '대기' | '진행중' | '완료' | '반려';
 
 export interface TicketDataProps {
   id: string;
+  role?: 'manager' | 'user' | 'admin';
   category: string;
   subCategory: string;
   title: string;

@@ -23,7 +23,7 @@ export default function TicketReview() {
                   {reviewer.reviewed && <span className="text-caption-regular">{reviewer.reviewDate} 검토 완료</span>}
                 </div>
               </div>
-              {reviewer.reviewed ? <CheckIcon /> : <button className="main-button">검토</button>}
+              {reviewer.reviewed ? <CheckIcon /> : <button className="main-btn">검토</button>}
             </li>
           ))}
         </ul>

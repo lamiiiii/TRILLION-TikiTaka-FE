@@ -1,5 +1,9 @@
-import UserHomeContainer from '../../components/user/UserHomeContainer';
+import UserHomeContainer from '../../components/user/home/UserHomeContainer';
 
 export default function UserHome() {
-  return <UserHomeContainer />;
+  return (
+    <div className="top-container">
+      <UserHomeContainer />
+    </div>
+  );
 }

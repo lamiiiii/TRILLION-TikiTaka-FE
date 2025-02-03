@@ -66,3 +66,10 @@ export interface InquiryData {
     content: string;
   };
 }
+
+export interface UserInfo {
+  name: string;
+  email: string;
+  role: 'manager' | 'user' | 'admin';
+  website: string;
+}

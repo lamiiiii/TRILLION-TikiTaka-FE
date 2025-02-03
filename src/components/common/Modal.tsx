@@ -5,7 +5,7 @@ import {motion} from 'framer-motion';
 interface ModalProps {
   title?: string;
   content?: string;
-  backBtn: string;
+  backBtn?: string;
   onBackBtnClick: () => void;
   checkBtn?: string;
   onBtnClick?: () => void;
@@ -32,11 +32,11 @@ export default function Modal({title, content, backBtn, onBackBtnClick, checkBtn
           </div>
           <div className="flex gap-4">
             <button onClick={onBackBtnClick} className="btn-back w-full">
-              {backBtn}
+              {backBtn || '취소'}
             </button>
             {checkBtn && (
               <button onClick={onBtnClick} className="btn-check w-full">
-                {checkBtn}
+                {checkBtn || '확인'}
               </button>
             )}
           </div>
