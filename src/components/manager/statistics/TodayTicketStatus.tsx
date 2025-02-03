@@ -10,11 +10,17 @@ const data = [
 const COLORS = ['#F6D47A', '#FFDF5F', '#F0C000'];
 
 export default function TodayTicketStatus() {
+  // 오늘 날짜 가져오기
+  const today = new Date();
+  const formattedDate = `${today.getMonth() + 1}월 ${today.getDate()}일`;
+
   return (
     <div className="flex flex-col w-full h-full bg-gray-18 p-5">
       <h1 className="text-title-bold">금일 티켓 처리 현황</h1>
       <div className="flex flex-col bg-white rounded border border-gray-2 p-10 mt-4">
-        <div className="flex items-center justify-center text-subtitle bg-main text-white rounded-full px-3 py-2 w-fit">1월 30일</div>
+        <div className="flex items-center justify-center text-subtitle bg-main text-white rounded-full px-3 py-2 w-fit">
+          {formattedDate}
+        </div>
         <div className="flex items-center gap-8 mt-[20px]">
           <section className="w-[200px] h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
