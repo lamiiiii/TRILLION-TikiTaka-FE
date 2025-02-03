@@ -6,6 +6,7 @@ import StatisticsFilter from './StatisticsFilter';
 
 import TodayTicketStatus from './daily/TodayTicketStatus';
 import ManagerTicketPeriodStatus from './monthly/ManagerTicketPeriodStatus';
+import ManagerPeriod from './monthly/ManagerPeriod';
 
 export default function ManagerStatisticsContainer() {
   const [selectedFilter, setSelectedFilter] = useState('일별');
@@ -30,7 +31,7 @@ export default function ManagerStatisticsContainer() {
           <div className="flex flex-col">
             <div className="w-full grid grid-cols-2">
               <ManagerTicketPeriodStatus />
-              <TodayTicketStatus />
+              <ManagerPeriod />
             </div>
             <CategoryTicketStatus />
           </div>
