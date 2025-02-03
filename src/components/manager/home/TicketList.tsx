@@ -1,18 +1,19 @@
-import { useEffect, useState } from "react";
-import { ticketDummy } from "../../../data/ticketData";
-import Dropdown from "../../common/Dropdown";
-import Ticket from "../common/Ticket";
-import PageNations from "../common/PageNations";
+import {useEffect, useState} from 'react';
+import {ticketDummy} from '../../../data/ticketData';
+import Dropdown from '../../common/Dropdown';
+import Ticket from '../common/Ticket';
+import PageNations from '../common/PageNations';
+import {Link} from 'react-router-dom';
 
-const dropdownData: { label: string; options: string[] }[] = [
-  { label: "담당자", options: ["곽서연", "김규리", "김낙도"] },
-  { label: "1차 카테고리", options: ["카테고리1", "카테고리2", "카테고리3"] },
-  { label: "2차 카테고리", options: ["서브1", "서브2", "서브3"] },
-  { label: "요청", options: ["요청1", "요청2", "요청3", "요청4", "요청5", "요청6"] },
+const dropdownData: {label: string; options: string[]}[] = [
+  {label: '담당자', options: ['곽서연', '김규리', '김낙도']},
+  {label: '1차 카테고리', options: ['카테고리1', '카테고리2', '카테고리3']},
+  {label: '2차 카테고리', options: ['서브1', '서브2', '서브3']},
+  {label: '요청', options: ['요청1', '요청2', '요청3', '요청4', '요청5', '요청6']},
 ];
 
 export default function TicketList() {
-  const [selectedFilters, setSelectedFilters] = useState<{ [key: string]: string }>({});
+  const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
   const [filteredTickets, setFilteredTickets] = useState([...ticketDummy]); // ✅ useState로 filteredTickets 관리
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -49,7 +50,7 @@ export default function TicketList() {
   };
 
   const handleSelect = (label: string, value: string) => {
-    setSelectedFilters((prev) => ({ ...prev, [label]: value }));
+    setSelectedFilters((prev) => ({...prev, [label]: value}));
   };
 
   const handleAssigneeChange = (id: string, newAssignee: string) => {
@@ -98,13 +99,15 @@ export default function TicketList() {
         <div className="flex flex-col gap-4">
           {currentTickets.length > 0 ? (
             currentTickets.map((ticket) => (
-              <Ticket
-                key={ticket.id}
-                {...ticket}
-                onAssigneeChange={(newAssignee) => handleAssigneeChange(ticket.id, newAssignee)}
-                onApprove={() => handleApprove(ticket.id)}
-                onReject={() => handleReject(ticket.id)}
-              />
+              <Link to="/manager/detail">
+                <Ticket
+                  key={ticket.id}
+                  {...ticket}
+                  onAssigneeChange={(newAssignee) => handleAssigneeChange(ticket.id, newAssignee)}
+                  onApprove={() => handleApprove(ticket.id)}
+                  onReject={() => handleReject(ticket.id)}
+                />
+              </Link>
             ))
           ) : (
             <div className="text-gray-500 text-center py-4">해당 상태의 티켓이 없습니다.</div>
