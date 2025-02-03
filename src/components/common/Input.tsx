@@ -6,18 +6,24 @@ interface InputProps {
   placeholder?: string;
   required?: boolean;
   maxLength?: number;
+  name?: string;
+  value?: string;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }
 
-export default function Input({type, element, label, size, placeholder, required, maxLength}: InputProps) {
+export default function Input({type, element, label, size, name, value, placeholder, required, maxLength, onChange}: InputProps) {
   return (
     <div className={`flex ${element === 'input' ? ' items-center' : 'items-start '}`}>
-      <label className="text-subtitle mr-6 w-[120px]">{label}</label>
+      {label && <label className="text-subtitle mr-6 w-[120px]">{label}</label>}
       {element === 'input' ? (
         <input
           type={type}
+          name={name}
+          value={value}
           placeholder={placeholder}
           maxLength={maxLength}
           required={required}
+          onChange={onChange}
           className={` ${size === 'sm' ? 'py-2' : ' py-4'} px-4 text-subtitle-regular w-full  border border-gray-2 rounded-md focus:outline-none focus:border-main `}
         />
       ) : (

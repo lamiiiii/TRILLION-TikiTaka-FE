@@ -330,3 +330,48 @@ export function XIcon() {
     </svg>
   );
 }
+
+// 닫기 아이콘
+export function EditIcon() {
+  return (
+    <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M8 14.2707H14M11 3.27066C11.2652 3.00544 11.6249 2.85645 12 2.85645C12.1857 2.85645 12.3696 2.89303 12.5412 2.9641C12.7128 3.03517 12.8687 3.13934 13 3.27066C13.1313 3.40198 13.2355 3.55788 13.3066 3.72946C13.3776 3.90104 13.4142 4.08494 13.4142 4.27066C13.4142 4.45638 13.3776 4.64027 13.3066 4.81185C13.2355 4.98344 13.1313 5.13934 13 5.27066L4.66667 13.604L2 14.2707L2.66667 11.604L11 3.27066Z"
+        stroke="#727586"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+// 캘린더 아이콘
+export function CalendarIcon() {
+  return (
+    <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M10.1667 1.33301V3.99967M4.83333 1.33301V3.99967M1.5 6.66634H13.5M2.83333 2.66634H12.1667C12.903 2.66634 13.5 3.26329 13.5 3.99967V13.333C13.5 14.0694 12.903 14.6663 12.1667 14.6663H2.83333C2.09695 14.6663 1.5 14.0694 1.5 13.333V3.99967C1.5 3.26329 2.09695 2.66634 2.83333 2.66634Z"
+        stroke="#D0D4E7"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+// 중요도 (별표) 아이콘
+export function StarIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M7.49998 1.33301L9.55998 5.50634L14.1666 6.17967L10.8333 9.42634L11.62 14.013L7.49998 11.8463L3.37998 14.013L4.16665 9.42634L0.833313 6.17967L5.43998 5.50634L7.49998 1.33301Z"
+        stroke="#727586"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
