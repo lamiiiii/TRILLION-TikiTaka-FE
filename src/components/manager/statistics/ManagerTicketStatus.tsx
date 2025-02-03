@@ -57,9 +57,9 @@ export default function ManagerTicketStatus() {
   };
 
   return (
-    <div className="flex flex-col w-full h-[500px] bg-gray-18 p-5">
+    <div className="flex flex-col w-full h-[430px] bg-gray-18 p-5">
       <h1 className="text-title-bold">담당자별 티켓 처리 현황</h1>
-      <div className="relative flex flex-col items-center bg-white rounded border border-gray-2 p-10 mt-4 overflow-hidden">
+      <div className="h-full relative flex flex-col items-center bg-white rounded border border-gray-2 p-10 mt-4 overflow-hidden">
         <div className="w-full overflow-hidden">
           <div
             className="flex transition-transform duration-300 ease-in-out"
