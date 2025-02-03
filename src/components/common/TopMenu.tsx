@@ -9,6 +9,7 @@ export interface TopMenuProps {
   onBtnClick?: () => void;
   rightText?: string;
   linkTo?: string;
+  onClick?: () => void;
 }
 
 export default function TopMenu({
@@ -20,6 +21,7 @@ export default function TopMenu({
   onBtnClick,
   rightText,
   linkTo,
+  onClick,
 }: TopMenuProps) {
   return (
     <div className="flex flex-col w-full gap-3 mt-6 whitespace-nowrap">
@@ -47,6 +49,12 @@ export default function TopMenu({
             {rightText}
             <LinkIcon />
           </Link>
+        )}
+        {onClick && rightText && (
+          <div className="flex items-center gap-2 text-title-bold text-gray-12 cursor-pointer" onClick={onClick}>
+            {rightText}
+            <LinkIcon />
+          </div>
         )}
       </div>
       {/* 구분선 */}

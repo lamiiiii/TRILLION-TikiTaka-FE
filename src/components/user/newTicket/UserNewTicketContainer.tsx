@@ -4,22 +4,15 @@ import TicketOptions from '../../common/ticket/TicketOptions';
 import {useNewTicketStore} from '../../../store/store';
 import NewTicketContent from '../../common/ticket/NewTicketContent';
 import FileUpload from '../../common/ticket/FileUpload';
+import {useState} from 'react';
+import TemplateContainer from '../../common/template/TemplateContainer';
 
 export default function UserNewTicketContainer() {
-  const {
-    title,
-    content,
-    isUrgent,
-    firstCategory,
-    secondCategory,
-    manager,
-    ticketType,
-    template,
-    dueDate,
-    dueTime,
-    setDueDate,
-    setDueTime,
-  } = useNewTicketStore();
+  const {title, content, isUrgent, firstCategory, secondCategory, manager, ticketType, template, dueDate, dueTime, setDueDate, setDueTime} =
+    useNewTicketStore();
+
+  const [isTemplateOpen, setIsTemplateOpen] = useState(false);
+  // const [panelWidth, setPanelWidth] = useState(500);
 
   const onClickSubmit = () => {
     const requestData = {
@@ -40,8 +33,7 @@ export default function UserNewTicketContainer() {
   return (
     <div className="top-container">
       <div className="flex flex-col max-w-1200 gap-6">
-        <TopMenu boldGrayText="티켓 생성" rightText="템플릿 리스트 / 템플릿 생성" linkTo="/user/templates" />
-
+        <TopMenu boldGrayText="티켓 생성" rightText="템플릿 리스트 / 템플릿 생성" onClick={() => setIsTemplateOpen(!isTemplateOpen)} />
         <div className="flex flex-col bg-bg-1 p-6 gap-10 min-w-[600px]">
           <TicketPreview />
           <TicketOptions />
@@ -66,13 +58,14 @@ export default function UserNewTicketContainer() {
             <NewTicketContent />
           </div>
           <FileUpload />
-          <div className="flex w-full justify-center">
-            <button onClick={onClickSubmit} className="h-full btn">
-              티켓 생성
-            </button>
-          </div>
+        </div>
+        <div className="flex w-full justify-center">
+          <button onClick={onClickSubmit} className="btn mb-4">
+            티켓 생성
+          </button>
         </div>
       </div>
+      <TemplateContainer isOpen={isTemplateOpen} onClose={() => setIsTemplateOpen(false)} />
     </div>
   );
 }

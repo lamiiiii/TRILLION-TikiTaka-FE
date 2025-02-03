@@ -24,7 +24,7 @@ export default function TicketPreview() {
     const timeDiff = dueDateTime.getTime() - now.getTime(); // 밀리초 단위 차이
     const hoursLeft = Math.floor(timeDiff / (1000 * 3600)); // 남은 시간 계산
 
-    if (timeDiff <= 24 * 60 * 60 * 1000 && timeDiff > 0) {
+    if (timeDiff <= 24 * 60 * 60 * 1000 && timeDiff > 0)  {
       return `(${hoursLeft} h)`; // 24시간 이내라면 시간으로 표시
     }
 
@@ -43,7 +43,7 @@ export default function TicketPreview() {
       </div>
       {isOpen && (
         <motion.div
-          className={`w-full bg-gray-1 border rounded p-4 flex justify-between text-subtitle-regular ${isUrgent ? 'border-error' : 'border-gray-2'}`}
+          className={`w-full bg-gray-1 border rounded p-2 flex justify-between text-subtitle-regular ${isUrgent ? 'border-error' : 'border-gray-2'}`}
           initial={{opacity: 0}}
           animate={{opacity: isOpen ? 1 : 0}}
           transition={{duration: 0.2}}
@@ -61,9 +61,9 @@ export default function TicketPreview() {
               <div className="flex items-center gap-1">
                 <p>{isUrgent && <AlertIcon className="text-error w-4 h-4" />}</p>
                 <p className={`${ticketType ? '' : 'text-gray-4'}`}> [{ticketType || '유형'}]</p>
-                <p className={`${title ? '' : 'text-gray-4'} truncate`}>{title || '제목'}</p>
+                <p className={`${title ? '' : 'text-gray-4'} truncate`}>{title || '제목을 작성해주세요'}</p>
               </div>
-              <p className={`text-body-regular ${content ? 'text-gray-6' : 'text-gray-4'} truncate`}>{content || '내용'}</p>
+              <p className={`text-body-regular ${content ? 'text-gray-6' : 'text-gray-4'} truncate`}>{content || '내용을 작성해주세요'}</p>
             </div>
           </div>
           <div className="flex gap-8 items-center">

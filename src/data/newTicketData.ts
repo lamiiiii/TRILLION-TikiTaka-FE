@@ -1,4 +1,4 @@
-import {Category} from '../interfaces/newTicket';
+import {Category, Template} from '../interfaces/newTicket';
 
 export const categoriesDummy: Category[] = [
   {
@@ -55,3 +55,62 @@ export const categoriesDummy: Category[] = [
   },
 ];
 
+export const templatesDummy: Template[] = [
+  {
+    id: 1,
+    firstCategory: 'ContainerPack',
+    secondCategory: 'Kubernetes Engine',
+    name: '템플릿 A',
+    type: '생성',
+    title: '마이크로서비스 기반의 애플리케이션 컨테이너화',
+    createdAt: '2024-02-01',
+  },
+  {
+    id: 2,
+    firstCategory: 'ContainerPack',
+    secondCategory: 'Kubernetes Engine',
+    name: '템플릿 A',
+    type: '생성',
+    title: '마이크로서비스',
+    createdAt: '2024-02-01',
+  },
+  {
+    id: 3,
+    firstCategory: 'ContainerPack',
+    secondCategory: 'Kubernetes Engine',
+    name: '템플릿 A',
+    type: '생성',
+    title: '마이크로서비스 기반의 애플리케이션 컨테이너화',
+    createdAt: '2024-02-01',
+  },
+  {
+    id: 4,
+    firstCategory: 'ContainerPack',
+    secondCategory: 'Kubernetes Engine',
+    name: '템플릿 A',
+    type: '생성',
+    title: '마이크로서비스 기반의 애플리케이션 컨테이너화',
+    createdAt: '2024-02-01',
+  },
+  {
+    id: 5,
+    firstCategory: 'ContainerPack',
+    secondCategory: 'Kubernetes Engine',
+    name: '템플릿 A',
+    type: '생성',
+    title: '마이크로서비스 기반의 애플리케이션 컨테이너화',
+    createdAt: '2024-02-01',
+  },
+];
+
+export const templateDummy: Template = {
+  id: 1,
+  name: '템플릿 이름',
+  firstCategory: '카테고리 1',
+  secondCategory: '카테고리 2',
+  manager: '관리자 이름',
+  type: '타입 1',
+  title: '템플릿 제목',
+  content: '여기에 템플릿 내용이 들어갑니다.',
+  createdAt: '2025-02-03',
+};
