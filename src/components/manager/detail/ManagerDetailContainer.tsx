@@ -11,6 +11,7 @@ import TicketTask from './TicketTask';
 import {CONTAINERIZATION_REQUEST} from '../../../constants/constants';
 import TicketReview from './TicketReview';
 import {useTicketStore} from '../../../store/store';
+import TicketLog from './TicketLog';
 
 export default function ManagerDetailContainer() {
   const {isReviewNeeded} = useTicketStore();
@@ -44,6 +45,7 @@ export default function ManagerDetailContainer() {
           <TicketDetail />
           <TicketSetting />
           <TicketTask />
+          <TicketLog />
         </section>
       </section>
     </div>
