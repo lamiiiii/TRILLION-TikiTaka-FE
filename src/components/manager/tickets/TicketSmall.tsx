@@ -1,6 +1,6 @@
 import {forwardRef, useEffect, useRef, useState} from 'react';
 import DropDown from '../../common/Dropdown';
-import {CalendarIcon, StarIcon} from '../../common/Icon';
+import {StarIcon} from '../../common/Icon';
 import Profile from '../../common/Profile';
 import {Link} from 'react-router-dom';
 import {PRIORITY, PRIORITY_COLOR} from '../../../constants/constants';
@@ -19,7 +19,6 @@ const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(({id, title, de
   const [showPriority, setShowPriority] = useState(false);
   const [priority, setPriority] = useState('');
   const priorityRef = useRef<HTMLDivElement>(null);
-  const [showCalendar, setShowCalendar] = useState(false);
 
   const handleStatusChange = (selectedStatus: '대기 중' | '진행 중' | '진행 완료') => {
     setStatus(selectedStatus);
@@ -45,23 +44,18 @@ const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(({id, title, de
   }, []);
 
   return (
-    <div ref={ref} {...props} className="relative bg-white border border-gray-2 rounded p-3">
+    <div ref={ref} {...props} className="relative bg-white border border-gray-2 rounded p-3 ">
       <div className="flex items-start">
         <div className="text-body-regular bg-gray-18 border border-gray-2 rounded px-2 mr-4">#{id}</div>
         <Link className="group relative" to={`/manager/detail/${id}`}>
-          <h1 className="w-[240px] text-subtitle-regular group-hover:text-main hover:underline">{title}</h1>
+          <h1 className="w-[240px] h-[40px] text-subtitle-regular group-hover:text-main hover:underline  overflow-hidden text-ellipsis line-clamp-2">
+            {title}
+          </h1>
         </Link>
       </div>
       <div className="flex items-center gap-2 mr-3 mt-4">
-        <div className="relative">
-          <button className="focus:outline-none" onClick={() => setShowCalendar(!showCalendar)}>
-            <CalendarIcon />
-          </button>
-          {/* TODO: 캘린더 추가 */}
-        </div>
-
         <div className="relative" ref={priorityRef}>
-          <button onClick={() => setShowPriority(!showPriority)}>
+          <button onClick={() => setShowPriority(!showPriority)} className="mt-2">
             <StarIcon
               color={
                 PRIORITY_COLOR[priority as keyof typeof PRIORITY_COLOR] || '#727586' // 기본 색상
