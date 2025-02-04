@@ -1,22 +1,36 @@
-import { useEffect, useRef, useState } from "react";
+import {useEffect, useRef, useState} from 'react';
 
-type StatViewType = "일간" | "월간";
+// 필터 항목 데이터 변경 (일별/월별로 변경, count 제거)
+const filterData = [{type: '일별'}, {type: '월별'}];
 
-// 필터 데이터
-const statFilters: { type: StatViewType }[] = [
-  { type: "일간" },
-  { type: "월간" },
-];
+// FilterItem 컴포넌트에서 count 관련 코드 제거
+function FilterItem({type, isSelected, onClick}: {type: string; isSelected: boolean; onClick: () => void}) {
+  const textColor = isSelected ? 'text-black text-title-bold' : 'text-gray-6 text-title-bold';
 
-export default function AdminStatFilter({ onFilterChange }: { onFilterChange: (type: StatViewType) => void }) {
-  const [selectedFilter, setSelectedFilter] = useState<StatViewType>("일간");
-  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
+  return (
+    <div className={`flex items-center gap-2 cursor-pointer`} onClick={onClick}>
+      <span className={textColor}>{type}</span>
+    </div>
+  );
+}
+
+interface TicketFilterProps {
+  onFilterChange: (type: string) => void;
+}
+export default function StatFilter({onFilterChange}: TicketFilterProps) {
+  const [selectedType, setSelectedType] = useState('일별'); // 초기값 일별로 변경
+  const [indicatorStyle, setIndicatorStyle] = useState({left: 0, width: 0});
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleFilterChange = (type: string) => {
+    setSelectedType(type);
+    onFilterChange(type);
+  };
 
   useEffect(() => {
     if (containerRef.current) {
-      const items = containerRef.current.querySelectorAll<HTMLDivElement>(".filter-item");
-      const selectedIndex = statFilters.findIndex((item) => item.type === selectedFilter);
+      const items = containerRef.current.querySelectorAll<HTMLDivElement>('.filter-item');
+      const selectedIndex = filterData.findIndex((item) => item.type === selectedType);
       if (items[selectedIndex]) {
         const selectedItem = items[selectedIndex];
         setIndicatorStyle({
@@ -25,29 +39,19 @@ export default function AdminStatFilter({ onFilterChange }: { onFilterChange: (t
         });
       }
     }
-  }, [selectedFilter]);
+  }, [selectedType]);
 
   return (
-    <div className="w-full mt-6 relative">
-      {/* 필터 리스트 */}
-      <div className="flex w-full h-7 px-4 gap-6" ref={containerRef}>
-        {statFilters.map((item) => (
-          <div
-            key={item.type}
-            className="filter-item cursor-pointer text-title-bold"
-            onClick={() => {
-              setSelectedFilter(item.type);
-              onFilterChange(item.type);
-            }}
-          >
-            <span className={selectedFilter === item.type ? "text-main" : "text-gray-6"}>{item.type}</span>
+    <div className="w-full mt-10 relative">
+      <div className="flex w-full h-6 px-4 gap-6" ref={containerRef}>
+        {filterData.map((item) => (
+          <div key={item.type} className="filter-item">
+            <FilterItem type={item.type} isSelected={item.type === selectedType} onClick={() => handleFilterChange(item.type)} />
           </div>
         ))}
       </div>
-
-      {/* 하단 이동 Bar */}
       <div
-        className="absolute bottom-0 h-0.5 bg-main transition-all duration-300"
+        className="absolute bottom-0 h-0.5 bg-gray-7 transition-all duration-300"
         style={{
           left: `${indicatorStyle.left}px`,
           width: `${indicatorStyle.width}px`,
