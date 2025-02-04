@@ -1,23 +1,42 @@
-import { useState } from "react";
-import AdminStatFilter from "./StatFilter";
-import AdminDailyStats from "./AdminDailyStats";
+import {useState} from 'react';
+import CategoryTicketStatus from '../../common/statistics/CategoryTicketStatus';
+
+import ManagerTicketStatus from './daily/ManagerTicketStatus';
+import StatFilter from './StatFilter';
+
+import TodayTicketStatus from './daily/TodayTicketStatus';
+import ManagerTicketPeriodStatus from './monthly/ManagerTicketPeriodStatus';
+import ManagerPeriod from './monthly/ManagerPeriod';
 
 export default function AdminStatContainer() {
-  const [selectedTab, setSelectedTab] = useState<"일간" | "월간">("일간");
+  const [selectedFilter, setSelectedFilter] = useState('일별');
 
   return (
-    <div className="flex flex-col max-w-[1200px] ">
-      {/* 필터 컴포넌트 */}
-      <AdminStatFilter onFilterChange={(type) => setSelectedTab(type)} />
+    <div className="flex flex-col max-w-1200 px-[46px]">
+    
+      <StatFilter onFilterChange={setSelectedFilter} />
 
-      {/* 선택된 탭에 따른 내용 표시 */}
-      <div className="mt-6">
-        {selectedTab === "일간" ? (
-          <AdminDailyStats/>
-        ) : (
-          <div className="text-lg text-gray-700">📆 이번 달의 통계 데이터를 표시합니다.</div>
-        )}
-      </div>
+      {selectedFilter === '일별' ? (
+        <section className="flex bg-gray-18 p-6 pb-[38px] mt-3 mb-[100px]">
+          <div className="flex flex-col">
+            <div className="w-full grid grid-cols-2">
+              <TodayTicketStatus />
+              <ManagerTicketStatus />
+            </div>
+            <CategoryTicketStatus />
+          </div>
+        </section>
+      ) : (
+        <section className="flex bg-gray-18 p-6 pb-[38px] mt-3 mb-[100px]">
+          <div className="flex flex-col">
+            <div className="w-full grid grid-cols-2">
+              <ManagerTicketPeriodStatus />
+              <ManagerPeriod />
+            </div>
+            <CategoryTicketStatus />
+          </div>
+        </section>
+      )}
     </div>
   );
 }

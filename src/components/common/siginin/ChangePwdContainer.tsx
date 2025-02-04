@@ -2,7 +2,7 @@ import {useState} from 'react';
 import InitialTopBar from './InitialTopBar';
 import Modal from '../Modal';
 import {useUserStore} from '../../../store/store';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 // 토큰값 없으면 접근 불가
 export default function ChangePwdContainer() {
@@ -194,7 +194,7 @@ export default function ChangePwdContainer() {
           onBackBtnClick={() => {
             setModalState({open: false, type: null});
             if (modalState.type === 'success') {
-                navigate(`/${role}`, { replace: true });
+              navigate(role === 'admin' ? '/admin/accounts' : `/${role}`, {replace: true});
             }
           }}
         />

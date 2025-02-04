@@ -81,7 +81,7 @@ export default function SignInContainer() {
 
     // 로그인 성공 여부 로직 -> setRole 후 페이지 이동
     // 최초 로그인 여부에 따라 페이지 이동 -> 비밀번호 변경은 토큰 값 필요
-    const isFirstLogin = true;
+    const isFirstLogin = false;
     if (isFirstLogin) {
       navigate('/changepwd');
     } else {

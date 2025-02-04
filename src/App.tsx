@@ -4,7 +4,6 @@ import './global.css'; // Tailwind CSS 적용
 import TopBar from './components/common/TopBar';
 import SideBar from './components/common/SideBar';
 import UserHome from './pages/user/UserHome';
-import AdminHome from './pages/admin/AdminHome';
 import ManagerTickets from './pages/manager/ManagerTickets';
 import ManagerStatistics from './pages/manager/ManagerStatistics';
 import NotFound from './pages/NotFound';
@@ -24,6 +23,7 @@ import ChangePwd from './pages/common/signin/ChangePwd';
 import UserInquiry from './pages/user/UserInquiry';
 import UserPwdChange from './pages/user/UserPwdChange';
 import AdminStatistics from './pages/admin/AdminStatistics';
+import ManagerNewTicket from './pages/manager/ManagerNewTicket';
 
 function Layout() {
   return (
@@ -41,10 +41,14 @@ function App() {
     {path: '', element: <ManagerHome />},
     {path: 'statistics', element: <ManagerStatistics />},
     {path: 'tickets', element: <ManagerTickets />},
+
+    {path: 'newticket', element: <ManagerNewTicket />},
+    {path: 'newtickets', element: <ManagerTickets />}, // todo 담당자 요청 티켓 대시보드
+
     {path: 'histories', element: <ManagerHistories />},
     {path: 'detail/:id', element: <ManagerTicketDetail />},
     {path: 'inquiry', element: <ManagerInquiry />},
-    {path: 'pwdChange', element: <ManagerPwdChange />}, //todo 명칭 변경하셔도 됩니다!
+    {path: 'pwdChange', element: <ManagerPwdChange />},
   ];
 
   const userRoutes = [
@@ -55,7 +59,6 @@ function App() {
   ];
 
   const adminRoutes = [
-    {path: '', element: <AdminHome />},
     {path: 'accounts', element: <AdminAccounts />},
     {path: 'categories', element: <AdminCategory />},
     {path: 'statistics', element: <AdminStatistics />},
