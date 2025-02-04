@@ -10,7 +10,7 @@ interface TicketSmallProps {
   title: string;
   deadline: string;
   initialStatus: string;
-  [key: string]: any; // For draggable props
+  [key: string]: any;
 }
 
 const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(({id, title, deadline, initialStatus, ...props}, ref) => {
@@ -46,7 +46,7 @@ const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(({id, title, de
     <div ref={ref} {...props} className="relative bg-white border border-gray-2 rounded p-3">
       <div className="flex items-start">
         <div className="text-body-regular bg-gray-18 border border-gray-2 rounded px-2 mr-4">#{id}</div>
-        <Link className="group relative" to="/manager/detail">
+        <Link className="group relative" to={`/manager/detail/${id}`}>
           <h1 className="w-[240px] text-subtitle-regular group-hover:text-main hover:underline">{title}</h1>
         </Link>
       </div>

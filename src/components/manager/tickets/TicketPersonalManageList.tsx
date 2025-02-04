@@ -1,42 +1,42 @@
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import TicketSmall from './TicketSmall';
 import {useState} from 'react';
+import {ticketDummy} from '../../../data/ticketData';
 
 // 임시 타입
-interface Ticket {
-  id: number;
+export interface TicketDataProps {
+  id: string;
+  category: string;
+  subCategory: string;
   title: string;
+  content: string;
   deadline: string;
-  status: 'wait' | 'ing' | 'end';
+  assignee: string;
+  assigneeOptions: string[];
+  isUrgent: boolean;
+  status: 'wait' | 'ing' | 'end'; // 상태 필드 추가
 }
 
 export default function TicketPersonalManageList() {
-  const [tickets, setTickets] = useState<Record<string, Ticket[]>>({
-    wait: [
-      {
-        id: 112,
-        title: '[생성] 마이크로서비스 기반의 애플리케이션 컨테이너화',
-        deadline: '2023-06-30',
-        status: 'wait',
-      },
-    ],
-    ing: [
-      {
-        id: 114,
-        title: '[생성] 마이크로서비스 기반의 애플리케이션 컨테이너화',
-        deadline: '2023-06-30',
-        status: 'ing',
-      },
-    ],
-    end: [
-      {
-        id: 115,
-        title: '[생성] 마이크로서비스 기반의 애플리케이션 컨테이너화',
-        deadline: '2023-06-30',
-        status: 'end',
-      },
-    ],
-  });
+  // 초기 상태 설정
+  const initialTickets = {
+    wait: ticketDummy.slice(0, 5).map((ticket) => ({
+      ...ticket,
+      status: 'wait' as const,
+    })),
+    ing: ticketDummy.slice(5, 10).map((ticket) => ({
+      ...ticket,
+      status: 'ing' as const,
+    })),
+    end: ticketDummy.slice(10).map((ticket) => ({
+      ...ticket,
+      status: 'end' as const,
+    })),
+  };
+
+  const [tickets, setTickets] = useState<Record<string, TicketDataProps[]>>(initialTickets);
+
+  // 드래그 앤 드롭 핸들러
 
   const onDragEnd = (result: any) => {
     console.log(result);
