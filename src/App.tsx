@@ -4,7 +4,6 @@ import './global.css'; // Tailwind CSS 적용
 import TopBar from './components/common/TopBar';
 import SideBar from './components/common/SideBar';
 import UserHome from './pages/user/UserHome';
-import AdminHome from './pages/admin/AdminHome';
 import ManagerTickets from './pages/manager/ManagerTickets';
 import ManagerStatistics from './pages/manager/ManagerStatistics';
 import NotFound from './pages/NotFound';
@@ -54,10 +53,10 @@ function App() {
     {path: 'pwdChange', element: <UserPwdChange />},
   ];
 
-  const adminRoutes = [{path: '', element: <AdminHome />},
+  const adminRoutes = [
     {path: 'accounts', element: <AdminAccounts />},
     {path: 'categories', element: <AdminCategory />},
-    {path: 'statistics', element: <AdminStatistics/>},
+    {path: 'statistics', element: <AdminStatistics />},
     {path: 'inquiries', element: <AdminInquiry />},
   ];
 

@@ -33,19 +33,21 @@ export default function SideBar() {
       {/* 상단 메뉴 */}
       <div className="flex flex-col w-full h-auto gap-4 ">
         {/* 대시보드 메뉴 */}
-        <Link
-          to={getDashboardLink()}
-          className={`side-menu rounded-lg border border-gray-18 mb-4 text-subtitle ${
-            location.pathname === '/manager' || location.pathname === '/user' || location.pathname === '/admin'
-              ? 'active-menu text-gray-15'
-              : 'gray-hover text-gray-8'
-          }`}
-        >
-          <div className="flex items-center gap-4">
-            <DbIcon strokeColor={location.pathname === '/manager' || location.pathname === '/user' ? '#1A1B1F' : '#565965'} /> Dashboard
-          </div>
-          <LgRightIcon strokeColor={location.pathname === '/manager' || location.pathname === '/user' ? '#1A1B1F' : '#A3A8BF'} />
-        </Link>
+        {role !== 'admin' && (
+          <Link
+            to={getDashboardLink()}
+            className={`side-menu rounded-lg border border-gray-18 mb-4 text-subtitle ${
+              location.pathname === '/manager' || location.pathname === '/user' || location.pathname === '/admin'
+                ? 'active-menu text-gray-15'
+                : 'gray-hover text-gray-8'
+            }`}
+          >
+            <div className="flex items-center gap-4">
+              <DbIcon strokeColor={location.pathname === '/manager' || location.pathname === '/user' ? '#1A1B1F' : '#565965'} /> Dashboard
+            </div>
+            <LgRightIcon strokeColor={location.pathname === '/manager' || location.pathname === '/user' ? '#1A1B1F' : '#A3A8BF'} />
+          </Link>
+        )}
 
         {/* 담당자 메뉴 */}
         {role === 'manager' && (
