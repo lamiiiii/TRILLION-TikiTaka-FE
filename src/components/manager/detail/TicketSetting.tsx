@@ -24,9 +24,11 @@ export default function TicketSetting() {
             <p>assignees</p>
             <p>End Date</p>
             <p>Priority</p>
+            <p>Primary Category</p>
+            <p>Secondary Category</p>
           </div>
 
-          <div className="flex flex-col gap-[7px]">
+          <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
               <DropDown
                 label="담당자"
@@ -41,6 +43,8 @@ export default function TicketSetting() {
               <input type="time" className="w-min text-gray-6 text-body-regular" />
             </div>
             <DropDown label="우선 순위" options={PRIORITY} value={priority} onSelect={handlePrioritySelect} border={false} />
+            <DropDown label="1차 카테고리" options={PRIORITY} value={priority} onSelect={handlePrioritySelect} border={false} />
+            <DropDown label="2차 카테고리" options={PRIORITY} value={priority} onSelect={handlePrioritySelect} border={false} />
           </div>
         </div>
       </div>

@@ -43,6 +43,7 @@ export default function TicketSmall({id, title, deadline, initialStatus}: Ticket
 
   console.log(priority, deadline);
 
+  //FIX: 링크 디테일 수정
   return (
     <div className="bg-white border border-gray-2 rounded p-3">
       <div className="flex items-start">

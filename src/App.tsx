@@ -42,7 +42,7 @@ function App() {
     {path: 'statistics', element: <ManagerStatistics />},
     {path: 'tickets', element: <ManagerTickets />},
     {path: 'histories', element: <ManagerHistories />},
-    {path: 'detail', element: <ManagerTicketDetail />},
+    {path: 'detail/:id', element: <ManagerTicketDetail />},
     {path: 'inquiry', element: <ManagerInquiry />},
     {path: 'pwdChange', element: <ManagerPwdChange />}, //todo 명칭 변경하셔도 됩니다!
   ];
@@ -54,10 +54,11 @@ function App() {
     {path: 'pwdChange', element: <UserPwdChange />},
   ];
 
-  const adminRoutes = [{path: '', element: <AdminHome />},
+  const adminRoutes = [
+    {path: '', element: <AdminHome />},
     {path: 'accounts', element: <AdminAccounts />},
     {path: 'categories', element: <AdminCategory />},
-    {path: 'statistics', element: <AdminStatistics/>},
+    {path: 'statistics', element: <AdminStatistics />},
     {path: 'inquiries', element: <AdminInquiry />},
   ];
 
