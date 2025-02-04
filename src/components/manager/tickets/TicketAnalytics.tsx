@@ -18,7 +18,7 @@ export default function TicketAnalytics() {
         <BarChart width={240} height={120} data={data}>
           <XAxis dataKey="name" tick={{fontSize: 14}} axisLine={false} tickLine={false} />
           <Bar dataKey="ticket" fill="#F6D47A" radius={100}>
-            <LabelList dataKey="ticket" position="center" fill="#FFFFFF" fontSize={10} />
+            <LabelList dataKey="ticket" position="center" fill="#FFFFFF" height={20} fontSize={10} />
           </Bar>
         </BarChart>
       </section>

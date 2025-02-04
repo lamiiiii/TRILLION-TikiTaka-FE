@@ -35,9 +35,9 @@ export default function TicketProfile({userInfo, onUserInfoChange}: TicketProfil
       <div className="w-full flex flex-col items-start">
         {isEditing ? (
           <form onSubmit={handleSubmit} className="w-full flex flex-col gap-2">
-            <Input element="input" size="sm" type="text" name="name" value={userInfo.name} onChange={handleChange} />
-            <Input element="input" size="sm" type="email" name="email" value={userInfo.email} onChange={handleChange} />
-            <Input element="input" size="sm" type="url" name="kakaowork" value={userInfo.website} onChange={handleChange} />
+            <Input label="ID 변경" element="input" size="sm" type="text" name="name" value={userInfo.name} onChange={handleChange} />
+            <p className="text-body-regular">{userInfo.email}</p>
+            <p className="text-body-regular">{userInfo.website}</p>
             <div className="flex justify-center mt-3">
               <button type="submit" className="main-button w-fit">
                 완료

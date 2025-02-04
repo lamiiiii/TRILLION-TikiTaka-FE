@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {Bar, BarChart, LabelList, XAxis, PieChart, Pie, Cell} from 'recharts';
+import {Bar, BarChart, LabelList, XAxis, PieChart, Pie, Cell, Tooltip} from 'recharts';
 
 // 임시 데이터 - 1차 카테고리
 const primaryData = [
@@ -112,6 +112,15 @@ export default function CategoryTicketStatus() {
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: '#fff',
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '8px',
+                        padding: '12px',
+                      }}
+                      formatter={(value, name) => [`${value}건`, name]}
+                    />
                   </PieChart>
                   <div className="text-main2-3 text-center">{selectedCategory} 세부 분류</div>
                 </div>
@@ -121,7 +130,7 @@ export default function CategoryTicketStatus() {
                     <div key={item.name} className="flex items-center gap-2">
                       <div className="w-3 h-3 rounded-full" style={{backgroundColor: COLORS[index % COLORS.length]}} />
                       <span>{item.name}</span>
-                      <span className="ml-auto">{item.value}%</span>
+                      <span className="ml-auto">{item.value}건</span>
                     </div>
                   ))}
                 </div>
