@@ -1,4 +1,4 @@
-import instance from './axiosInstance';
+import instance from '../axiosInstance';
 
 // POST: 계정 등록 신청 (INTF-1)
 export async function postRegistration(postData: {email: string; username: string}) {
