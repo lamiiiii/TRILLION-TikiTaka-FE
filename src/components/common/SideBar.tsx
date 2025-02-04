@@ -33,19 +33,21 @@ export default function SideBar() {
       {/* 상단 메뉴 */}
       <div className="flex flex-col w-full h-auto gap-4 ">
         {/* 대시보드 메뉴 */}
-        <Link
-          to={getDashboardLink()}
-          className={`side-menu rounded-lg border border-gray-18 mb-4 text-subtitle ${
-            location.pathname === '/manager' || location.pathname === '/user' || location.pathname === '/admin'
-              ? 'active-menu text-gray-15'
-              : 'gray-hover text-gray-8'
-          }`}
-        >
-          <div className="flex items-center gap-4">
-            <DbIcon strokeColor={location.pathname === '/manager' || location.pathname === '/user' ? '#1A1B1F' : '#565965'} /> Dashboard
-          </div>
-          <LgRightIcon strokeColor={location.pathname === '/manager' || location.pathname === '/user' ? '#1A1B1F' : '#A3A8BF'} />
-        </Link>
+        {role !== 'admin' && (
+          <Link
+            to={getDashboardLink()}
+            className={`side-menu rounded-lg border border-gray-18 mb-4 text-subtitle ${
+              location.pathname === '/manager' || location.pathname === '/user' || location.pathname === '/admin'
+                ? 'active-menu text-gray-15'
+                : 'gray-hover text-gray-8'
+            }`}
+          >
+            <div className="flex items-center gap-4">
+              <DbIcon strokeColor={location.pathname === '/manager' || location.pathname === '/user' ? '#1A1B1F' : '#565965'} /> Dashboard
+            </div>
+            <LgRightIcon strokeColor={location.pathname === '/manager' || location.pathname === '/user' ? '#1A1B1F' : '#A3A8BF'} />
+          </Link>
+        )}
 
         {/* 담당자 메뉴 */}
         {role === 'manager' && (
@@ -54,6 +56,10 @@ export default function SideBar() {
             <MenuItem icon={TicketIcon} text="티켓 관리" to="/manager/tickets">
               <SubMenuItem to="/manager/tickets" text="티켓 관리" />
               <SubMenuItem to="/manager/histories" text="티켓 이력 관리" />
+            </MenuItem>
+            <MenuItem icon={NewTicketIcon} text="티켓 생성" to="/manager/newticket">
+              <SubMenuItem to="/manager/newticket" text="티켓 생성" />
+              <SubMenuItem to="/manager/newtickets" text="요청 티켓 관리" />
             </MenuItem>
             <MenuItem icon={MyIcon} text="마이페이지" to="/manager/inquiry">
               <SubMenuItem to="/manager/inquiry" text="문의내역 확인" />
