@@ -11,7 +11,7 @@ interface AccountCardProps {
   onRoleChange: (id: string, newRole: string) => void;
   onStatusChange: (id: string, newStatus: string) => void;
   onDelete: (id: string) => void;
-  onReject: (id: string) => void; // ✅ 거절 시 삭제 기능 추가
+  onReject: (id: string) => void; 
 }
 
 export default function AccountCard({
@@ -23,7 +23,7 @@ export default function AccountCard({
   onRoleChange,
   onStatusChange,
   onDelete,
-  onReject, // ✅ 새로운 onReject 추가
+  onReject, 
 }: AccountCardProps) {
   const [showMenu, setShowMenu] = useState(false);
 
@@ -35,22 +35,17 @@ export default function AccountCard({
       <div className="w-[16%]">
         <RoleDropdown label={role} options={['사용자', '담당자', '관리자']} onSelect={(value) => onRoleChange(id, value)} />
       </div>
-
-      {/* 승인/거절 상태 */}
       <div className="w-[20%] flex gap-2 relative">
         {status === '대기중' ? (
           <>
-            {/* ✅ 승인 버튼 → 승인 대기 목록에서 계정 목록으로 이동 */}
             <button
               onClick={() => onStatusChange(id, '승인')}
               className="px-4 py-1 text-subtitle-regular border rounded hover:bg-gray-8 hover:text-white whitespace-nowrap"
             >
               승인
             </button>
-
-            {/* ✅ 거절 버튼 → 즉시 계정 삭제 */}
             <button
-              onClick={() => onReject(id)} // ✅ onReject 실행
+              onClick={() => onReject(id)}
               className="px-4 py-1 text-subtitle-regular border rounded hover:bg-red/80 hover:text-white"
             >
               거절
@@ -59,8 +54,7 @@ export default function AccountCard({
         ) : (
           <div className={`px-4 py-1 text-subtitle-regular rounded whitespace-nowrap`}>{status}</div>
         )}
-
-        {/* ✅ 승인된 경우 메뉴 버튼 (삭제 가능) */}
+        {/* 승인상태 */}
         {status === '승인' && (
           <div className="ml-[120px] mt-1">
             <button onClick={() => setShowMenu(!showMenu)}>

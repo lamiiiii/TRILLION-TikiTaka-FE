@@ -1,7 +1,6 @@
 import { Chart as ChartJS, ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from "chart.js";
 import { Bar, Doughnut } from "react-chartjs-2";
 
-// ✅ Chart.js 요소 등록
 ChartJS.register(ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 export default function CategoryTicketStats() {

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 
-// 필터 타입
 type StatViewType = "일간" | "월간";
 
 // 필터 데이터

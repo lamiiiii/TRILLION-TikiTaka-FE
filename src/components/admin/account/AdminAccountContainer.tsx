@@ -9,7 +9,6 @@ export default function AdminAccountContainer() {
     <div className="flex flex-col max-w-1200">
       <AccountFilter onFilterChange={setSelectedTab} />
       <div>
-        {/* ✅ selectedTab만 전달하면 AccountList에서 알아서 처리 */}
         <AccountList selectedTab={selectedTab} />
       </div>
     </div>
