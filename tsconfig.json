@@ -1,28 +1,24 @@
 {
-    "compilerOptions": {
-      "target": "es6",
-      "useDefineForClassFields": true,
-      "lib": [
-        "ES2020",
-        "DOM",
-        "DOM.Iterable"
-      ],
-      "module": "ESNext",
-      "skipLibCheck": true,
-      /* Bundler mode */
-      "moduleResolution": "bundler",
-      "allowImportingTsExtensions": true,
-      "resolveJsonModule": true,
-      "isolatedModules": true,
-      "noEmit": true,
-      "jsx": "react-jsx",
-      /* Linting */
-      "strict": true,
-      "noUnusedLocals": true,
-      "noUnusedParameters": true,
-      "noFallthroughCasesInSwitch": true
-    },
-    "include": [
-      "src"
-    ]
-  }
+  "compilerOptions": {
+    "target": "es6",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "declaration": false,
+    "typeRoots": ["./src/api/type"] // types라는 폴더에 있는 d.ts 파일'들'을 전역으로 사용가능
+  },
+  "include": ["src"]
+}
