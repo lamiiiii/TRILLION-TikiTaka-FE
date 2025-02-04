@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react';
+import {forwardRef, useEffect, useRef, useState} from 'react';
 import DropDown from '../../common/Dropdown';
 import {CalendarIcon, StarIcon} from '../../common/Icon';
 import Profile from '../../common/Profile';
@@ -10,9 +10,10 @@ interface TicketSmallProps {
   title: string;
   deadline: string;
   initialStatus: string;
+  [key: string]: any; // For draggable props
 }
 
-export default function TicketSmall({id, title, deadline, initialStatus}: TicketSmallProps) {
+const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(({id, title, deadline, initialStatus, ...props}, ref) => {
   const [status, setStatus] = useState(initialStatus);
   const [showPriority, setShowPriority] = useState(false);
   const [priority, setPriority] = useState('');
@@ -41,18 +42,15 @@ export default function TicketSmall({id, title, deadline, initialStatus}: Ticket
     };
   }, []);
 
-  console.log(priority, deadline);
-
-  //FIX: 링크 디테일 수정
   return (
-    <div className="bg-white border border-gray-2 rounded p-3">
+    <div ref={ref} {...props} className="relative bg-white border border-gray-2 rounded p-3">
       <div className="flex items-start">
         <div className="text-body-regular bg-gray-18 border border-gray-2 rounded px-2 mr-4">#{id}</div>
         <Link className="group relative" to="/manager/detail">
           <h1 className="w-[240px] text-subtitle-regular group-hover:text-main hover:underline">{title}</h1>
         </Link>
       </div>
-      <div className="flex items-center gap-2 mr-3 mt-4s">
+      <div className="flex items-center gap-2 mr-3 mt-4">
         <div className="relative">
           <button className="focus:outline-none" onClick={() => setShowCalendar(!showCalendar)}>
             <CalendarIcon />
@@ -60,7 +58,7 @@ export default function TicketSmall({id, title, deadline, initialStatus}: Ticket
           {/* TODO: 캘린더 추가 */}
         </div>
 
-        <button className="relative">
+        <div className="relative" ref={priorityRef}>
           <button onClick={() => setShowPriority(!showPriority)}>
             <StarIcon
               color={
@@ -74,7 +72,9 @@ export default function TicketSmall({id, title, deadline, initialStatus}: Ticket
                 <div
                   key={item}
                   className={`px-4 py-1.5 h-6 mt-1 text-center cursor-pointer leading-none rounded
-          border border-transparent transition-all duration-100 text-caption-regular ${priority === item ? 'bg-gray-1 text-caption-bold text-gray-15 border-gray-2' : 'text-gray-700 hover:bg-gray-1  '}`}
+                    border border-transparent transition-all duration-100 text-caption-regular ${
+                      priority === item ? 'bg-gray-1 text-caption-bold text-gray-15 border-gray-2' : 'text-gray-700 hover:bg-gray-1'
+                    }`}
                   onClick={() => handlePrioritySelect(item)}
                 >
                   {item}
@@ -82,7 +82,7 @@ export default function TicketSmall({id, title, deadline, initialStatus}: Ticket
               ))}
             </div>
           )}
-        </button>
+        </div>
         <div className="w-full flex justify-between items-center mt-1">
           <DropDown
             label="진행중"
@@ -99,4 +99,6 @@ export default function TicketSmall({id, title, deadline, initialStatus}: Ticket
       </div>
     </div>
   );
-}
+});
+
+export default TicketSmall;
