@@ -1,23 +1,30 @@
 export type TicketViewType = '전체' | '대기중' | '진행중' | '검토 요청' | '완료' | '긴급';
 
-export type TicketStatusType = '대기' | '진행중' | '완료' | '반려';
+export type TicketStatusType = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'REJECTED';
 
 export interface TicketDataProps {
-  id: string;
-  role?: 'manager' | 'user' | 'admin';
-  category: string;
-  subCategory: string;
+  ticketId: number;
   title: string;
-  content: string;
-  deadline: string;
-  assignee: string;
-  assigneeOptions: string[];
-  isUrgent: boolean;
+  description: string;
+  typeName: string; // 요청 유형
+  firstCategoryName: string;
+  secondCategoryName: string;
+  managerName: string;
+  status: TicketStatusType;
+  urgent: boolean;
+  deadline: string; // yyyy-MM-dd HH:mm
 }
 
-// 컴포넌트 Props 인터페이스
-export interface TicketProps extends TicketDataProps {
-  onAssigneeChange: (value: string) => void;
-  onApprove: () => void;
-  onReject: () => void;
+// API 응답 데이터 구조
+export interface TicketListResponse {
+  message: string;
+  data: {
+    content: TicketDataProps[];
+    pageable: {
+      pageNumber: number;
+      pageSize: number;
+      totalPages: number;
+      totalElements: number;
+    };
+  };
 }
