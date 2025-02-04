@@ -35,7 +35,7 @@ export default function TicketAwaitingList() {
         {isListVisible && (
           <motion.div initial={{opacity: 0, height: 0, y: -20}} animate={{opacity: 1, height: 'auto', y: 0}} transition={{duration: 0.3}}>
             <TicketFilter />
-            <TicketList role="manager" />
+            <TicketList role="manager" selectedFilter={'전체'} />
           </motion.div>
         )}
       </AnimatePresence>
