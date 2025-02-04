@@ -23,6 +23,7 @@ import ChangePwd from './pages/common/signin/ChangePwd';
 import UserInquiry from './pages/user/UserInquiry';
 import UserPwdChange from './pages/user/UserPwdChange';
 import AdminStatistics from './pages/admin/AdminStatistics';
+import ManagerNewTicket from './pages/manager/ManagerNewTicket';
 
 function Layout() {
   return (
@@ -40,10 +41,14 @@ function App() {
     {path: '', element: <ManagerHome />},
     {path: 'statistics', element: <ManagerStatistics />},
     {path: 'tickets', element: <ManagerTickets />},
+
+    {path: 'newticket', element: <ManagerNewTicket />},
+    {path: 'newtickets', element: <ManagerTickets />}, // todo 담당자 요청 티켓 대시보드
+
     {path: 'histories', element: <ManagerHistories />},
     {path: 'detail', element: <ManagerTicketDetail />},
     {path: 'inquiry', element: <ManagerInquiry />},
-    {path: 'pwdChange', element: <ManagerPwdChange />}, //todo 명칭 변경하셔도 됩니다!
+    {path: 'pwdChange', element: <ManagerPwdChange />},
   ];
 
   const userRoutes = [
