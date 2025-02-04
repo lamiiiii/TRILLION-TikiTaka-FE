@@ -15,6 +15,7 @@ export default function TicketAnalytics() {
   return (
     <div className="flex items-center gap-6 w-full bg-gray-18 p-5">
       <section>
+        <p className="pl-2 text-caption-regular text-gray-14">단위: 건</p>
         <BarChart width={240} height={120} data={data}>
           <XAxis dataKey="name" tick={{fontSize: 14}} axisLine={false} tickLine={false} />
           <Bar dataKey="ticket" fill="#F6D47A" radius={100}>

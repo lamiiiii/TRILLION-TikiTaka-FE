@@ -39,7 +39,7 @@ export default function ManagerDetailContainer() {
           </section>
         </div>
 
-        <section className="flex flex-col gap-5 w-full">
+        <section className="flex flex-col gap-5 w-[400px]">
           {isReviewNeeded && <TicketReview />}
           <TicketDetail />
           <TicketSetting />
