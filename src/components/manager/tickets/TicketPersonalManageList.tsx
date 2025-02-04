@@ -14,30 +14,45 @@ export interface TicketDataProps {
   assignee: string;
   assigneeOptions: string[];
   isUrgent: boolean;
-  status: 'wait' | 'ing' | 'end'; // 상태 필드 추가
+  status: '대기 중' | '진행 중' | '진행 완료'; // 상태 필드 추가
 }
 
 export default function TicketPersonalManageList() {
   // 초기 상태 설정
   const initialTickets = {
-    wait: ticketDummy.slice(0, 5).map((ticket) => ({
+    '대기 중': ticketDummy.slice(0, 5).map((ticket) => ({
       ...ticket,
-      status: 'wait' as const,
+      status: '대기 중' as const,
     })),
-    ing: ticketDummy.slice(5, 10).map((ticket) => ({
+    '진행 중': ticketDummy.slice(5, 10).map((ticket) => ({
       ...ticket,
-      status: 'ing' as const,
+      status: '진행 중' as const,
     })),
-    end: ticketDummy.slice(10).map((ticket) => ({
+    '진행 완료': ticketDummy.slice(10).map((ticket) => ({
       ...ticket,
-      status: 'end' as const,
+      status: '진행 완료' as const,
     })),
   };
 
   const [tickets, setTickets] = useState<Record<string, TicketDataProps[]>>(initialTickets);
 
-  // 드래그 앤 드롭 핸들러
+  const handleStatusChange = (ticketId: string, newStatus: '대기 중' | '진행 중' | '진행 완료') => {
+    const updatedTickets = {...tickets};
 
+    // 모든 상태 목록을 순회하며 티켓 찾기
+    Object.keys(updatedTickets).forEach((status) => {
+      const ticketIndex = updatedTickets[status].findIndex((ticket) => ticket.id === ticketId);
+      if (ticketIndex !== -1) {
+        const [movedTicket] = updatedTickets[status].splice(ticketIndex, 1);
+        movedTicket.status = newStatus;
+        updatedTickets[newStatus].push(movedTicket);
+      }
+    });
+
+    setTickets(updatedTickets);
+  };
+
+  // 드래그 앤 드롭 핸들러
   const onDragEnd = (result: any) => {
     console.log(result);
     if (!result.destination) return;
@@ -47,7 +62,7 @@ export default function TicketPersonalManageList() {
     const [movedItem] = sourceList.splice(result.source.index, 1);
 
     if (result.source.droppableId !== result.destination.droppableId) {
-      movedItem.status = result.destination.droppableId as 'wait' | 'ing' | 'end';
+      movedItem.status = result.destination.droppableId as '대기 중' | '진행 중' | '진행 완료';
     }
 
     destList.splice(result.destination.index, 0, movedItem);
@@ -76,10 +91,10 @@ export default function TicketPersonalManageList() {
                 <header className="flex items-center gap-3">
                   <div
                     className={`w-[8px] h-[8px] rounded-full ${
-                      status === 'wait' ? 'bg-orange' : status === 'ing' ? 'bg-green' : 'bg-yellow'
+                      status === '대기 중' ? 'bg-orange' : status === '진행 중' ? 'bg-green' : 'bg-yellow'
                     }`}
                   />
-                  <h1 className="text-subtitle">{status === 'wait' ? '대기' : status === 'ing' ? '진행중' : '완료'}</h1>
+                  <h1 className="text-subtitle">{status}</h1>
                 </header>
 
                 {/* 티켓 리스트 */}
@@ -94,6 +109,7 @@ export default function TicketPersonalManageList() {
                         title={ticket.title}
                         deadline={ticket.deadline}
                         initialStatus={ticket.status}
+                        onStatusChange={handleStatusChange}
                       />
                     )}
                   </Draggable>

@@ -10,18 +10,20 @@ interface TicketSmallProps {
   title: string;
   deadline: string;
   initialStatus: string;
+  onStatusChange: (id: string, newStatus: '대기 중' | '진행 중' | '진행 완료') => void;
   [key: string]: any;
 }
 
-const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(({id, title, deadline, initialStatus, ...props}, ref) => {
+const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(({id, title, deadline, initialStatus, onStatusChange, ...props}, ref) => {
   const [status, setStatus] = useState(initialStatus);
   const [showPriority, setShowPriority] = useState(false);
   const [priority, setPriority] = useState('');
   const priorityRef = useRef<HTMLDivElement>(null);
   const [showCalendar, setShowCalendar] = useState(false);
 
-  const handleStatusChange = (selectedStatus: string) => {
+  const handleStatusChange = (selectedStatus: '대기 중' | '진행 중' | '진행 완료') => {
     setStatus(selectedStatus);
+    onStatusChange(id, selectedStatus);
   };
 
   const handlePrioritySelect = (selectedOption: string) => {
@@ -85,10 +87,10 @@ const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(({id, title, de
         </div>
         <div className="w-full flex justify-between items-center mt-1">
           <DropDown
-            label="진행중"
-            options={['진행중', '완료']}
+            label="진행 중"
+            options={['대기 중', '진행 중', '진행 완료']}
             defaultSelected={initialStatus}
-            onSelect={handleStatusChange}
+            onSelect={handleStatusChange as (value: string) => void}
             paddingX="px-5"
             border={false}
             value={status}
