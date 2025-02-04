@@ -1,11 +1,6 @@
 import instance from '../axiosInstance';
 
-// 티켓 폼 생성 (INTF-21)
-interface CreateTicketFormData {
-  mustDescription: string;
-  description: string;
-}
-
+// INTF-21: 티켓 폼 생성
 export async function createTicketForm(token: string, firstCategoryId: number, secondCategoryId: number, formData: CreateTicketFormData) {
   try {
     const {data} = await instance.post(`/tickets/forms/${firstCategoryId}/${secondCategoryId}`, formData, {
@@ -18,7 +13,7 @@ export async function createTicketForm(token: string, firstCategoryId: number, s
   }
 }
 
-// 티켓 폼 조회 (INTF-22)
+// INTF-22: 티켓 폼 조회
 export async function getTicketForm(token: string, firstCategoryId: number, secondCategoryId: number) {
   try {
     const {data} = await instance.get(`/tickets/forms/${firstCategoryId}/${secondCategoryId}`, {
@@ -31,11 +26,7 @@ export async function getTicketForm(token: string, firstCategoryId: number, seco
   }
 }
 
-// 티켓 폼 수정 (INTF-23)
-interface UpdateTicketFormData {
-  description: string;
-}
-
+// INTF-23: 티켓 폼 수정
 export async function updateTicketForm(token: string, firstCategoryId: number, secondCategoryId: number, formData: UpdateTicketFormData) {
   try {
     const {data} = await instance.patch(`/tickets/forms/${firstCategoryId}/${secondCategoryId}`, formData, {
@@ -48,7 +39,7 @@ export async function updateTicketForm(token: string, firstCategoryId: number, s
   }
 }
 
-// 티켓 폼 삭제 (INTF-24)
+// INTF-24: 티켓 폼 삭제
 export async function deleteTicketForm(token: string, firstCategoryId: number, secondCategoryId: number) {
   try {
     const {data} = await instance.delete(`/tickets/forms/${firstCategoryId}/${secondCategoryId}`, {
@@ -61,11 +52,7 @@ export async function deleteTicketForm(token: string, firstCategoryId: number, s
   }
 }
 
-// 티켓 유형 생성 (INTF-25)
-interface CreateTicketTypeData {
-  typeName: string;
-}
-
+// INTF-25: 티켓 유형 생성
 export async function createTicketType(token: string, typeData: CreateTicketTypeData) {
   try {
     const {data} = await instance.post('/tickets/types', typeData, {
@@ -78,7 +65,7 @@ export async function createTicketType(token: string, typeData: CreateTicketType
   }
 }
 
-// 티켓 유형 조회 (INTF-26)
+// INTF-26: 티켓 유형 조회
 export async function getTicketTypes(token: string) {
   try {
     const {data} = await instance.get('/tickets/types/list', {
@@ -91,11 +78,7 @@ export async function getTicketTypes(token: string) {
   }
 }
 
-// 티켓 유형 수정 (INTF-27)
-interface UpdateTicketTypeData {
-  typeName: string;
-}
-
+// INTF-27: 티켓 유형 수정
 export async function updateTicketType(token: string, typeId: number, typeData: UpdateTicketTypeData) {
   try {
     const {data} = await instance.patch(`/tickets/types/${typeId}`, typeData, {
@@ -108,7 +91,7 @@ export async function updateTicketType(token: string, typeId: number, typeData: 
   }
 }
 
-// 티켓 유형 삭제 (INTF-28)
+// INTF-28: 티켓 유형 삭제
 export async function deleteTicketType(token: string, typeId: number) {
   try {
     const {data} = await instance.delete(`/tickets/types/${typeId}`, {
@@ -121,20 +104,7 @@ export async function deleteTicketType(token: string, typeId: number) {
   }
 }
 
-// 티켓 생성 (INTF-29)
-interface CreateTicketData {
-  title?: string;
-  description?: string;
-  urgent: boolean;
-  type_id: number;
-  primary_category_id: number;
-  secondary_category_id?: number;
-  deadline: string; // yyyy-MM-dd HH:mm
-  requester_id: number;
-  manager_id?: number;
-  status: string;
-}
-
+// INTF-29: 티켓 생성
 export async function createTicket(token: string, ticketData: CreateTicketData) {
   try {
     const {data} = await instance.post('/tickets', ticketData, {
@@ -147,16 +117,7 @@ export async function createTicket(token: string, ticketData: CreateTicketData) 
   }
 }
 
-// 티켓 상태별 개수 조회 (INTF-30)
-interface TicketStatusCount {
-  total: number;
-  pending: number;
-  inProgress: number;
-  reviewing: number;
-  completed: number;
-  urgent: number;
-}
-
+// INTF-30: 티켓 상태별 개수 조회
 export async function getTicketStatusCount(token: string) {
   try {
     const {data} = await instance.get<{message: string; data: TicketStatusCount}>('/tickets/count', {
@@ -169,24 +130,7 @@ export async function getTicketStatusCount(token: string) {
   }
 }
 
-// 티켓 상세 조회 (INTF-31)
-interface TicketDetails {
-  ticketId: number;
-  title: string;
-  description: string;
-  priority: string | null;
-  status: string;
-  typeName: string;
-  firstCategoryName: string;
-  secondCategoryName: string;
-  managerName: string;
-  requesterName: string;
-  urgent: boolean;
-  deadline: string; // yyyy-MM-dd HH:mm
-  createdAt: string; // yyyy-MM-dd HH:mm
-  updatedAt: string | null;
-}
-
+// INTF-31: 티켓 상세 조회
 export async function getTicketDetails(token: string, ticketId: number) {
   try {
     const {data} = await instance.get<{message: string; data: TicketDetails}>(`/tickets/${ticketId}`, {
@@ -200,11 +144,6 @@ export async function getTicketDetails(token: string, ticketId: number) {
 }
 
 // INTF-32: 티켓 승인 대기 조회
-interface PendingApprovalCount {
-  totalPending: number;
-  totalPendingUrgent: number;
-}
-
 export async function getPendingApprovalCount(token: string) {
   try {
     const {data} = await instance.get<{message: string; data: PendingApprovalCount}>('/tickets/list/my/pending', {
@@ -218,11 +157,6 @@ export async function getPendingApprovalCount(token: string) {
 }
 
 // INTF-33: 대기 티켓 수 조회
-interface PendingTicketCount {
-  myPendingTicket: number;
-  unassignedPendingTicket: number;
-}
-
 export async function getPendingTicketCount(token: string) {
   try {
     const {data} = await instance.get<{message: string; data: PendingTicketCount}>('/tickets/list/pending', {
@@ -236,12 +170,6 @@ export async function getPendingTicketCount(token: string) {
 }
 
 // INTF-34: 담당자 개인 티켓 조회
-interface PersonalTicketStatus {
-  pendingTicket: number;
-  processingTicket: number;
-  doneTicket: number;
-}
-
 export async function getPersonalTicketStatus(token: string) {
   try {
     const {data} = await instance.get<{message: string; data: PersonalTicketStatus}>('/tickets/list/personal', {
@@ -255,41 +183,6 @@ export async function getPersonalTicketStatus(token: string) {
 }
 
 // INTF-35: 티켓 목록 조회
-interface TicketListItem {
-  ticketId: number;
-  title: string;
-  description: string;
-  typeName: string;
-  firstCategoryName: string;
-  secondCategoryName: string;
-  managerName: string;
-  status: string;
-  urgent: boolean;
-  deadline: string;
-}
-
-interface TicketListResponse {
-  content: TicketListItem[];
-  pageable: {
-    pageNumber: number;
-    pageSize: number;
-    // ... 기타 페이지네이션 필드
-  };
-  totalPages: number;
-  totalElements: number;
-}
-
-interface TicketListParams {
-  page?: number;
-  size?: number;
-  status?: string;
-  firstCategoryId?: number;
-  secondCategoryId?: number;
-  ticketTypeId?: number;
-  managerId?: number;
-  requesterId?: number;
-}
-
 export async function getTicketList(token: string, params: TicketListParams = {}) {
   try {
     const {data} = await instance.get<{message: string; data: TicketListResponse}>('/tickets/list', {
@@ -313,15 +206,6 @@ export async function getTicketList(token: string, params: TicketListParams = {}
 }
 
 // INTF-36: 티켓 세부내용 수정
-interface UpdateTicketParams {
-  title: string;
-  description: string;
-  urgent: boolean;
-  typeId?: number;
-  primaryCategoryId?: number;
-  secondaryCategoryId?: number;
-}
-
 export async function updateTicket(token: string, ticketId: number, params: UpdateTicketParams) {
   try {
     const {data} = await instance.patch(`/tickets/${ticketId}`, params, {

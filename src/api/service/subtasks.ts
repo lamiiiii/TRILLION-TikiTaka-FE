@@ -1,11 +1,6 @@
 import instance from '../axiosInstance';
 
 // INTF-51: 하위태스크 생성
-interface CreateSubtaskParams {
-  ticketId: number;
-  description: string;
-}
-
 export async function createSubtask(token: string, params: CreateSubtaskParams) {
   try {
     const {data} = await instance.post('/subtasks', params, {
@@ -19,13 +14,6 @@ export async function createSubtask(token: string, params: CreateSubtaskParams) 
 }
 
 // INTF-52: 하위태스크 조회
-interface SubtaskItem {
-  subtaskId: number;
-  parentId: number;
-  description: string;
-  done: boolean;
-}
-
 export async function getSubtasks(token: string, ticketId: number) {
   try {
     const {data} = await instance.get<{message: string; data: SubtaskItem[]}>(`/subtasks/${ticketId}`, {
@@ -39,11 +27,6 @@ export async function getSubtasks(token: string, ticketId: number) {
 }
 
 // INTF-53: 하위태스크 수정
-interface UpdateSubtaskParams {
-  description: string;
-  ticketId?: number;
-}
-
 export async function updateSubtaskDescription(token: string, taskId: number, params: UpdateSubtaskParams) {
   try {
     const {data} = await instance.patch(`/subtasks/${taskId}`, params, {headers: {Authorization: `Bearer ${token}`}});
@@ -82,10 +65,6 @@ export async function updateSubtaskStatus(token: string, ticketId: number, taskI
 }
 
 // INTF-56: 진행률 조회
-interface ProgressResponse {
-  progress: number;
-}
-
 export async function getTicketProgress(token: string, ticketId: number) {
   try {
     const {data} = await instance.get<{message: string; data: ProgressResponse}>(`/tickets/${ticketId}/progress`, {

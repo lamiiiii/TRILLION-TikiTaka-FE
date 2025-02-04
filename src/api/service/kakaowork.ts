@@ -5,17 +5,6 @@ const kakaoWorkInstance = axios.create({
 });
 
 // INTF-52: 카카오워크 사용자 조회
-interface KakaoUserResponse {
-  success: boolean;
-  user: {
-    id: string;
-    name: string;
-    display_name: string;
-    emails: string[];
-    // ... 기타 필드
-  };
-}
-
 export async function getUserByEmail(token: string, email: string) {
   try {
     const {data} = await kakaoWorkInstance.get<KakaoUserResponse>('/v1/users.find_by_email', {
@@ -30,15 +19,6 @@ export async function getUserByEmail(token: string, email: string) {
 }
 
 // INTF-52: 카카오워크 채팅방 생성
-interface ConversationResponse {
-  success: boolean;
-  conversation: {
-    id: string;
-    type: string;
-    users_count: number;
-  };
-}
-
 export async function openConversation(token: string, userId: string) {
   try {
     const {data} = await kakaoWorkInstance.post<ConversationResponse>(
@@ -54,17 +34,6 @@ export async function openConversation(token: string, userId: string) {
 }
 
 // INTF-52: 카카오워크 알림 전송
-interface MessageBlock {
-  type: string;
-  text?: string;
-  blocks?: any[];
-}
-
-interface SendMessageParams {
-  conversation_id: string;
-  blocks: MessageBlock[];
-}
-
 export async function sendNotification(token: string, conversationId: string, messageBlocks: MessageBlock[]) {
   try {
     const {data} = await kakaoWorkInstance.post(

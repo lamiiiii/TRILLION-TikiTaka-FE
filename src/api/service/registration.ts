@@ -1,6 +1,6 @@
 import instance from '../axiosInstance';
 
-// POST: 계정 등록 신청 (INTF-1)
+// INTF-1: POST: 계정 등록 신청
 export async function postRegistration(postData: {email: string; username: string}) {
   try {
     const {data} = await instance.post('/registrations', postData);
@@ -11,14 +11,7 @@ export async function postRegistration(postData: {email: string; username: strin
   }
 }
 
-// GET: 계정 등록 신청 조회 (INTF-2)
-interface RegistrationListParams {
-  page?: number;
-  size?: number;
-  status?: 'PENDING' | 'APPROVED' | 'REJECTED';
-  token: string;
-}
-
+// INTF-2: GET: 계정 등록 신청 조회
 export async function getRegistrationList(params: RegistrationListParams) {
   try {
     const {data} = await instance.get('/registrations/list', {
@@ -38,14 +31,7 @@ export async function getRegistrationList(params: RegistrationListParams) {
   }
 }
 
-// POST: 계정 등록 승인/거절 (INTF-3)
-interface RegistrationUpdateParams {
-  registrationId: number;
-  status: 'APPROVED' | 'REJECTED';
-  role: 'ADMIN' | 'MANAGER' | 'USER';
-  token: string;
-}
-
+// INTF-3: POST: 계정 등록 승인/거절
 export async function updateRegistrationStatus(params: RegistrationUpdateParams) {
   try {
     const {data} = await instance.post(

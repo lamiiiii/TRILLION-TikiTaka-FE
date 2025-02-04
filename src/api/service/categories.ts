@@ -1,10 +1,6 @@
 import instance from '../axiosInstance';
 
-// 카테고리 생성 (INTF-17)
-interface CreateCategoryData {
-  name: string;
-}
-
+// INTF-17: 카테고리 생성
 export async function createCategory(token: string, parentId: number, categoryData: CreateCategoryData) {
   try {
     const {data} = await instance.post(`/categories?parentId=${parentId}`, categoryData, {
@@ -17,13 +13,7 @@ export async function createCategory(token: string, parentId: number, categoryDa
   }
 }
 
-// 카테고리 조회 (INTF-18)
-interface Category {
-  id: number;
-  name: string;
-  parentId: number | null;
-}
-
+// INTF-18: 카테고리 조회
 export async function getCategoryList(token: string, parentId?: number) {
   try {
     const url = parentId ? `/categories/list?parentId=${parentId}` : '/categories/list';
@@ -37,11 +27,7 @@ export async function getCategoryList(token: string, parentId?: number) {
   }
 }
 
-// 카테고리 수정 (INTF-19)
-interface UpdateCategoryData {
-  name: string;
-}
-
+// INTF-19: 카테고리 수정
 export async function updateCategory(token: string, categoryId: number, categoryData: UpdateCategoryData) {
   try {
     const {data} = await instance.patch(`/categories/${categoryId}`, categoryData, {
@@ -54,7 +40,7 @@ export async function updateCategory(token: string, categoryId: number, category
   }
 }
 
-// 카테고리 삭제 (INTF-20)
+// INTF-20: 카테고리 삭제
 export async function deleteCategory(token: string, categoryId: number) {
   try {
     const {data} = await instance.delete(`/categories/${categoryId}`, {

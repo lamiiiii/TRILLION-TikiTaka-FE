@@ -1,17 +1,5 @@
 import instance from '../axiosInstance';
 
-interface ChangeHistoryItem {
-  historyId: number;
-  ticketId: number;
-  fieldName: string;
-  originalValue: string;
-  updatedValue: string;
-  updatedBy: number;
-  updatedByName: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export async function getChangeHistory(token: string, ticketId: number): Promise<ChangeHistoryItem[]> {
   try {
     const {data} = await instance.get<{message: string; data: ChangeHistoryItem[]}>(`/histories/${ticketId}`, {
