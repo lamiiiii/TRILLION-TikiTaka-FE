@@ -1,4 +1,4 @@
-import Modal from '../../common/Modal';
+import AdminModal from '../common/AdminModal';
 
 interface ReplyModalProps {
   inquiry: {id: number; user: string; title: string; content: string};
@@ -7,7 +7,7 @@ interface ReplyModalProps {
 
 export default function ReplyModal({inquiry, onClose}: ReplyModalProps) {
   return (
-    <Modal title="문의 답변 등록" onBackBtnClick={onClose} backBtn="닫기" checkBtn="등록" onBtnClick={() => console.log('답변 등록')}>
+    <AdminModal title="문의 답변 등록" onBackBtnClick={onClose} backBtn="닫기" checkBtn="등록" onBtnClick={() => console.log('답변 등록')}>
       <div className="mb-4">
         <input
           type="text"
@@ -26,6 +26,6 @@ export default function ReplyModal({inquiry, onClose}: ReplyModalProps) {
           placeholder="답변을 입력해주세요"
         />
       </div>
-    </Modal>
+    </AdminModal>
   );
 }

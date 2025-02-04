@@ -5,6 +5,7 @@ import Modal from '../../common/Modal';
 import {CATEGORY_MENU} from '../../../constants/admin';
 import RegisterRequestForm from './RegisterRequestForm';
 import RequestFormDetail from './RequestFormDetail';
+import AdminModal from '../common/AdminModal';
 
 export default function CategoryList() {
   const [categories, setCategories] = useState(categoryDummy);
@@ -89,7 +90,7 @@ export default function CategoryList() {
 
       {/* 카테고리 추가 모달 */}
       {isAddModalOpen && (
-        <Modal
+        <AdminModal
           title="카테고리 등록"
           content="해당 부서의 카테고리를 추가합니다."
           backBtn="취소"
@@ -102,7 +103,7 @@ export default function CategoryList() {
               <label className="text-sm text-gray-700 font-bold">{CATEGORY_MENU[0]}</label>
               <input
                 type="text"
-                className="w-full px-3 py-2 border border-gray-300 rounded mt-1"
+                className="w-full px-3 py-2 border border-gray-300 rounded mt-1 text-body-regular"
                 placeholder="1차 카테고리를 입력해주세요"
                 value={newPrimary}
                 onChange={(e) => setNewPrimary(e.target.value)}
@@ -112,14 +113,14 @@ export default function CategoryList() {
               <label className="text-sm text-gray-700 font-bold">{CATEGORY_MENU[1]}</label>
               <input
                 type="text"
-                className="w-full px-3 py-2 border border-gray-300 rounded mt-1"
+                className="w-full px-3 py-2 border border-gray-300 rounded mt-1 text-body-regular"
                 placeholder="2차 카테고리를 입력해주세요"
                 value={newSecondary}
                 onChange={(e) => setNewSecondary(e.target.value)}
               />
             </div>
           </div>
-        </Modal>
+        </AdminModal>
       )}
 
       {/* 카테고리 삭제 모달 */}
