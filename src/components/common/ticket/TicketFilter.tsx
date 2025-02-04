@@ -34,12 +34,12 @@ function FilterItem({type, count, isSelected, onClick}: {type: TicketViewType; c
         : 'bg-gray-6'; // 선택되지 않은 다른 상태는 흐린 회색 배경
 
   return (
-    <div className={`flex items-center gap-2 cursor-pointer`} onClick={onClick}>
+    <div className={`flex gap-2 cursor-pointer`} onClick={onClick}>
       {/* 텍스트 */}
       <span className={textColor}>{type}</span>
       {/* Count */}
       <div className={`px-4 h-[16px] flex place-items-center rounded-full  ${bgColor} text-white mb-0.5`}>
-        <div className="mt-0.5 text-caption-bold">{count}</div>
+        <div className=" text-caption-bold h-full flex items-center">{count}</div>
       </div>
     </div>
   );

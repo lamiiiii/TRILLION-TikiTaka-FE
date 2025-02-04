@@ -8,7 +8,7 @@ interface CategoryCardProps {
   isRegistered: boolean;
   onEdit: (id: number) => void;
   onDelete: (id: number) => void;
-  onRegister: () => void; // 요청 양식 등록 
+  onRegister: () => void; // 요청 양식 등록
   onViewDetail: () => void; // 요청 양식 상세 보기
 }
 
