@@ -59,7 +59,7 @@ export default function SideBar() {
               <SubMenuItem to="/manager/newtickets" text="요청 티켓 관리" />
             </MenuItem>
             <MenuItem icon={MyIcon} text="마이페이지" to="/manager/inquiry">
-              <SubMenuItem to="/manager/inquiry" text="문의내역 확인" />
+              {/* <SubMenuItem to="/manager/inquiry" text="문의내역 확인" /> */}
               <SubMenuItem to="/manager/pwdChange" text="비밀번호 변경" />
             </MenuItem>
           </>
@@ -70,7 +70,7 @@ export default function SideBar() {
           <>
             <MenuItem icon={NewTicketIcon} text="티켓 생성" to="/user/newticket" />
             <MenuItem icon={MyIcon} text="마이페이지" to="/user/inquiry">
-              <SubMenuItem to="/user/inquiry" text="문의내역 확인" />
+              {/* <SubMenuItem to="/user/inquiry" text="문의내역 확인" /> */}
               <SubMenuItem to="/user/pwdChange" text="비밀번호 변경" />
             </MenuItem>
           </>

@@ -15,9 +15,7 @@ export interface TokenStore {
 
 export interface TicketStore {
   priority: PriorityType;
-  isReviewNeeded: boolean;
   setPriority: (priority: string) => void;
-  setIsReviewNeeded: (isReviewRequired: boolean) => void;
 }
 
 export interface CategoryStore {

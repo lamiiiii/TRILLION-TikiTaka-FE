@@ -1,5 +1,5 @@
-import {CheckIcon} from '../../common/Icon';
-import Profile from '../../common/Profile';
+import {CheckIcon} from '../Icon';
+import Profile from '../Profile';
 
 // 임시 데이터
 const reviewers = [

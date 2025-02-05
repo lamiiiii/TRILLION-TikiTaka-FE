@@ -1,6 +1,6 @@
 import {useMemo, useState} from 'react';
 import {motion, AnimatePresence} from 'framer-motion';
-import DropDown from '../../common/Dropdown';
+import DropDown from '../Dropdown';
 
 interface Task {
   id: number;
@@ -63,6 +63,7 @@ export default function TicketTask() {
                     label="상태"
                     options={['진행 전', '진행 중', '완료']}
                     defaultSelected={task.status}
+                    value={task.status}
                     onSelect={(status) => handleStatusChange(task.id, status)}
                     border={false}
                     textColor="white"

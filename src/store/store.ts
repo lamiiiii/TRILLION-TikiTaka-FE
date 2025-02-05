@@ -6,7 +6,7 @@ import {CategoryStore, NewTicketStore, TicketStore, TokenStore, UserStore} from 
 // 역할 임시 전달 - user, manager, admin (추후 로그인시 전달 받아와서 저장)
 // 시스템 사용자 정보 저장 전역변수
 export const useUserStore = create<UserStore>((set) => ({
-  role: 'manager',
+  role: 'user',
   setRole: (role) => set({role}),
 }));
 
@@ -20,9 +20,7 @@ export const useTokenStore = create<TokenStore>((set) => ({
 
 export const useTicketStore = create<TicketStore>((set) => ({
   priority: 'HIGH',
-  isReviewNeeded: false,
   setPriority: (priority: string) => set((state) => ({...state, priority})),
-  setIsReviewNeeded: (state) => set({isReviewNeeded: state}),
 }));
 
 // 카테고리

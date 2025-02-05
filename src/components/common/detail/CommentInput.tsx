@@ -1,6 +1,6 @@
 import {useRef, useState} from 'react';
-import DropDown from '../../common/Dropdown';
-import Profile from '../../common/Profile';
+import DropDown from '../Dropdown';
+import Profile from '../Profile';
 
 export default function CommentInput() {
   const [selectedManager, setSelectedManager] = useState('@Alex');
