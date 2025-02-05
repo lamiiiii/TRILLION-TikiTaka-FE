@@ -118,11 +118,9 @@ export async function createTicket(token: string, ticketData: CreateTicketData) 
 }
 
 // INTF-30: 티켓 상태별 개수 조회
-export async function getTicketStatusCount(token: string) {
+export async function getTicketStatusCount() {
   try {
-    const {data} = await instance.get<{message: string; data: TicketStatusCount}>('/tickets/count', {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.get<{message: string; data: TicketStatusCount}>('/tickets/count');
     return data.data;
   } catch (error) {
     console.error('티켓 상태 조회 실패:', error);
@@ -131,11 +129,9 @@ export async function getTicketStatusCount(token: string) {
 }
 
 // INTF-31: 티켓 상세 조회
-export async function getTicketDetails(token: string, ticketId: number) {
+export async function getTicketDetails(ticketId: number) {
   try {
-    const {data} = await instance.get<{message: string; data: TicketDetails}>(`/tickets/${ticketId}`, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.get<{message: string; data: TicketDetails}>(`/tickets/${ticketId}`);
     return data.data;
   } catch (error) {
     console.error('티켓 상세 조회 실패:', error);

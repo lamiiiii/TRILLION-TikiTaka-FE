@@ -85,6 +85,7 @@ export default function TicketTask() {
   };
 
   const handleDelete = (taskId: number) => {
+    // TODO: 태스크 삭제는 alert api 연결 후 제거
     if (window.confirm('정말로 이 태스크를 삭제하시겠습니까?')) {
       deleteSubtaskMutation.mutate(taskId);
     }

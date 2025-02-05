@@ -1,5 +1,5 @@
 interface TicketContentProps {
-  content: string;
+  content?: string;
 }
 
 export default function TicketContent({content}: TicketContentProps) {

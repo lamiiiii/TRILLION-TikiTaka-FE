@@ -1,17 +1,26 @@
 import DropDown from '../Dropdown';
-import {PRIORITY, STATUS_OPTIONS} from '../../../constants/constants';
+import {PRIORITY, STATUS_MAP, STATUS_OPTIONS} from '../../../constants/constants';
 import {useTicketStore} from '../../../store/store';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {WhiteCheckIcon} from '../Icon';
 
 interface StatusBarProps {
-  status: (typeof STATUS_OPTIONS)[number];
+  status?: keyof typeof STATUS_MAP;
 }
 
 export default function StatusBar({status}: StatusBarProps) {
-  const [currentStatus, setCurrentStatus] = useState(status);
+  const [currentStatus, setCurrentStatus] = useState<string>(status ? STATUS_MAP[status] : '대기 중');
   const {priority, setPriority} = useTicketStore();
   const [isUrgent, setIsUrgent] = useState(false);
+
+  // '반려'를 제외한 상태 옵션
+  const visibleStatusOptions = STATUS_OPTIONS.filter((option) => option !== '반려');
+
+  useEffect(() => {
+    if (status) {
+      setCurrentStatus(STATUS_MAP[status]);
+    }
+  }, [status]);
 
   const checkboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = e.target.checked;
@@ -49,7 +58,7 @@ export default function StatusBar({status}: StatusBarProps) {
 
         <div className="flex items-center gap-2">
           <label className="text-body-bold">Status</label>
-          {STATUS_OPTIONS.map((option) => (
+          {visibleStatusOptions.map((option) => (
             <button
               key={option}
               onClick={() => handleStatusClick(option)}

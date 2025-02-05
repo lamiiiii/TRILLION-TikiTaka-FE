@@ -9,25 +9,26 @@ import TicketDetail from './TicketDetail';
 import TicketSetting from './TicketSetting';
 import TicketTask from './TicketTask';
 import TicketLog from './TicketLog';
-import {ticketDummy} from '../../../data/ticketData';
 import {useQuery} from '@tanstack/react-query';
-import {getTicketComments} from '../../../api/service/tickets';
+import {getTicketComments, getTicketDetails} from '../../../api/service/tickets';
 import {Comment} from '../../../interfaces/interfaces';
+import {TicketDetails} from '../../../api/type/tickets';
 
 export default function DetailContainer() {
   const {id} = useParams<{id: string}>();
   const navigate = useNavigate();
 
-  // URL의 ID와 일치하는 티켓 찾기
-  const ticket = ticketDummy.find((ticket) => ticket.id === id);
-  if (!ticket) {
-    return <div className="text-center py-8">티켓을 찾을 수 없습니다</div>;
-  }
-
+  // 뒤로 가기
   const handleGoBack = () => navigate(-1);
 
   // URL 파라미터에서 추출한 ID
   const ticketId = Number(id);
+
+  // 티켓 상세 정보 조회
+  const {data: ticket} = useQuery<TicketDetails>({
+    queryKey: ['ticketDetails', ticketId],
+    queryFn: () => getTicketDetails(ticketId),
+  });
 
   //댓글 조회
   const {data: comments} = useQuery({
@@ -41,15 +42,14 @@ export default function DetailContainer() {
         {'< 뒤로가기'}
       </button>
 
-      <TopMenu boldBlackText={`#${ticket.id}`} regularText={ticket.title} />
-      {/* FIX: 상태 연결 필요 */}
-      <StatusBar status="진행 중" />
+      <TopMenu boldBlackText={`#${ticket?.ticketId}`} regularText={ticket?.title} />
+      <StatusBar status={ticket?.status as 'PENDING' | 'IN_PROGRESS' | 'DONE' | 'REVIEW' | 'REJECTED' | undefined} />
 
       <section className="flex bg-gray-18 p-6 pb-[38px] mt-3 mb-[100px]">
         <div className="flex gap-4 mr-10">
-          <Profile name={ticket.assignee} backgroundColor="user" size="lg" />
+          <Profile name={ticket?.managerName ? ticket?.managerName : 'undefined'} backgroundColor="user" size="lg" />
           <section className="w-[577px] flex flex-col">
-            <TicketContent content={ticket?.content} />
+            <TicketContent content={ticket?.description} />
             <CommentInput />
             {comments?.data && comments?.data.length > 0 ? (
               comments?.data.map((comment: Comment) => (
@@ -68,8 +68,12 @@ export default function DetailContainer() {
 
         <section className="flex flex-col gap-5 w-[400px]">
           {/* {isReviewNeeded && <TicketReview />} */}
-          <TicketDetail data={ticket} />
-          <TicketSetting data={ticket} />
+          {ticket && (
+            <>
+              <TicketDetail data={ticket} />
+              <TicketSetting data={ticket} />
+            </>
+          )}
           {location.pathname.startsWith('/manager') && <TicketTask />}
           <TicketLog />
         </section>
