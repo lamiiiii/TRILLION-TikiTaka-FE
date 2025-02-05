@@ -1,4 +1,5 @@
-import UserNewTicketContainer from '../../components/user/newTicket/UserNewTicketContainer';
+import NewTicketContainer from '../../components/common/ticket/NewTicketContainer';
+
 export default function UserNewTicket() {
-  return <UserNewTicketContainer />;
+  return <NewTicketContainer />;
 }

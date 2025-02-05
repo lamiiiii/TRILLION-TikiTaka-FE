@@ -1,5 +1,5 @@
-import ManagerNewTicketContainer from '../../components/manager/newticket/ManagerNewTicketContainer';
+import NewTicketContainer from "../../components/common/ticket/NewTicketContainer";
 
 export default function ManagerNewTicket() {
-  return <ManagerNewTicketContainer />;
+  return <NewTicketContainer />;
 }
