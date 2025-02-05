@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import InitialTopBar from './InitialTopBar';
 import Modal from '../Modal';
+import {validateEmail, validatePwd} from '../../../utils/Validation';
 
 export default function ResetPwdContainer() {
   const [email, setEmail] = useState('');
@@ -16,17 +17,6 @@ export default function ResetPwdContainer() {
   const [newPwdCheckError, setNewPwdCheckError] = useState('');
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // 이메일 유효성 검사 정규식
-    return emailRegex.test(email);
-  };
-
-  // 비밀번호 정규식 (영문, 숫자, 특수문자 포함, 6~32자)
-  const validatePwd = (password: string) => {
-    const pwdRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{6,32}$/;
-    return pwdRegex.test(password);
-  };
 
   const emailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -136,45 +126,39 @@ export default function ResetPwdContainer() {
     <div className="flex h-screen">
       <InitialTopBar />
       <div className="top-container items-center">
-        <div className="flex flex-col items-center gap-10">
+        <div className="flex flex-col items-center gap-10 w-[400px]">
           <p className="text-black text-2xl font-bold">비밀번호 재설정</p>
-          <div className="flex w-[500px] flex-col gap-5 p-5">
+          <div className="flex flex-col w-full gap-5">
             {/* 이메일 */}
             {!isVerified && (
               <div className="email">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-bold">이메일</p>
-                  <input
-                    id="email"
-                    autoComplete="email"
-                    type="email"
-                    value={email}
-                    onChange={emailChange}
-                    placeholder="이메일을 입력하세요"
-                    required
-                    className={`py-3 px-4 text-subtitle-regular w-[328px] border rounded-md focus:outline-none 
+                <input
+                  id="email"
+                  autoComplete="email"
+                  type="email"
+                  value={email}
+                  onChange={emailChange}
+                  placeholder="이메일을 입력하세요"
+                  required
+                  className={`py-3 px-4 text-subtitle-regular w-full border rounded-md focus:outline-none 
                 ${emailError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
-                  />
-                </div>
-                <div className={`flex relative left-[132px] text-error text-xs mt-1 ${emailError ? '' : 'hidden'}`}>{emailError}</div>
+                />
+                <div className={`flex relative text-error text-xs mt-1 ${emailError ? '' : 'hidden'}`}>{emailError}</div>
               </div>
             )}
             {/* 인증번호 입력 (이메일 전송 후 표시) */}
             {!isVerified && isAuthSent && (
               <div className="authCode">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-bold">인증번호</p>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={authCode}
-                      onChange={authCodeChange}
-                      placeholder="인증번호 입력"
-                      className={`py-3 px-4 text-subtitle-regular w-[328px] border rounded-md focus:outline-none ${
-                        authCodeError ? 'border-error' : 'border-gray-2 focus:border-main'
-                      }`}
-                    />
-                  </div>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={authCode}
+                    onChange={authCodeChange}
+                    placeholder="인증번호 입력"
+                    className={`py-3 px-4 text-subtitle-regular w-full border rounded-md focus:outline-none ${
+                      authCodeError ? 'border-error' : 'border-gray-2 focus:border-main'
+                    }`}
+                  />
                   {authCodeError && <p className="text-error text-xs mt-1">{authCodeError}</p>}
                 </div>
               </div>
@@ -184,41 +168,33 @@ export default function ResetPwdContainer() {
               <>
                 {/* 새 비밀번호 */}
                 <div className="newPwd">
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm font-bold">새 비밀번호</p>
-                    <input
-                      id="newPwd"
-                      autoComplete="newPwd"
-                      type="password"
-                      value={newPwd}
-                      onChange={newPwdChange}
-                      placeholder="새 비밀번호를 입력하세요"
-                      required
-                      className={`py-3 px-4 text-subtitle-regular w-[328px] border rounded-md focus:outline-none 
+                  <input
+                    id="newPwd"
+                    autoComplete="newPwd"
+                    type="password"
+                    value={newPwd}
+                    onChange={newPwdChange}
+                    placeholder="새 비밀번호를 입력하세요"
+                    required
+                    className={`py-3 px-4 text-subtitle-regular w-full border rounded-md focus:outline-none 
                 ${newPwdError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
-                    />
-                  </div>
-                  <div className={`flex relative left-[132px] text-error text-xs mt-1 ${newPwdError ? '' : 'hidden'}`}>{newPwdError}</div>
+                  />
+                  <div className={`flex relative text-error text-xs mt-1 ${newPwdError ? '' : 'hidden'}`}>{newPwdError}</div>
                 </div>
                 {/* 새 비밀번호 확인*/}
                 <div className="newPwdCheck">
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm font-bold">새 비밀번호 확인</p>
-                    <input
-                      id="newPwdCheck"
-                      autoComplete="newPwdCheck"
-                      type="password"
-                      value={newPwdCheck}
-                      onChange={newPwdCheckChange}
-                      placeholder="새 비밀번호를 다시 입력하세요"
-                      required
-                      className={`py-3 px-4 text-subtitle-regular w-[328px] border rounded-md focus:outline-none 
+                  <input
+                    id="newPwdCheck"
+                    autoComplete="newPwdCheck"
+                    type="password"
+                    value={newPwdCheck}
+                    onChange={newPwdCheckChange}
+                    placeholder="새 비밀번호를 다시 입력하세요"
+                    required
+                    className={`py-3 px-4 text-subtitle-regular w-full border rounded-md focus:outline-none 
                 ${newPwdCheckError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
-                    />
-                  </div>
-                  <div className={`flex relative left-[132px] text-error text-xs mt-1 ${newPwdCheckError ? '' : 'hidden'}`}>
-                    {newPwdCheckError}
-                  </div>
+                  />
+                  <div className={`flex relative text-error text-xs mt-1 ${newPwdCheckError ? '' : 'hidden'}`}>{newPwdCheckError}</div>
                 </div>
               </>
             )}
@@ -233,7 +209,7 @@ export default function ResetPwdContainer() {
                   : email.trim() === '' || emailError !== ''
                 : newPwd.trim() === '' || newPwdCheck.trim() === '' || newPwdError !== '' || newPwdCheckError !== ''
             }
-            className="main-btn-lg disabled:bg-gray-2 disabled:cursor-not-allowed w-32"
+            className="main-btn-lg disabled:bg-gray-2 disabled:cursor-not-allowed w-full"
           >
             {!isVerified ? (isAuthSent ? '인증번호 확인' : '인증하기') : '재설정 완료'}
           </button>
@@ -246,7 +222,7 @@ export default function ResetPwdContainer() {
           backBtn="로그인하러 가기"
           onBackBtnClick={() => {
             setIsModalOpen(false);
-            window.location.href = '/signin';
+            window.location.href = '/';
           }}
         />
       )}
