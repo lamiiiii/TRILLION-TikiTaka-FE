@@ -365,11 +365,7 @@ export async function updateTicketComment(ticketId: number, commentId: number, c
 // INTF-47: 티켓 댓글 삭제
 export async function deleteTicketComment(ticketId: number, commentId: number) {
   try {
-    const {data} = await instance.delete(`/tickets/${ticketId}/comments/${commentId}`, {
-      headers: {
-        'Access-Control-Request-Method': 'DELETE',
-      },
-    });
+    const {data} = await instance.delete(`/tickets/${ticketId}/comments/${commentId}`);
     return data;
   } catch (error) {
     console.error('티켓 댓글 삭제 실패:', error);
