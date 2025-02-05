@@ -48,7 +48,7 @@ export default function TemplateContainer({isOpen, onClose}: TemplateContainerPr
     <motion.div
       className="fixed top-14 right-0 h-full bg-white shadow-2xl transition-all"
       animate={{width}}
-      transition={{duration: 0.2, ease: 'easeInOut'}}
+      transition={{duration: 0.3, ease: 'easeInOut'}}
     >
       <div className="top-container">
         <div className="flex flex-col max-w-1200 py-4 gap-4">

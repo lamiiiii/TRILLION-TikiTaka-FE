@@ -8,7 +8,6 @@ import NotFound from './pages/NotFound';
 import ManagerInquiry from './pages/manager/ManagerInquiry';
 import ManagerPwdChange from './pages/manager/ManagerPwdChange';
 import UserNewTicket from './pages/user/UserNewTicket';
-import Landing from './pages/common/signin/Landing';
 import SignIn from './pages/common/signin/SignIn';
 import SignUp from './pages/common/signin/SignUp';
 import ResetPwd from './pages/common/signin/ResetPwd';
@@ -60,8 +59,7 @@ function App() {
       <Router>
         <Routes>
           {/* 레이아웃 없음 */}
-          <Route path="/" element={<Landing />} />
-          <Route path="/signin" element={<SignIn />} />
+          <Route path="/" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/resetpwd" element={<ResetPwd />} />
           <Route path="/changepwd" element={<ChangePwd />} />

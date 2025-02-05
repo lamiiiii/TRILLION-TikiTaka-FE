@@ -2,6 +2,8 @@ import {useState} from 'react';
 import InitialTopBar from './InitialTopBar';
 import {SmRightIcon, WhiteCheckIcon} from '../Icon';
 import Modal from '../Modal';
+import {validateEmail, validateId} from '../../../utils/Validation';
+import { Link } from 'react-router-dom';
 
 export default function SignUpContainer() {
   const [email, setEmail] = useState('');
@@ -14,16 +16,6 @@ export default function SignUpContainer() {
   const [termsError, setTermsError] = useState('');
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // 이메일 유효성 검사 정규식
-    return emailRegex.test(email);
-  };
-
-  const validateId = (id: string) => {
-    const idRegex = /^[a-z]{3,10}\.[a-z]{1,5}$/; // 아이디 유효성 검사 정규식
-    return idRegex.test(id);
-  };
 
   // todo 이메일 중복 여부 체크
   const emailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,42 +84,36 @@ export default function SignUpContainer() {
     <div className="flex h-screen">
       <InitialTopBar />
       <div className="top-container items-center">
-        <div className="flex flex-col items-center gap-10">
+        <div className="flex flex-col items-center gap-10 w-[400px]">
           <p className="text-black text-2xl font-bold">계정 등록 신청</p>
-          <div className="flex w-full flex-col gap-5 p-5">
+          <div className="flex w-full flex-col gap-5">
             <div className="email">
-              <div className="flex items-center gap-16">
-                <p className="text-sm font-bold">이메일</p>
-                <input
-                  id="email"
-                  autoComplete="email"
-                  type="email"
-                  value={email}
-                  onChange={emailChange}
-                  placeholder="user@tikitaka.com"
-                  required
-                  className={`py-3 px-4 text-subtitle-regular w-[328px] border rounded-md focus:outline-none 
+              <input
+                id="email"
+                autoComplete="email"
+                type="email"
+                value={email}
+                onChange={emailChange}
+                placeholder="[Email] &nbsp; user@tikitaka.com"
+                required
+                className={`py-3 px-4 text-subtitle-regular w-full border rounded-md focus:outline-none 
                 ${emailError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
-                />
-              </div>
-              <div className={`flex relative left-[101px] text-error text-xs mt-1 ${emailError ? '' : 'hidden'}`}>{emailError}</div>
+              />
+              <div className={`flex relative text-error text-xs mt-1 ${emailError ? '' : 'hidden'}`}>{emailError}</div>
             </div>
             <div className="id">
-              <div className="flex items-center gap-16">
-                <p className="text-sm font-bold">아이디</p>
-                <input
-                  id="id"
-                  autoComplete="id"
-                  type="id"
-                  value={id}
-                  onChange={idChange}
-                  placeholder="3~15자리/영문 소문자, 점(.) 조합"
-                  required
-                  className={`py-3 px-4 text-subtitle-regular w-[328px] border rounded-md focus:outline-none 
+              <input
+                id="id"
+                autoComplete="id"
+                type="id"
+                value={id}
+                onChange={idChange}
+                placeholder="[ID] &nbsp; 3~15자리/영문 소문자, 점(.) 조합"
+                required
+                className={`py-3 px-4 text-subtitle-regular w-full border rounded-md focus:outline-none 
                 ${idError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
-                />
-              </div>
-              <div className={`flex relative left-[101px] text-error text-xs mt-1 ${idError ? '' : 'hidden'}`}>{idError}</div>
+              />
+              <div className={`flex relative text-error text-xs mt-1 ${idError ? '' : 'hidden'}`}>{idError}</div>
             </div>
             <div className="accountTerms">
               <div className="flex w-full py-2 items-center justify-between ">
@@ -154,9 +140,14 @@ export default function SignUpContainer() {
               <div className={`flex relative left-[101px] text-error text-xs mt-1 ${termsError ? '' : 'hidden'}`}>{termsError}</div>
             </div>
           </div>
-          <button onClick={onClickSubmit} className="main-btn-lg w-20">
+          <button onClick={onClickSubmit} className="main-btn-lg w-full">
             신청 완료
           </button>
+          <div className="flex justify-end w-full">
+            <Link to="/" className="text-sm text-gray-2 cursor-pointer hover:underline hover:text-gray-15">
+              로그인하러 가기
+            </Link>
+          </div>
         </div>
       </div>
       {isModalOpen && (

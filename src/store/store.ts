@@ -35,7 +35,7 @@ export const useNewTicketStore = create<NewTicketStore>((set) => ({
   secondCategory: null,
   title: '',
   content: '',
-  manager: 'all',
+  manager: '',
   ticketType: '',
   template: '',
   dueDate: '',
