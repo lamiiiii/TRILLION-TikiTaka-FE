@@ -24,6 +24,7 @@ import UserInquiry from './pages/user/UserInquiry';
 import UserPwdChange from './pages/user/UserPwdChange';
 import AdminStatistics from './pages/admin/AdminStatistics';
 import ManagerNewTicket from './pages/manager/ManagerNewTicket';
+import UserTicketDetail from './pages/user/UserTicketDetail';
 
 function Layout() {
   return (
@@ -54,6 +55,7 @@ function App() {
   const userRoutes = [
     {path: '', element: <UserHome />},
     {path: 'newTicket', element: <UserNewTicket />},
+    {path: 'detail', element: <UserTicketDetail />},
     {path: 'inquiry', element: <UserInquiry />},
     {path: 'pwdChange', element: <UserPwdChange />},
   ];
