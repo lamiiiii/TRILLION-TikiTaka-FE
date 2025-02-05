@@ -71,3 +71,13 @@ export interface UserInfo {
   role: 'manager' | 'user' | 'admin';
   website: string;
 }
+
+// 댓글 응답 형식
+export interface Comment {
+  author: {
+    name: string;
+  };
+  content: string;
+  files?: File[];
+  createdAt: string;
+}

@@ -326,15 +326,13 @@ export async function getTicketReviews(token: string, ticketId: number) {
 }
 
 // INTF-44: 티켓 댓글 작성
-export async function createTicketComment(token: string, ticketId: number, content: string) {
+export async function createTicketComment(ticketId: number, formData: FormData) {
   try {
-    const {data} = await instance.post(
-      `/tickets/${ticketId}/comments`,
-      {content},
-      {
-        headers: {Authorization: `Bearer ${token}`},
-      }
-    );
+    const {data} = await instance.post(`/tickets/${ticketId}/comments`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     return data;
   } catch (error) {
     console.error('티켓 댓글 작성 실패:', error);
@@ -343,11 +341,9 @@ export async function createTicketComment(token: string, ticketId: number, conte
 }
 
 // INTF-45: 티켓 댓글 조회
-export async function getTicketComments(token: string, ticketId: number) {
+export async function getTicketComments(ticketId: number) {
   try {
-    const {data} = await instance.get(`/tickets/${ticketId}/comments`, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.get(`/tickets/${ticketId}/comments`);
     return data;
   } catch (error) {
     console.error('티켓 댓글 조회 실패:', error);
@@ -356,15 +352,9 @@ export async function getTicketComments(token: string, ticketId: number) {
 }
 
 // INTF-46: 티켓 댓글 수정
-export async function updateTicketComment(token: string, ticketId: number, commentId: number, content: string) {
+export async function updateTicketComment(ticketId: number, commentId: number, content: string) {
   try {
-    const {data} = await instance.patch(
-      `/tickets/${ticketId}/comments/${commentId}`,
-      {content},
-      {
-        headers: {Authorization: `Bearer ${token}`},
-      }
-    );
+    const {data} = await instance.patch(`/tickets/${ticketId}/comments/${commentId}`, {content});
     return data;
   } catch (error) {
     console.error('티켓 댓글 수정 실패:', error);
@@ -373,11 +363,9 @@ export async function updateTicketComment(token: string, ticketId: number, comme
 }
 
 // INTF-47: 티켓 댓글 삭제
-export async function deleteTicketComment(token: string, ticketId: number, commentId: number) {
+export async function deleteTicketComment(ticketId: number, commentId: number) {
   try {
-    const {data} = await instance.delete(`/tickets/${ticketId}/comments/${commentId}`, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.delete(`/tickets/${ticketId}/comments/${commentId}`);
     return data;
   } catch (error) {
     console.error('티켓 댓글 삭제 실패:', error);

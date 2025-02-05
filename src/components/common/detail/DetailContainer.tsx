@@ -10,6 +10,9 @@ import TicketSetting from './TicketSetting';
 import TicketTask from './TicketTask';
 import TicketLog from './TicketLog';
 import {ticketDummy} from '../../../data/ticketData';
+import {useQuery} from '@tanstack/react-query';
+import {getTicketComments} from '../../../api/service/tickets';
+import {Comment} from '../../../interfaces/interfaces';
 
 export default function DetailContainer() {
   const {id} = useParams<{id: string}>();
@@ -22,6 +25,15 @@ export default function DetailContainer() {
   }
 
   const handleGoBack = () => navigate(-1);
+
+  // URL 파라미터에서 추출한 ID
+  const ticketId = Number(id);
+
+  //댓글 조회
+  const {data: comments} = useQuery({
+    queryKey: ['ticketComments', ticketId],
+    queryFn: () => getTicketComments(ticketId),
+  });
 
   return (
     <div className="flex flex-col pt-[30px] px-[46px] ">
@@ -39,8 +51,13 @@ export default function DetailContainer() {
           <section className="w-[577px] flex flex-col">
             <TicketContent content={ticket?.content} />
             <CommentInput />
-            {/* FIX: 댓글 데이터 연결 필요 */}
-            <CommentItem name="Yeon" content="댓글 내용" />
+            {comments && comments.length > 0 ? (
+              comments.map((comment: Comment) => (
+                <CommentItem name={comment.author.name} content={comment.content} files={comment.files} createdAt={comment.createdAt} />
+              ))
+            ) : (
+              <></>
+            )}
           </section>
         </div>
 
