@@ -1,5 +1,5 @@
 import {TicketDataProps} from '../../../interfaces/ticket';
-import Profile from '../../common/Profile';
+import Profile from '../Profile';
 
 interface TicketDetailProps {
   data: TicketDataProps;

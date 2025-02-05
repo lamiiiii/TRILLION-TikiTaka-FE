@@ -31,3 +31,35 @@ export const INQUIRY_DATA = [
 ];
 
 export const ROLE = ['사용자', '담당자', '관리자'];
+
+export const PRIMARY_CATEGORIES = ['인프라', '시스템', '네트워크', '공통 플랫폼'];
+
+export const SECONDARY_CATEGORIES = {
+  인프라: ['Virtual machine', 'Bare metal server', 'Gpu', 'Object Storage', 'Media Convert', 'File Storage'],
+  시스템: [
+    'Kubernetes Engine',
+    'Container Registry',
+    'MySQL',
+    'PostgreSQL',
+    'MemStore',
+    'IAM',
+    'Monitoring',
+    'Alert Center',
+    'Cloud Trail',
+    'Monitoring Flow',
+    'Advanced Managed Premetheus',
+  ],
+  네트워크: ['VPC', 'Load balancing', 'CDN', 'DNS', 'Transit Gateway'],
+  '공통 플랫폼': [
+    'OSS Library',
+    'Hadoop Eco',
+    'Data Catalog',
+    'Data Query',
+    'Pub/Sub',
+    'Advanced Managed Kafka',
+    'Kubeflow',
+    'Hybrid Data Center',
+  ],
+};
+
+export const TICKET_TYPES = ['생성', '조회', '수정', '삭제', '오류', '기타'];

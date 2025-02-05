@@ -1,8 +1,6 @@
-import {Outlet, Route, BrowserRouter as Router, Routes} from 'react-router-dom';
+import {Route, BrowserRouter as Router, Routes} from 'react-router-dom';
 import ManagerHome from './pages/manager/ManagerHome';
 import './global.css'; // Tailwind CSS 적용
-import TopBar from './components/common/TopBar';
-import SideBar from './components/common/SideBar';
 import UserHome from './pages/user/UserHome';
 import ManagerTickets from './pages/manager/ManagerTickets';
 import ManagerStatistics from './pages/manager/ManagerStatistics';
@@ -24,18 +22,9 @@ import UserInquiry from './pages/user/UserInquiry';
 import UserPwdChange from './pages/user/UserPwdChange';
 import AdminStatistics from './pages/admin/AdminStatistics';
 import ManagerNewTicket from './pages/manager/ManagerNewTicket';
+import UserTicketDetail from './pages/user/UserTicketDetail';
+import Layout from './Layout';
 
-function Layout() {
-  return (
-    <div className="flex h-screen">
-      <TopBar />
-      <SideBar />
-      <div className="flex-1 overflow-auto ml-52 mt-14">
-        <Outlet />
-      </div>
-    </div>
-  );
-}
 function App() {
   const managerRoutes = [
     {path: '', element: <ManagerHome />},
@@ -54,6 +43,7 @@ function App() {
   const userRoutes = [
     {path: '', element: <UserHome />},
     {path: 'newTicket', element: <UserNewTicket />},
+    {path: 'detail/:id', element: <UserTicketDetail />},
     {path: 'inquiry', element: <UserInquiry />},
     {path: 'pwdChange', element: <UserPwdChange />},
   ];
