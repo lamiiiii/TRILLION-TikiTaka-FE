@@ -3,6 +3,7 @@ import {ticketDummy} from '../../../data/ticketData';
 import Dropdown from '../Dropdown';
 import Ticket from './Ticket';
 import PageNations from '../../manager/common/PageNations';
+import {Link} from 'react-router-dom';
 
 const dropdownData: {label: string; options: string[]}[] = [
   {label: '담당자', options: ['곽서연', '김규리', '김낙도']},
@@ -102,14 +103,16 @@ export default function TicketList({role}: TicketListProps) {
         <div className="flex flex-col gap-4">
           {currentTickets.length > 0 ? (
             currentTickets.map((ticket) => (
-              <Ticket
-                role={role}
-                key={ticket.id}
-                {...ticket}
-                onAssigneeChange={(newAssignee) => handleAssigneeChange(ticket.id, newAssignee)}
-                onApprove={() => handleApprove(ticket.id)}
-                onReject={() => handleReject(ticket.id)}
-              />
+              <Link key={ticket.id} to={`/manager/detail/${ticket.id}`}>
+                <Ticket
+                  role={role}
+                  key={ticket.id}
+                  {...ticket}
+                  onAssigneeChange={(newAssignee) => handleAssigneeChange(ticket.id, newAssignee)}
+                  onApprove={() => handleApprove(ticket.id)}
+                  onReject={() => handleReject(ticket.id)}
+                />
+              </Link>
             ))
           ) : (
             <div className="text-gray-500 text-center py-4">해당 상태의 티켓이 없습니다.</div>

@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {Bar, BarChart, LabelList, XAxis, PieChart, Pie, Cell} from 'recharts';
+import {Bar, BarChart, LabelList, XAxis, PieChart, Pie, Cell, Tooltip} from 'recharts';
 
 // 임시 데이터 - 1차 카테고리
 const primaryData = [
@@ -41,7 +41,12 @@ export default function CategoryTicketStatus() {
 
   return (
     <div className="flex flex-col w-full h-[500px] bg-gray-18 p-5">
-      <h1 className="text-title-bold">카테고리별 티켓 생성 현황</h1>
+      <div className="flex items-center gap-4">
+        <h1 className="text-title-bold">카테고리별 티켓 생성 현황</h1>
+        <div className="bg-gray-1 border border-gray-2 rounded-full py-1 px-4 text-body-bold w-fit">
+          1차 카테고리 Bar 클릭 시 2차 카테고리 데이터를 확인 가능합니다.
+        </div>
+      </div>
       <div className="flex flex-col bg-white rounded border border-gray-2 p-10 mt-4">
         <div className="flex items-start gap-10 w-full bg-gray-18 p-5">
           <div className="flex flex-col gap-8">
@@ -107,6 +112,15 @@ export default function CategoryTicketStatus() {
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: '#fff',
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '8px',
+                        padding: '12px',
+                      }}
+                      formatter={(value, name) => [`${value}건`, name]}
+                    />
                   </PieChart>
                   <div className="text-main2-3 text-center">{selectedCategory} 세부 분류</div>
                 </div>
@@ -116,7 +130,7 @@ export default function CategoryTicketStatus() {
                     <div key={item.name} className="flex items-center gap-2">
                       <div className="w-3 h-3 rounded-full" style={{backgroundColor: COLORS[index % COLORS.length]}} />
                       <span>{item.name}</span>
-                      <span className="ml-auto">{item.value}%</span>
+                      <span className="ml-auto">{item.value}건</span>
                     </div>
                   ))}
                 </div>

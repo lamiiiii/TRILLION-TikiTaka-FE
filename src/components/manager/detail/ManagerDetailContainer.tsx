@@ -1,4 +1,4 @@
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import TopMenu from '../../common/TopMenu';
 import StatusBar from './StatusBar';
 import TicketContent from './TicketContent';
@@ -8,17 +8,23 @@ import Profile from '../../common/Profile';
 import TicketDetail from './TicketDetail';
 import TicketSetting from './TicketSetting';
 import TicketTask from './TicketTask';
-import {CONTAINERIZATION_REQUEST} from '../../../constants/constants';
 import TicketReview from './TicketReview';
 import {useTicketStore} from '../../../store/store';
+import TicketLog from './TicketLog';
+import {ticketDummy} from '../../../data/ticketData';
 
 export default function ManagerDetailContainer() {
+  const {id} = useParams<{id: string}>();
   const {isReviewNeeded} = useTicketStore();
-
   const navigate = useNavigate();
-  const handleGoBack = () => {
-    navigate(-1);
-  };
+
+  // URL의 ID와 일치하는 티켓 찾기
+  const ticket = ticketDummy.find((ticket) => ticket.id === id);
+  if (!ticket) {
+    return <div className="text-center py-8">티켓을 찾을 수 없습니다</div>;
+  }
+
+  const handleGoBack = () => navigate(-1);
 
   return (
     <div className="flex flex-col pt-[30px] px-[46px] ">
@@ -26,24 +32,27 @@ export default function ManagerDetailContainer() {
         {'< 뒤로가기'}
       </button>
 
-      <TopMenu boldBlackText="#113" regularText="[요청] 마이크로서비스 기반의 애플리케이션 컨테이너화" />
+      <TopMenu boldBlackText={`#${ticket.id}`} regularText={ticket.title} />
+      {/* FIX: 상태 연결 필요 */}
       <StatusBar status="진행 중" />
 
       <section className="flex bg-gray-18 p-6 pb-[38px] mt-3 mb-[100px]">
         <div className="flex gap-4 mr-10">
-          <Profile name="honggildong" backgroundColor="user" size="lg" />
+          <Profile name={ticket.assignee} backgroundColor="user" size="lg" />
           <section className="w-[577px] flex flex-col">
-            <TicketContent content={CONTAINERIZATION_REQUEST} />
+            <TicketContent content={ticket?.content} />
             <CommentInput />
+            {/* FIX: 댓글 데이터 연결 필요 */}
             <CommentItem name="Yeon" content="댓글 내용" />
           </section>
         </div>
 
-        <section className="flex flex-col gap-5 w-full">
+        <section className="flex flex-col gap-5 w-[400px]">
           {isReviewNeeded && <TicketReview />}
-          <TicketDetail />
+          <TicketDetail data={ticket} />
           <TicketSetting />
           <TicketTask />
+          <TicketLog />
         </section>
       </section>
     </div>
