@@ -351,22 +351,64 @@ export async function getTicketComments(ticketId: number) {
   }
 }
 
-// INTF-46: 티켓 댓글 수정
+// // INTF-46: 티켓 댓글 수정
+// export async function updateTicketComment(ticketId: number, commentId: number, content: string) {
+//   try {
+//     const {data} = await instance.patch(`/tickets/${ticketId}/comments/${commentId}`, {content});
+//     return data;
+//   } catch (error) {
+//     console.error('티켓 댓글 수정 실패:', error);
+//     throw error;
+//   }
+// }
+
+// // INTF-47: 티켓 댓글 삭제
+// export async function deleteTicketComment(ticketId: number, commentId: number) {
+//   try {
+//     const {data} = await instance.delete(`/tickets/${ticketId}/comments/${commentId}`);
+//     return data;
+//   } catch (error) {
+//     console.error('티켓 댓글 삭제 실패:', error);
+//     throw error;
+//   }
+// }
+
+// INTF-46: 티켓 댓글 수정 (PATCH)
 export async function updateTicketComment(ticketId: number, commentId: number, content: string) {
   try {
-    const {data} = await instance.patch(`/tickets/${ticketId}/comments/${commentId}`, {content});
-    return data;
+    const response = await fetch(`http://210.109.54.71:8080/tickets/${ticketId}/comments/${commentId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWQiOjQsInVzZXJuYW1lIjoibWFuYWdlci50ayIsInJvbGUiOiJNQU5BR0VSIiwiaWF0IjoxNzM4NzY2Mzg4LCJleHAiOjE3Mzg3Njk5ODh9.-fUGrM4_Jabl4F2uDsi057Qchj97ShkD5w5R2akxqEDqNl_I8iTZlywzHG8adEfdMnM8kRj07VJq4dIVjIt5ZQ
+`,
+      },
+      credentials: 'include', // withCredentials: true 대체
+      body: JSON.stringify({content}),
+    });
+
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    return await response.json();
   } catch (error) {
     console.error('티켓 댓글 수정 실패:', error);
     throw error;
   }
 }
 
-// INTF-47: 티켓 댓글 삭제
+// INTF-47: 티켓 댓글 삭제 (DELETE)
 export async function deleteTicketComment(ticketId: number, commentId: number) {
   try {
-    const {data} = await instance.delete(`/tickets/${ticketId}/comments/${commentId}`);
-    return data;
+    const response = await fetch(`http://210.109.54.71:8080/tickets/${ticketId}/comments/${commentId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWQiOjQsInVzZXJuYW1lIjoibWFuYWdlci50ayIsInJvbGUiOiJNQU5BR0VSIiwiaWF0IjoxNzM4NzY2Mzg4LCJleHAiOjE3Mzg3Njk5ODh9.-fUGrM4_Jabl4F2uDsi057Qchj97ShkD5w5R2akxqEDqNl_I8iTZlywzHG8adEfdMnM8kRj07VJq4dIVjIt5ZQ
+`,
+      },
+      credentials: 'include',
+    });
+
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    return await response.json(); // 서버가 응답 본문을 반환하지 않으면 .text() 사용
   } catch (error) {
     console.error('티켓 댓글 삭제 실패:', error);
     throw error;

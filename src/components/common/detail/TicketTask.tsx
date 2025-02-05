@@ -1,47 +1,62 @@
-import {useMemo, useState} from 'react';
+import {useState} from 'react';
 import {motion, AnimatePresence} from 'framer-motion';
-import DropDown from '../Dropdown';
-
-interface Task {
-  id: number;
-  content: string;
-  status: '진행 전' | '진행 중' | '완료';
-}
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {createSubtask, getSubtasks} from '../../../api/service/subtasks';
+import {useParams} from 'react-router-dom';
 
 export default function TicketTask() {
-  const [tasks, setTasks] = useState<Task[]>([]);
   const [inputValue, setInputValue] = useState('');
+
+  const {id} = useParams();
+  const ticketId = Number(id);
+  const queryClient = useQueryClient();
+
+  // 하위 태스크 조회
+  const {data: tasks = []} = useQuery({
+    queryKey: ['subtasks', ticketId],
+    queryFn: () => getSubtasks(ticketId),
+  });
+
+  // 하위 태스크 작성
+  const createSubtaskMutation = useMutation({
+    mutationFn: createSubtask,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['tasks', ticketId],
+      });
+    },
+    onError: () => {
+      alert('하위 태스크 추가에 실패했습니다. 다시 시도해 주세요.');
+    },
+  });
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter' && inputValue.trim()) {
-      const newTask: Task = {
-        id: tasks.length + 1,
-        content: inputValue,
-        status: '진행 전',
+      const newTaskParams: CreateSubtaskParams = {
+        ticketId,
+        description: inputValue,
       };
-      setTasks([...tasks, newTask]);
+      createSubtaskMutation.mutate(newTaskParams);
       setInputValue('');
       event.preventDefault();
     }
   };
 
-  const handleStatusChange = (taskId: number, newStatus: string) => {
-    setTasks(tasks.map((task) => (task.id === taskId ? {...task, status: newStatus as '진행 전' | '진행 중' | '완료'} : task)));
-  };
-
-  // 완료된 태스크의 비율을 계산하는 메모이제이션된 값
-  const progressPercentage = useMemo(() => {
-    if (tasks.length === 0) return 0;
-    const completedTasks = tasks.filter((task) => task.status === '완료').length;
-    return Math.round((completedTasks / tasks.length) * 100);
-  }, [tasks]);
+  // 상태 변경 핸들러 (서버 업데이트 로직 추가 필요)
+  // const handleStatusChange = (taskId: number, newStatus: SubtaskItem['status']) => {
+  //   // 임시 로컬 상태 업데이트
+  //   queryClient.setQueryData(
+  //     ['subtasks', ticketId],
+  //     (old: SubtaskItem[] | undefined) => old?.map((task) => (task.id === taskId ? {...task, status: newStatus} : task)) || []
+  //   );
+  // };
 
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
         <label className="text-body-bold">Task</label>
         <label className="text-body-bold">
-          Progress: <span className="text-main2-3">{progressPercentage}%</span>
+          Progress: <span className="text-main2-3">{'10'}%</span>
         </label>
       </div>
 
@@ -57,19 +72,8 @@ export default function TicketTask() {
                 transition={{duration: 0.5, ease: 'easeOut'}}
                 className="bg-main text-white rounded-md p-5 my-2"
               >
-                <div className="w-full flex items-center justify-between">
-                  <div>#{index + 1}</div>
-                  <DropDown
-                    label="상태"
-                    options={['진행 전', '진행 중', '완료']}
-                    defaultSelected={task.status}
-                    value={task.status}
-                    onSelect={(status) => handleStatusChange(task.id, status)}
-                    border={false}
-                    textColor="white"
-                  />
-                </div>
-                <p>{task.content}</p>
+                <div className="w-full flex items-center justify-between">{/* 완료 체크 */}</div>
+                <p>{task.description}</p>
               </motion.li>
             ))}
           </AnimatePresence>
