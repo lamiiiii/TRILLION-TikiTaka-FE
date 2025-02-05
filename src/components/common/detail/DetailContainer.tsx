@@ -51,8 +51,8 @@ export default function DetailContainer() {
           <section className="w-[577px] flex flex-col">
             <TicketContent content={ticket?.content} />
             <CommentInput />
-            {comments && comments.length > 0 ? (
-              comments.map((comment: Comment) => (
+            {comments?.data && comments?.data.length > 0 ? (
+              comments?.data.map((comment: Comment) => (
                 <CommentItem
                   commentId={comment.commentId}
                   name={comment.authorName}

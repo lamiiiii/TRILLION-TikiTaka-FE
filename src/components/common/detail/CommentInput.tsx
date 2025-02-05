@@ -5,6 +5,7 @@ import {createTicketComment} from '../../../api/service/tickets';
 import {useParams} from 'react-router-dom';
 
 export default function CommentInput() {
+  const [content, setContent] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<File[]>([]);
   const [fileNames, setFileNames] = useState<string[]>([]);
@@ -29,14 +30,25 @@ export default function CommentInput() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const content = textareaRef.current?.value || '';
 
+    // JSON 데이터 준비
+    const jsonData = {
+      content: content,
+    };
+
+    // FormData 객체 생성
     const formData = new FormData();
-    formData.append('content', content);
+
+    // JSON 데이터를 Blob으로 변환하여 추가
+    const jsonBlob = new Blob([JSON.stringify(jsonData)], {type: 'application/json'});
+    formData.append('request', jsonBlob);
+
+    // 파일 추가 (파일이 있는 경우)
     files.forEach((file) => {
       formData.append('files', file);
     });
 
+    // API 호출
     mutation.mutate(formData);
   };
 
@@ -94,7 +106,13 @@ export default function CommentInput() {
       <div className="relative mt-3">
         <div className="flex gap-2 mb-2">
           <Profile name="yeon" size="sm" backgroundColor="manager" />
-          <textarea ref={textareaRef} className="comment-textarea" placeholder="댓글 추가" />
+          <textarea
+            ref={textareaRef}
+            className="comment-textarea"
+            placeholder="댓글 추가"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+          />
         </div>
         <button type="submit" className="absolute right-0 main-btn" disabled={mutation.isPending}>
           {mutation.isPending ? '저장 중...' : '저장'}
