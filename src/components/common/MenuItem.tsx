@@ -34,8 +34,11 @@ export default function MenuItem({icon: Icon, text, to, children}: MenuItemProps
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      <Link
+    <div
+      className="flex flex-col gap-2"
+      onMouseEnter={() => children && setIsExpanded(true)}
+      onMouseLeave={() => children && setIsExpanded(false)}
+    >      <Link
         to={to}
         onClick={handleToggle}
         className={`side-menu rounded-lg border border-gray-18 ${

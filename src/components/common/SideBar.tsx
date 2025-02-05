@@ -53,10 +53,7 @@ export default function SideBar() {
         {role === 'manager' && (
           <>
             <MenuItem icon={StatIcon} text="통계 관리" to="/manager/statistics" />
-            <MenuItem icon={TicketIcon} text="티켓 관리" to="/manager/tickets">
-              <SubMenuItem to="/manager/tickets" text="티켓 관리" />
-              <SubMenuItem to="/manager/histories" text="티켓 이력 관리" />
-            </MenuItem>
+            <MenuItem icon={TicketIcon} text="티켓 관리" to="/manager/tickets" />
             <MenuItem icon={NewTicketIcon} text="티켓 생성" to="/manager/newticket">
               <SubMenuItem to="/manager/newticket" text="티켓 생성" />
               <SubMenuItem to="/manager/newtickets" text="요청 티켓 관리" />
