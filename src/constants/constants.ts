@@ -2,8 +2,8 @@ export const STATUS_OPTIONS = ['대기 중', '진행 중', '진행 완료'];
 
 export const PRIORITY = ['HIGH', 'MEDIUM', 'LOW'];
 export const PRIORITY_COLOR: {[key in (typeof PRIORITY)[number]]: string} = {
-  HIGH: '#F4B540',
-  MEDIUM: '#FFEA31',
+  HIGH: '#F24949',
+  MEDIUM: '#F4B540',
   LOW: '#93CF1A',
 };
 

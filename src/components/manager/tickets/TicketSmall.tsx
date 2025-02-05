@@ -55,12 +55,16 @@ const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(({id, title, de
       </div>
       <div className="flex items-center gap-2 mr-3 mt-4">
         <div className="relative" ref={priorityRef}>
-          <button onClick={() => setShowPriority(!showPriority)} className="mt-2">
-            <StarIcon
-              color={
-                PRIORITY_COLOR[priority as keyof typeof PRIORITY_COLOR] || '#727586' // 기본 색상
-              }
-            />
+          <button
+            onClick={() => setShowPriority(!showPriority)}
+            className={`flex items-center justify-center ${priority ? 'px-4 py-1 rounded border border-gray-2 text-caption-bold ' : ''}`}
+            style={{
+              color: priority ? PRIORITY_COLOR[priority as keyof typeof PRIORITY_COLOR] : 'transparent',
+              borderColor: priority ? PRIORITY_COLOR[priority as keyof typeof PRIORITY_COLOR] : 'transparent',
+            }}
+          >
+            {priority || <StarIcon color="#727586" />}
+            <span className="absolute inset-[-10px]" aria-hidden="true" />
           </button>
           {showPriority && (
             <div className="absolute z-50 bg-white border border-gray-2 rounded shadow-md mt-1 p-2 min-w-[106px] overflow-hidden">
