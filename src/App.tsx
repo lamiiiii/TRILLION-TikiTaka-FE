@@ -55,7 +55,7 @@ function App() {
   const userRoutes = [
     {path: '', element: <UserHome />},
     {path: 'newTicket', element: <UserNewTicket />},
-    {path: 'detail', element: <UserTicketDetail />},
+    {path: 'detail/:id', element: <UserTicketDetail />},
     {path: 'inquiry', element: <UserInquiry />},
     {path: 'pwdChange', element: <UserPwdChange />},
   ];

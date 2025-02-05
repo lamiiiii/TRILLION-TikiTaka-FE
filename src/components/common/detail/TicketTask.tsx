@@ -1,6 +1,6 @@
 import {useMemo, useState} from 'react';
 import {motion, AnimatePresence} from 'framer-motion';
-import DropDown from '../../common/Dropdown';
+import DropDown from '../Dropdown';
 
 interface Task {
   id: number;

@@ -1,4 +1,4 @@
-import Profile from '../../common/Profile';
+import Profile from '../Profile';
 
 interface CommentItemProps {
   name: string;

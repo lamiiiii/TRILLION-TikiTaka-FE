@@ -1,4 +1,4 @@
-import DropDown from '../../common/Dropdown';
+import DropDown from '../Dropdown';
 import {PRIORITY, STATUS_OPTIONS} from '../../../constants/constants';
 import {useTicketStore} from '../../../store/store';
 import {useState} from 'react';

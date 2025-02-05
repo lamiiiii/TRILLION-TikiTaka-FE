@@ -1,10 +1,10 @@
 import {useNavigate, useParams} from 'react-router-dom';
-import TopMenu from '../../common/TopMenu';
+import TopMenu from '../TopMenu';
 import StatusBar from './StatusBar';
 import TicketContent from './TicketContent';
 import CommentInput from './CommentInput';
 import CommentItem from './CommentItem';
-import Profile from '../../common/Profile';
+import Profile from '../Profile';
 import TicketDetail from './TicketDetail';
 import TicketSetting from './TicketSetting';
 import TicketTask from './TicketTask';
@@ -13,7 +13,7 @@ import {useTicketStore} from '../../../store/store';
 import TicketLog from './TicketLog';
 import {ticketDummy} from '../../../data/ticketData';
 
-export default function ManagerDetailContainer() {
+export default function DetailContainer() {
   const {id} = useParams<{id: string}>();
   const {isReviewNeeded} = useTicketStore();
   const navigate = useNavigate();

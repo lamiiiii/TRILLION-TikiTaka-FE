@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import DropDown from '../../common/Dropdown';
+import DropDown from '../Dropdown';
 import {useTicketStore} from '../../../store/store';
 import {PRIORITY} from '../../../constants/constants';
 
