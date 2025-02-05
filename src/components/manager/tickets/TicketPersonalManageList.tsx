@@ -109,6 +109,7 @@ export default function TicketPersonalManageList() {
                         title={ticket.title}
                         deadline={ticket.deadline}
                         initialStatus={ticket.status}
+                        assignee={ticket.assignee}
                         onStatusChange={handleStatusChange}
                       />
                     )}
