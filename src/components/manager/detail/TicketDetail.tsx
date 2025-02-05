@@ -1,6 +1,10 @@
+import {TicketDataProps} from '../../../interfaces/ticket';
 import Profile from '../../common/Profile';
 
-export default function TicketDetail() {
+interface TicketDetailProps {
+  data: TicketDataProps;
+}
+export default function TicketDetail({data}: TicketDetailProps) {
   return (
     <div className="flex flex-col gap-2">
       <label className="text-body-bold">티켓 상세</label>
@@ -17,14 +21,14 @@ export default function TicketDetail() {
 
           <div className="flex flex-col gap-[7px]">
             <div className="flex items-center gap-2">
-              <Profile name="Yeon" backgroundColor="manager" size="md" />
-              <span>Yeon</span>
+              <Profile name={data?.assignee} backgroundColor="manager" size="md" />
+              <span>{data?.assignee}</span>
             </div>
-            <p>Container Pack</p>
-            <p>Kubernetes Engine</p>
+            <p>{data?.category}</p>
+            <p>{data?.subCategory}</p>
             <p>홍길동 (BE 1팀)</p>
             <p>2025.01.02 15:00</p>
-            <p>2025.01.08 15:00</p>
+            <p>{data?.deadline}</p>
           </div>
         </div>
       </div>

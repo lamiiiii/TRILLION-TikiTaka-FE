@@ -47,7 +47,7 @@ function App() {
     {path: 'newtickets', element: <ManagerTickets />}, // todo 담당자 요청 티켓 대시보드
 
     {path: 'histories', element: <ManagerHistories />},
-    {path: 'detail', element: <ManagerTicketDetail />},
+    {path: 'detail/:id', element: <ManagerTicketDetail />},
     {path: 'inquiry', element: <ManagerInquiry />},
     {path: 'pwdChange', element: <ManagerPwdChange />},
   ];
