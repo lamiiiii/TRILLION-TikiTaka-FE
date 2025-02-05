@@ -8,7 +8,7 @@ interface StatusBarProps {
 }
 export default function StatusBar({status}: StatusBarProps) {
   const [currentStatus, setCurrentStatus] = useState(status);
-  const {isReviewNeeded, setIsReviewNeeded, priority, setPriority} = useTicketStore();
+  const {priority, setPriority} = useTicketStore();
 
   const handlePrioritySelect = (selectedOption: string) => {
     setPriority(selectedOption);
@@ -18,17 +18,15 @@ export default function StatusBar({status}: StatusBarProps) {
     setCurrentStatus(option);
   };
 
-  const handleReviewCheckbox = () => {
-    setIsReviewNeeded(!isReviewNeeded);
-  };
-
   return (
     <div className="flex justify-between items-center gap-2 mt-2">
       <div className="flex items-center gap-2">
-        <div className="flex items-center gap-2 mr-2">
-          <label className="text-body-bold">Priority</label>
-          <DropDown label="Priority" options={PRIORITY} value={priority} onSelect={handlePrioritySelect} />
-        </div>
+        {location.pathname.startsWith('/manager') && (
+          <div className="flex items-center gap-2 mr-2">
+            <label className="text-body-bold">Priority</label>
+            <DropDown label="Priority" options={PRIORITY} value={priority} onSelect={handlePrioritySelect} />
+          </div>
+        )}
         <div className="flex items-center gap-2">
           <label className="text-body-bold">Status</label>
 
@@ -45,13 +43,6 @@ export default function StatusBar({status}: StatusBarProps) {
           ))}
         </div>
       </div>
-
-      <section className="flex items-center gap-4">
-        <label className="flex items-center gap-2 text-subtitle-regular">
-          <input type="checkbox" checked={isReviewNeeded} onChange={handleReviewCheckbox} />
-          검토 필요 여부
-        </label>
-      </section>
     </div>
   );
 }

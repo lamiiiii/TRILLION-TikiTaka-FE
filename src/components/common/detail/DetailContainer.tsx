@@ -8,14 +8,11 @@ import Profile from '../Profile';
 import TicketDetail from './TicketDetail';
 import TicketSetting from './TicketSetting';
 import TicketTask from './TicketTask';
-import TicketReview from './TicketReview';
-import {useTicketStore} from '../../../store/store';
 import TicketLog from './TicketLog';
 import {ticketDummy} from '../../../data/ticketData';
 
 export default function DetailContainer() {
   const {id} = useParams<{id: string}>();
-  const {isReviewNeeded} = useTicketStore();
   const navigate = useNavigate();
 
   // URL의 ID와 일치하는 티켓 찾기
@@ -48,10 +45,10 @@ export default function DetailContainer() {
         </div>
 
         <section className="flex flex-col gap-5 w-[400px]">
-          {isReviewNeeded && <TicketReview />}
+          {/* {isReviewNeeded && <TicketReview />} */}
           <TicketDetail data={ticket} />
-          <TicketSetting />
-          <TicketTask />
+          <TicketSetting data={ticket} />
+          {location.pathname.startsWith('/manager') && <TicketTask />}
           <TicketLog />
         </section>
       </section>
