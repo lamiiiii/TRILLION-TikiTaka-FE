@@ -63,7 +63,6 @@ export default function DetailContainer() {
             ) : (
               <></>
             )}
-            <CommentItem commentId={34897284972} name={'Joooooooooo'} content={'내용'} createdAt={'2025-02-04'} />
           </section>
         </div>
 

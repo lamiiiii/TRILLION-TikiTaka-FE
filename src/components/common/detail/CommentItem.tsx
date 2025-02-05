@@ -1,8 +1,9 @@
 import {useState} from 'react';
 import Profile from '../Profile';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {updateTicketComment} from '../../../api/service/tickets';
+import {deleteTicketComment, updateTicketComment} from '../../../api/service/tickets';
 import {useParams} from 'react-router-dom';
+import Modal from '../Modal';
 
 interface CommentItemProps {
   commentId: number;
@@ -15,6 +16,7 @@ interface CommentItemProps {
 export default function CommentItem({commentId, name, content, files, createdAt}: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(content);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const {id} = useParams();
   const ticketId = Number(id);
@@ -32,6 +34,17 @@ export default function CommentItem({commentId, name, content, files, createdAt}
       setIsEditing(false); // 편집 모드 취소
     },
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteTicketComment(ticketId, commentId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['ticketComments', ticketId]});
+    },
+    onError: () => {
+      alert('댓글 삭제에 실패했습니다. 다시 시도해 주세요.');
+    },
+  });
+
   const handleEdit = () => {
     setIsEditing(true);
   };
@@ -43,6 +56,15 @@ export default function CommentItem({commentId, name, content, files, createdAt}
   const handleCancel = () => {
     setEditedContent(content);
     setIsEditing(false);
+  };
+
+  const handleDelete = () => {
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    deleteMutation.mutate();
+    setShowDeleteModal(false);
   };
 
   return (
@@ -72,7 +94,9 @@ export default function CommentItem({commentId, name, content, files, createdAt}
                   <button className="hover:text-gray-15" onClick={handleEdit}>
                     편집
                   </button>
-                  <button className="hover:text-gray-15">삭제</button>
+                  <button className="hover:text-gray-15" onClick={handleDelete}>
+                    삭제
+                  </button>
                 </>
               )}
             </div>
@@ -85,6 +109,15 @@ export default function CommentItem({commentId, name, content, files, createdAt}
           <p className="text-subtitle-regular">{content}</p>
         )}
       </div>
+      {showDeleteModal && (
+        <Modal
+          title="해당 댓글을 삭제하시겠습니까?"
+          backBtn="취소"
+          onBackBtnClick={() => setShowDeleteModal(false)}
+          checkBtn="삭제"
+          onBtnClick={confirmDelete}
+        />
+      )}
     </div>
   );
 }
