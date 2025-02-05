@@ -2,6 +2,7 @@ import {useState} from 'react';
 import InitialTopBar from './InitialTopBar';
 import Modal from '../Modal';
 import {validateEmail, validatePwd} from '../../../utils/Validation';
+import { Link } from 'react-router-dom';
 
 export default function ResetPwdContainer() {
   const [email, setEmail] = useState('');
@@ -213,6 +214,11 @@ export default function ResetPwdContainer() {
           >
             {!isVerified ? (isAuthSent ? '인증번호 확인' : '인증하기') : '재설정 완료'}
           </button>
+          <div className="flex justify-end w-full">
+            <Link to="/" className="text-sm text-gray-2 cursor-pointer hover:underline hover:text-gray-15">
+              로그인하러 가기
+            </Link>
+          </div>
         </div>
       </div>
       {isModalOpen && (

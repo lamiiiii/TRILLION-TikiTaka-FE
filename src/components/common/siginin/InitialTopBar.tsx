@@ -10,15 +10,13 @@ export default function InitialTopBar() {
       {/* 상단바 */}
       <div className="relative w-full h-14 shrink-0 flex justify-between px-12 py-4">
         {/* 좌측 로고 */}
-        <div className="flex items-center gap-2">
-          <Link to="/">
-            <LogoIcon />
-          </Link>
+        <Link to="/" className="flex items-center gap-2">
+          <LogoIcon />
           <div className="flex gap-3 items-baseline">
             <p className="text-white font-bold text-xl whitespace-nowrap">TIKITAKA</p>
             <p className="text-white font-regular text-xs whitespace-nowrap">INFRA ENGINEERING &nbsp; Ticket Management System</p>
           </div>
-        </div>
+        </Link>
         {/* 우측 메뉴 */}
         {location.pathname !== '/changepwd' && (
           <div className="flex items-center gap-3 text-white font-bold text-[13px]">

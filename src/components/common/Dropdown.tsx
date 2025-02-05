@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import { useState } from "react";
 
 interface DropdownProps {
   label: string; // 드롭다운 버튼에 표시될 텍스트
@@ -18,9 +18,9 @@ export default function DropDown({
   onSelect,
   value,
   defaultSelected = label,
-  paddingX = 'px-4', // 기본 여백 값
+  paddingX = "px-4", // 기본 여백 값
   border = true,
-  textColor = 'text-gray-900', // ✅ 기본값 유지
+  textColor = "text-gray-900", // ✅ 기본값 유지
   disabled = false,
 }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,17 +36,19 @@ export default function DropDown({
     <div className="relative inline-block">
       {/* 드롭다운 버튼 */}
       <button
-        className={`${border ? 'border border-gray-6' : 'border-none'} 
-        ${value ? textColor : 'text-gray-6'} 
-        ${value ? 'bg-white' : 'bg-gray-100'} 
+        className={`${border ? "border border-gray-6" : "border-none"} 
+        ${value ? textColor : "text-gray-6"} 
+        ${value ? "bg-white" : "bg-gray-100"} 
         rounded-md py-1 ${paddingX} text-body-regular flex items-center gap-3 
-        ${disabled ? 'bg-gray-1 text-gray-3 cursor-not-allowed' : ''}`}
+        ${disabled ? "bg-gray-1 text-gray-3 cursor-not-allowed" : ""}`}
         onClick={() => setIsOpen(!isOpen)}
         disabled={disabled}
       >
         <span className="flex items-center leading-none">{value || label}</span>
         <svg
-          className={`w-4 h-4 transform transition-transform ml-auto ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+          className={`w-4 h-4 transform transition-transform ml-auto ${
+            isOpen ? "rotate-180" : "rotate-0"
+          }`}
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="none"
@@ -68,8 +70,8 @@ export default function DropDown({
               className={`px-4 py-1.5 text-center cursor-pointer leading-none m-2 
                 ${
                   selected === option
-                    ? 'bg-gray-1 text-caption-bold rounded-md mx-2 border border-gray-2 text-gray-900'
-                    : 'text-gray-700 text-caption-regular hover:bg-gray-1 rounded-md'
+                    ? "bg-gray-1 text-caption-bold rounded-md mx-2 border border-gray-2 text-gray-900"
+                    : "text-gray-700 text-caption-regular hover:bg-gray-1 rounded-md"
                 }`}
               onClick={() => handleSelect(option)}
             >
