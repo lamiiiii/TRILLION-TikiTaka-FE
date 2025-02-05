@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { SmRightIcon } from "./Icon";
+import React, {useEffect, useState} from 'react';
+import {SmRightIcon} from './Icon';
 import {Link, useLocation} from 'react-router-dom';
 import {motion} from 'framer-motion';
 
@@ -36,9 +36,14 @@ export default function MenuItem({icon: Icon, text, to, children}: MenuItemProps
   return (
     <div
       className="flex flex-col gap-2"
-      onMouseEnter={() => children && setIsExpanded(true)}
-      onMouseLeave={() => children && setIsExpanded(false)}
-    >      <Link
+      onMouseEnter={() => {
+        if (!isExpanded) setIsExpanded(true);
+      }}
+      onMouseLeave={() => {
+        if (!isActive) setIsExpanded(false);
+      }}
+    >
+      <Link
         to={to}
         onClick={handleToggle}
         className={`side-menu rounded-lg border border-gray-18 ${
@@ -66,4 +71,3 @@ export default function MenuItem({icon: Icon, text, to, children}: MenuItemProps
     </div>
   );
 }
-

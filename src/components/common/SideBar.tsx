@@ -1,13 +1,15 @@
-import {useUserStore} from '../../store/store';
+import {useTokenStore, useUserStore} from '../../store/store';
 import {AccountIcon, CategoryIcon, DbIcon, InquiryIcon, LgRightIcon, LogoutIcon, MyIcon, NewTicketIcon, StatIcon, TicketIcon} from './Icon';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import MenuItem from './MenuItem';
 import SubMenuItem from './SubMenuItem';
+import {postLogout} from '../../api/service/auth';
 
 export default function SideBar() {
   const location = useLocation();
   const role = useUserStore((state) => state.role);
   const navigate = useNavigate();
+  const {logout} = useTokenStore();
 
   const getDashboardLink = () => {
     switch (role) {
@@ -23,9 +25,13 @@ export default function SideBar() {
   };
 
   const onClickLogout = () => {
-    // 토큰 삭제
-    console.log('로그아웃');
-    navigate('/');
+    try {
+      postLogout(); // 서버 전달
+      logout(); // 상태 저장
+      navigate('/');
+    } catch (error) {
+      console.error('로그아웃 실패:', error);
+    }
   };
 
   return (

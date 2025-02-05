@@ -6,11 +6,11 @@ export interface UserStore {
   role: 'manager' | 'user' | 'admin';
   setRole: (newRole: 'manager' | 'user' | 'admin') => void; // 역할 값의 타입을 정확히 제한
 }
+
 export interface TokenStore {
-  accessToken: string;
-  setAccessToken: (token: string) => void;
-  isTokenSet: boolean;
-  setIsTokenSet: (state: boolean) => void;
+  isAuthenticated: boolean;
+  login: (accessToken: string) => void;
+  logout: () => void;
 }
 
 export interface TicketStore {

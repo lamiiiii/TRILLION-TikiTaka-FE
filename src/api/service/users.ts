@@ -1,46 +1,4 @@
-import instance from '../axiosInstance';
-
-// INTF-4: 로그인
-export async function postLogin(loginData: LoginData) {
-  try {
-    const {data, headers} = await instance.post<{message: string; data: LoginResponse}>('/login', loginData);
-    const accessToken = headers['authorization'];
-    const refreshToken = headers['set-cookie']?.find((cookie) => cookie.startsWith('refresh='));
-    return {...data, accessToken, refreshToken};
-  } catch (error) {
-    console.error('로그인 실패:', error);
-    throw error;
-  }
-}
-
-// INTF-5: 로그아웃
-export async function postLogout(token: string) {
-  try {
-    const {data} = await instance.post('/logout', null, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
-    return data;
-  } catch (error) {
-    console.error('로그아웃 실패:', error);
-    throw error;
-  }
-}
-
-// INTF-6: 토큰 재발급
-export async function postReissueToken(refreshToken: string) {
-  try {
-    const {headers} = await instance.post('/reissue', null, {
-      headers: {Cookie: refreshToken},
-    });
-    return {
-      accessToken: headers['authorization'],
-      refreshToken: headers['set-cookie']?.find((cookie) => cookie.startsWith('refresh=')),
-    };
-  } catch (error) {
-    console.error('토큰 재발급 실패:', error);
-    throw error;
-  }
-}
+import instance from "../axiosInstance";
 
 // INTF-7: 비밀번호 변경
 export async function patchUserPassword(token: string, passwordData: PasswordChangeData) {
