@@ -74,10 +74,10 @@ export interface UserInfo {
 
 // 댓글 응답 형식
 export interface Comment {
-  author: {
-    name: string;
-  };
+  commentId: number;
+  authorId: number;
+  authorName: string;
   content: string;
-  files?: File[];
   createdAt: string;
+  updatedAt: string;
 }

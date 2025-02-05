@@ -94,11 +94,7 @@ export default function CommentInput() {
       <div className="relative mt-3">
         <div className="flex gap-2 mb-2">
           <Profile name="yeon" size="sm" backgroundColor="manager" />
-          <textarea
-            ref={textareaRef}
-            className="w-full h-[78px] text-subtitle-regular border border-gray-2 rounded-[4px] py-3 px-4 focus:border-main"
-            placeholder="댓글 추가"
-          />
+          <textarea ref={textareaRef} className="comment-textarea" placeholder="댓글 추가" />
         </div>
         <button type="submit" className="absolute right-0 main-btn" disabled={mutation.isPending}>
           {mutation.isPending ? '저장 중...' : '저장'}

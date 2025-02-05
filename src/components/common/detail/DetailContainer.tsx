@@ -53,11 +53,17 @@ export default function DetailContainer() {
             <CommentInput />
             {comments && comments.length > 0 ? (
               comments.map((comment: Comment) => (
-                <CommentItem name={comment.author.name} content={comment.content} files={comment.files} createdAt={comment.createdAt} />
+                <CommentItem
+                  commentId={comment.commentId}
+                  name={comment.authorName}
+                  content={comment.content}
+                  createdAt={comment.createdAt}
+                />
               ))
             ) : (
               <></>
             )}
+            <CommentItem commentId={34897284972} name={'Joooooooooo'} content={'내용'} createdAt={'2025-02-04'} />
           </section>
         </div>
 
