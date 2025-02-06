@@ -3,14 +3,18 @@ import {Category} from './newTicket';
 
 // 사용자 정보
 export interface UserStore {
-  role: 'manager' | 'user' | 'admin';
-  setRole: (newRole: 'manager' | 'user' | 'admin') => void; // 역할 값의 타입을 정확히 제한
+  userId: number; // 사용자 아이디
+  setUserId: (id: number) => void;
+  role: 'MANAGER' | 'USER' | 'ADMIN';
+  setRole: (newRole: 'MANAGER' | 'USER' | 'ADMIN') => void; // 역할 값의 타입을 정확히 제한
 }
+
 export interface TokenStore {
+  isAuthenticated: boolean;
   accessToken: string;
-  setAccessToken: (token: string) => void;
-  isTokenSet: boolean;
-  setIsTokenSet: (state: boolean) => void;
+  setAccessToken: (accessToken: string) => void;
+  login: (accessToken: string) => void;
+  logout: () => void;
 }
 
 export interface TicketStore {

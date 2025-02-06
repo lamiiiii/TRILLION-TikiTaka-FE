@@ -1,41 +1,39 @@
-import {useUserStore} from '../../store/store';
+import {useTokenStore, useUserStore} from '../../store/store';
 import {AccountIcon, CategoryIcon, DbIcon, InquiryIcon, LgRightIcon, LogoutIcon, MyIcon, NewTicketIcon, StatIcon, TicketIcon} from './Icon';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import MenuItem from './MenuItem';
 import SubMenuItem from './SubMenuItem';
+// import {postLogout} from '../../api/service/auth';
+import UserBox from './UserBox';
+import {tokenStorage} from '../../utils/token';
 
 export default function SideBar() {
+  const {logout} = useTokenStore();
   const location = useLocation();
   const role = useUserStore((state) => state.role);
   const navigate = useNavigate();
 
-  const getDashboardLink = () => {
-    switch (role) {
-      case 'manager':
-        return '/manager';
-      case 'user':
-        return '/user';
-      case 'admin':
-        return '/admin';
-      default:
-        return '/';
+  const onClickLogout = () => {
+    try {
+      // postLogout();
+      tokenStorage.remove(); // 로그아웃 서버 오류로 인해 임시 토큰 삭제
+      logout(); // 상태 저장
+      navigate('/');
+    } catch (error) {
+      console.error('로그아웃 실패:', error);
     }
   };
 
-  const onClickLogout = () => {
-    // 토큰 삭제
-    console.log('로그아웃');
-    navigate('/');
-  };
-
   return (
-    <div className="flex flex-col fixed justify-between bg-bg-1 w-52 min-h-screen z-50 top-14 left-0 px-4 py-6 pb-20">
+    <div className="flex flex-col fixed justify-between bg-bg-1 w-52 min-h-screen z-50 top-14 left-0 px-4 py-6 pb-20 shadow-[4px_0_6px_-2px_rgba(0,0,0,0.1)]">
       {/* 상단 메뉴 */}
       <div className="flex flex-col w-full h-auto gap-4 ">
+        {/* 사용자 정보 박스 */}
+        <UserBox />
         {/* 대시보드 메뉴 */}
-        {role !== 'admin' && (
+        {role !== 'ADMIN' && (
           <Link
-            to={getDashboardLink()}
+            to={`/${role.toLowerCase()}`}
             className={`side-menu rounded-lg border border-gray-18 mb-4 text-subtitle ${
               location.pathname === '/manager' || location.pathname === '/user' || location.pathname === '/admin'
                 ? 'active-menu text-gray-15'
@@ -50,34 +48,34 @@ export default function SideBar() {
         )}
 
         {/* 담당자 메뉴 */}
-        {role === 'manager' && (
+        {role === 'MANAGER' && (
           <>
-            <MenuItem icon={StatIcon} text="통계 관리" to="/manager/statistics" />
             <MenuItem icon={TicketIcon} text="티켓 관리" to="/manager/tickets" />
             <MenuItem icon={NewTicketIcon} text="티켓 생성" to="/manager/newticket">
               <SubMenuItem to="/manager/newticket" text="티켓 생성" />
               <SubMenuItem to="/manager/newtickets" text="요청 티켓 관리" />
             </MenuItem>
+            <MenuItem icon={StatIcon} text="통계 관리" to="/manager/statistics" />
             <MenuItem icon={MyIcon} text="마이페이지" to="/manager/inquiry">
-              {/* <SubMenuItem to="/manager/inquiry" text="문의내역 확인" /> */}
+              <SubMenuItem to="/manager/inquiry" text="문의내역 확인" />
               <SubMenuItem to="/manager/pwdChange" text="비밀번호 변경" />
             </MenuItem>
           </>
         )}
 
         {/* 사용자 메뉴 */}
-        {role === 'user' && (
+        {role === 'USER' && (
           <>
             <MenuItem icon={NewTicketIcon} text="티켓 생성" to="/user/newticket" />
             <MenuItem icon={MyIcon} text="마이페이지" to="/user/inquiry">
-              {/* <SubMenuItem to="/user/inquiry" text="문의내역 확인" /> */}
+              <SubMenuItem to="/user/inquiry" text="문의내역 확인" />
               <SubMenuItem to="/user/pwdChange" text="비밀번호 변경" />
             </MenuItem>
           </>
         )}
 
         {/* 관리자 메뉴 */}
-        {role === 'admin' && (
+        {role === 'ADMIN' && (
           <>
             <MenuItem icon={AccountIcon} text="계정 관리" to="/admin/accounts" />
             <MenuItem icon={CategoryIcon} text="카테고리 관리" to="/admin/categories" />
@@ -88,7 +86,7 @@ export default function SideBar() {
       </div>
 
       {/* 하단 로그아웃 */}
-      <div className="">
+      <div className="logout">
         <button
           onClick={onClickLogout}
           className="
