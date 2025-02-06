@@ -13,19 +13,6 @@ export default function SideBar() {
   const role = useUserStore((state) => state.role);
   const navigate = useNavigate();
 
-  const getDashboardLink = () => {
-    switch (role) {
-      case 'MANAGER':
-        return '/manager';
-      case 'USER':
-        return '/user';
-      case 'ADMIN':
-        return '/admin';
-      default:
-        return '/';
-    }
-  };
-
   const onClickLogout = () => {
     try {
       // postLogout();
@@ -46,7 +33,7 @@ export default function SideBar() {
         {/* 대시보드 메뉴 */}
         {role !== 'ADMIN' && (
           <Link
-            to={getDashboardLink()}
+            to={`/${role.toLowerCase()}`}
             className={`side-menu rounded-lg border border-gray-18 mb-4 text-subtitle ${
               location.pathname === '/manager' || location.pathname === '/user' || location.pathname === '/admin'
                 ? 'active-menu text-gray-15'
