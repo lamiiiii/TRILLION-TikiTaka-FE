@@ -46,9 +46,11 @@ export default function DetailContainer() {
 
       <section className="flex bg-gray-18 p-6 pb-[38px] mt-3 mb-[100px]">
         <div className="flex gap-4 mr-10">
-          <Profile name={ticket?.managerName ? ticket?.managerName : 'undefined'} backgroundColor="user" size="lg" />
+          <div className="mt-5">
+            <Profile name={ticket?.managerName ? ticket?.managerName : 'undefined'} backgroundColor="user" size="lg" />
+          </div>
           <section className="w-[577px] flex flex-col">
-            <TicketContent content={ticket?.description} />
+            {ticket && <TicketContent data={ticket} />}
             <CommentInput />
             {comments?.data && comments?.data.length > 0 ? (
               [...comments.data]

@@ -202,11 +202,9 @@ export async function getTicketList(token: string, params: TicketListParams = {}
 }
 
 // INTF-36: 티켓 세부내용 수정
-export async function updateTicket(token: string, ticketId: number, params: UpdateTicketParams) {
+export async function updateTicket(ticketId: number, params: UpdateTicketParams) {
   try {
-    const {data} = await instance.patch(`/tickets/${ticketId}`, params, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.patch(`/tickets/${ticketId}`, params);
     return data;
   } catch (error) {
     console.error('티켓 세부내용 수정 실패:', error);
@@ -249,15 +247,9 @@ export async function updateTicketPriority(token: string, ticketId: number, prio
 }
 
 // INTF-39: 티켓 담당자 수정
-export async function updateTicketManager(token: string, ticketId: number, managerId: number) {
+export async function updateTicketManager(ticketId: number, managerId: number) {
   try {
-    const {data} = await instance.patch(
-      `/tickets/manager/${ticketId}`,
-      {managerId},
-      {
-        headers: {Authorization: `Bearer ${token}`},
-      }
-    );
+    const {data} = await instance.patch(`/tickets/manager/${ticketId}`, {managerId});
     return data;
   } catch (error) {
     console.error('티켓 담당자 수정 실패:', error);
@@ -283,11 +275,9 @@ export async function updateTicketDeadline(token: string, ticketId: number, dead
 }
 
 // INTF-41: 티켓 삭제
-export async function deleteTicket(token: string, ticketId: number) {
+export async function deleteTicket(ticketId: number) {
   try {
-    const {data} = await instance.delete(`/tickets/${ticketId}`, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.delete(`/tickets/${ticketId}`);
     return data;
   } catch (error) {
     console.error('티켓 삭제 실패:', error);

@@ -153,19 +153,19 @@ export default function TicketTask() {
                     <div className="flex gap-1 text-gray-3 text-body-regular ">
                       {editingTaskId === task.subtaskId ? (
                         <>
-                          <button className="hover:text-gray-15" onClick={() => handleSave(task.subtaskId)}>
+                          <button className="hover:text-gray-5" onClick={() => handleSave(task.subtaskId)}>
                             저장
                           </button>
-                          <button className="hover:text-gray-15" onClick={handleCancel}>
+                          <button className="hover:text-gray-5" onClick={handleCancel}>
                             취소
                           </button>
                         </>
                       ) : (
                         <>
-                          <button onClick={() => handleEdit(task.subtaskId, task.description)} className="hover:text-gray-15 ">
+                          <button onClick={() => handleEdit(task.subtaskId, task.description)} className="hover:text-gray-5 ">
                             편집
                           </button>
-                          <button onClick={() => handleDelete(task.subtaskId)} className="hover:text-gray-15">
+                          <button onClick={() => handleDelete(task.subtaskId)} className="hover:text-gray-5">
                             삭제
                           </button>
                         </>
