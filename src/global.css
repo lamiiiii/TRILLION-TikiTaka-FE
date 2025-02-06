@@ -150,7 +150,7 @@ textarea {
 
   /* 티켓 생성 선택지 */
   .selection {
-    @apply flex items-center gap-9;
+    @apply flex items-center gap-9 w-[340px];
   }
 
   /* 티켓 생성 선택지 text */
@@ -172,5 +172,41 @@ textarea {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .prose p,
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose ul,
+  .prose ol {
+    @apply m-0 break-words;
+  }
+  .prose hr {
+    @apply my-8;
+  }
+  /* 텍스트 에디터 내 code 태그 css 오버라이딩 */
+  /* strong 태그 스타일 오버라이딩 */
+  .prose strong {
+    font-weight: normal; /* 볼드체를 제거 */
+  }
+  .prose code::before,
+  .prose code::after {
+    @apply content-none;
+  }
+  .prose code {
+    @apply bg-white rounded-[0.4rem] text-main text-[12px] font-normal px-[0.4rem] py-[0.2rem] whitespace-pre-wrap break-words;
+  }
+  /* code block css 오버라이딩 */
+  .prose pre {
+    @apply bg-main rounded text-white my-6 py-3 px-4 whitespace-pre-wrap break-words;
+  }
+
+  .prose pre code {
+    @apply bg-transparent text-inherit text-[0.8rem] p-0 whitespace-pre-wrap break-words;
+  }
+
+  .prose * {
+    @apply min-h-[1rem];
   }
 }
