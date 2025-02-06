@@ -2,16 +2,17 @@ import {useState, useRef, useEffect} from 'react';
 import {PlusCircle, VerticalDotIcon} from '../../common/Icon';
 import {createCategory, deleteCategory} from '../../../api/service/categories';
 import DeleteConfirmModal from '../common/DeleteConfirmModal';
+import { toast } from 'react-toastify';
 
 interface CategoryCardProps {
   id: number; // 1차 카테고리 ID (2차 카테고리의 parentId)
   name: string;
-  token: string; // accessToken
+  
   onDelete: (categoryId: number) => void;
   onAddSubCategory: (primaryId: number, newSubCategory: { id: number; name: string }) => void;
 }
 
-export default function CategoryCard({id, name, token, onDelete, onAddSubCategory}: CategoryCardProps) {
+export default function CategoryCard({id, name,  onDelete, onAddSubCategory}: CategoryCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [subCategoryName, setSubCategoryName] = useState(''); // 입력된 2차 카테고리 이름
   // const [subCategories, setSubCategories] = useState<{id: number; name: string}[]>([]); // 추가된 2차 카테고리 목록
@@ -33,21 +34,22 @@ export default function CategoryCard({id, name, token, onDelete, onAddSubCategor
   };
 
   const handleDelete = async () => {
-    try {
-      await deleteCategory(token, id);
-      onDelete(id); // 삭제 후 부모에서 리스트 업데이트
-    } catch (error) {
-      alert('카테고리 삭제에 실패했습니다.');
-    } finally {
-      setIsDeleteModalOpen(false);
-    }
-  };
+      try {
+        await deleteCategory(id);
+        onDelete(id); // 삭제 후 부모에서 리스트 업데이트
+        toast.success('카테고리가 성공적으로 삭제되었습니다.');
+      } catch (error) {
+        toast.error('카테고리 삭제에 실패했습니다.');
+      } finally {
+        setIsDeleteModalOpen(false);
+      }
+    };
 
   // Enter 키 입력 시 API 요청
   const handleSubmit = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && subCategoryName.trim()) {
       try {
-        const response = await createCategory(token, id, { name: subCategoryName });
+        const response = await createCategory( id, { name: subCategoryName });
         const newSubCategory = { id: response.data.id, name: subCategoryName };
 
         // ✅ 부모 컴포넌트(CategoryList.tsx)에서만 2차 카테고리 추가하도록 콜백 실행

@@ -16,19 +16,18 @@ export default function CategoryList() {
     setIsRegModalOpen(false); // 1차 카테고리 모달 닫기
   };
 
-  const token =
-    'eyJhbGciOiJIUzUxMiJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4udGsiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3Mzg3Nzg3MzgsImV4cCI6MTczODc4MjMzOH0.tLl8_IgnWjlXk25EQ1NNATbJtqIGnsNlO8ftMw4wvE_wJT_iAu6cZjQdDhx9h-9O9p2wlxfMzs0m3kdi1KpVAw';
+  
 
   useEffect(() => {
-    getCategoryList(token)
+    getCategoryList()
       .then((primaryCategories) => {
         const secondaryRequests = primaryCategories.map((primary) =>
-          getCategoryList(token, primary.id).then((secondaries) => ({
+          getCategoryList(primary.id).then((secondaries) => ({
             primary,
-            secondaries, // 이제 올바른 2차 카테고리 데이터가 들어감
+            secondaries, // ✅ 원래의 2차 카테고리 데이터만 포함
           }))
         );
-
+  
         return Promise.all(secondaryRequests);
       })
       .then((fullCategoryData) => {
@@ -38,7 +37,7 @@ export default function CategoryList() {
   }, []);
 
   return (
-    <div className="w-[450px] mt-[20px] relative mb-[100px] bg-slate-300">
+    <div className="w-[550px] mt-[20px] relative mb-[100px] bg-slate-300">
       <div className="bg-gray-18 h-full shadow-[0px_1px_3px_1px_rgba(0,0,0,0.15)] flex flex-col justify-start p-4">
         <div className="flex justify-between gap-4 text-gray-700 text-title-bold mt-3 mb-5 px-4 items-center">
           <div className="w-[36%]">카테고리 조회</div>
@@ -57,7 +56,7 @@ export default function CategoryList() {
             <CategoryCard
               id={primary.id}
               name={primary.name}
-              token={token}
+              
               onDelete={(categoryId) => {
                 setCategories((prev) => prev.filter(({primary}) => primary.id !== categoryId)); // 1차 카테고리 & 하위 2차 카테고리 삭제
               }}
@@ -81,7 +80,6 @@ export default function CategoryList() {
                 id={secondary.id} // 2차 카테고리 ID 추가
                 parentId={primary.id}
                 name={secondary.name}
-                token={token}
                 onDelete={(categoryId) => {
                   setCategories((prev) =>
                     prev.map(({primary, secondaries}) => ({

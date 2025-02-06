@@ -4,6 +4,7 @@ import Portal from '../../common/Portal';
 import {AnimatePresence, motion} from 'framer-motion';
 import {useState} from 'react';
 import {createCategory} from '../../../api/service/categories';
+import { toast } from 'react-toastify';
 
 interface ReqCateModalProps {
   onClose: () => void;
@@ -12,22 +13,27 @@ interface ReqCateModalProps {
 export default function ReqCateModal({onClose}: ReqCateModalProps) {
   const [categoryName, setCategoryName] = useState(''); // 입력값 상태
   const [loading, setLoading] = useState(false); // 로딩 상태
-  const token = "eyJhbGciOiJIUzUxMiJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWQiOjEsInVzZXJuYW1lIjoiYWRtaW4udGsiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3Mzg3NzUwMTYsImV4cCI6MTczODc3ODYxNn0.tS-Q935vydHCOGL8JnLxa_3NXRSKkEhmTrQl8hyokpIHGBPWJZF87F0SNcqXm9X1nV6hJeJuLk-lJc6sFGRBgw"; // 로그인 토큰 가져오기 (사용자 인증 필요)
+  
 
   // 카테고리 등록 함수
   const onSubmit = async () => {
     if (!categoryName.trim()) {
-      alert('카테고리 이름을 입력해주세요.');
+      toast.error('카테고리 이름을 입력해주세요.');
       return;
     }
-
+  
     try {
       setLoading(true);
-      await createCategory(token, null, {name: categoryName}); // parentId는 null
-      alert('카테고리가 성공적으로 등록되었습니다.');
+      await createCategory(null, { name: categoryName }); // parentId는 null
+      toast.success('카테고리가 성공적으로 등록되었습니다.');
+  
+      setTimeout(() => {
+        window.location.reload(); // 페이지 새로고침
+      }, 1000); // 1초 후 새로고침 (UX 고려)
+      
       onClose(); // 모달 닫기
     } catch (error) {
-      alert('카테고리 등록에 실패했습니다.');
+      toast.error('카테고리 등록에 실패했습니다.');
     } finally {
       setLoading(false);
     }

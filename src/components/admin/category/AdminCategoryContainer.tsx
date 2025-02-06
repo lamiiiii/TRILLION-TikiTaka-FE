@@ -1,10 +1,11 @@
+import AdminGuide from "./AdminGuide";
 import CategoryList from "./CategoryList";
 
 export default function AdminCategoryContainer() {
   return (
-    <div className="flex  max-w-1200 gap-[80px]">
+    <div className="flex  max-w-1200 gap-[120px]">
        <CategoryList/>
-       <div>티켓 유형 조회 </div>
+       <AdminGuide />
     </div>
   );
 }

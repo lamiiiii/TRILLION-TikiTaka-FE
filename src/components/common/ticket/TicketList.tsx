@@ -90,12 +90,6 @@ export default function TicketList({ role, selectedFilter }: TicketListProps) {
     console.log(`티켓 ${ticketId} 반려`);
   };
 
-  // ✅ 역할에 따라 다르게 링크 이동
-  // const getDetailLink = (ticketId: string): string => {
-  //   if (role === 'manager') return `/manager/detail/${ticketId}`;
-  //   if (role === 'user') return `/user/detail/${ticketId}`;
-  //   return `/detail/${ticketId}`;
-  // };
   return (
     <div className="w-full mt-[20px] relative mb-[100px]">
       <div className="bg-gray-18 h-full shadow-[0px_1px_3px_1px_rgba(0,0,0,0.15)] flex flex-col justify-start p-4">
