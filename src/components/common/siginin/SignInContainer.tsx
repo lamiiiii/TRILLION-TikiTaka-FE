@@ -4,6 +4,7 @@ import {useTokenStore, useUserStore} from '../../../store/store';
 import {validateId, validatePwd} from '../../../utils/Validation';
 import InitialLayout from './InitialLayout';
 import {postLogin} from '../../../api/service/auth';
+import Modal from '../Modal';
 
 // 연속 5회 설정한 비밀번호가 틀렸을 경우 30분간 잠금
 // 토큰값 있으면 리다이렉트
@@ -16,6 +17,10 @@ export default function SignInContainer() {
   const [idError, setIdError] = useState('');
   const [pwd, setPwd] = useState('');
   const [pwdError, setPwdError] = useState('');
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState('로그인');
+  const [modalMessage, setModalMessage] = useState('');
 
   const validateInput = (type: 'id' | 'pwd', value: string) => {
     if (!value) return type === 'id' ? '아이디를 입력해주세요.' : '비밀번호를 입력해주세요.';
@@ -43,6 +48,10 @@ export default function SignInContainer() {
 
     try {
       const response = await postLogin({username: id, password: pwd});
+      if (!response) {
+        setModalMessage('');
+        setModalTitle('');
+      }
 
       if (response) {
         const {accessToken, data} = response;
@@ -59,9 +68,20 @@ export default function SignInContainer() {
           }
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('로그인 실패:', error);
+      setIsModalOpen(true);
+      setModalTitle('로그인 안내');
+      setModalMessage(error.response?.data?.message || '알 수 없는 오류가 발생했습니다.');
     }
+  };
+
+  const closeModal = () => {
+    setId('');
+    setIdError('');
+    setPwd('');
+    setPwdError('');
+    setIsModalOpen(false);
   };
 
   return (
@@ -117,6 +137,7 @@ export default function SignInContainer() {
           </div>
         </div>
       </div>
+      {isModalOpen && <Modal title={modalTitle} content={modalMessage} backBtn="확인" onBackBtnClick={closeModal} />}
     </InitialLayout>
     // </div>
   );

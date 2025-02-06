@@ -9,7 +9,7 @@ export async function postLogin(loginData: LoginData) {
       tokenStorage.remove(); // 기존 토큰을 지움
     }
 
-    const response = await instance.post<{message: string; data: LoginResponse}>('/login', loginData);
+    const response = await instance.post('/login', loginData);
     const {data, headers} = response;
     const authorizationHeader = headers['authorization'] || headers['Authorization'];
 
@@ -33,7 +33,6 @@ export async function postLogout() {
     tokenStorage.remove();
 
     console.log('로그아웃 해주세요.');
-    console.log(token);
     const response = await instance.post('/logout', null, {
       headers: {Authorization: `Bearer ${token}`},
     });
