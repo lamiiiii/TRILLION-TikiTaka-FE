@@ -341,6 +341,28 @@ export async function deleteTicketComment(ticketId: number, commentId: number) {
   }
 }
 
+// 티켓 승인 함수
+export async function approveTicket(ticketId: number) {
+  try {
+    const {data} = await instance.patch(`/tickets/${ticketId}/approve`);
+    return data;
+  } catch (error) {
+    console.error('티켓 승인 실패:', error);
+    throw error;
+  }
+}
+
+// 티켓 반려 함수
+export async function rejectTicket(ticketId: number) {
+  try {
+    const {data} = await instance.patch(`/tickets/${ticketId}/reject`);
+    return data;
+  } catch (error) {
+    console.error('티켓 반려 실패:', error);
+    throw error;
+  }
+}
+
 // // INTF-46: 티켓 댓글 수정 (PATCH)
 // export async function updateTicketComment(ticketId: number, commentId: number, content: string) {
 //   try {

@@ -5,7 +5,7 @@ import {useEffect, useState} from 'react';
 import {WhiteCheckIcon} from '../Icon';
 import {useParams} from 'react-router-dom';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {updateTicket, updateTicketPriority, updateTicketStatus} from '../../../api/service/tickets';
+import {approveTicket, rejectTicket, updateTicket, updateTicketPriority, updateTicketStatus} from '../../../api/service/tickets';
 
 interface StatusBarProps {
   data: TicketDetails;
@@ -76,6 +76,30 @@ export default function StatusBar({data, status}: StatusBarProps) {
     },
   });
 
+  // 티켓 승인
+  const approveMutation = useMutation({
+    mutationFn: () => approveTicket(ticketId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['ticket', ticketId]});
+      setCurrentStatus('승인');
+    },
+    onError: () => {
+      alert('티켓 승인에 실패했습니다. 다시 시도해 주세요.');
+    },
+  });
+
+  // 티켷 반려
+  const rejectMutation = useMutation({
+    mutationFn: () => rejectTicket(ticketId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['ticket', ticketId]});
+      setCurrentStatus('반려');
+    },
+    onError: () => {
+      alert('티켓 반려에 실패했습니다. 다시 시도해 주세요.');
+    },
+  });
+
   useEffect(() => {
     if (status) {
       setCurrentStatus(STATUS_MAP[status]);
@@ -98,13 +122,11 @@ export default function StatusBar({data, status}: StatusBarProps) {
   };
 
   const handleApprove = () => {
-    // 승인 로직 구현
-    updateStatusMutation.mutate('승인');
+    approveMutation.mutate();
   };
 
   const handleReject = () => {
-    // 반려 로직 구현
-    updateStatusMutation.mutate('반려');
+    rejectMutation.mutate();
   };
 
   // 반려 상태가 아닐 때만 '반려'를 제외한 상태 옵션 표시
