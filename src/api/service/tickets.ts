@@ -222,7 +222,7 @@ export async function updateTicketStatus(ticketId: number, status: string) {
 // INTF-38: 티켓 우선순위 수정
 export async function updateTicketPriority(ticketId: number, priority: string) {
   try {
-    const {data} = await instance.patch(`/tickets/priority/${ticketId}`, priority);
+    const {data} = await instance.patch(`/tickets/${ticketId}/priority`, {priority});
     return data;
   } catch (error) {
     console.error('티켓 우선순위 수정 실패:', error);
