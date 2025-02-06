@@ -25,7 +25,7 @@ export default function TicketTask() {
     mutationFn: createSubtask,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['tasks', ticketId],
+        queryKey: ['subtasks', ticketId],
       });
     },
     onError: () => {
@@ -56,7 +56,7 @@ export default function TicketTask() {
 
   // 하위 태스크 삭제
   const deleteSubtaskMutation = useMutation({
-    mutationFn: (taskId: number) => deleteSubtask(taskId),
+    mutationFn: (taskId: number) => deleteSubtask(ticketId, taskId),
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['subtasks', ticketId]});
     },
@@ -85,10 +85,7 @@ export default function TicketTask() {
   };
 
   const handleDelete = (taskId: number) => {
-    // TODO: 태스크 삭제는 alert api 연결 후 제거
-    if (window.confirm('정말로 이 태스크를 삭제하시겠습니까?')) {
-      deleteSubtaskMutation.mutate(taskId);
-    }
+    deleteSubtaskMutation.mutate(taskId);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -135,8 +132,8 @@ export default function TicketTask() {
                   {/* 태스크 완료 섹션 */}
                   <section className="flex gap-3 items-center mr-4">
                     <label
-                      className={`flex items-center justify-center w-4 h-4 border rounded-md cursor-pointer 
-                        ${task.done ? 'bg-main border-main' : 'border-gray-2 hover:border-main'}`}
+                      className={`flex items-center justify-center w-4 h-4 border rounded-md cursor-pointer border-gray-2
+                        ${task.done ? 'bg-main ' : ' '}`}
                     >
                       <input
                         type="checkbox"
@@ -146,7 +143,7 @@ export default function TicketTask() {
                       />
                       {task.done && <WhiteCheckIcon />}
                     </label>
-                    <p className={`${task.done ? 'text-main text-body-bold' : 'text-gray-6 text-body-regular'}`}>완료</p>
+                    <p className={`text-white text-body-regular`}>완료</p>
                   </section>
 
                   <section>
@@ -178,6 +175,7 @@ export default function TicketTask() {
                     className="w-full p-2 border rounded text-main"
                     value={editedContent}
                     onChange={(e) => setEditedContent(e.target.value)}
+                    style={{resize: 'none'}} // 크기 조절 비활성화
                   />
                 ) : (
                   <p className={task.done ? 'line-through' : ''}>{task.description}</p>

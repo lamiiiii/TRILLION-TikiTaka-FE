@@ -11,13 +11,14 @@ const AuthGuard: React.FC<AuthGuardProps> = ({children, isAuthenticated}) => {
 
   useEffect(() => {
     if (!isAuthenticated) {
+      alert('로그인 후 이용 가능합니다.');
       navigate('/');
     }
   }, [isAuthenticated, navigate]);
 
   if (!isAuthenticated) return null;
 
-  return <>{children}</>; // 로그인된 경우 자식 요소를 렌더링
+  return <>{children}</>;
 };
 
 export default AuthGuard;

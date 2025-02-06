@@ -3,15 +3,104 @@ import {PRIORITY, STATUS_MAP, STATUS_OPTIONS} from '../../../constants/constants
 import {useTicketStore} from '../../../store/store';
 import {useEffect, useState} from 'react';
 import {WhiteCheckIcon} from '../Icon';
+import {useParams} from 'react-router-dom';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {approveTicket, rejectTicket, updateTicket, updateTicketPriority, updateTicketStatus} from '../../../api/service/tickets';
 
 interface StatusBarProps {
+  data: TicketDetails;
   status?: keyof typeof STATUS_MAP;
 }
 
-export default function StatusBar({status}: StatusBarProps) {
+// STATUS_MAP의 키와 값을 뒤집은 객체 생성
+const REVERSE_STATUS_MAP = Object.fromEntries(Object.entries(STATUS_MAP).map(([key, value]) => [value, key]));
+
+export default function StatusBar({data, status}: StatusBarProps) {
   const [currentStatus, setCurrentStatus] = useState<string>(status ? STATUS_MAP[status] : '대기 중');
   const {priority, setPriority} = useTicketStore();
-  const [isUrgent, setIsUrgent] = useState(false);
+  const [isUrgent, setIsUrgent] = useState(data?.urgent);
+
+  const isApproved = ['IN_PROGRESS', 'REVIEW', 'DONE'].includes(status || '');
+  const isRejected = currentStatus === '반려';
+
+  const {id} = useParams();
+  const ticketId = Number(id);
+
+  const queryClient = useQueryClient();
+
+  // 티켓 긴급 여부 수정
+  const updateUrgentMutation = useMutation({
+    mutationFn: (urgent: boolean) =>
+      updateTicket(ticketId, {
+        title: data?.title || '',
+        description: data?.description || '',
+        urgent: urgent,
+        typeId: data?.typeId,
+        primaryCategoryId: data?.firstCategoryId,
+        secondaryCategoryId: data?.secondCategoryId,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
+    },
+    onError: () => {
+      alert('티켓 긴급 여부 변경에 실패했습니다. 다시 시도해 주세요.');
+      setIsUrgent(!isUrgent); // 실패 시 상태를 원래대로 되돌림
+    },
+  });
+
+  //티켓 상태 수정
+  const updateStatusMutation = useMutation({
+    mutationFn: (newStatus: string) => {
+      // 한글 상태를 영문 키로 변환
+      const statusKey = REVERSE_STATUS_MAP[newStatus] as keyof typeof STATUS_MAP;
+      return updateTicketStatus(ticketId, statusKey);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['ticket', ticketId]});
+    },
+    onError: () => {
+      alert('티켓 상태 변경에 실패했습니다. 다시 시도해 주세요.');
+    },
+  });
+
+  //티켓 우선순위 수정
+  // FIX: cors 해결 후 요청 형식 맞는지 검토하기
+  const updatePriorityMutation = useMutation({
+    mutationFn: (newPriority: string) => updateTicketPriority(ticketId, newPriority),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({queryKey: ['ticket', ticketId]});
+      setPriority(data.priority); // API 응답의 priority로 전역 상태 업데이트
+    },
+    onError: () => {
+      alert('티켓 우선순위 변경에 실패했습니다. 다시 시도해 주세요.');
+    },
+  });
+
+  // 티켓 승인
+  const approveMutation = useMutation({
+    mutationFn: () => approveTicket(ticketId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['ticket', ticketId]});
+      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
+      setCurrentStatus('승인');
+    },
+    onError: () => {
+      alert('티켓 승인에 실패했습니다. 다시 시도해 주세요.');
+    },
+  });
+
+  // 티켷 반려
+  const rejectMutation = useMutation({
+    mutationFn: () => rejectTicket(ticketId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['ticket', ticketId]});
+      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
+      setCurrentStatus('반려');
+    },
+    onError: () => {
+      alert('티켓 반려에 실패했습니다. 다시 시도해 주세요.');
+    },
+  });
 
   useEffect(() => {
     if (status) {
@@ -20,20 +109,26 @@ export default function StatusBar({status}: StatusBarProps) {
   }, [status]);
 
   const checkboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const isChecked = e.target.checked;
-    setIsUrgent(isChecked);
+    const newUrgentState = e.target.checked;
+    setIsUrgent(newUrgentState);
+    updateUrgentMutation.mutate(newUrgentState);
   };
 
   const handlePrioritySelect = (selectedOption: string) => {
-    setPriority(selectedOption);
+    updatePriorityMutation.mutate(selectedOption);
   };
 
   const handleStatusClick = (option: string) => {
-    setCurrentStatus(option);
+    updateStatusMutation.mutate(option);
   };
 
-  // 반려 상태인지 확인
-  const isRejected = currentStatus === '반려';
+  const handleApprove = () => {
+    approveMutation.mutate();
+  };
+
+  const handleReject = () => {
+    rejectMutation.mutate();
+  };
 
   // 반려 상태가 아닐 때만 '반려'를 제외한 상태 옵션 표시
   const visibleStatusOptions = isRejected ? ['반려'] : STATUS_OPTIONS.filter((option) => option !== '반려');
@@ -59,7 +154,7 @@ export default function StatusBar({status}: StatusBarProps) {
           </div>
         )}
 
-        <div className="flex items-center gap-2">
+        <section className="flex items-center gap-2">
           <label className="text-body-bold">Status</label>
           {visibleStatusOptions.map((option) => (
             <button
@@ -69,11 +164,32 @@ export default function StatusBar({status}: StatusBarProps) {
                 currentStatus === option ? 'bg-main text-white' : 'bg-white-100'
               } rounded-md py-1 px-6 text-caption-regular border border-main`}
             >
-              {option}
+              {updateStatusMutation.isPending && currentStatus === option ? 'Updating...' : option}
             </button>
           ))}
-        </div>
+        </section>
       </div>
+
+      <section className="flex items-center gap-2">
+        <button
+          onClick={handleApprove}
+          disabled={location.pathname.startsWith('/user')}
+          className={`${
+            isApproved ? 'bg-main text-white' : 'bg-white text-main border border-main hover:bg-main hover:text-white'
+          } rounded-md py-1 px-6 text-caption-regular`}
+        >
+          승인
+        </button>
+        <button
+          onClick={handleReject}
+          disabled={location.pathname.startsWith('/user')}
+          className={`${
+            isRejected ? 'bg-main text-white' : 'bg-white text-main border border-main hover:bg-main hover:text-white'
+          } rounded-md py-1 px-6 text-caption-regular`}
+        >
+          반려
+        </button>
+      </section>
     </div>
   );
 }
