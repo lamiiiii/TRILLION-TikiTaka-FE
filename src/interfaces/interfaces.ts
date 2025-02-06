@@ -1,5 +1,4 @@
 import {PRIORITY} from '../constants/constants';
-import {Category} from './newTicket';
 
 // 사용자 정보
 export interface UserStore {
@@ -38,7 +37,7 @@ export interface NewTicketStore {
   title: string;
   content: string;
   manager: string;
-  ticketType: string;
+  ticketType: {typeId: number; typeName: string};
   template: string;
   dueDate: string;
   dueTime: string;
@@ -48,7 +47,7 @@ export interface NewTicketStore {
   setTitle: (title: string) => void;
   setContent: (content: string) => void;
   setManager: (manager: string) => void;
-  setTicketType: (ticketType: string) => void;
+  setTicketType: (ticketType: {typeId: number; typeName: string}) => void;
   setTemplate: (template: string) => void;
   setDueDate: (date: string) => void;
   setDueTime: (time: string) => void;

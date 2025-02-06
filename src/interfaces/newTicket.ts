@@ -1,9 +1,3 @@
-export interface Category {
-  id: number;
-  firstId?: number; // 1차 카테고리 아이디 (있으면)
-  name: string;
-}
-
 export interface Template {
   id: number;
   name: string;
@@ -16,8 +10,3 @@ export interface Template {
   createdAt: string;
   // 첨부파일
 }
-
-// // 요청 양식
-// export interface RequestForm {
-//   firstCategory:
-// }

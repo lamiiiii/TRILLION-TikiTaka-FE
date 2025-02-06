@@ -1,17 +1,17 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import {useTokenStore, useUserStore} from '../../../store/store';
 import {validateId, validatePwd} from '../../../utils/Validation';
 import InitialLayout from './InitialLayout';
 import {postLogin} from '../../../api/service/auth';
 import Modal from '../Modal';
-import { useEnterKeyHandler } from '../../../hooks/useEnterKeyHandler';
+import {useEnterKeyHandler} from '../../../hooks/useEnterKeyHandler';
 
 // 연속 5회 설정한 비밀번호가 틀렸을 경우 30분간 잠금
 // 토큰값 있으면 리다이렉트
 export default function SignInContainer() {
   const navigate = useNavigate();
-  const {login} = useTokenStore();
+  const {isAuthenticated, login} = useTokenStore();
   const {setUserId, setRole} = useUserStore();
 
   const [id, setId] = useState('');
@@ -85,6 +85,13 @@ export default function SignInContainer() {
     setPwdError('');
     setIsModalOpen(false);
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      alert('이미 로그인된 상태입니다.');
+      navigate(-1);
+    }
+  }, []);
 
   return (
     // <div className="flex h-screen">

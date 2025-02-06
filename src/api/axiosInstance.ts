@@ -32,6 +32,7 @@ instance.interceptors.response.use(
   (response) => {
     return response;
   },
+  
   async (error) => {
     const originalRequest = error.config;
 
@@ -44,12 +45,16 @@ instance.interceptors.response.use(
         if (!refreshTokenPromise) {
           refreshTokenPromise = postReissueToken()
             .then(({accessToken}) => {
+              console.log('새로운 액세스 토큰:', accessToken); // 로그 추가
+
               refreshTokenPromise = null;
 
               return accessToken;
             })
             .catch((err) => {
               refreshTokenPromise = null;
+              console.error('토큰 재발급 실패:', err); // 에러 로그 추가
+
               throw err;
             });
         }
@@ -58,7 +63,7 @@ instance.interceptors.response.use(
         const newAccessToken = await refreshTokenPromise;
         if (!newAccessToken) throw new Error('토큰 재발급 실패');
 
-        originalRequest.headers.Authorization = `${newAccessToken}`;
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return instance(originalRequest);
       } catch (reissueError) {
         console.error('토큰 재발급 실패, 로그아웃 처리:', reissueError);

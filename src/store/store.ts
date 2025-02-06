@@ -46,7 +46,7 @@ export const useNewTicketStore = create<NewTicketStore>((set) => ({
   title: '',
   content: '',
   manager: '',
-  ticketType: '',
+  ticketType: {typeId: 0, typeName: ''},
   template: '',
   dueDate: '',
   dueTime: '',

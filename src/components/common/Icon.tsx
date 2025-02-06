@@ -525,7 +525,7 @@ export function StarIcon({color = '#727586'}: StarIconProps) {
   );
 }
 
-export function RequiredIcon() {
+export function ReferredIcon() {
   return (
     <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
@@ -534,6 +534,17 @@ export function RequiredIcon() {
         strokeWidth="1.6"
         strokeLinecap="round"
         strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function RequiredIcon() {
+  return (
+    <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M7 4.33333H4.8L6.36667 5.9L5.9 6.36667L4.33333 4.8V7H3.66667V4.76667L2.1 6.33333L1.63333 5.86667L3.13333 4.33333H1V3.66667H3.2L1.63333 2.1L2.1 1.63333L3.66667 3.2V1H4.33333V3.13333L5.86667 1.6L6.33333 2.1L4.76667 3.66667H7V4.33333Z"
+        fill="#B3261E"
       />
     </svg>
   );

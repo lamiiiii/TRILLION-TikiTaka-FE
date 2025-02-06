@@ -1,11 +1,9 @@
 import instance from '../axiosInstance';
 
 // INTF-21: 티켓 폼 생성
-export async function createTicketForm( firstCategoryId: number, secondCategoryId: number, formData: CreateTicketFormData) {
+export async function createTicketForm(firstCategoryId: number, secondCategoryId: number, formData: CreateTicketFormData) {
   try {
-    const {data} = await instance.post(`/tickets/forms/${firstCategoryId}/${secondCategoryId}`, formData, {
-      
-    });
+    const {data} = await instance.post(`/tickets/forms/${firstCategoryId}/${secondCategoryId}`, formData, {});
     return data;
   } catch (error) {
     console.error('티켓 폼 생성 실패:', error);
@@ -16,14 +14,13 @@ export async function createTicketForm( firstCategoryId: number, secondCategoryI
 // INTF-22: 티켓 폼 조회
 export async function getTicketForm(firstCategoryId: number, secondCategoryId: number) {
   try {
-    const { data } = await instance.get(`/tickets/forms/${firstCategoryId}/${secondCategoryId}`);
+    const {data} = await instance.get(`/tickets/forms/${firstCategoryId}/${secondCategoryId}`);
     return data.data; // 요청 양식이 있는 경우 반환
   } catch (error) {
     console.error('티켓 폼 조회 실패:', error);
     return null; // 요청 양식이 없는 경우 null 반환
   }
 }
-
 
 // INTF-23: 티켓 폼 수정
 export async function updateTicketForm(token: string, firstCategoryId: number, secondCategoryId: number, formData: UpdateTicketFormData) {
@@ -65,11 +62,9 @@ export async function createTicketType(token: string, typeData: CreateTicketType
 }
 
 // INTF-26: 티켓 유형 조회
-export async function getTicketTypes(token: string) {
+export async function getTicketTypes() {
   try {
-    const {data} = await instance.get('/tickets/types/list', {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.get('/tickets/types/list', {});
     return data.data;
   } catch (error) {
     console.error('티켓 유형 조회 실패:', error);
@@ -104,11 +99,9 @@ export async function deleteTicketType(token: string, typeId: number) {
 }
 
 // INTF-29: 티켓 생성
-export async function createTicket(token: string, ticketData: CreateTicketData) {
+export async function createTicket(formData: FormData) {
   try {
-    const {data} = await instance.post('/tickets', ticketData, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.post('/tickets', formData, {});
     return data;
   } catch (error) {
     console.error('티켓 생성 실패:', error);
