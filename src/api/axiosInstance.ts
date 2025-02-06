@@ -13,9 +13,6 @@ const server = config.backend.baseURL;
 const instance: AxiosInstance = axios.create({
   baseURL: server,
   withCredentials: true, // 쿠키를 포함한 인증 정보를 서버에 전송
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 // 토큰 재발급 요청이 중복되지 않도록 Promise 공유
