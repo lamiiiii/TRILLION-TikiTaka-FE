@@ -47,7 +47,7 @@ export async function deleteSubtask(ticketId: number, taskId: number) {
 // INTF-55: 하위태스크 상태 변경
 export async function updateSubtaskStatus(ticketId: number, taskId: number, checked: boolean) {
   try {
-    const {data} = await instance.patch(`/tickets/${ticketId}/${taskId}/${checked}`);
+    const {data} = await instance.patch(`/subtasks/${ticketId}/${taskId}/${checked}`);
     return data;
   } catch (error) {
     console.error('하위태스크 상태 변경 실패:', error);

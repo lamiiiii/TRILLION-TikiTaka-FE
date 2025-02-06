@@ -132,8 +132,8 @@ export default function TicketTask() {
                   {/* 태스크 완료 섹션 */}
                   <section className="flex gap-3 items-center mr-4">
                     <label
-                      className={`flex items-center justify-center w-4 h-4 border rounded-md cursor-pointer 
-                        ${task.done ? 'bg-main border-main' : 'border-gray-2 hover:border-main'}`}
+                      className={`flex items-center justify-center w-4 h-4 border rounded-md cursor-pointer border-gray-2
+                        ${task.done ? 'bg-main ' : ' '}`}
                     >
                       <input
                         type="checkbox"
@@ -143,7 +143,7 @@ export default function TicketTask() {
                       />
                       {task.done && <WhiteCheckIcon />}
                     </label>
-                    <p className={`${task.done ? 'text-main text-body-bold' : 'text-gray-6 text-body-regular'}`}>완료</p>
+                    <p className={`text-white text-body-regular`}>완료</p>
                   </section>
 
                   <section>
