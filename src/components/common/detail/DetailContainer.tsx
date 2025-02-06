@@ -12,7 +12,6 @@ import TicketLog from './TicketLog';
 import {useQuery} from '@tanstack/react-query';
 import {getTicketComments, getTicketDetails} from '../../../api/service/tickets';
 import {Comment} from '../../../interfaces/interfaces';
-import {TicketDetails} from '../../../api/type/tickets';
 
 export default function DetailContainer() {
   const {id} = useParams<{id: string}>();
@@ -52,14 +51,17 @@ export default function DetailContainer() {
             <TicketContent content={ticket?.description} />
             <CommentInput />
             {comments?.data && comments?.data.length > 0 ? (
-              comments?.data.map((comment: Comment) => (
-                <CommentItem
-                  commentId={comment.commentId}
-                  name={comment.authorName}
-                  content={comment.content}
-                  createdAt={comment.createdAt}
-                />
-              ))
+              [...comments.data]
+                .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                .map((comment: Comment) => (
+                  <CommentItem
+                    key={comment.commentId}
+                    commentId={comment.commentId}
+                    name={comment.authorName}
+                    content={comment.content}
+                    createdAt={comment.createdAt}
+                  />
+                ))
             ) : (
               <></>
             )}

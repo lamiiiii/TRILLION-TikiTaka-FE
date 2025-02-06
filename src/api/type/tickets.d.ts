@@ -1,5 +1,3 @@
-import {STATUS_MAP} from '../../constants/constants';
-
 declare interface CreateTicketFormData {
   mustDescription: string;
   description: string;
