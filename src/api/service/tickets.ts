@@ -213,15 +213,9 @@ export async function updateTicket(ticketId: number, params: UpdateTicketParams)
 }
 
 // INTF-37: 티켓 상태 수정
-export async function updateTicketStatus(token: string, ticketId: number, status: string) {
+export async function updateTicketStatus(ticketId: number, status: string) {
   try {
-    const {data} = await instance.patch(
-      `/tickets/status/${ticketId}`,
-      {status},
-      {
-        headers: {Authorization: `Bearer ${token}`},
-      }
-    );
+    const {data} = await instance.patch(`/tickets/status/${ticketId}`, {status});
     return data;
   } catch (error) {
     console.error('티켓 상태 수정 실패:', error);
@@ -230,15 +224,9 @@ export async function updateTicketStatus(token: string, ticketId: number, status
 }
 
 // INTF-38: 티켓 우선순위 수정
-export async function updateTicketPriority(token: string, ticketId: number, priority: string) {
+export async function updateTicketPriority(ticketId: number, priority: string) {
   try {
-    const {data} = await instance.patch(
-      `/tickets/priority/${ticketId}`,
-      {priority},
-      {
-        headers: {Authorization: `Bearer ${token}`},
-      }
-    );
+    const {data} = await instance.patch(`/tickets/priority/${ticketId}`, {priority});
     return data;
   } catch (error) {
     console.error('티켓 우선순위 수정 실패:', error);

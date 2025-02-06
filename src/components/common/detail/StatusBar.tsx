@@ -3,15 +3,41 @@ import {PRIORITY, STATUS_MAP, STATUS_OPTIONS} from '../../../constants/constants
 import {useTicketStore} from '../../../store/store';
 import {useEffect, useState} from 'react';
 import {WhiteCheckIcon} from '../Icon';
+import {useParams} from 'react-router-dom';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {updateTicketStatus} from '../../../api/service/tickets';
 
 interface StatusBarProps {
   status?: keyof typeof STATUS_MAP;
 }
 
+// STATUS_MAP의 키와 값을 뒤집은 객체 생성
+const REVERSE_STATUS_MAP = Object.fromEntries(Object.entries(STATUS_MAP).map(([key, value]) => [value, key]));
+
 export default function StatusBar({status}: StatusBarProps) {
   const [currentStatus, setCurrentStatus] = useState<string>(status ? STATUS_MAP[status] : '대기 중');
   const {priority, setPriority} = useTicketStore();
   const [isUrgent, setIsUrgent] = useState(false);
+
+  const {id} = useParams();
+  const ticketId = Number(id);
+
+  const queryClient = useQueryClient();
+
+  //티켓 상태 수정
+  const updateStatusMutation = useMutation({
+    mutationFn: (newStatus: string) => {
+      // 한글 상태를 영문 키로 변환
+      const statusKey = REVERSE_STATUS_MAP[newStatus] as keyof typeof STATUS_MAP;
+      return updateTicketStatus(ticketId, statusKey);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['ticket', ticketId]});
+    },
+    onError: () => {
+      alert('티켓 상태 변경에 실패했습니다. 다시 시도해 주세요.');
+    },
+  });
 
   useEffect(() => {
     if (status) {
@@ -30,6 +56,7 @@ export default function StatusBar({status}: StatusBarProps) {
 
   const handleStatusClick = (option: string) => {
     setCurrentStatus(option);
+    updateStatusMutation.mutate(option);
   };
 
   // 반려 상태인지 확인
@@ -69,7 +96,7 @@ export default function StatusBar({status}: StatusBarProps) {
                 currentStatus === option ? 'bg-main text-white' : 'bg-white-100'
               } rounded-md py-1 px-6 text-caption-regular border border-main`}
             >
-              {option}
+              {updateStatusMutation.isPending && currentStatus === option ? 'Updating...' : option}
             </button>
           ))}
         </div>
