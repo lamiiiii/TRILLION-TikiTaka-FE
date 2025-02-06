@@ -21,7 +21,7 @@ const colorClasses = {
 
 export default function Profile({name, size = 'sm', backgroundColor}: ProfileInitialProps) {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const initial = name.charAt(0).toUpperCase();
+  const initial = name?.charAt(0).toUpperCase();
 
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);

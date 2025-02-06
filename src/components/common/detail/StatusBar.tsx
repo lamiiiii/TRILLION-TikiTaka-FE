@@ -57,6 +57,7 @@ export default function StatusBar({data, status}: StatusBarProps) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['ticket', ticketId]});
+      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
     },
     onError: () => {
       alert('티켓 상태 변경에 실패했습니다. 다시 시도해 주세요.');
@@ -164,7 +165,7 @@ export default function StatusBar({data, status}: StatusBarProps) {
                 currentStatus === option ? 'bg-main text-white' : 'bg-white-100'
               } rounded-md py-1 px-6 text-caption-regular border border-main`}
             >
-              {updateStatusMutation.isPending && currentStatus === option ? 'Updating...' : option}
+              {option}
             </button>
           ))}
         </section>
