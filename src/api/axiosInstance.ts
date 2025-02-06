@@ -4,7 +4,7 @@ import {tokenStorage} from '../utils/token';
 
 const config = {
   backend: {
-    baseURL: process.env.REACT_APP_BASE_URL, // React 환경변수 사용
+    baseURL: process.env.REACT_APP_BASE_URL,
   },
 };
 

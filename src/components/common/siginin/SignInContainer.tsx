@@ -10,7 +10,7 @@ import {postLogin} from '../../../api/service/auth';
 export default function SignInContainer() {
   const navigate = useNavigate();
   const {login} = useTokenStore();
-  const {setUserId, role, setRole} = useUserStore();
+  const {setUserId, setRole} = useUserStore();
 
   const [id, setId] = useState('');
   const [idError, setIdError] = useState('');
@@ -54,9 +54,7 @@ export default function SignInContainer() {
             if (data.role && data.id) {
               setRole(data.role);
               setUserId(data.id);
-              if (data.role === role) {
-                navigate(`/${role.toLowerCase()}`, {replace: true});
-              }
+              navigate(`/${data.role.toLowerCase()}`, {replace: true});
             }
           }
         }

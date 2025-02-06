@@ -118,11 +118,9 @@ export async function createTicket(token: string, ticketData: CreateTicketData) 
 }
 
 // INTF-30: 티켓 상태별 개수 조회
-export async function getTicketStatusCount(token: string) {
+export async function getTicketStatusCount() {
   try {
-    const {data} = await instance.get<{message: string; data: TicketStatusCount}>('/tickets/count', {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.get<{message: string; data: TicketStatusCount}>('/tickets/count');
     return data.data;
   } catch (error) {
     console.error('티켓 상태 조회 실패:', error);
@@ -131,11 +129,9 @@ export async function getTicketStatusCount(token: string) {
 }
 
 // INTF-31: 티켓 상세 조회
-export async function getTicketDetails(token: string, ticketId: number) {
+export async function getTicketDetails(ticketId: number) {
   try {
-    const {data} = await instance.get<{message: string; data: TicketDetails}>(`/tickets/${ticketId}`, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.get<{message: string; data: TicketDetails}>(`/tickets/${ticketId}`);
     return data.data;
   } catch (error) {
     console.error('티켓 상세 조회 실패:', error);
@@ -206,11 +202,9 @@ export async function getTicketList(token: string, params: TicketListParams = {}
 }
 
 // INTF-36: 티켓 세부내용 수정
-export async function updateTicket(token: string, ticketId: number, params: UpdateTicketParams) {
+export async function updateTicket(ticketId: number, params: UpdateTicketParams) {
   try {
-    const {data} = await instance.patch(`/tickets/${ticketId}`, params, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.patch(`/tickets/${ticketId}`, params);
     return data;
   } catch (error) {
     console.error('티켓 세부내용 수정 실패:', error);
@@ -253,15 +247,9 @@ export async function updateTicketPriority(token: string, ticketId: number, prio
 }
 
 // INTF-39: 티켓 담당자 수정
-export async function updateTicketManager(token: string, ticketId: number, managerId: number) {
+export async function updateTicketManager(ticketId: number, managerId: number) {
   try {
-    const {data} = await instance.patch(
-      `/tickets/manager/${ticketId}`,
-      {managerId},
-      {
-        headers: {Authorization: `Bearer ${token}`},
-      }
-    );
+    const {data} = await instance.patch(`/tickets/manager/${ticketId}`, {managerId});
     return data;
   } catch (error) {
     console.error('티켓 담당자 수정 실패:', error);
@@ -287,11 +275,9 @@ export async function updateTicketDeadline(token: string, ticketId: number, dead
 }
 
 // INTF-41: 티켓 삭제
-export async function deleteTicket(token: string, ticketId: number) {
+export async function deleteTicket(ticketId: number) {
   try {
-    const {data} = await instance.delete(`/tickets/${ticketId}`, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.delete(`/tickets/${ticketId}`);
     return data;
   } catch (error) {
     console.error('티켓 삭제 실패:', error);
@@ -326,15 +312,13 @@ export async function getTicketReviews(token: string, ticketId: number) {
 }
 
 // INTF-44: 티켓 댓글 작성
-export async function createTicketComment(token: string, ticketId: number, content: string) {
+export async function createTicketComment(ticketId: number, formData: FormData) {
   try {
-    const {data} = await instance.post(
-      `/tickets/${ticketId}/comments`,
-      {content},
-      {
-        headers: {Authorization: `Bearer ${token}`},
-      }
-    );
+    const {data} = await instance.post(`/tickets/${ticketId}/comments`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     return data;
   } catch (error) {
     console.error('티켓 댓글 작성 실패:', error);
@@ -343,11 +327,9 @@ export async function createTicketComment(token: string, ticketId: number, conte
 }
 
 // INTF-45: 티켓 댓글 조회
-export async function getTicketComments(token: string, ticketId: number) {
+export async function getTicketComments(ticketId: number) {
   try {
-    const {data} = await instance.get(`/tickets/${ticketId}/comments`, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.get(`/tickets/${ticketId}/comments`);
     return data;
   } catch (error) {
     console.error('티켓 댓글 조회 실패:', error);
@@ -356,15 +338,9 @@ export async function getTicketComments(token: string, ticketId: number) {
 }
 
 // INTF-46: 티켓 댓글 수정
-export async function updateTicketComment(token: string, ticketId: number, commentId: number, content: string) {
+export async function updateTicketComment(ticketId: number, commentId: number, content: string) {
   try {
-    const {data} = await instance.patch(
-      `/tickets/${ticketId}/comments/${commentId}`,
-      {content},
-      {
-        headers: {Authorization: `Bearer ${token}`},
-      }
-    );
+    const {data} = await instance.patch(`/tickets/${ticketId}/comments/${commentId}`, {content});
     return data;
   } catch (error) {
     console.error('티켓 댓글 수정 실패:', error);
@@ -373,14 +349,54 @@ export async function updateTicketComment(token: string, ticketId: number, comme
 }
 
 // INTF-47: 티켓 댓글 삭제
-export async function deleteTicketComment(token: string, ticketId: number, commentId: number) {
+export async function deleteTicketComment(ticketId: number, commentId: number) {
   try {
-    const {data} = await instance.delete(`/tickets/${ticketId}/comments/${commentId}`, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.delete(`/tickets/${ticketId}/comments/${commentId}`);
     return data;
   } catch (error) {
     console.error('티켓 댓글 삭제 실패:', error);
     throw error;
   }
 }
+
+// // INTF-46: 티켓 댓글 수정 (PATCH)
+// export async function updateTicketComment(ticketId: number, commentId: number, content: string) {
+//   try {
+//     const response = await fetch(`http://210.109.54.71:8080/tickets/${ticketId}/comments/${commentId}`, {
+//       method: 'PATCH',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWQiOjQsInVzZXJuYW1lIjoibWFuYWdlci50ayIsInJvbGUiOiJNQU5BR0VSIiwiaWF0IjoxNzM4NzY2Mzg4LCJleHAiOjE3Mzg3Njk5ODh9.-fUGrM4_Jabl4F2uDsi057Qchj97ShkD5w5R2akxqEDqNl_I8iTZlywzHG8adEfdMnM8kRj07VJq4dIVjIt5ZQ
+// `,
+//       },
+//       credentials: 'include', // withCredentials: true 대체
+//       body: JSON.stringify({content}),
+//     });
+
+//     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+//     return await response.json();
+//   } catch (error) {
+//     console.error('티켓 댓글 수정 실패:', error);
+//     throw error;
+//   }
+// }
+
+// // INTF-47: 티켓 댓글 삭제 (DELETE)
+// export async function deleteTicketComment(ticketId: number, commentId: number) {
+//   try {
+//     const response = await fetch(`http://210.109.54.71:8080/tickets/${ticketId}/comments/${commentId}`, {
+//       method: 'DELETE',
+//       headers: {
+//         Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWQiOjQsInVzZXJuYW1lIjoibWFuYWdlci50ayIsInJvbGUiOiJNQU5BR0VSIiwiaWF0IjoxNzM4NzY2Mzg4LCJleHAiOjE3Mzg3Njk5ODh9.-fUGrM4_Jabl4F2uDsi057Qchj97ShkD5w5R2akxqEDqNl_I8iTZlywzHG8adEfdMnM8kRj07VJq4dIVjIt5ZQ
+// `,
+//       },
+//       credentials: 'include',
+//     });
+
+//     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+//     return await response.json(); // 서버가 응답 본문을 반환하지 않으면 .text() 사용
+//   } catch (error) {
+//     console.error('티켓 댓글 삭제 실패:', error);
+//     throw error;
+//   }
+// }

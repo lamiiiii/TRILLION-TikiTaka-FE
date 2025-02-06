@@ -42,7 +42,7 @@ declare interface TicketDetails {
   title: string;
   description: string;
   priority: string | null;
-  status: string;
+  status: keyof typeof STATUS_MAP;
   typeName: string;
   firstCategoryName: string;
   secondCategoryName: string;
