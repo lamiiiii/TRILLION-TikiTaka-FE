@@ -5,7 +5,7 @@ import {useEffect, useState} from 'react';
 import {WhiteCheckIcon} from '../Icon';
 import {useParams} from 'react-router-dom';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {updateTicketStatus} from '../../../api/service/tickets';
+import {updateTicketPriority, updateTicketStatus} from '../../../api/service/tickets';
 
 interface StatusBarProps {
   status?: keyof typeof STATUS_MAP;
@@ -39,6 +39,19 @@ export default function StatusBar({status}: StatusBarProps) {
     },
   });
 
+  //티켓 우선순위 수정
+  // FIX: cors 해결 후 요청 형식 맞는지 검토하기
+  const updatePriorityMutation = useMutation({
+    mutationFn: (newPriority: string) => updateTicketPriority(ticketId, newPriority),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({queryKey: ['ticket', ticketId]});
+      setPriority(data.priority); // API 응답의 priority로 전역 상태 업데이트
+    },
+    onError: () => {
+      alert('티켓 우선순위 변경에 실패했습니다. 다시 시도해 주세요.');
+    },
+  });
+
   useEffect(() => {
     if (status) {
       setCurrentStatus(STATUS_MAP[status]);
@@ -51,7 +64,7 @@ export default function StatusBar({status}: StatusBarProps) {
   };
 
   const handlePrioritySelect = (selectedOption: string) => {
-    setPriority(selectedOption);
+    updatePriorityMutation.mutate(selectedOption);
   };
 
   const handleStatusClick = (option: string) => {
