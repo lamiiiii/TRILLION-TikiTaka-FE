@@ -1,17 +1,22 @@
 import instance from '../axiosInstance';
 
 // INTF-17: 카테고리 생성
-export async function createCategory(token: string, parentId: number, categoryData: CreateCategoryData) {
+export async function createCategory(token: string, parentId: number | null, categoryData: { name: string }) {
   try {
-    const {data} = await instance.post(`/categories?parentId=${parentId}`, categoryData, {
-      headers: {Authorization: `Bearer ${token}`},
+    const url = parentId !== null ? `/categories?parentId=${parentId}` : '/categories';
+
+    const  data  = await instance.post(url, categoryData, {
+      headers: { Authorization: `Bearer ${token}` },
     });
+    console.log("데이터",data)
     return data;
+    
   } catch (error) {
     console.error('카테고리 생성 실패:', error);
     throw error;
   }
 }
+
 
 // INTF-18: 카테고리 조회
 export async function getCategoryList(token: string, parentId?: number) {

@@ -1,80 +1,159 @@
-import { useState } from "react";
-import { VerticalDotIcon } from "../../common/Icon";
+import {useState, useRef, useEffect} from 'react';
+import {PlusCircle, VerticalDotIcon} from '../../common/Icon';
+import {createCategory, deleteCategory} from '../../../api/service/categories';
+import DeleteConfirmModal from '../common/DeleteConfirmModal';
 
 interface CategoryCardProps {
-  id: number;
-  primary: string;
-  secondary: string;
-  isRegistered: boolean;
-  onEdit: (id: number) => void;
-  onDelete: (id: number) => void;
-  onRegister: () => void; // 요청 양식 등록
-  onViewDetail: () => void; // 요청 양식 상세 보기
+  id: number; // 1차 카테고리 ID (2차 카테고리의 parentId)
+  name: string;
+  token: string; // accessToken
+  onDelete: (categoryId: number) => void;
+  onAddSubCategory: (primaryId: number, newSubCategory: { id: number; name: string }) => void;
 }
 
-export default function CategoryCard({
-  id,
-  primary,
-  secondary,
-  isRegistered,
-  onEdit,
-  onDelete,
-  onRegister,
-  onViewDetail,
-}: CategoryCardProps) {
-  const [activeMenuId, setActiveMenuId] = useState<number | null>(null);
+export default function CategoryCard({id, name, token, onDelete, onAddSubCategory}: CategoryCardProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [subCategoryName, setSubCategoryName] = useState(''); // 입력된 2차 카테고리 이름
+  // const [subCategories, setSubCategories] = useState<{id: number; name: string}[]>([]); // 추가된 2차 카테고리 목록
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  
 
-  const toggleMenu = (clickedId: number) => {
-    setActiveMenuId(activeMenuId === clickedId ? null : clickedId);
+  // PlusCircle 클릭 시 Input 표시
+  const handleAddSubCategory = () => {
+    setIsEditing(true);
   };
 
+  // 삭제 버튼 클릭 시 모달 열기
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+    setIsMenuOpen(false);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteCategory(token, id);
+      onDelete(id); // 삭제 후 부모에서 리스트 업데이트
+    } catch (error) {
+      alert('카테고리 삭제에 실패했습니다.');
+    } finally {
+      setIsDeleteModalOpen(false);
+    }
+  };
+
+  // Enter 키 입력 시 API 요청
+  const handleSubmit = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && subCategoryName.trim()) {
+      try {
+        const response = await createCategory(token, id, { name: subCategoryName });
+        const newSubCategory = { id: response.data.id, name: subCategoryName };
+
+        // ✅ 부모 컴포넌트(CategoryList.tsx)에서만 2차 카테고리 추가하도록 콜백 실행
+        onAddSubCategory(id, newSubCategory);
+
+        setSubCategoryName('');
+        setIsEditing(false);
+      } catch (error) {
+        console.error('2차 카테고리 추가 실패:', error);
+        alert('2차 카테고리 추가에 실패했습니다.');
+      }
+    }
+  };
+
+  // 화면 다른 곳 클릭 시 Input 숨기기
+  const handleOutsideClick = (e: MouseEvent) => {
+    if (inputRef.current && !inputRef.current.contains(e.target as Node)) {
+      setIsEditing(false);
+      setSubCategoryName('');
+    }
+  };
+
+  // 화면 다른 곳 클릭 시 메뉴 닫기
+  const handleOutMenuClick = (e: MouseEvent) => {
+    if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+      setIsMenuOpen(false);
+    }
+  };
+
+  // 이벤트 리스너 추가 및 정리
+  useEffect(() => {
+    if (isEditing) {
+      document.addEventListener('mousedown', handleOutsideClick);
+    } else {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    }
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, [isEditing]);
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleOutMenuClick);
+    return () => document.removeEventListener('mousedown', handleOutMenuClick);
+  }, []);
+
   return (
-    <div className="flex gap-4 py-3 px-4 border border-gray-2 bg-white items-center rounded cursor-pointer text-subtitle-regular relative">
-      {/* 1차 카테고리 */}
-      <div className="w-[36%] flex items-center justify-between relative">
-        {primary}
-        <button onClick={() => toggleMenu(id)} className="relative mr-5">
-          <VerticalDotIcon />
-        </button>
-        {activeMenuId === id && (
-          <div className="absolute left-[200px] top-full mt-2 w-[100px] bg-white shadow-md border rounded text-center z-10">
-            <button onClick={() => onEdit(id)} className="w-full px-3 py-2 hover:bg-gray-1">
-              수정
-            </button>
-            <button onClick={() => onDelete(id)} className="w-full px-3 py-2 text-red-500 hover:bg-gray-1">
-              삭제
-            </button>
-          </div>
-        )}
-      </div>
-      {/* 2차 카테고리 */}
-      <div className="w-[28%] flex items-center justify-between relative">
-        {secondary}
-        <button onClick={() => toggleMenu(id + 1000)} className="relative mr-5">
-          <VerticalDotIcon />
-        </button>
-        {activeMenuId === id + 1000 && (
-          <div className="absolute left-[150px] top-full mt-2 w-[100px] bg-white shadow-md border rounded text-center z-10">
-            <button onClick={() => onEdit(id)} className="w-full px-3 py-2 hover:bg-gray-1">
-              수정
-            </button>
-            <button onClick={() => onDelete(id)} className="w-full px-3 py-2 text-red-500 hover:bg-gray-1">
-              삭제
-            </button>
-          </div>
-        )}
-      </div>
-      <div className="w-[18%]">
-        <div
-          className={`w-[72px] px-2 py-1 rounded flex justify-center items-center leading-5 cursor-pointer ${
-            isRegistered ? "border border-gray-8 text-gray-15 text-body-bold w-[60px]" : "bg-main text-white text-body-bold"
-          }`}
-          onClick={isRegistered ? onViewDetail : onRegister} 
-        >
-          {isRegistered ? "상세" : "등록하기"}
+    <div className="flex flex-col border border-gray-2 bg-white rounded text-subtitle-regular relative mb-2">
+      <div className="flex justify-between px-4 py-3 items-center">
+        <div className="flex items-center gap-2">
+          <span className="border border-gray-3 text-[10px] px-2 h-[19px] font-semibold rounded-full flex items-center justify-center leading-none">
+            1차
+          </span>
+          <span className="text-subtitle-regular leading-none">{name}</span>
+        </div>
+        {/* 1차 카테고리 이름 */}
+        <div className="flex items-center gap-2">
+          <button onClick={handleAddSubCategory}>
+            <PlusCircle />
+          </button>
+          <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            <VerticalDotIcon />
+          </button>
+          {/* 수정/삭제 메뉴 */}
+          {isMenuOpen && (
+            <div ref={menuRef} className="absolute top-[32px] right-[16px] mt-2 w-24 bg-white border border-gray-300 shadow-md rounded-md z-10">
+              <button className="w-full px-4 py-2 text-body-bold text-center hover:bg-gray-100">수정</button>
+              <button className="w-full px-4 py-2 text-body-bold text-center hover:bg-gray-100" onClick={openDeleteModal}>
+                삭제
+              </button>
+            </div>
+          )}
         </div>
       </div>
-      <div className="w-[100px]"></div>
+
+      {/* PlusCircle 클릭 시 Input 나타남 */}
+      {isEditing && (
+        <div className="px-4 pb-3">
+          <input
+            ref={inputRef}
+            type="text"
+            className="border border-gray-3 rounded px-2 py-1 w-full text-body-regular"
+            placeholder="2차 카테고리 입력"
+            value={subCategoryName}
+            onChange={(e) => setSubCategoryName(e.target.value)}
+            onKeyDown={handleSubmit} // Enter 입력 처리
+            autoFocus
+          />
+        </div>
+      )}
+
+      
+      {/* ✅ 추가된 2차 카테고리 리스트 */}
+      {/* {subCategories.length > 0 && (
+        <div className="px-4 pb-3">
+          {subCategories.map((sub) => (
+            <SecCategoryCard key={sub.id} id={sub.id} name={sub.name} token={token} onDelete={onDelete}/>
+          ))}
+        </div>
+      )} */}
+
+      {/* 삭제 모달 */}
+      <DeleteConfirmModal 
+        isOpen={isDeleteModalOpen} 
+        onClose={() => setIsDeleteModalOpen(false)} 
+        onConfirm={handleDelete} 
+        categoryName={name} 
+      />
     </div>
   );
 }
