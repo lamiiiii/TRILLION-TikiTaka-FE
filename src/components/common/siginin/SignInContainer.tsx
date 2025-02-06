@@ -42,10 +42,18 @@ export default function SignInContainer() {
     if (idValidation || pwdValidation) return;
 
     try {
-      const {accessToken} = await postLogin({username: id, password: pwd});
-      if (accessToken) {
-        login(accessToken);
-        navigate(`/${role}`, {replace: true});
+      const response = await postLogin({username: id, password: pwd});
+
+      if (response) {
+        const {accessToken, data} = response;
+        if (accessToken) {
+          login(accessToken);
+          if (data.passwordChangeNeeded) {
+            navigate('/changepwd', {replace: true});
+          } else {
+            navigate(`/${role}`, {replace: true});
+          }
+        }
       }
     } catch (error) {
       console.error('로그인 실패:', error);

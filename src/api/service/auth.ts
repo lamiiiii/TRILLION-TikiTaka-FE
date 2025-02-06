@@ -11,11 +11,14 @@ export async function postLogin(loginData: LoginData) {
 
     const response = await instance.post<{message: string; data: LoginResponse}>('/login', loginData);
     const {data, headers} = response;
-    const accessToken = headers['authorization'] || headers['Authorization'];
-    if (accessToken) tokenStorage.set(accessToken); // 세션 스토리지에 저장
-    console.log(accessToken);
-    console.log(response);
-    return {...data, accessToken};
+    const authorizationHeader = headers['authorization'] || headers['Authorization'];
+
+    if (authorizationHeader) {
+      // Bearer 토큰에서 'Bearer ' 부분을 제거하고 토큰만 저장
+      const accessToken = authorizationHeader.replace('Bearer ', '');
+      tokenStorage.set(accessToken); // 세션 스토리지에 저장
+      return {...data, accessToken};
+    }
   } catch (error) {
     console.error('로그인 오류:', error);
     throw error;
@@ -25,16 +28,19 @@ export async function postLogin(loginData: LoginData) {
 // INTF-5: 로그아웃
 export async function postLogout() {
   try {
-    console.log('로그아웃 해주세요.');
-
     const token = tokenStorage.get();
     if (!token) throw new Error('로그인 정보가 없습니다.');
-
-    await instance.post('/logout', null, {
-      headers: {Authorization: `${token}`},
+    console.log('로그아웃 해주세요.');
+    console.log(token);
+    const response = await instance.post('/logout', null, {
+      headers: {Authorization: `Bearer ${token}`},
     });
-    tokenStorage.remove(); // 로그아웃 시 토큰 삭제
-    console.log('로그아웃했습니다.');
+    if (response.status === 200) {
+      tokenStorage.remove(); // 응답이 성공하면 토큰 삭제
+      console.log('로그아웃했습니다.');
+    } else {
+      console.error('로그아웃 실패:', response.statusText);
+    }
   } catch (error) {
     console.error('로그아웃 오류:', error);
     throw error;

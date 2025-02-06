@@ -17,7 +17,7 @@ export default function MenuItem({icon: Icon, text, to, children}: MenuItemProps
 
   const isActive = [to, ...subPaths].includes(location.pathname);
 
-  const [isExpanded, setIsExpanded] = useState(isActive);
+  const [isExpanded, setIsExpanded] = useState(isActive || !!children);
 
   useEffect(() => {
     if (!isActive) {
