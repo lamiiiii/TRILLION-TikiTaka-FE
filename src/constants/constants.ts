@@ -1,8 +1,8 @@
 export const STATUS_MAP = {
   PENDING: '대기 중',
   IN_PROGRESS: '진행 중',
-  DONE: '진행 완료',
   REVIEW: '검토',
+  DONE: '진행 완료',
   REJECTED: '반려',
 };
 

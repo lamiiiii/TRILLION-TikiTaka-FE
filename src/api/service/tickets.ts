@@ -213,15 +213,9 @@ export async function updateTicket(ticketId: number, params: UpdateTicketParams)
 }
 
 // INTF-37: 티켓 상태 수정
-export async function updateTicketStatus(token: string, ticketId: number, status: string) {
+export async function updateTicketStatus(ticketId: number, status: string) {
   try {
-    const {data} = await instance.patch(
-      `/tickets/status/${ticketId}`,
-      {status},
-      {
-        headers: {Authorization: `Bearer ${token}`},
-      }
-    );
+    const {data} = await instance.patch(`/tickets/status/${ticketId}`, status);
     return data;
   } catch (error) {
     console.error('티켓 상태 수정 실패:', error);
@@ -230,15 +224,9 @@ export async function updateTicketStatus(token: string, ticketId: number, status
 }
 
 // INTF-38: 티켓 우선순위 수정
-export async function updateTicketPriority(token: string, ticketId: number, priority: string) {
+export async function updateTicketPriority(ticketId: number, priority: string) {
   try {
-    const {data} = await instance.patch(
-      `/tickets/priority/${ticketId}`,
-      {priority},
-      {
-        headers: {Authorization: `Bearer ${token}`},
-      }
-    );
+    const {data} = await instance.patch(`/tickets/priority/${ticketId}`, priority);
     return data;
   } catch (error) {
     console.error('티켓 우선순위 수정 실패:', error);
@@ -258,15 +246,9 @@ export async function updateTicketManager(ticketId: number, managerId: number) {
 }
 
 // INTF-40: 티켓 마감기한 수정
-export async function updateTicketDeadline(token: string, ticketId: number, deadline: string) {
+export async function updateTicketDeadline(ticketId: number, deadline: string) {
   try {
-    const {data} = await instance.patch(
-      `/tickets/deadline/${ticketId}`,
-      {deadline},
-      {
-        headers: {Authorization: `Bearer ${token}`},
-      }
-    );
+    const {data} = await instance.patch(`/tickets/deadline/${ticketId}`, {deadline});
     return data;
   } catch (error) {
     console.error('티켓 마감기한 수정 실패:', error);
@@ -355,6 +337,28 @@ export async function deleteTicketComment(ticketId: number, commentId: number) {
     return data;
   } catch (error) {
     console.error('티켓 댓글 삭제 실패:', error);
+    throw error;
+  }
+}
+
+// 티켓 승인 함수
+export async function approveTicket(ticketId: number) {
+  try {
+    const {data} = await instance.patch(`/tickets/${ticketId}/approve`);
+    return data;
+  } catch (error) {
+    console.error('티켓 승인 실패:', error);
+    throw error;
+  }
+}
+
+// 티켓 반려 함수
+export async function rejectTicket(ticketId: number) {
+  try {
+    const {data} = await instance.patch(`/tickets/${ticketId}/reject`);
+    return data;
+  } catch (error) {
+    console.error('티켓 반려 실패:', error);
     throw error;
   }
 }

@@ -112,6 +112,7 @@ export default function CommentInput() {
             placeholder="댓글 추가"
             value={content}
             onChange={(e) => setContent(e.target.value)}
+            style={{resize: 'none'}} // 크기 조절 비활성화
           />
         </div>
         <button type="submit" className="absolute right-0 main-btn" disabled={mutation.isPending}>

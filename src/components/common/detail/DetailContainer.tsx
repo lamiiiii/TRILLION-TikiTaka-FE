@@ -12,6 +12,7 @@ import TicketLog from './TicketLog';
 import {useQuery} from '@tanstack/react-query';
 import {getTicketComments, getTicketDetails} from '../../../api/service/tickets';
 import {Comment} from '../../../interfaces/interfaces';
+import TicketReview from './TicketReview';
 
 export default function DetailContainer() {
   const {id} = useParams<{id: string}>();
@@ -42,7 +43,9 @@ export default function DetailContainer() {
       </button>
 
       <TopMenu boldBlackText={`#${ticket?.ticketId}`} regularText={ticket?.title} />
-      <StatusBar status={ticket?.status as 'PENDING' | 'IN_PROGRESS' | 'DONE' | 'REVIEW' | 'REJECTED' | undefined} />
+      {ticket && (
+        <StatusBar data={ticket} status={ticket?.status as 'PENDING' | 'IN_PROGRESS' | 'DONE' | 'REVIEW' | 'REJECTED' | undefined} />
+      )}
       <section className="flex bg-gray-18 p-6 pb-[38px] mt-3 mb-[100px]">
         <div className="flex gap-4 mr-10">
           <div className="mt-5">
@@ -70,7 +73,7 @@ export default function DetailContainer() {
         </div>
 
         <section className="flex flex-col gap-5 w-[400px]">
-          {/* {isReviewNeeded && <TicketReview />} */}
+          {ticket && ticket.status === 'REVIEW' && <TicketReview />}
           {ticket && (
             <>
               <TicketDetail data={ticket} />
