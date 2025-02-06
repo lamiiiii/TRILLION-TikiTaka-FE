@@ -30,13 +30,14 @@ export async function postLogout() {
   try {
     const token = tokenStorage.get();
     if (!token) throw new Error('로그인 정보가 없습니다.');
+    tokenStorage.remove();
+
     console.log('로그아웃 해주세요.');
     console.log(token);
     const response = await instance.post('/logout', null, {
       headers: {Authorization: `Bearer ${token}`},
     });
     if (response.status === 200) {
-      tokenStorage.remove(); // 응답이 성공하면 토큰 삭제
       console.log('로그아웃했습니다.');
     } else {
       console.error('로그아웃 실패:', response.statusText);

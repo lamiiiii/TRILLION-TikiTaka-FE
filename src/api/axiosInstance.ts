@@ -21,6 +21,7 @@ const instance: AxiosInstance = axios.create({
 // 토큰 재발급 요청이 중복되지 않도록 Promise 공유
 // let refreshTokenPromise: Promise<string | null> | null = null;
 
+// 요청 인터셉터: Authorization 헤더에 액세스 토큰 추가
 instance.interceptors.request.use((config) => {
   const token = tokenStorage.get();
   if (token) {

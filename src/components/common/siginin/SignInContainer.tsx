@@ -10,7 +10,7 @@ import {postLogin} from '../../../api/service/auth';
 export default function SignInContainer() {
   const navigate = useNavigate();
   const {login} = useTokenStore();
-  const {role} = useUserStore();
+  const {setUserId, role, setRole} = useUserStore();
 
   const [id, setId] = useState('');
   const [idError, setIdError] = useState('');
@@ -51,16 +51,19 @@ export default function SignInContainer() {
           if (data.passwordChangeNeeded) {
             navigate('/changepwd', {replace: true});
           } else {
-            navigate(`/${role}`, {replace: true});
+            if (data.role && data.id) {
+              setRole(data.role);
+              setUserId(data.id);
+              if (data.role === role) {
+                navigate(`/${role.toLowerCase()}`, {replace: true});
+              }
+            }
           }
         }
       }
     } catch (error) {
       console.error('로그인 실패:', error);
     }
-
-    // const isFirstLogin = false;
-    // navigate(isFirstLogin ? '/changepwd' : `/${role}`, {replace: true});
   };
 
   return (
