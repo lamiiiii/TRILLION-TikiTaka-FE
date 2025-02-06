@@ -12,6 +12,7 @@ import TicketLog from './TicketLog';
 import {useQuery} from '@tanstack/react-query';
 import {getTicketComments, getTicketDetails} from '../../../api/service/tickets';
 import {Comment} from '../../../interfaces/interfaces';
+import TicketReview from './TicketReview';
 
 export default function DetailContainer() {
   const {id} = useParams<{id: string}>();
@@ -72,7 +73,7 @@ export default function DetailContainer() {
         </div>
 
         <section className="flex flex-col gap-5 w-[400px]">
-          {/* {isReviewNeeded && <TicketReview />} */}
+          {ticket && ticket.status === 'REVIEW' && <TicketReview />}
           {ticket && (
             <>
               <TicketDetail data={ticket} />

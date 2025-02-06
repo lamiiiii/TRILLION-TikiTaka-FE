@@ -178,6 +178,7 @@ export default function TicketTask() {
                     className="w-full p-2 border rounded text-main"
                     value={editedContent}
                     onChange={(e) => setEditedContent(e.target.value)}
+                    style={{resize: 'none'}} // 크기 조절 비활성화
                   />
                 ) : (
                   <p className={task.done ? 'line-through' : ''}>{task.description}</p>
