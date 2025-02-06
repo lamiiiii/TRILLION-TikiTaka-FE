@@ -5,24 +5,46 @@ import {useEffect, useState} from 'react';
 import {WhiteCheckIcon} from '../Icon';
 import {useParams} from 'react-router-dom';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {updateTicketPriority, updateTicketStatus} from '../../../api/service/tickets';
+import {updateTicket, updateTicketPriority, updateTicketStatus} from '../../../api/service/tickets';
 
 interface StatusBarProps {
+  data: TicketDetails;
   status?: keyof typeof STATUS_MAP;
 }
 
 // STATUS_MAP의 키와 값을 뒤집은 객체 생성
 const REVERSE_STATUS_MAP = Object.fromEntries(Object.entries(STATUS_MAP).map(([key, value]) => [value, key]));
 
-export default function StatusBar({status}: StatusBarProps) {
+export default function StatusBar({data, status}: StatusBarProps) {
   const [currentStatus, setCurrentStatus] = useState<string>(status ? STATUS_MAP[status] : '대기 중');
   const {priority, setPriority} = useTicketStore();
-  const [isUrgent, setIsUrgent] = useState(false);
+  const [isUrgent, setIsUrgent] = useState(data?.urgent);
 
   const {id} = useParams();
   const ticketId = Number(id);
 
   const queryClient = useQueryClient();
+
+  // 티켓 긴급 여부 수정
+  // FIX: typeId, primaryCategoryId, secondaryCategoryId 수정 꼭 필요 !!!!
+  const updateUrgentMutation = useMutation({
+    mutationFn: (urgent: boolean) =>
+      updateTicket(ticketId, {
+        title: data?.title || '',
+        description: data?.description || '',
+        urgent: urgent,
+        typeId: 1,
+        primaryCategoryId: 1,
+        secondaryCategoryId: 1,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
+    },
+    onError: () => {
+      alert('티켓 긴급 여부 변경에 실패했습니다. 다시 시도해 주세요.');
+      setIsUrgent(!isUrgent); // 실패 시 상태를 원래대로 되돌림
+    },
+  });
 
   //티켓 상태 수정
   const updateStatusMutation = useMutation({
@@ -59,8 +81,9 @@ export default function StatusBar({status}: StatusBarProps) {
   }, [status]);
 
   const checkboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const isChecked = e.target.checked;
-    setIsUrgent(isChecked);
+    const newUrgentState = e.target.checked;
+    setIsUrgent(newUrgentState);
+    updateUrgentMutation.mutate(newUrgentState);
   };
 
   const handlePrioritySelect = (selectedOption: string) => {
