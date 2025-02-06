@@ -168,9 +168,11 @@ export default function StatusBar({data, status}: StatusBarProps) {
           ))}
         </section>
       </div>
+
       <section className="flex items-center gap-2">
         <button
           onClick={handleApprove}
+          disabled={location.pathname.startsWith('/user')}
           className={`${
             isApproved ? 'bg-main text-white' : 'bg-white text-main border border-main hover:bg-main hover:text-white'
           } rounded-md py-1 px-6 text-caption-regular`}
@@ -179,6 +181,7 @@ export default function StatusBar({data, status}: StatusBarProps) {
         </button>
         <button
           onClick={handleReject}
+          disabled={location.pathname.startsWith('/user')}
           className={`${
             isRejected ? 'bg-main text-white' : 'bg-white text-main border border-main hover:bg-main hover:text-white'
           } rounded-md py-1 px-6 text-caption-regular`}
