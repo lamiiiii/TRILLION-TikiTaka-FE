@@ -119,7 +119,6 @@ export default function StatusBar({data, status}: StatusBarProps) {
   };
 
   const handleStatusClick = (option: string) => {
-    setCurrentStatus(option);
     updateStatusMutation.mutate(option);
   };
 

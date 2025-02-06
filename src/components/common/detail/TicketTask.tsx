@@ -56,7 +56,7 @@ export default function TicketTask() {
 
   // 하위 태스크 삭제
   const deleteSubtaskMutation = useMutation({
-    mutationFn: (taskId: number) => deleteSubtask(taskId),
+    mutationFn: (taskId: number) => deleteSubtask(ticketId, taskId),
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['subtasks', ticketId]});
     },

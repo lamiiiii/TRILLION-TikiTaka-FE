@@ -215,7 +215,7 @@ export async function updateTicket(ticketId: number, params: UpdateTicketParams)
 // INTF-37: 티켓 상태 수정
 export async function updateTicketStatus(ticketId: number, status: string) {
   try {
-    const {data} = await instance.patch(`/tickets/status/${ticketId}`, {status});
+    const {data} = await instance.patch(`/tickets/status/${ticketId}`, status);
     return data;
   } catch (error) {
     console.error('티켓 상태 수정 실패:', error);

@@ -34,15 +34,17 @@ export async function updateSubtaskDescription(taskId: number, params: UpdateSub
 }
 
 // INTF-54: 하위태스크 삭제
-export async function deleteSubtask(taskId: number) {
+export async function deleteSubtask(ticketId: number, taskId: number) {
   try {
-    const {data} = await instance.delete(`/subtasks/${taskId}`);
+    const {data} = await instance.delete(`/subtasks/${ticketId}/${taskId}`);
     return data;
   } catch (error) {
     console.error('하위태스크 삭제 실패:', error);
     throw error;
   }
 }
+
+// 티켓 아이디 body 안에
 
 // INTF-55: 하위태스크 상태 변경
 export async function updateSubtaskStatus(ticketId: number, taskId: number, checked: boolean) {
