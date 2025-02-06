@@ -183,7 +183,7 @@ export default function ChangePwdContainer() {
           onBackBtnClick={() => {
             setModalState({open: false, type: null});
             if (modalState.type === 'success') {
-              navigate(role === 'admin' ? '/admin/accounts' : `/${role}`, {replace: true});
+              navigate(role === 'ADMIN' ? '/admin/accounts' : `/${role}`, {replace: true});
             }
           }}
         />

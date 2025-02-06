@@ -1,4 +1,4 @@
-import instance from "../axiosInstance";
+import instance from '../axiosInstance';
 
 // INTF-7: 비밀번호 변경
 export async function patchUserPassword(token: string, passwordData: PasswordChangeData) {
@@ -53,11 +53,22 @@ export async function getUserList(token: string) {
 }
 
 // INTF-15: 시스템 사용자 기본 정보 조회
-export async function getUserDetail(token: string, userId: number) {
+export async function getUserDetail(userId: number) {
   try {
-    const {data} = await instance.get<{message: string; data: UserDetailResponse}>(`/users/${userId}`, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    // 토큰을 따로 전달할 필요 없이, 인스턴스가 인터셉터를 통해 자동으로 헤더에 토큰을 추가
+    const {data} = await instance.get<{message: string; data: UserDetailResponse}>(`/users/${userId}`);
+    return data.data;
+  } catch (error) {
+    console.error('사용자 상세 정보 조회 실패:', error);
+    throw error;
+  }
+}
+
+// 사용자 본인 정보 조회
+export async function getUserInfo() {
+  try {
+    // 토큰을 따로 전달할 필요 없이, 인스턴스가 인터셉터를 통해 자동으로 헤더에 토큰을 추가
+    const {data} = await instance.get<{message: string; data: UserDetailResponse}>(`/users/me`);
     return data.data;
   } catch (error) {
     console.error('사용자 상세 정보 조회 실패:', error);
