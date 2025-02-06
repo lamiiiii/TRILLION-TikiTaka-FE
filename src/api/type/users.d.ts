@@ -4,7 +4,9 @@ declare interface LoginData {
 }
 
 declare interface LoginResponse {
+  id: number;
   passwordChangeNeeded: boolean;
+  role: 'MANAGER' | 'USER' | 'ADMIN';
 }
 
 declare interface PasswordChangeData {
@@ -30,9 +32,10 @@ declare interface UserListResponse {
 }
 
 declare interface UserDetailResponse {
+  id: number;
   username: string;
   email: string;
-  role: string;
+  role: 'MANAGER' | 'USER' | 'ADMIN';
   department: string;
   profileImageUrl: string;
 }

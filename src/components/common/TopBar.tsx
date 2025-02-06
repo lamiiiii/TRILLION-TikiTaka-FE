@@ -28,7 +28,7 @@ export default function TopBar() {
         {/* 우측 메뉴 */}
         <div className="flex items-center gap-4">
           {/* <PushIcon /> */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 text-white">
             {/* todo 추후 아이디 텍스트 추가*/}
             <SmProfileIcon />
             <DownIcon />

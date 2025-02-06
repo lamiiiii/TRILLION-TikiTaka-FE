@@ -1,5 +1,13 @@
-import NewTicketContainer from "../../components/common/ticket/NewTicketContainer";
+import AuthGuard from '../../components/common/AuthGuard';
+import NewTicketContainer from '../../components/common/ticket/NewTicketContainer';
+import {useTokenStore} from '../../store/store';
 
 export default function ManagerNewTicket() {
-  return <NewTicketContainer />;
+  const {isAuthenticated} = useTokenStore();
+
+  return (
+    <AuthGuard isAuthenticated={isAuthenticated}>
+      <NewTicketContainer />
+    </AuthGuard>
+  );
 }

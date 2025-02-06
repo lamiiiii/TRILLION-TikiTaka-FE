@@ -44,7 +44,7 @@ export function SmProfileIcon() {
     <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M1 13C1 6.37258 6.37258 1 13 1V1C19.6274 1 25 6.37258 25 13V13C25 19.6274 19.6274 25 13 25V25C6.37258 25 1 19.6274 1 13V13Z"
-        fill={role === 'manager' ? '#2C2C2C' : role === 'user' ? '#F6D47A' : role === 'admin' ? '#16407B' : '#FFFFFF'}
+        fill={role === 'MANAGER' ? '#2C2C2C' : role === 'USER' ? '#F6D47A' : role === 'ADMIN' ? '#16407B' : '#FFFFFF'}
       />
       <path
         d="M0.5 13C0.5 19.9036 6.09644 25.5 13 25.5C19.9036 25.5 25.5 19.9036 25.5 13C25.5 6.09644 19.9036 0.5 13 0.5C6.09644 0.5 0.5 6.09644 0.5 13Z"

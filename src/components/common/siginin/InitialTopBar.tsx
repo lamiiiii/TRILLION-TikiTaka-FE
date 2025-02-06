@@ -6,9 +6,9 @@ export default function InitialTopBar() {
   const location = useLocation();
 
   return (
-    <div className="bg-main fixed w-full h-14 z-50">
+    <div className="bg-main fixed w-full h-16 z-50">
       {/* 상단바 */}
-      <div className="relative w-full h-14 shrink-0 flex justify-between px-12 py-4">
+      <div className="relative w-full h-full shrink-0 flex justify-between px-12 items-center">
         {/* 좌측 로고 */}
         <Link to="/" className="flex items-center gap-2">
           <LogoIcon />
