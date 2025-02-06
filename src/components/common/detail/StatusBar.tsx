@@ -13,9 +13,6 @@ export default function StatusBar({status}: StatusBarProps) {
   const {priority, setPriority} = useTicketStore();
   const [isUrgent, setIsUrgent] = useState(false);
 
-  // '반려'를 제외한 상태 옵션
-  const visibleStatusOptions = STATUS_OPTIONS.filter((option) => option !== '반려');
-
   useEffect(() => {
     if (status) {
       setCurrentStatus(STATUS_MAP[status]);
@@ -34,6 +31,12 @@ export default function StatusBar({status}: StatusBarProps) {
   const handleStatusClick = (option: string) => {
     setCurrentStatus(option);
   };
+
+  // 반려 상태인지 확인
+  const isRejected = currentStatus === '반려';
+
+  // 반려 상태가 아닐 때만 '반려'를 제외한 상태 옵션 표시
+  const visibleStatusOptions = isRejected ? ['반려'] : STATUS_OPTIONS.filter((option) => option !== '반려');
 
   return (
     <div className="flex justify-between items-center gap-2 mt-2">

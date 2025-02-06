@@ -43,7 +43,6 @@ export default function DetailContainer() {
 
       <TopMenu boldBlackText={`#${ticket?.ticketId}`} regularText={ticket?.title} />
       <StatusBar status={ticket?.status as 'PENDING' | 'IN_PROGRESS' | 'DONE' | 'REVIEW' | 'REJECTED' | undefined} />
-
       <section className="flex bg-gray-18 p-6 pb-[38px] mt-3 mb-[100px]">
         <div className="flex gap-4 mr-10">
           <div className="mt-5">
