@@ -20,6 +20,9 @@ export default function StatusBar({data, status}: StatusBarProps) {
   const {priority, setPriority} = useTicketStore();
   const [isUrgent, setIsUrgent] = useState(data?.urgent);
 
+  const isApproved = ['IN_PROGRESS', 'REVIEW', 'DONE'].includes(status || '');
+  const isRejected = currentStatus === '반려';
+
   const {id} = useParams();
   const ticketId = Number(id);
 
@@ -94,8 +97,15 @@ export default function StatusBar({data, status}: StatusBarProps) {
     updateStatusMutation.mutate(option);
   };
 
-  // 반려 상태인지 확인
-  const isRejected = currentStatus === '반려';
+  const handleApprove = () => {
+    // 승인 로직 구현
+    updateStatusMutation.mutate('승인');
+  };
+
+  const handleReject = () => {
+    // 반려 로직 구현
+    updateStatusMutation.mutate('반려');
+  };
 
   // 반려 상태가 아닐 때만 '반려'를 제외한 상태 옵션 표시
   const visibleStatusOptions = isRejected ? ['반려'] : STATUS_OPTIONS.filter((option) => option !== '반려');
@@ -121,7 +131,7 @@ export default function StatusBar({data, status}: StatusBarProps) {
           </div>
         )}
 
-        <div className="flex items-center gap-2">
+        <section className="flex items-center gap-2">
           <label className="text-body-bold">Status</label>
           {visibleStatusOptions.map((option) => (
             <button
@@ -134,8 +144,26 @@ export default function StatusBar({data, status}: StatusBarProps) {
               {updateStatusMutation.isPending && currentStatus === option ? 'Updating...' : option}
             </button>
           ))}
-        </div>
+        </section>
       </div>
+      <section className="flex items-center gap-2">
+        <button
+          onClick={handleApprove}
+          className={`${
+            isApproved ? 'bg-main text-white' : 'bg-white text-main border border-main hover:bg-main hover:text-white'
+          } rounded-md py-1 px-6 text-caption-regular`}
+        >
+          승인
+        </button>
+        <button
+          onClick={handleReject}
+          className={`${
+            isRejected ? 'bg-main text-white' : 'bg-white text-main border border-main hover:bg-main hover:text-white'
+          } rounded-md py-1 px-6 text-caption-regular`}
+        >
+          반려
+        </button>
+      </section>
     </div>
   );
 }
