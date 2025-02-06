@@ -1,24 +1,29 @@
 import instance from '../axiosInstance';
 
 // INTF-17: 카테고리 생성
-export async function createCategory(token: string, parentId: number, categoryData: CreateCategoryData) {
+export async function createCategory( parentId: number | null, categoryData: { name: string }) {
   try {
-    const {data} = await instance.post(`/categories?parentId=${parentId}`, categoryData, {
-      headers: {Authorization: `Bearer ${token}`},
+    const url = parentId !== null ? `/categories?parentId=${parentId}` : '/categories';
+
+    const  data  = await instance.post(url, categoryData, {
+      
     });
+    console.log("데이터",data)
     return data;
+    
   } catch (error) {
     console.error('카테고리 생성 실패:', error);
     throw error;
   }
 }
 
+
 // INTF-18: 카테고리 조회
-export async function getCategoryList(token: string, parentId?: number) {
+export async function getCategoryList( parentId?: number) {
   try {
     const url = parentId ? `/categories/list?parentId=${parentId}` : '/categories/list';
     const {data} = await instance.get<{message: string; data: Category[]}>(url, {
-      headers: {Authorization: `Bearer ${token}`},
+      
     });
     return data.data;
   } catch (error) {
@@ -41,10 +46,10 @@ export async function updateCategory(token: string, categoryId: number, category
 }
 
 // INTF-20: 카테고리 삭제
-export async function deleteCategory(token: string, categoryId: number) {
+export async function deleteCategory( categoryId: number) {
   try {
     const {data} = await instance.delete(`/categories/${categoryId}`, {
-      headers: {Authorization: `Bearer ${token}`},
+      
     });
     return data;
   } catch (error) {

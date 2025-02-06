@@ -1,10 +1,10 @@
 import instance from '../axiosInstance';
 
 // INTF-21: 티켓 폼 생성
-export async function createTicketForm(token: string, firstCategoryId: number, secondCategoryId: number, formData: CreateTicketFormData) {
+export async function createTicketForm( firstCategoryId: number, secondCategoryId: number, formData: CreateTicketFormData) {
   try {
     const {data} = await instance.post(`/tickets/forms/${firstCategoryId}/${secondCategoryId}`, formData, {
-      headers: {Authorization: `Bearer ${token}`},
+      
     });
     return data;
   } catch (error) {
@@ -14,17 +14,16 @@ export async function createTicketForm(token: string, firstCategoryId: number, s
 }
 
 // INTF-22: 티켓 폼 조회
-export async function getTicketForm(token: string, firstCategoryId: number, secondCategoryId: number) {
+export async function getTicketForm(firstCategoryId: number, secondCategoryId: number) {
   try {
-    const {data} = await instance.get(`/tickets/forms/${firstCategoryId}/${secondCategoryId}`, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
-    return data.data;
+    const { data } = await instance.get(`/tickets/forms/${firstCategoryId}/${secondCategoryId}`);
+    return data.data; // 요청 양식이 있는 경우 반환
   } catch (error) {
     console.error('티켓 폼 조회 실패:', error);
-    throw error;
+    return null; // 요청 양식이 없는 경우 null 반환
   }
 }
+
 
 // INTF-23: 티켓 폼 수정
 export async function updateTicketForm(token: string, firstCategoryId: number, secondCategoryId: number, formData: UpdateTicketFormData) {
