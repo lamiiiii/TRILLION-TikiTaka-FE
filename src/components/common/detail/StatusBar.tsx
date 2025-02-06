@@ -81,6 +81,7 @@ export default function StatusBar({data, status}: StatusBarProps) {
     mutationFn: () => approveTicket(ticketId),
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['ticket', ticketId]});
+      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
       setCurrentStatus('승인');
     },
     onError: () => {
@@ -93,6 +94,7 @@ export default function StatusBar({data, status}: StatusBarProps) {
     mutationFn: () => rejectTicket(ticketId),
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['ticket', ticketId]});
+      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
       setCurrentStatus('반려');
     },
     onError: () => {
