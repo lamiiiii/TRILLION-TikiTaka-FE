@@ -1,4 +1,12 @@
-export const STATUS_OPTIONS = ['대기 중', '진행 중', '진행 완료'];
+export const STATUS_MAP = {
+  PENDING: '대기 중',
+  IN_PROGRESS: '진행 중',
+  DONE: '진행 완료',
+  REVIEW: '검토',
+  REJECTED: '반려',
+};
+
+export const STATUS_OPTIONS = Object.values(STATUS_MAP);
 
 export const PRIORITY = ['HIGH', 'MEDIUM', 'LOW'];
 export const PRIORITY_COLOR: {[key in (typeof PRIORITY)[number]]: string} = {

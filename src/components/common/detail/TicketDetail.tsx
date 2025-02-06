@@ -1,8 +1,7 @@
-import {TicketDataProps} from '../../../interfaces/ticket';
 import Profile from '../Profile';
 
 interface TicketDetailProps {
-  data: TicketDataProps;
+  data: TicketDetails;
 }
 export default function TicketDetail({data}: TicketDetailProps) {
   return (
@@ -11,23 +10,30 @@ export default function TicketDetail({data}: TicketDetailProps) {
       <div className="w-full p-5 border border-gray-2 rounded-[4px] bg-white text-subtitle-regular text-gray-15">
         <div className="grid grid-cols-2 gap-4">
           <div className="text-subtitle flex flex-col gap-4">
-            <p>assignees</p>
-            <p>Primary Category</p>
-            <p>Secondary Category</p>
-            <p>Requester</p>
-            <p>Request Date</p>
-            <p>End Date</p>
+            <p>담당자</p>
+            <p>요청자명</p>
+            <p>티켓 유형</p>
+            <p>1차 카테고리</p>
+            <p>2차 카테고리</p>
+            <p>요청일자</p>
+            <p>최근 수정일자</p>
+            <p>마감일자</p>
           </div>
 
           <div className="flex flex-col gap-[7px]">
             <div className="flex items-center gap-2">
-              <Profile name={data?.assignee} backgroundColor="manager" size="md" />
-              <span>{data?.assignee}</span>
+              <Profile name={data?.managerName} backgroundColor="manager" size="md" />
+              <span>{data?.managerName}</span>
             </div>
-            <p>{data?.category}</p>
-            <p>{data?.subCategory}</p>
-            <p>홍길동 (BE 1팀)</p>
-            <p>2025.01.02 15:00</p>
+            <div className="flex items-center gap-2">
+              <Profile name={data?.requesterName} backgroundColor="user" size="md" />
+              <span>{data?.requesterName}</span>
+            </div>
+            <p>{data?.typeName}</p>
+            <p>{data?.firstCategoryName}</p>
+            <p>{data?.secondCategoryName}</p>
+            <p>{data?.createdAt}</p>
+            <p>{data?.updatedAt}</p>
             <p>{data?.deadline}</p>
           </div>
         </div>

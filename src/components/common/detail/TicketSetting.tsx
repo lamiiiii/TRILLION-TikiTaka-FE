@@ -2,18 +2,16 @@ import {useState} from 'react';
 import DropDown from '../Dropdown';
 import {useTicketStore} from '../../../store/store';
 import {PRIMARY_CATEGORIES, PRIORITY, SECONDARY_CATEGORIES, TICKET_TYPES} from '../../../constants/constants';
-import {TicketDataProps} from '../../../interfaces/ticket';
 
 interface TicketSettingProps {
-  data: TicketDataProps;
+  data: TicketDetails;
 }
 
 export default function TicketSetting({data}: TicketSettingProps) {
-  const [selectedAssignee, setSelectedAssignee] = useState(data.assignee);
-  const [primaryCategory, setPrimaryCategory] = useState(data.category);
-  const [secondaryCategory, setSecondaryCategory] = useState(data.subCategory);
-  //FIX: 티켓 타입도 데이터에 추가되면 수정
-  const [ticketType, setTicketType] = useState('요청');
+  const [selectedAssignee, setSelectedAssignee] = useState(data.managerName);
+  const [primaryCategory, setPrimaryCategory] = useState(data.firstCategoryName);
+  const [secondaryCategory, setSecondaryCategory] = useState(data.secondCategoryName);
+  const [ticketType, setTicketType] = useState(data.typeName);
   //FIX: 티켓 마감기한도 낙도님 머지되면 데이터 일치 시켜서 대입
 
   const priority = useTicketStore((state) => state.priority);
