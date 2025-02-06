@@ -3,7 +3,8 @@ import InitialTopBar from './InitialTopBar';
 import {SmRightIcon, WhiteCheckIcon} from '../Icon';
 import Modal from '../Modal';
 import {validateEmail, validateId} from '../../../utils/Validation';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
+import {postRegistration} from '../../../api/service/registration';
 
 export default function SignUpContainer() {
   const [email, setEmail] = useState('');
@@ -16,68 +17,59 @@ export default function SignUpContainer() {
   const [termsError, setTermsError] = useState('');
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState('계정 등록 안내');
+  const [modalMessage, setModalMessage] = useState('');
 
-  // todo 이메일 중복 여부 체크
   const emailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setEmail(value);
-
-    if (value === '') {
-      setEmailError('이메일을 입력해주세요.');
-    } else if (!validateEmail(value)) {
-      setEmailError('잘못된 이메일 주소입니다. 이메일 주소를 정확하게 입력해주세요.');
-    } else {
-      setEmailError('');
-    }
+    setEmailError(value ? (validateEmail(value) ? '' : '잘못된 이메일 주소입니다.') : '이메일을 입력해주세요.');
   };
 
-  // todo 아이디 중복 여부 체크
   const idChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setId(value);
-
-    if (value === '') {
-      setIdError('아이디를 입력해주세요.');
-    } else if (!validateId(value)) {
-      setIdError('아이디는 영어 소문자와 점(.)을 포함한 3~15자여야 합니다.');
-    } else {
-      setIdError('');
-    }
+    setIdError(value ? (validateId(value) ? '' : '아이디는 영어 소문자와 점(.)을 포함한 3~15자여야 합니다.') : '아이디를 입력해주세요.');
   };
 
   const checkboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = e.target.checked;
     setChecked(isChecked);
-
-    if (isChecked) {
-      setTermsError('');
-    }
+    setTermsError(e.target.checked ? '' : '이용 정보에 동의해 주세요.');
   };
 
-  const onClickSubmit = () => {
-    if (email === '') {
+  const onClickSubmit = async () => {
+    if (!email || !validateEmail(email)) {
       setEmailError('이메일을 입력해주세요.');
       return;
-    } else if (!validateEmail(email)) {
-      setEmailError('잘못된 이메일 주소입니다. 이메일 주소를 정확하게 입력해주세요.');
-      return;
     }
-
     if (!checked) {
       setTermsError('이용 정보에 동의해 주세요.');
       return;
     }
     setTermsError('');
 
-    const requestData = {
-      email,
-      id,
-      acceptedTerms: checked,
-    };
-
-    // todo 신청 완료 모달 추가 및 페이지 이동
+    try {
+      const response = await postRegistration({email, username: id});
+      setModalTitle(response.status === 200 ? '계정 등록 신청' : '계정 등록 실패');
+      setModalMessage(
+        response.status === 200 ? '등록 신청하신 이메일 주소로 결과를 안내드릴 예정입니다.' : '계정 등록 중 오류가 발생했습니다.'
+      );
+    } catch (error: any) {
+      setModalTitle('계정 등록 실패');
+      setModalMessage(error.response?.data?.message || '알 수 없는 오류가 발생했습니다.');
+    }
     setIsModalOpen(true);
-    console.log(requestData);
+  };
+
+  const closeModal = () => {
+    setEmail('');
+    setId('');
+    setChecked(false);
+    setEmailError('');
+    setIdError('');
+    setTermsError('');
+    setIsModalOpen(false);
   };
 
   return (
@@ -150,17 +142,7 @@ export default function SignUpContainer() {
           </div>
         </div>
       </div>
-      {isModalOpen && (
-        <Modal
-          title="계정 등록 신청이 정상적으로 접수되었습니다."
-          content={`등록 신청하신 이메일 주소로 결과를 안내드릴 예정입니다.`}
-          backBtn="확인"
-          onBackBtnClick={() => {
-            setIsModalOpen(false);
-            window.location.href = '/';
-          }}
-        />
-      )}
+      {isModalOpen && <Modal title={modalTitle} content={modalMessage} backBtn="확인" onBackBtnClick={closeModal} />}
     </div>
   );
 }

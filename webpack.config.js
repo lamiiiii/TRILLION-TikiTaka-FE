@@ -50,6 +50,9 @@ module.exports = {
     }),
     // 환경 정보를 제공
     new webpack.EnvironmentPlugin(['MODE', 'PORT']),
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify(process.env),
+    }),
   ],
   devServer: {
     host: 'localhost',
@@ -59,4 +62,9 @@ module.exports = {
     hot: true, // hot : 모듈의 변화된 부분만 서버에 자동으로 반영
   },
   devtool: 'eval-cheap-source-map',
+  performance: {
+    hints: false,
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000,
+  },
 };
