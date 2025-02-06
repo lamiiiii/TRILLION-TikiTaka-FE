@@ -1,8 +1,6 @@
-import {Outlet, Route, BrowserRouter as Router, Routes} from 'react-router-dom';
+import {Route, BrowserRouter as Router, Routes} from 'react-router-dom';
 import ManagerHome from './pages/manager/ManagerHome';
 import './global.css'; // Tailwind CSS 적용
-import TopBar from './components/common/TopBar';
-import SideBar from './components/common/SideBar';
 import UserHome from './pages/user/UserHome';
 import ManagerTickets from './pages/manager/ManagerTickets';
 import ManagerStatistics from './pages/manager/ManagerStatistics';
@@ -10,7 +8,6 @@ import NotFound from './pages/NotFound';
 import ManagerInquiry from './pages/manager/ManagerInquiry';
 import ManagerPwdChange from './pages/manager/ManagerPwdChange';
 import UserNewTicket from './pages/user/UserNewTicket';
-import Landing from './pages/common/signin/Landing';
 import SignIn from './pages/common/signin/SignIn';
 import SignUp from './pages/common/signin/SignUp';
 import ResetPwd from './pages/common/signin/ResetPwd';
@@ -24,18 +21,9 @@ import UserInquiry from './pages/user/UserInquiry';
 import UserPwdChange from './pages/user/UserPwdChange';
 import AdminStatistics from './pages/admin/AdminStatistics';
 import ManagerNewTicket from './pages/manager/ManagerNewTicket';
+import UserTicketDetail from './pages/user/UserTicketDetail';
+import Layout from './Layout';
 
-function Layout() {
-  return (
-    <div className="flex h-screen">
-      <TopBar />
-      <SideBar />
-      <div className="flex-1 overflow-auto ml-52 mt-14">
-        <Outlet />
-      </div>
-    </div>
-  );
-}
 function App() {
   const managerRoutes = [
     {path: '', element: <ManagerHome />},
@@ -46,7 +34,7 @@ function App() {
     {path: 'newtickets', element: <ManagerTickets />}, // todo 담당자 요청 티켓 대시보드
 
     {path: 'histories', element: <ManagerHistories />},
-    {path: 'detail', element: <ManagerTicketDetail />},
+    {path: 'detail/:id', element: <ManagerTicketDetail />},
     {path: 'inquiry', element: <ManagerInquiry />},
     {path: 'pwdChange', element: <ManagerPwdChange />},
   ];
@@ -54,6 +42,7 @@ function App() {
   const userRoutes = [
     {path: '', element: <UserHome />},
     {path: 'newTicket', element: <UserNewTicket />},
+    {path: 'detail/:id', element: <UserTicketDetail />},
     {path: 'inquiry', element: <UserInquiry />},
     {path: 'pwdChange', element: <UserPwdChange />},
   ];
@@ -70,8 +59,7 @@ function App() {
       <Router>
         <Routes>
           {/* 레이아웃 없음 */}
-          <Route path="/" element={<Landing />} />
-          <Route path="/signin" element={<SignIn />} />
+          <Route path="/" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/resetpwd" element={<ResetPwd />} />
           <Route path="/changepwd" element={<ChangePwd />} />

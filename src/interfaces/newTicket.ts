@@ -16,3 +16,8 @@ export interface Template {
   createdAt: string;
   // 첨부파일
 }
+
+// // 요청 양식
+// export interface RequestForm {
+//   firstCategory:
+// }

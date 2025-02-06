@@ -38,7 +38,7 @@ export default function TicketOptions() {
   return (
     <div className="flex gap-20 px-3 text-body-bold text-gray-15">
       <div className="flex flex-col gap-3">
-        <div className="flex gap-9 items-center">
+        <div className="flex gap-9 items-center h-[26px]">
           <p className="w-16">긴급 티켓</p>
           <div className="flex gap-3 items-center">
             <label
@@ -47,7 +47,7 @@ export default function TicketOptions() {
             >
               <input type="checkbox" checked={isUrgent} onChange={checkboxChange} className="hidden" />
               {isUrgent && <WhiteCheckIcon />}
-            </label>{' '}
+            </label>
             <p className={` ${isUrgent ? 'text-error text-body-bold' : 'text-gray-6 text-body-regular'}`}>긴급</p>
           </div>
         </div>
@@ -100,6 +100,11 @@ export default function TicketOptions() {
             value={template}
             onSelect={(value) => setTemplate(value)}
           />
+        </div>
+      </div>
+      <div className="flex h-full items-end">
+        <div className="h-8 bg-gray-1 border border-gray-2 rounded-full py-1 px-4 text-body-bold w-fit mx-3">
+          2차 카테고리 선택 시 해당 카테고리 템플릿이 적용됩니다.
         </div>
       </div>
     </div>

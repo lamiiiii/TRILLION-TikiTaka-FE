@@ -4,7 +4,7 @@ import InitialLayout from './InitialLayout';
 
 export default function LandingContainer() {
   return (
-    <InitialLayout size="wide">
+    <InitialLayout>
       {/* 우측 */}
       <motion.div
         className="absolute right-0 top-0 flex flex-col min-h-screen justify-center items-start gap-16 pl-40"

@@ -15,9 +15,7 @@ export interface TokenStore {
 
 export interface TicketStore {
   priority: PriorityType;
-  isReviewNeeded: boolean;
   setPriority: (priority: string) => void;
-  setIsReviewNeeded: (isReviewRequired: boolean) => void;
 }
 
 export interface CategoryStore {
@@ -72,4 +70,14 @@ export interface UserInfo {
   email: string;
   role: 'manager' | 'user' | 'admin';
   website: string;
+}
+
+// 댓글 응답 형식
+export interface Comment {
+  commentId: number;
+  authorId: number;
+  authorName: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
 }

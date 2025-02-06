@@ -1,43 +1,30 @@
 import {useState} from 'react';
-import InitialTopBar from './InitialTopBar';
-import ToggleBtn from '../ToggleBtn';
-import {useNavigate} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {useUserStore} from '../../../store/store';
+import {validateId, validatePwd} from '../../../utils/Validation';
+import InitialLayout from './InitialLayout';
 
-// todo 연속 5회 설정한 비밀번호가 틀렸을 경우 30분간 잠금
+// 연속 5회 설정한 비밀번호가 틀렸을 경우 30분간 잠금
 // 토큰값 있으면 리다이렉트
 export default function SignInContainer() {
   const navigate = useNavigate();
   const {role} = useUserStore();
 
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
+  const [id, setId] = useState('');
+  const [idError, setIdError] = useState('');
   const [pwd, setPwd] = useState('');
   const [pwdError, setPwdError] = useState('');
 
-  const [autoLogin, setAutoLogin] = useState(false);
-
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // 이메일 유효성 검사 정규식
-    return emailRegex.test(email);
-  };
-
-  // 비밀번호 정규식 (영문, 숫자, 특수문자 포함, 6~32자)
-  const validatePwd = (password: string) => {
-    const pwdRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{6,32}$/;
-    return pwdRegex.test(password);
-  };
-
-  const emailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const idChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setEmail(value);
+    setId(value);
 
     if (value === '') {
-      setEmailError('이메일을 입력해주세요.');
-    } else if (!validateEmail(value)) {
-      setEmailError('잘못된 이메일 주소입니다. 이메일 주소를 정확하게 입력해주세요.');
+      setIdError('아이디를 입력해주세요.');
+    } else if (!validateId(value)) {
+      setIdError('아이디는 영어 소문자와 점(.)을 포함한 3~15자여야 합니다.');
     } else {
-      setEmailError('');
+      setIdError('');
     }
   };
 
@@ -55,11 +42,11 @@ export default function SignInContainer() {
   };
 
   const onClickLogin = () => {
-    if (email === '') {
-      setEmailError('이메일을 입력해주세요.');
+    if (id === '') {
+      setIdError('아이디를 입력해주세요.');
       return;
-    } else if (!validateEmail(email)) {
-      setEmailError('잘못된 이메일 주소입니다. 이메일 주소를 정확하게 입력해주세요.');
+    } else if (!validateId(id)) {
+      setIdError('아이디는 영어 소문자와 점(.)을 포함한 3~15자여야 합니다.');
       return;
     }
 
@@ -71,8 +58,7 @@ export default function SignInContainer() {
       return;
     }
     const requestData = {
-      autoLogin,
-      email,
+      id,
       pwd,
     };
 
@@ -90,62 +76,55 @@ export default function SignInContainer() {
   };
 
   return (
-    <div className="flex h-screen">
-      <InitialTopBar />
-      <div className="top-container items-center">
-        <div className="flex flex-col items-center gap-10">
-          <p className="text-black text-2xl font-bold">로그인</p>
-          <div className="flex w-[470px] flex-col gap-5 p-5">
-            {/* 이메일 */}
-            <div className="email">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-bold">이메일</p>
-                <input
-                  id="email"
-                  autoComplete="email"
-                  type="email"
-                  value={email}
-                  onChange={emailChange}
-                  placeholder="이메일을 입력하세요"
-                  required
-                  className={`py-3 px-4 text-subtitle-regular w-[328px] border rounded-md focus:outline-none 
-                ${emailError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
-                />
-              </div>
-              <div className={`flex relative left-[102px] text-error text-xs mt-1 ${emailError ? '' : 'hidden'}`}>{emailError}</div>
+    // <div className="flex h-screen">
+    //   <div className="top-container items-center">
+    <InitialLayout>
+      <div className="w-full absolute right-0 top-0 min-h-screen flex items-center justify-center">
+        <div className="flex flex-col justify-center items-start gap-10 w-[400px]">
+          <p className="w-full text-center text-black text-2xl font-bold">로그인</p>
+          <div className="flex flex-col w-full gap-5">
+            {/* 아이디 */}
+            <div className="id">
+              <input
+                id="id"
+                autoComplete="id"
+                type="text"
+                value={id}
+                onChange={idChange}
+                placeholder="아이디를 입력하세요"
+                required
+                className={`py-3 px-4 text-subtitle-regular w-full border rounded-md focus:outline-none 
+                ${idError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
+              />
+              <div className={`flex relative text-error text-xs mt-1 ${idError ? '' : 'hidden'}`}>{idError}</div>
             </div>
             {/* 비밀번호 */}
             <div className="password">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-bold">비밀번호</p>
-                <input
-                  id="password"
-                  autoComplete="password"
-                  type="password"
-                  value={pwd}
-                  onChange={pwdChange}
-                  placeholder="비밀번호를 입력하세요"
-                  required
-                  className={`py-3 px-4 text-subtitle-regular w-[328px] border rounded-md focus:outline-none 
+              <input
+                id="password"
+                autoComplete="password"
+                type="password"
+                value={pwd}
+                onChange={pwdChange}
+                placeholder="비밀번호를 입력하세요"
+                required
+                className={`py-3 px-4 text-subtitle-regular w-full border rounded-md focus:outline-none 
                 ${pwdError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
-                />
-              </div>
-              <div className={`flex relative left-[102px] text-error text-xs mt-1 ${pwdError ? '' : 'hidden'}`}>{pwdError}</div>
-            </div>
-            {/* 자동 로그인 */}
-            <div className="autoLogin">
-              <div className="flex items-center gap-8 justify-end">
-                <p className="text-sm font-bold">자동 로그인</p>
-                <ToggleBtn state={autoLogin} onClick={() => setAutoLogin((prev) => !prev)} />
-              </div>
+              />
+              <div className={`flex relative text-error text-xs mt-1 ${pwdError ? '' : 'hidden'}`}>{pwdError}</div>
             </div>
           </div>
           {/* 버튼 */}
-          <button onClick={onClickLogin} className="main-btn-lg w-20">
+          <button onClick={onClickLogin} className=" w-full main-btn-lg">
             로그인
           </button>
+          <div className="flex justify-between px-16 w-full">
+            <Link to="/signup" className="cursor-pointer hover:underline hover:text-gray-15">계정 등록 신청</Link>
+            <Link to="/resetpwd" className="cursor-pointer hover:underline hover:text-gray-15">비밀번호 재설정</Link>
+          </div>
         </div>
       </div>
-    </div>
+    </InitialLayout>
+    // </div>
   );
 }

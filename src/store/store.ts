@@ -20,9 +20,7 @@ export const useTokenStore = create<TokenStore>((set) => ({
 
 export const useTicketStore = create<TicketStore>((set) => ({
   priority: 'HIGH',
-  isReviewNeeded: false,
   setPriority: (priority: string) => set((state) => ({...state, priority})),
-  setIsReviewNeeded: (state) => set({isReviewNeeded: state}),
 }));
 
 // 카테고리
@@ -37,7 +35,7 @@ export const useNewTicketStore = create<NewTicketStore>((set) => ({
   secondCategory: null,
   title: '',
   content: '',
-  manager: 'all',
+  manager: '',
   ticketType: '',
   template: '',
   dueDate: '',
