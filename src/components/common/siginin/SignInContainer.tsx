@@ -5,6 +5,7 @@ import {validateId, validatePwd} from '../../../utils/Validation';
 import InitialLayout from './InitialLayout';
 import {postLogin} from '../../../api/service/auth';
 import Modal from '../Modal';
+import { useEnterKeyHandler } from '../../../hooks/useEnterKeyHandler';
 
 // 연속 5회 설정한 비밀번호가 틀렸을 경우 30분간 잠금
 // 토큰값 있으면 리다이렉트
@@ -75,6 +76,7 @@ export default function SignInContainer() {
       setModalMessage(error.response?.data?.message || '알 수 없는 오류가 발생했습니다.');
     }
   };
+  useEnterKeyHandler(onClickLogin);
 
   const closeModal = () => {
     setId('');
