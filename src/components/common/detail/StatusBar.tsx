@@ -26,16 +26,15 @@ export default function StatusBar({data, status}: StatusBarProps) {
   const queryClient = useQueryClient();
 
   // 티켓 긴급 여부 수정
-  // FIX: typeId, primaryCategoryId, secondaryCategoryId 수정 꼭 필요 !!!!
   const updateUrgentMutation = useMutation({
     mutationFn: (urgent: boolean) =>
       updateTicket(ticketId, {
         title: data?.title || '',
         description: data?.description || '',
         urgent: urgent,
-        typeId: 1,
-        primaryCategoryId: 1,
-        secondaryCategoryId: 1,
+        typeId: data?.typeId,
+        primaryCategoryId: data?.firstCategoryId,
+        secondaryCategoryId: data?.secondCategoryId,
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});

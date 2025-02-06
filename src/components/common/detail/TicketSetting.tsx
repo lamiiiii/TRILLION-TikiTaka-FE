@@ -2,6 +2,9 @@ import {useEffect, useState} from 'react';
 import DropDown from '../Dropdown';
 import {useTicketStore} from '../../../store/store';
 import {PRIMARY_CATEGORIES, PRIORITY, SECONDARY_CATEGORIES, TICKET_TYPES} from '../../../constants/constants';
+import {useParams} from 'react-router-dom';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {updateTicketDeadline, updateTicketManager, updateTicketPriority} from '../../../api/service/tickets';
 
 interface TicketSettingProps {
   data: TicketDetails;
@@ -15,9 +18,15 @@ export default function TicketSetting({data}: TicketSettingProps) {
   const [deadlineDate, setDeadlineDate] = useState('');
   const [deadlineTime, setDeadlineTime] = useState('');
 
+  const {id} = useParams();
+  const ticketId = Number(id);
+
+  const queryClient = useQueryClient();
+
   const priority = useTicketStore((state) => state.priority);
   const setPriority = useTicketStore((state) => state.setPriority);
 
+  // 마감기한 데이터 변환
   useEffect(() => {
     if (data.deadline) {
       const [date, time] = data.deadline.split(' ');
@@ -26,12 +35,53 @@ export default function TicketSetting({data}: TicketSettingProps) {
     }
   }, [data.deadline]);
 
+  // 우선순위 업데이트
+  const updatePriorityMutation = useMutation({
+    mutationFn: (newPriority: string) => updateTicketPriority(ticketId, newPriority),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
+      setPriority(data.priority);
+    },
+    onError: () => {
+      alert('티켓 우선순위 변경에 실패했습니다. 다시 시도해 주세요.');
+    },
+  });
+
+  // 담당자 업데이트
+  const updateManagerMutation = useMutation({
+    mutationFn: (managerId: number) => updateTicketManager(ticketId, managerId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
+    },
+    onError: () => {
+      alert('티켓 담당자 변경에 실패했습니다. 다시 시도해 주세요.');
+    },
+  });
+
+  const updateDeadlineMutation = useMutation({
+    mutationFn: (deadline: string) => updateTicketDeadline(ticketId, deadline),
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
+    },
+    onError: () => {
+      alert('티켓 마감기한 변경에 실패했습니다. 다시 시도해 주세요.');
+    },
+  });
+
   const handlePrioritySelect = (selectedOption: string) => {
-    setPriority(selectedOption);
+    updatePriorityMutation.mutate(selectedOption);
   };
 
   const handleAssigneeSelect = (selectedOption: string) => {
     setSelectedAssignee(selectedOption);
+    // FIX: 사용자 정보에서 매니저 정보 연결 필요
+    const managerId = 1;
+    updateManagerMutation.mutate(managerId);
+  };
+
+  const handleDeadlineChange = () => {
+    const newDeadline = `${deadlineDate} ${deadlineTime}`;
+    updateDeadlineMutation.mutate(newDeadline);
   };
 
   const handlePrimaryCategorySelect = (selectedOption: string) => {
@@ -75,12 +125,18 @@ export default function TicketSetting({data}: TicketSettingProps) {
               <input
                 type="date"
                 value={deadlineDate}
+                onChange={(e) => setDeadlineDate(e.target.value)}
+                onBlur={handleDeadlineChange}
                 className={`${deadlineDate ? 'text-gray-15' : 'text-gray-6'} w-min text-body-regular`}
+                disabled={updateDeadlineMutation.isPending}
               />
               <input
                 type="time"
                 value={deadlineTime}
+                onChange={(e) => setDeadlineTime(e.target.value)}
+                onBlur={handleDeadlineChange}
                 className={`${deadlineTime ? 'text-gray-15' : 'text-gray-6'} w-min text-body-regular`}
+                disabled={updateDeadlineMutation.isPending}
               />
             </div>
             {location.pathname.startsWith('/manager') && (

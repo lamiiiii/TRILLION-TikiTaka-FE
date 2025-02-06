@@ -43,15 +43,21 @@ declare interface TicketDetails {
   description: string;
   priority: string | null;
   status: keyof typeof STATUS_MAP;
+  typeId: number;
   typeName: string;
+  firstCategoryId: number;
   firstCategoryName: string;
+  secondCategoryId: number;
   secondCategoryName: string;
+  managerId: number;
   managerName: string;
+  requesterId: number;
   requesterName: string;
   urgent: boolean;
   deadline: string; // yyyy-MM-dd HH:mm
   createdAt: string; // yyyy-MM-dd HH:mm
-  updatedAt: string | null;
+  updatedAt: string; // yyyy-MM-dd HH:mm
+  attachments: any[]; // 첨부 파일 정보를 위한 배열
 }
 
 declare interface PendingApprovalCount {

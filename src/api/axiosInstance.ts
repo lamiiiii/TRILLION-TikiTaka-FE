@@ -5,7 +5,7 @@ const instance: AxiosInstance = axios.create({
   baseURL: 'http://210.109.54.71:8080',
   withCredentials: true, // 쿠키를 포함한 인증 정보를 서버에 전송
   headers: {
-    Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWQiOjQsInVzZXJuYW1lIjoibWFuYWdlci50ayIsInJvbGUiOiJNQU5BR0VSIiwiaWF0IjoxNzM4ODA4NDY4LCJleHAiOjE3Mzg4MTIwNjh9.J_sFYAR8-kOSIRDY3yv5h6HxONfSVwbES8XKh_pmoivqYUMuGx4RKs391mBRtW58ORUR0AanML7g_4CY4vWTyw
+    Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWQiOjQsInVzZXJuYW1lIjoibWFuYWdlci50ayIsInJvbGUiOiJNQU5BR0VSIiwiaWF0IjoxNzM4ODExMTc2LCJleHAiOjE3Mzg4MTQ3NzZ9.0W3N5FoJJoH7iwdPCo7zGC1-3uc7iMO8VUYiP0Pyjyk5eGvz4YCc9j2yHFofoqu-B-aIEbLj7hq-GpzKCJczMw
 
 `,
   },
