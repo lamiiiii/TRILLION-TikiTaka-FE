@@ -178,10 +178,9 @@ export async function getPersonalTicketStatus(token: string) {
 }
 
 // INTF-35: 티켓 목록 조회
-export async function getTicketList(token: string, params: TicketListParams = {}) {
+export async function getTicketList( params: TicketListParams = {}) {
   try {
     const {data} = await instance.get<{message: string; data: TicketListResponse}>('/tickets/list', {
-      headers: {Authorization: `Bearer ${token}`},
       params: {
         page: params.page || 0,
         size: params.size || 20,

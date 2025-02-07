@@ -109,6 +109,7 @@ declare interface TicketListParams {
   ticketTypeId?: number;
   managerId?: number;
   requesterId?: number;
+  orderBy?: string;
 }
 
 declare interface UpdateTicketParams {
