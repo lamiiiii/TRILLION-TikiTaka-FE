@@ -3,9 +3,8 @@ declare interface CreateTemplateParams {
   title: string;
   description: string;
   typeId: number;
-  firstCategoryId: number;
-  secondCategoryId: number;
-  requesterId: number;
+  firstCategoryId?: number;
+  secondCategoryId?: number;
   managerId?: number;
 }
 
@@ -25,9 +24,16 @@ declare interface TemplateDetail {
 declare interface TemplateListItem {
   templateTitle: string;
   title: string;
+  description: string;
   typeId: number;
-  firstCategoryId: number;
-  secondCategoryId: number;
+  firstCategoryId?: number;
+  secondCategoryId?: number;
+  managerId?: number;
+  managerName?: string;
+  templateId?: number;
+  typeName?: string;
+  firstCategoryName?: string;
+  secondCategoryName?: string;
   createdAt: string;
   updatedAt: string;
 }

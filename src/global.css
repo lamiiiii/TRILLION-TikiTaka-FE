@@ -150,7 +150,11 @@ textarea {
 
   /* 티켓 생성 선택지 */
   .selection {
-    @apply flex items-center gap-9;
+    @apply flex items-center gap-9 w-[340px];
+  }
+
+  .selection-2 {
+    @apply flex items-center gap-9 w-[280px];
   }
 
   /* 티켓 생성 선택지 text */
@@ -172,5 +176,54 @@ textarea {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .prose h1 {
+    @apply text-4xl font-bold; /* h1 제목 크기 */
+  }
+  .prose h2 {
+    @apply text-3xl font-semibold; /* h2 제목 크기 */
+  }
+  .prose h3 {
+    @apply text-2xl font-medium; /* h3 제목 크기 */
+  }
+  .prose p {
+    @apply text-base; /* 일반 본문 텍스트 크기 */
+  }
+  .prose ul {
+    @apply list-disc pl-5 mb-4; /* 원형 리스트, 왼쪽 패딩, 마진 */
+  }
+  .prose li {
+    @apply mb-2; /* 리스트 항목 간 간격 */
+  }
+  .prose ol {
+    @apply m-0 break-words;
+  }
+  .prose hr {
+    @apply my-8;
+  }
+  /* 텍스트 에디터 내 code 태그 css 오버라이딩 */
+  /* strong 태그 스타일 오버라이딩 */
+  .prose strong {
+    font-weight: normal; /* 볼드체를 제거 */
+  }
+  .prose code::before,
+  .prose code::after {
+    @apply content-none;
+  }
+  .prose code {
+    @apply bg-white rounded-[0.4rem] text-main text-[12px] font-normal px-[0.4rem] py-[0.2rem] whitespace-pre-wrap break-words;
+  }
+  /* code block css 오버라이딩 */
+  .prose pre {
+    @apply bg-main rounded text-white my-6 py-3 px-4 whitespace-pre-wrap break-words;
+  }
+
+  .prose pre code {
+    @apply bg-transparent text-inherit text-[0.8rem] p-0 whitespace-pre-wrap break-words;
+  }
+
+  .prose * {
+    @apply min-h-[1rem];
   }
 }

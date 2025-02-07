@@ -32,12 +32,10 @@ export async function postLogout() {
     if (!token) throw new Error('로그인 정보가 없습니다.');
     tokenStorage.remove();
 
-    console.log('로그아웃 해주세요.');
     const response = await instance.post('/logout', null, {
       headers: {Authorization: `Bearer ${token}`},
     });
     if (response.status === 200) {
-      console.log('로그아웃했습니다.');
     } else {
       console.error('로그아웃 실패:', response.statusText);
     }
@@ -50,17 +48,20 @@ export async function postLogout() {
 // INTF-6: 토큰 재발급
 export async function postReissueToken() {
   try {
-    const {headers} = await instance.post('/reissue', null);
+    const response = await instance.post('/reissue', null);
+    console.log('재발급돼');
+
+    const {headers} = response;
+
     // 새로운 accessToken 가져오기
     let newAccessToken = headers['authorization'] || headers['Authorization'];
     if (newAccessToken?.startsWith('Bearer ')) {
-      newAccessToken = newAccessToken.replace('');
+      newAccessToken = newAccessToken.replace('Bearer ', '');
     }
 
     if (newAccessToken) {
       tokenStorage.set(newAccessToken); // 새로운 accessToken 저장
     }
-
     return {accessToken: newAccessToken};
   } catch (error) {
     console.error('토큰 재발급 실패:', error);

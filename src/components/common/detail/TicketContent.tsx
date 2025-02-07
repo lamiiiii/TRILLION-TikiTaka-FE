@@ -3,6 +3,7 @@ import {useState} from 'react';
 import {Link, useParams} from 'react-router-dom';
 import {deleteTicket} from '../../../api/service/tickets';
 import Modal from '../Modal';
+import MarkdownPreview from '../MarkdownPreview';
 import {useUserStore} from '../../../store/store';
 
 interface TicketContentProps {
@@ -58,7 +59,8 @@ export default function TicketContent({data}: TicketContentProps) {
         )}
       </div>
       <div className="w-full h-[400px] overflow-scroll p-5 border border-gray-2 rounded-[4px] bg-white text-subtitle-regular text-gray-15">
-        {data?.description}
+        {/* 여기에서 마크다운을 HTML로 변환하고 안전하게 렌더링 */}
+        <MarkdownPreview content={data?.description || ''} />
       </div>
       {showDeleteModal && (
         <Modal

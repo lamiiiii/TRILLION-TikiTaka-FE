@@ -3,6 +3,7 @@ import Modal from '../Modal';
 import {useUserStore} from '../../../store/store';
 import {Link, useNavigate} from 'react-router-dom';
 import {validatePwd} from '../../../utils/Validation';
+import TopBar from '../TopBar';
 
 // 토큰값 없으면 접근 불가
 export default function ChangePwdContainer() {
@@ -109,6 +110,8 @@ export default function ChangePwdContainer() {
 
   return (
     <div className="flex h-screen">
+      <TopBar />
+
       <div className="top-container items-center">
         <div className="flex flex-col items-center gap-10 w-[400px]">
           <div className="flex flex-col items-center gap-4">
@@ -169,7 +172,7 @@ export default function ChangePwdContainer() {
             변경 완료
           </button>
           <div className="flex justify-end w-full">
-            <Link to={`/${role}`} className="text-sm text-gray-2 cursor-pointer hover:underline hover:text-gray-15">
+            <Link to={`/${role.toLowerCase()}`} className="text-sm text-gray-2 cursor-pointer hover:underline hover:text-gray-15">
               다음에 변경하기
             </Link>
           </div>

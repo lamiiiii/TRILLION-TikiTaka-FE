@@ -1,5 +1,4 @@
 import {PRIORITY} from '../constants/constants';
-import {Category} from './newTicket';
 
 // 사용자 정보
 export interface UserStore {
@@ -39,21 +38,61 @@ export interface NewTicketStore {
   secondCategory: Category | null;
   title: string;
   content: string;
-  manager: string;
-  ticketType: string;
-  template: string;
+  manager: UserListResponse['users'][number] | null;
+  ticketType: {typeId: number; typeName: string};
+  template: {
+    templateTitle: string;
+    title: string;
+    description: string;
+    typeId: number;
+    firstCategoryId?: number;
+    secondCategoryId?: number;
+    managerId?: number;
+  };
   dueDate: string;
   dueTime: string;
+
   setIsUrgent: (isUrgent: boolean) => void;
   setFirstCategory: (category: Category | null) => void;
   setSecondCategory: (category: Category | null) => void;
   setTitle: (title: string) => void;
   setContent: (content: string) => void;
-  setManager: (manager: string) => void;
-  setTicketType: (ticketType: string) => void;
-  setTemplate: (template: string) => void;
+  setManager: (manager: UserListResponse['users'][number] | null) => void;
+  setTicketType: (ticketType: {typeId: number; typeName: string}) => void;
+  setTemplate: (template: TemplateListItem) => void;
   setDueDate: (date: string) => void;
   setDueTime: (time: string) => void;
+
+  firstCategoryId: number;
+  secondCategoryId: number;
+  managerId: number;
+  setFirstCategoryId: (id: number) => void;
+  setSecondCategoryId: (id: number) => void;
+  setManagerId: (id: number) => void;
+}
+
+export interface TemplateStore {
+  templateTitle: string;
+  firstCategory: Category | null;
+  secondCategory: Category | null;
+  title: string;
+  content: string;
+  manager: UserListResponse['users'][number] | null;
+  ticketType: {typeId: number; typeName: string};
+  setTemplateTitle: (templateTitle: string) => void;
+  setFirstCategory: (category: Category | null) => void;
+  setSecondCategory: (category: Category | null) => void;
+  setTitle: (title: string) => void;
+  setContent: (content: string) => void;
+  setManager: (manager: UserListResponse['users'][number] | null) => void;
+  setTicketType: (ticketType: {typeId: number; typeName: string}) => void;
+}
+
+export interface NewTicketFormStore {
+  mustDescription: string;
+  description: string;
+  setMustDescription: (mustDescription: string) => void;
+  setDescription: (description: string) => void;
 }
 
 // 기타 interface
