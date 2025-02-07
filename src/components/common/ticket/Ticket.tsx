@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { TicketDataProps } from '../../../interfaces/ticket';
+import {useEffect, useState} from 'react';
+import {TicketDataProps} from '../../../interfaces/ticket';
 import Dropdown from '../Dropdown';
-import { AlertIcon } from '../Icon';
+import {AlertIcon} from '../Icon';
 
 interface TicketProps extends TicketDataProps {
   role: 'manager' | 'user' | 'admin'; // role 추가
@@ -9,6 +9,9 @@ interface TicketProps extends TicketDataProps {
   onApprove: () => void;
   onReject: () => void;
 }
+
+// 담당자 목록 (managerName이 null이 아니면 포함)
+const assigneeOptions = ['all', 'yeon', 'alex', 'jojo'];
 
 export default function Ticket({
   ticketId,
@@ -27,6 +30,14 @@ export default function Ticket({
 }: TicketProps) {
   const [selectedAssignee, setSelectedAssignee] = useState(managerName);
   const [ticketStatus, setTicketStatus] = useState(status);
+
+  if (managerName && !assigneeOptions.includes(managerName)) {
+    assigneeOptions.push(managerName);
+  }
+
+  useEffect(() => {
+    setSelectedAssignee(managerName || 'all');
+  }, [managerName]);
 
   const handleAssigneeSelect = (selectedOption: string) => {
     setSelectedAssignee(selectedOption);
@@ -59,7 +70,7 @@ export default function Ticket({
       </div>
 
       {/* 요청 내용 */}
-      <div className={role === 'manager' ? 'w-[36%]' : 'w-[51%]'} style={{ textAlign: 'left' }}>
+      <div className="w-[30%]" style={{textAlign: 'left'}}>
         <div className="flex items-center gap-1">
           {urgent && <AlertIcon className="text-error w-4 h-4" />}
           <div className={`text-subtitle-regular ${urgent ? 'text-error' : 'text-gray-15'}`}>{title}</div>
@@ -71,10 +82,10 @@ export default function Ticket({
       <div className="w-[12%] text-body-regular text-gray-15">{deadline}</div>
 
       {/* 담당자 */}
-      <div className="w-[10%]">
+      <div className="w-[16%]">
         <Dropdown
-          label={selectedAssignee}
-          options={['yeon', 'alex', 'jojo']}
+          label={selectedAssignee === 'all' ? '담당자 선택' : selectedAssignee}
+          options={assigneeOptions}
           defaultSelected={selectedAssignee}
           onSelect={handleAssigneeSelect}
           paddingX="px-3"
@@ -88,10 +99,16 @@ export default function Ticket({
         <div className="w-[15%] flex gap-2">
           {ticketStatus === 'PENDING' && (
             <>
-              <button className="px-6 h-[30px] text-[12px] leading-none border border-gray-6 rounded-md hover:bg-gray-8 hover:text-white" onClick={handleApprove}>
+              <button
+                className="px-6 h-[30px] text-[12px] leading-none border border-gray-6 rounded-md hover:bg-gray-8 hover:text-white"
+                onClick={handleApprove}
+              >
                 진행
               </button>
-              <button className="px-6 h-[30px] text-[12px] leading-none border border-gray-6 rounded-md hover:bg-error/80 hover:text-white" onClick={handleReject}>
+              <button
+                className="px-6 h-[30px] text-[12px] leading-none border border-gray-6 rounded-md hover:bg-error/80 hover:text-white"
+                onClick={handleReject}
+              >
                 반려
               </button>
             </>
@@ -107,8 +124,12 @@ export default function Ticket({
               textColor="text-gray-15"
             />
           )}
-          {ticketStatus === 'COMPLETED' && <div className="px-8 py-1.5 text-[12px] leading-none border text-blue border-gray-2 bg-gray-1 rounded-md">완료</div>}
-          {ticketStatus === 'REJECTED' && <div className="px-8 py-1.5 text-[12px] leading-none border text-error border-error/50 bg-red/10 rounded-md">반려</div>}
+          {ticketStatus === 'COMPLETED' && (
+            <div className="px-8 py-1.5 text-[12px] leading-none border text-blue border-gray-2 bg-gray-1 rounded-md">완료</div>
+          )}
+          {ticketStatus === 'REJECTED' && (
+            <div className="px-8 py-1.5 text-[12px] leading-none border text-error border-error/50 bg-red/10 rounded-md">반려</div>
+          )}
         </div>
       )}
     </div>

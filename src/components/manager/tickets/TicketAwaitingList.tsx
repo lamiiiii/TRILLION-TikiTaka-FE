@@ -3,6 +3,8 @@ import {AlertIcon, DownIcon} from '../../common/Icon';
 import TicketList from '../../common/ticket/TicketList';
 import TicketFilter from './TicketFilter';
 import {motion, AnimatePresence} from 'framer-motion';
+import {useQuery} from '@tanstack/react-query';
+import {getPendingApprovalCount} from '../../../api/service/tickets';
 
 export default function TicketAwaitingList() {
   const [isListVisible, setIsListVisible] = useState(false);
@@ -10,6 +12,14 @@ export default function TicketAwaitingList() {
   const toggleListVisibility = () => {
     setIsListVisible((prev) => !prev);
   };
+
+  //승인 대기 티켓 수 조회
+  const {data: pendingApprovalCount} = useQuery({
+    queryKey: ['pendingApprovalCount'],
+    queryFn: getPendingApprovalCount,
+    refetchInterval: 60000, // 1분마다 자동으로 데이터 갱신 (필요에 따라 조정)
+  });
+
   return (
     <div>
       <button
@@ -18,13 +28,17 @@ export default function TicketAwaitingList() {
       >
         <div className="flex items-center gap-2">
           <h1 className="text-title-bold">승인 대기</h1>
-          <div className={`px-4 h-[16px] flex place-items-center rounded-full bg-gray-9 text-white mb-0.5`}>
-            <div className="mt-0.5 text-caption-bold">{240}</div>
-          </div>
-          <div className={`px-4 h-[16px] flex place-items-center gap-1 rounded-full bg-error text-white mb-0.5`}>
-            <AlertIcon />
-            <div className="mt-0.5 text-caption-bold">{2}</div>
-          </div>
+          {pendingApprovalCount && (
+            <div className={`px-4 h-[16px] flex place-items-center rounded-full bg-gray-9 text-white mb-0.5`}>
+              <div className="mt-0.5 text-caption-bold">{pendingApprovalCount?.totalPending}</div>
+            </div>
+          )}
+          {pendingApprovalCount && (
+            <div className={`px-4 h-[16px] flex place-items-center gap-1 rounded-full bg-error text-white mb-0.5`}>
+              <AlertIcon />
+              <div className="mt-0.5 text-caption-bold">{pendingApprovalCount?.totalPendingUrgent}</div>
+            </div>
+          )}
         </div>
         <div className={`transform ${isListVisible ? 'rotate-180' : 'rotate-0'} transition-transform duration-300 ease-in-out`}>
           <DownIcon />
