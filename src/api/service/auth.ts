@@ -49,7 +49,6 @@ export async function postLogout() {
 export async function postReissueToken() {
   try {
     const response = await instance.post('/reissue', null);
-    console.log('재발급돼');
 
     const {headers} = response;
 

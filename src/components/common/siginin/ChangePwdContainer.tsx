@@ -4,8 +4,8 @@ import {useUserStore} from '../../../store/store';
 import {Link, useNavigate} from 'react-router-dom';
 import {validatePwd} from '../../../utils/Validation';
 import TopBar from '../TopBar';
+import {patchUserPassword} from '../../../api/service/users';
 
-// 토큰값 없으면 접근 불가
 export default function ChangePwdContainer() {
   const {role} = useUserStore();
   const navigate = useNavigate();
@@ -63,7 +63,7 @@ export default function ChangePwdContainer() {
     }
   };
 
-  const onClickChange = () => {
+  const onClickChange = async () => {
     if (pwd === '') {
       setPwdError('비밀번호를 입력해주세요.');
       return;
@@ -92,20 +92,17 @@ export default function ChangePwdContainer() {
     }
 
     const requestData = {
-      pwd,
-      newPwd,
+      currentPassword: pwd,
+      newPassword: newPwd,
     };
 
-    // todo 비밀번호 변경 완료 모달 추가 및 메인페이지 이동
-    // 응답 내용에 따른 처리
-    const isCurrentPwdCorrect = true;
-    if (!isCurrentPwdCorrect) {
-      setModalState({open: true, type: 'error'});
-      return;
-    }
-    setModalState({open: true, type: 'success'});
+    try {
+      await patchUserPassword(requestData);
 
-    console.log(requestData);
+      setModalState({open: true, type: 'success'});
+    } catch (error) {
+      setModalState({open: true, type: 'error'});
+    }
   };
 
   return (
@@ -186,7 +183,7 @@ export default function ChangePwdContainer() {
           onBackBtnClick={() => {
             setModalState({open: false, type: null});
             if (modalState.type === 'success') {
-              navigate(role === 'ADMIN' ? '/admin/accounts' : `/${role}`, {replace: true});
+              navigate(role.toLowerCase() === 'admin' ? '/admin/accounts' : `/${role.toLowerCase()}`, {replace: true});
             }
           }}
         />
