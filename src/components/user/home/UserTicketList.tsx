@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import PageNations from '../../manager/common/PageNations';
 import {TicketViewType} from '../../../interfaces/ticket';
 import DropDown from '../../common/Dropdown';
@@ -17,18 +17,41 @@ interface TicketListProps {
   selectedFilter: TicketViewType; // 필터 상태 추가
 }
 
+const STATUS_MAP = {
+  PENDING: '대기중',
+  IN_PROGRESS: '진행중',
+  REVIEW: '검토',
+  DONE: '완료',
+  REJECTED: '반려',
+};
+
+// STATUS_MAP을 역으로 만듭니다.
+const REVERSE_STATUS_MAP = Object.entries(STATUS_MAP).reduce(
+  (acc, [key, value]) => {
+    acc[value] = key;
+    return acc;
+  },
+  {} as Record<string, string>
+);
+
 export default function UserTicketList({selectedFilter}: TicketListProps) {
   const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
   const [currentPage, setCurrentPage] = useState(1);
   const ticketsPerPage = 5;
 
+  const apiStatus = useMemo(() => {
+    if (selectedFilter === '전체') return undefined;
+    if (selectedFilter === '긴급') return undefined; // 긴급은 별도 처리 필요
+    return REVERSE_STATUS_MAP[selectedFilter] || undefined;
+  }, [selectedFilter]);
+
   const {data: ticketListResponse} = useQuery({
-    queryKey: ['ticketList', selectedFilter, selectedFilters, currentPage],
+    queryKey: ['ticketList', apiStatus, selectedFilters, currentPage],
     queryFn: () =>
       getTicketList({
         page: currentPage - 1,
         size: ticketsPerPage,
-        status: selectedFilter !== '전체' ? selectedFilter : undefined,
+        status: apiStatus,
       }),
   });
 

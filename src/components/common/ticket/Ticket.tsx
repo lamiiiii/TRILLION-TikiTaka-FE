@@ -3,6 +3,7 @@ import {TicketDataProps} from '../../../interfaces/ticket';
 import Dropdown from '../Dropdown';
 import {AlertIcon} from '../Icon';
 import {Link} from 'react-router-dom';
+import {useUserStore} from '../../../store/store';
 
 interface TicketProps extends TicketDataProps {
   role: 'manager' | 'user' | 'admin'; // role 추가
@@ -30,6 +31,8 @@ export default function Ticket({
 }: TicketProps) {
   const [selectedAssignee, setSelectedAssignee] = useState(managerName);
   const [ticketStatus, setTicketStatus] = useState(status);
+
+  const {role} = useUserStore();
 
   if (managerName && !assigneeOptions.includes(managerName)) {
     assigneeOptions.push(managerName);
@@ -67,7 +70,7 @@ export default function Ticket({
   const ticketClass = urgent ? 'border-error bg-white hover:bg-red/5' : 'border-gray-2 bg-white hover:bg-gray-1';
 
   return (
-    <Link className="group relative" to={`/manager/detail/${ticketId}`}>
+    <Link className="group relative" to={role === 'USER' ? `/user/detail/${ticketId}` : `/manager/detail/${ticketId}`}>
       <div className={`flex gap-4 py-4 px-2 border items-center rounded cursor-pointer transition-all duration-200 ${ticketClass}`}>
         {/* 티켓 ID */}
         <div className="w-[6%] text-subtitle-regular text-gray-700 px-2">#{ticketId}</div>
@@ -108,7 +111,7 @@ export default function Ticket({
         {/* 승인 여부 */}
 
         <div className="w-[15%] flex gap-2" onClick={handleClick}>
-          {ticketStatus === 'PENDING' && (
+          {role !== 'USER' && ticketStatus === 'PENDING' && (
             <>
               <button
                 className="px-6 h-[30px] text-[12px] leading-none border border-gray-6 rounded-md hover:bg-gray-8 hover:text-white"
