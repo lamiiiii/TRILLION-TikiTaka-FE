@@ -7,7 +7,7 @@ import TopBar from '../TopBar';
 import {patchUserPassword} from '../../../api/service/users';
 
 export default function ChangePwdContainer() {
-  const {role} = useUserStore();
+  const {role, userId} = useUserStore();
   const navigate = useNavigate();
 
   const [pwd, setPwd] = useState('');
@@ -97,7 +97,7 @@ export default function ChangePwdContainer() {
     };
 
     try {
-      await patchUserPassword(requestData);
+      await patchUserPassword(requestData, userId);
 
       setModalState({open: true, type: 'success'});
     } catch (error) {
