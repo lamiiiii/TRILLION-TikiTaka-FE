@@ -5,17 +5,17 @@ import {useEffect, useState} from 'react';
 import {WhiteCheckIcon} from '../Icon';
 import {useParams} from 'react-router-dom';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {approveTicket, rejectTicket, updateTicket, updateTicketPriority, updateTicketStatus} from '../../../api/service/tickets';
+import {approveTicket, rejectTicket, updateTicket, updateTicketStatus} from '../../../api/service/tickets';
+import useReverseMap from '../../../hooks/useReverseMap';
+import {useUpdateTicketPriority} from '../../../api/hooks/useUpdateTicketPriority';
 
 interface StatusBarProps {
   data: TicketDetails;
   status?: keyof typeof STATUS_MAP;
 }
 
-// STATUS_MAP의 키와 값을 뒤집은 객체 생성
-const REVERSE_STATUS_MAP = Object.fromEntries(Object.entries(STATUS_MAP).map(([key, value]) => [value, key]));
-
 export default function StatusBar({data, status}: StatusBarProps) {
+  const REVERSE_STATUS_MAP = useReverseMap(STATUS_MAP);
   const [currentStatus, setCurrentStatus] = useState<string>(status ? STATUS_MAP[status] : '대기 중');
   const {priority, setPriority} = useTicketStore();
   const [isUrgent, setIsUrgent] = useState(data?.urgent);
@@ -27,6 +27,12 @@ export default function StatusBar({data, status}: StatusBarProps) {
   const ticketId = Number(id);
 
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (data?.priority) {
+      setPriority(data.priority);
+    }
+  }, [data?.priority, setPriority]);
 
   // 티켓 긴급 여부 수정
   const updateUrgentMutation = useMutation({
@@ -57,6 +63,7 @@ export default function StatusBar({data, status}: StatusBarProps) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['ticket', ticketId]});
+      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
     },
     onError: () => {
       alert('티켓 상태 변경에 실패했습니다. 다시 시도해 주세요.');
@@ -64,15 +71,9 @@ export default function StatusBar({data, status}: StatusBarProps) {
   });
 
   //티켓 우선순위 수정
-  // FIX: cors 해결 후 요청 형식 맞는지 검토하기
-  const updatePriorityMutation = useMutation({
-    mutationFn: (newPriority: string) => updateTicketPriority(ticketId, newPriority),
+  const updatePriorityMutation = useUpdateTicketPriority(ticketId, {
     onSuccess: (data) => {
-      queryClient.invalidateQueries({queryKey: ['ticket', ticketId]});
-      setPriority(data.priority); // API 응답의 priority로 전역 상태 업데이트
-    },
-    onError: () => {
-      alert('티켓 우선순위 변경에 실패했습니다. 다시 시도해 주세요.');
+      setPriority(data.priority);
     },
   });
 
@@ -89,7 +90,7 @@ export default function StatusBar({data, status}: StatusBarProps) {
     },
   });
 
-  // 티켷 반려
+  // 티켓 반려
   const rejectMutation = useMutation({
     mutationFn: () => rejectTicket(ticketId),
     onSuccess: () => {
@@ -164,7 +165,7 @@ export default function StatusBar({data, status}: StatusBarProps) {
                 currentStatus === option ? 'bg-main text-white' : 'bg-white-100'
               } rounded-md py-1 px-6 text-caption-regular border border-main`}
             >
-              {updateStatusMutation.isPending && currentStatus === option ? 'Updating...' : option}
+              {option}
             </button>
           ))}
         </section>

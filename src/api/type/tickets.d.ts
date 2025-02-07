@@ -60,8 +60,10 @@ declare interface TicketDetails {
 }
 
 declare interface PendingApprovalCount {
-  totalPending: number;
-  totalPendingUrgent: number;
+  myPendingTicket: number;
+  unassignedPendingTicket: number;
+  totalPendingTicket: number;
+  urgentPendingTicket: number;
 }
 
 declare interface PendingTicketCount {
@@ -93,10 +95,28 @@ declare interface TicketListResponse {
   pageable: {
     pageNumber: number;
     pageSize: number;
-    // ... 기타 페이지네이션 필드
+    sort: {
+      empty: boolean;
+      sorted: boolean;
+      unsorted: boolean;
+    };
+    offset: number;
+    paged: boolean;
+    unpaged: boolean;
   };
   totalPages: number;
   totalElements: number;
+  last: boolean;
+  size: number;
+  number: number;
+  sort: {
+    empty: boolean;
+    sorted: boolean;
+    unsorted: boolean;
+  };
+  numberOfElements: number;
+  first: boolean;
+  empty: boolean;
 }
 
 declare interface TicketListParams {

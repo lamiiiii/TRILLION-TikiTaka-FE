@@ -132,27 +132,12 @@ export async function getTicketDetails(ticketId: number) {
 }
 
 // INTF-32: 티켓 승인 대기 조회
-export async function getPendingApprovalCount(token: string) {
+export async function getPendingApprovalCount(managerId: number) {
   try {
-    const {data} = await instance.get<{message: string; data: PendingApprovalCount}>('/tickets/list/my/pending', {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.get<{message: string; data: PendingApprovalCount}>(`/tickets/list/pending?manager=${managerId}`);
     return data.data;
   } catch (error) {
     console.error('승인 대기 티켓 조회 실패:', error);
-    throw error;
-  }
-}
-
-// INTF-33: 대기 티켓 수 조회
-export async function getPendingTicketCount(token: string) {
-  try {
-    const {data} = await instance.get<{message: string; data: PendingTicketCount}>('/tickets/list/pending', {
-      headers: {Authorization: `Bearer ${token}`},
-    });
-    return data.data;
-  } catch (error) {
-    console.error('대기 티켓 수 조회 실패:', error);
     throw error;
   }
 }
@@ -171,10 +156,9 @@ export async function getPersonalTicketStatus(token: string) {
 }
 
 // INTF-35: 티켓 목록 조회
-export async function getTicketList(token: string, params: TicketListParams = {}) {
+export async function getTicketList(params: TicketListParams = {}) {
   try {
     const {data} = await instance.get<{message: string; data: TicketListResponse}>('/tickets/list', {
-      headers: {Authorization: `Bearer ${token}`},
       params: {
         page: params.page || 0,
         size: params.size || 20,
@@ -207,7 +191,7 @@ export async function updateTicket(ticketId: number, params: UpdateTicketParams)
 // INTF-37: 티켓 상태 수정
 export async function updateTicketStatus(ticketId: number, status: string) {
   try {
-    const {data} = await instance.patch(`/tickets/status/${ticketId}`, status);
+    const {data} = await instance.patch(`/tickets/${ticketId}/status`, {status});
     return data;
   } catch (error) {
     console.error('티켓 상태 수정 실패:', error);
@@ -218,7 +202,7 @@ export async function updateTicketStatus(ticketId: number, status: string) {
 // INTF-38: 티켓 우선순위 수정
 export async function updateTicketPriority(ticketId: number, priority: string) {
   try {
-    const {data} = await instance.patch(`/tickets/priority/${ticketId}`, priority);
+    const {data} = await instance.patch(`/tickets/${ticketId}/priority`, {priority});
     return data;
   } catch (error) {
     console.error('티켓 우선순위 수정 실패:', error);
