@@ -1,50 +1,37 @@
 import {useState} from 'react';
 import ManagerItem from './ManagerItem';
+import {useQuery} from '@tanstack/react-query';
+import {getMonthlyManagerTicketSummary} from '../../../../api/service/statistics';
 
-// 담당자 임시 데이터
-const managerData = [
-  {
-    name: 'Alex',
-    email: 'alex@gmail.com',
-    processing: 10,
-    completed: 15,
-  },
-  {
-    name: 'Jojo',
-    email: 'jojo@gmail.com',
-    processing: 8,
-    completed: 12,
-  },
-  {
-    name: 'Hoho',
-    email: 'hoho@gmail.com',
-    processing: 5,
-    completed: 9,
-  },
-  {
-    name: 'Mimi',
-    email: 'mimi@gmail.com',
-    processing: 7,
-    completed: 11,
-  },
-  {
-    name: 'Nana',
-    email: 'nana@gmail.com',
-    processing: 6,
-    completed: 8,
-  },
-  {
-    name: 'Lulu',
-    email: 'lulu@gmail.com',
-    processing: 9,
-    completed: 13,
-  },
-];
+interface ManagerData {
+  userId: number;
+  userName: string;
+  userEmail: string;
+  totalManagingCreatedTicket: number;
+}
 
 export default function ManagerTicketPeriodStatus() {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 3;
-  const totalPages = Math.ceil(managerData.length / itemsPerPage);
+
+  // 현재 날짜 가져오기
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1; // JavaScript의 월은 0부터 시작하므로 1을 더합니다.
+
+  const {
+    data: managerData,
+    isLoading,
+    error,
+  } = useQuery<ManagerData[], Error>({
+    queryKey: ['monthlyManagerTicketSummary', currentYear, currentMonth],
+    queryFn: () => getMonthlyManagerTicketSummary(currentYear, currentMonth),
+  });
+
+  if (isLoading) return <div>로딩 중...</div>;
+  if (error) return <div>에러가 발생했습니다.</div>;
+
+  const totalPages = Math.ceil((managerData?.length || 0) / itemsPerPage);
 
   const goToPage = (pageIndex: number) => {
     setCurrentPage(pageIndex);
@@ -53,7 +40,7 @@ export default function ManagerTicketPeriodStatus() {
   return (
     <div className="flex flex-col w-full h-[430px] bg-gray-18 p-5">
       <h1 className="text-title-bold">담당자별 티켓 처리 현황</h1>
-      <div className="h-full relative flex flex-col items-center bg-white rounded border border-gray-2 p-10 mt-4 overflow-hidden">
+      <div className="h-full relative flex flex-col items-center bg-white rounded border border-gray-2 py-10 mt-4 overflow-hidden">
         <div className="w-full overflow-hidden">
           <div
             className="flex transition-transform duration-300 ease-in-out"
@@ -63,12 +50,13 @@ export default function ManagerTicketPeriodStatus() {
             }}
           >
             {Array.from({length: totalPages}).map((_, pageIndex) => (
-              <div key={pageIndex} className="flex w-full justify-between">
-                {managerData.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage).map((manager, index) => (
-                  <div key={index} className="w-1/3 flex-shrink-0 px-1">
-                    <ManagerItem {...manager} />
-                  </div>
-                ))}
+              <div key={pageIndex} className="flex w-full justify-between mx-4">
+                {managerData &&
+                  managerData.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage).map((manager) => (
+                    <div key={manager.userId} className="w-1/3 px-1">
+                      <ManagerItem name={manager.userName} email={manager.userEmail} totalTickets={manager?.totalManagingCreatedTicket} />
+                    </div>
+                  ))}
               </div>
             ))}
           </div>

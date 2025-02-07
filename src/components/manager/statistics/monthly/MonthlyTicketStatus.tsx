@@ -5,7 +5,7 @@ import {commonTooltipStyle} from '../../../../constants/constants';
 
 const COLORS = ['#F6D47A', '#FFDF5F', '#F0C000'];
 
-export default function ManagerPeriod() {
+export default function MonthlyTicketStatus() {
   const today = new Date();
   const year = today.getFullYear();
   const month = today.getMonth() + 1;
