@@ -1,4 +1,4 @@
-import {Route, BrowserRouter as Router, Routes} from 'react-router-dom';
+import {Navigate, Route, BrowserRouter as Router, Routes} from 'react-router-dom';
 import ManagerHome from './pages/manager/ManagerHome';
 import './global.css'; // Tailwind CSS 적용
 import UserHome from './pages/user/UserHome';
@@ -48,6 +48,7 @@ function App() {
   ];
 
   const adminRoutes = [
+    { path: '', element: <Navigate to="accounts" replace /> },
     {path: 'accounts', element: <AdminAccounts />},
     {path: 'categories', element: <AdminCategory />},
     {path: 'statistics', element: <AdminStatistics />},

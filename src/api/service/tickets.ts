@@ -58,11 +58,9 @@ export async function createTicketType(token: string, typeData: CreateTicketType
 }
 
 // INTF-26: 티켓 유형 조회
-export async function getTicketTypes(token: string) {
+export async function getTicketTypes() {
   try {
-    const {data} = await instance.get('/tickets/types/list', {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.get('/tickets/types/list', {});
     return data.data;
   } catch (error) {
     console.error('티켓 유형 조회 실패:', error);
@@ -97,11 +95,9 @@ export async function deleteTicketType(token: string, typeId: number) {
 }
 
 // INTF-29: 티켓 생성
-export async function createTicket(token: string, ticketData: CreateTicketData) {
+export async function createTicket(formData: FormData) {
   try {
-    const {data} = await instance.post('/tickets', ticketData, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.post('/tickets', formData, {});
     return data;
   } catch (error) {
     console.error('티켓 생성 실패:', error);
@@ -132,27 +128,12 @@ export async function getTicketDetails(ticketId: number) {
 }
 
 // INTF-32: 티켓 승인 대기 조회
-export async function getPendingApprovalCount(token: string) {
+export async function getPendingApprovalCount(managerId: number) {
   try {
-    const {data} = await instance.get<{message: string; data: PendingApprovalCount}>('/tickets/list/my/pending', {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.get<{message: string; data: PendingApprovalCount}>(`/tickets/list/pending?manager=${managerId}`);
     return data.data;
   } catch (error) {
     console.error('승인 대기 티켓 조회 실패:', error);
-    throw error;
-  }
-}
-
-// INTF-33: 대기 티켓 수 조회
-export async function getPendingTicketCount(token: string) {
-  try {
-    const {data} = await instance.get<{message: string; data: PendingTicketCount}>('/tickets/list/pending', {
-      headers: {Authorization: `Bearer ${token}`},
-    });
-    return data.data;
-  } catch (error) {
-    console.error('대기 티켓 수 조회 실패:', error);
     throw error;
   }
 }
@@ -171,7 +152,7 @@ export async function getPersonalTicketStatus(token: string) {
 }
 
 // INTF-35: 티켓 목록 조회
-export async function getTicketList( params: TicketListParams = {}) {
+export async function getTicketList(params: TicketListParams = {}) {
   try {
     const {data} = await instance.get<{message: string; data: TicketListResponse}>('/tickets/list', {
       params: {

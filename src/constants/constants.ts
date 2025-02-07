@@ -8,10 +8,17 @@ export const STATUS_MAP = {
 
 export const STATUS_OPTIONS = Object.values(STATUS_MAP);
 
-export const PRIORITY = ['HIGH', 'MEDIUM', 'LOW'];
+export const TICKET_STATUS = {
+  WAITING: '대기 중',
+  IN_PROGRESS: '진행 중',
+  COMPLETED: '진행 완료',
+} as const;
+export type TicketStatus = (typeof TICKET_STATUS)[keyof typeof TICKET_STATUS];
+
+export const PRIORITY = ['HIGH', 'MIDDLE', 'LOW'];
 export const PRIORITY_COLOR: {[key in (typeof PRIORITY)[number]]: string} = {
   HIGH: '#F24949',
-  MEDIUM: '#F4B540',
+  MIDDLE: '#F4B540',
   LOW: '#93CF1A',
 };
 

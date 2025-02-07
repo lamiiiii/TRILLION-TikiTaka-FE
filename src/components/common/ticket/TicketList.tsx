@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-import { ticketDummy } from '../../../data/ticketData';
+import {useEffect, useState} from 'react';
+import {ticketDummy} from '../../../data/ticketData';
 import Dropdown from '../Dropdown';
 import Ticket from './Ticket';
 import PageNations from '../../manager/common/PageNations';
-import { TicketDataProps, TicketStatusType, TicketViewType } from '../../../interfaces/ticket';
+import {TicketDataProps, TicketStatusType, TicketViewType} from '../../../interfaces/ticket';
 
-const dropdownData: { label: string; options: string[] }[] = [
-  { label: '담당자', options: ['곽서연', '김규리', '김낙도'] },
-  { label: '1차 카테고리', options: ['카테고리1', '카테고리2', '카테고리3'] },
-  { label: '2차 카테고리', options: ['서브1', '서브2', '서브3'] },
-  { label: '요청', options: ['요청1', '요청2', '요청3', '요청4', '요청5', '요청6'] },
+const dropdownData: {label: string; options: string[]}[] = [
+  {label: '담당자', options: ['곽서연', '김규리', '김낙도']},
+  {label: '1차 카테고리', options: ['카테고리1', '카테고리2', '카테고리3']},
+  {label: '2차 카테고리', options: ['서브1', '서브2', '서브3']},
+  {label: '요청', options: ['요청1', '요청2', '요청3', '요청4', '요청5', '요청6']},
 ];
 
 interface TicketListProps {
@@ -32,8 +32,8 @@ const mapViewTypeToStatus = (viewType: TicketViewType): TicketStatusType | null 
   }
 };
 
-export default function TicketList({ role, selectedFilter }: TicketListProps) {
-  const [selectedFilters, setSelectedFilters] = useState<{ [key: string]: string }>({});
+export default function TicketList({role, selectedFilter}: TicketListProps) {
+  const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
   const [filteredTickets, setFilteredTickets] = useState<TicketDataProps[]>([]);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -75,7 +75,7 @@ export default function TicketList({ role, selectedFilter }: TicketListProps) {
   };
 
   const handleSelect = (label: string, value: string) => {
-    setSelectedFilters((prev) => ({ ...prev, [label]: value }));
+    setSelectedFilters((prev) => ({...prev, [label]: value}));
   };
 
   const handleAssigneeChange = (ticketId: number, newAssignee: string) => {

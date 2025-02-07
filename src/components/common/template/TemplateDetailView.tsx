@@ -1,19 +1,48 @@
 import {useEffect, useState} from 'react';
-import {Template} from '../../../interfaces/newTicket';
-import {templateDummy} from '../../../data/newTicketData';
+import {getTicketTemplate} from '../../../api/service/ticketTemplates';
+import {useNewTicketStore} from '../../../store/store';
+import Modal from '../Modal';
 
 interface TemplateDetailViewProps {
   templateId: number;
 }
 
 export default function TemplateDetailView({templateId}: TemplateDetailViewProps) {
-  const [template, setTemplate] = useState<Template | null>(null);
+  const [template, setTemplate] = useState<TemplateListItem | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const {setTitle, setContent, setIsUrgent, setTicketType, setDueDate, setDueTime, setFirstCategoryId, setSecondCategoryId, setManagerId} =
+    useNewTicketStore();
 
   useEffect(() => {
-    // 실제 API 호출 대신 더미 데이터를 사용
-    console.log(templateId);
-    setTemplate(templateDummy);
-  }, []);
+    const fetchTemplate = async () => {
+      const fetchedTemplate = await getTicketTemplate(templateId);
+      setTemplate(fetchedTemplate);
+    };
+    fetchTemplate();
+  }, [templateId]);
+
+  const onApplyClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const confirmApply = () => {
+    if (!template) return;
+
+    setTitle(template.title);
+    setContent(template.description);
+    setIsUrgent(false); // 기본값으로 설정 (템플릿에서 받아오는 값이 없다고 가정)
+    setTicketType({typeId: template.typeId, typeName: template.typeName ?? ''});
+    setDueDate(''); // 필요하면 템플릿에서 가져올 값 설정
+    setDueTime('');
+    setFirstCategoryId(Number(template.firstCategoryId));
+    setSecondCategoryId(Number(template.secondCategoryId));
+    setManagerId(Number(template.managerId));
+    setIsModalOpen(false);
+  };
+  const onCancel = () => {
+    setIsModalOpen(false);
+  };
 
   const renderTemplateDetail = (label: string, value: string | undefined) => (
     <div className="flex items-center">
@@ -29,7 +58,7 @@ export default function TemplateDetailView({templateId}: TemplateDetailViewProps
   return (
     <div className="flex flex-col p-4 gap-6">
       <div className="flex text-title-bold text-black justify-between">
-        <p className="text-title-bold">{template.name}</p>
+        <p className="text-title-bold">{template.templateTitle}</p>
         <div className="flex gap-4 justify-center">
           <button onClick={() => console.log('템플릿 수정')} className="main-button">
             템플릿 수정
@@ -40,23 +69,33 @@ export default function TemplateDetailView({templateId}: TemplateDetailViewProps
         </div>
       </div>
       {/* 내용 */}
-      <div className="flex flex-col w-full min-h-[600px] bg-gray-18 p-7 gap-4 text-body-regular">
-        {renderTemplateDetail('템플릿 제목', template.name)}
+      <div className="flex flex-col w-full min-h-[500px] bg-gray-18 p-7 gap-6 text-body-regular">
+        {renderTemplateDetail('템플릿 제목', template.templateTitle)}
         <div className="w-10" />
-        {renderTemplateDetail('1차 카테고리', template.firstCategory)}
-        {renderTemplateDetail('2차 카테고리', template.secondCategory)}
-        {renderTemplateDetail('담당자', template.manager)}
-        {renderTemplateDetail('유형', template.type)}
+        {renderTemplateDetail('1차 카테고리', template.firstCategoryName)}
+        {renderTemplateDetail('2차 카테고리', template.secondCategoryName)}
+        {renderTemplateDetail('담당자', template.managerName)}
+        {renderTemplateDetail('유형', template.typeName)}
         <div className="w-10" />
         {renderTemplateDetail('요청 제목', template.title)}
-        {renderTemplateDetail('요청 내용', template.content)}
-        {renderTemplateDetail('첨부파일', '첨부파일')}
+        {renderTemplateDetail('요청 내용', template.description)}
       </div>
       <div className="flex w-full justify-center">
-        <button onClick={() => console.log('템플릿 적용')} className="btn mb-4">
+        <button onClick={onApplyClick} className="btn mb-4">
           적용
         </button>
       </div>
+
+      {isModalOpen && (
+        <Modal
+          title="템플릿 적용"
+          content="현재 작성 중인 내용이 템플릿 내용으로 덮어씌워집니다. 계속하시겠습니까?"
+          backBtn="취소"
+          onBackBtnClick={onCancel}
+          checkBtn="확인"
+          onBtnClick={confirmApply}
+        />
+      )}
     </div>
   );
 }

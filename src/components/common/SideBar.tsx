@@ -3,9 +3,8 @@ import {AccountIcon, CategoryIcon, DbIcon, InquiryIcon, LgRightIcon, LogoutIcon,
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import MenuItem from './MenuItem';
 import SubMenuItem from './SubMenuItem';
-// import {postLogout} from '../../api/service/auth';
+import {postLogout} from '../../api/service/auth';
 import UserBox from './UserBox';
-import {tokenStorage} from '../../utils/token';
 
 export default function SideBar() {
   const {logout} = useTokenStore();
@@ -15,10 +14,10 @@ export default function SideBar() {
 
   const onClickLogout = () => {
     try {
-      // postLogout();
-      tokenStorage.remove(); // 로그아웃 서버 오류로 인해 임시 토큰 삭제
+      postLogout();
       logout(); // 상태 저장
       navigate('/');
+      window.location.reload(); // 로그아웃 후 새로고침
     } catch (error) {
       console.error('로그아웃 실패:', error);
     }

@@ -1,36 +1,106 @@
-import {useNewTicketStore} from '../../../store/store';
+import {useEffect, useRef, useState} from 'react';
+import {useNewTicketFormStore, useNewTicketStore} from '../../../store/store';
 import {RequiredIcon} from '../Icon';
+import MarkdownPreview from '../MarkdownPreview';
+import {getTicketForm} from '../../../api/service/tickets';
+import Modal from '../Modal';
 
 export default function NewTicketContent() {
-  const {title, content, setTitle, setContent} = useNewTicketStore();
+  const {title, content, firstCategory, secondCategory, setTitle, setContent} = useNewTicketStore();
+  const {description, mustDescription, setDescription, setMustDescription} = useNewTicketFormStore();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [content]);
+
+  useEffect(() => {
+    const fetchRequestForm = async () => {
+      if (firstCategory?.id && secondCategory?.id) {
+        try {
+          const formData = await getTicketForm(firstCategory.id, secondCategory.id);
+          setMustDescription(formData.mustDescription);
+          setDescription(formData.description);
+        } catch (error) {
+          console.error('티켓 폼 조회 실패:', error);
+        }
+      }
+    };
+
+    fetchRequestForm();
+  }, [firstCategory?.id, secondCategory?.id, setMustDescription]);
+
+  useEffect(() => {
+    if (mustDescription || description) {
+      setIsModalOpen(true);
+    }
+  }, [mustDescription, description]);
+
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContent(e.target.value);
+  };
+
+  const onOverwrite = () => {
+    if (description) {
+      setContent('');
+      setContent(description);
+    }
+    setIsModalOpen(false);
+  };
+
+  const onCancel = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <>
       <div className="flex gap-10 items-center">
-        <p className="flex items-center gap-1">
-          요청 제목
-          <RequiredIcon />
-        </p>
+        <div className="flex items-center gap-1">
+          요청 제목 <RequiredIcon />
+        </div>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-[660px] text-subtitle-regular border border-gray-2 bg-white py-2 px-4"
+          className={`w-[660px] text-subtitle-regular border bg-white py-2 px-4  ${title ? 'border-gray-2' : 'border-blue'}`}
           placeholder="요청 사항에 대한 제목을 입력해주세요"
         />
       </div>
+
       <div className="flex gap-10 items-center">
-        {/* todo 에디터 추가 */}
-        <p className="flex items-center gap-1">
-          요청 내용
-          <RequiredIcon />
-        </p>
+        <div className="flex items-center gap-1">
+          요청 내용 <RequiredIcon />
+        </div>
         <textarea
+          rows={5}
+          ref={textareaRef}
           value={content}
-          onChange={(e) => setContent(e.target.value)}
-          className="w-[660px] min-h-48 text-subtitle-regular border border-gray-2 bg-white py-2 px-4 resize-none"
-          placeholder="요청 내용을 입력해주세요"
+          onChange={handleContentChange}
+          className={`w-[800px] min-h-48 text-subtitle-regular border bg-white py-2 px-4 resize-none ${content ? 'border-gray-2' : 'border-blue'}`}
+          placeholder={`요청 내용을 자세히 입력해주세요. \nMarkdown 문법을 지원합니다. \n 예: # 제목, **강조**, - 리스트, [링크](https://example.com)**`}
         />
       </div>
+
+      {/* 마크다운 미리보기 */}
+      <div className="w-[800px] ml-[97px] mt-4 p-4 border border-gray-3 bg-gray-1">
+        {content ? <MarkdownPreview content={content} /> : <div className="text-center text-gray-6">요청 내용 미리보기 화면</div>}{' '}
+      </div>
+
+      {isModalOpen && (
+        <Modal
+          title="요청 양식 제공"
+          content={`2차 카테고리에 따른 요청 양식이 적용됩니다. \n 기존 내용에 덮어쓰시겠습니까?`}
+          backBtn="취소"
+          onBackBtnClick={onCancel}
+          checkBtn="확인"
+          onBtnClick={onOverwrite}
+        />
+      )}
     </>
   );
 }
