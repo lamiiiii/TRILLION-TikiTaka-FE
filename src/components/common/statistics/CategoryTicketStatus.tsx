@@ -1,21 +1,26 @@
 import {useState} from 'react';
 import {Bar, BarChart, XAxis, PieChart, Pie, Cell, Tooltip} from 'recharts';
 import {useQuery} from '@tanstack/react-query';
-import {getDailyCategorySummary} from '../../../api/service/statistics';
+import {getDailyCategorySummary, getMonthlyCategorySummary} from '../../../api/service/statistics';
 import {commonTooltipStyle} from '../../../constants/constants';
 const COLORS = ['#F6D47A', '#FFB74D', '#FFD700']; // 색상 팔레트
 
-export default function CategoryTicketStatus() {
+export default function CategoryTicketStatus({isMonthly}: {isMonthly?: boolean}) {
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  // 현재 날짜로 year와 month 초기화
+  const currentDate = new Date();
+  const [year, _setYear] = useState(currentDate.getFullYear());
+  const [month, _setMonth] = useState(currentDate.getMonth() + 1);
 
   const {
     data: categoryData,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['dailyCategorySummary'],
-    queryFn: getDailyCategorySummary,
+    queryKey: isMonthly ? ['monthlyCategorySummary', year, month] : ['dailyCategorySummary'],
+    queryFn: isMonthly ? () => getMonthlyCategorySummary(year, month) : getDailyCategorySummary,
   });
 
   if (isLoading) return <div>로딩 중...</div>;

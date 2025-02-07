@@ -65,6 +65,17 @@ export async function getDailyCategorySummary(): Promise<FirstCategory[]> {
   }
 }
 
+// INTF-52: 월간 카테고리별 티켓 생성 현황
+export async function getMonthlyCategorySummary(year: number, month: number): Promise<FirstCategory[]> {
+  try {
+    const {data} = await instance.get<MonthlyCategorySummaryResponse>(`/statistics/monCategory?year=${year}&month=${month}`);
+    return data.data;
+  } catch (error) {
+    console.error('월간 카테고리별 티켓 생성 현황 조회 실패:', error);
+    throw error;
+  }
+}
+
 // INTF-69: 일간 담당자별 티켓 처리 현황
 export async function getDailyManagerTicketSummary(): Promise<ManagerTicketSummary[]> {
   try {
@@ -72,6 +83,17 @@ export async function getDailyManagerTicketSummary(): Promise<ManagerTicketSumma
     return data.data;
   } catch (error) {
     console.error('일간 담당자별 티켓 처리 현황 조회 실패:', error);
+    throw error;
+  }
+}
+
+// INTF-69: 월간 담당자별 티켓 처리 현황
+export async function getMonthlyManagerTicketSummary(year: number, month: number): Promise<MonthlyManagerTicketSummary[]> {
+  try {
+    const {data} = await instance.get<MonthlyManagerTicketSummaryResponse>(`/statistics/monUser?year=${year}&month=${month}`);
+    return data.data;
+  } catch (error) {
+    console.error('월간 담당자별 티켓 처리 현황 조회 실패:', error);
     throw error;
   }
 }

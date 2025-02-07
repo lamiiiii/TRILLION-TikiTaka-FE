@@ -93,3 +93,34 @@ declare interface DailyCategorySummary {
   message: string;
   data: FirstCategory[];
 }
+
+declare interface MonthlyManagerTicketSummary {
+  userName: string;
+  userId: number;
+  userEmail: string;
+  userProfile: string;
+  totalManagingCreatedTicket: number;
+}
+
+declare interface MonthlyManagerTicketSummaryResponse {
+  message: string;
+  data: MonthlyManagerTicketSummary[];
+}
+
+declare interface SecondCategory {
+  secondCategoryId: number;
+  secondCategoryName: string;
+  ticketCount: number;
+}
+
+declare interface FirstCategory {
+  firstCategoryId: number;
+  firstCategoryName: string;
+  secondCategories: SecondCategory[];
+  totalTicketCount: number;
+}
+
+declare interface MonthlyCategorySummaryResponse {
+  message: string;
+  data: FirstCategory[];
+}

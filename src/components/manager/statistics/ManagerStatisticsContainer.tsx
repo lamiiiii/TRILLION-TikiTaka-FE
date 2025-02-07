@@ -33,7 +33,7 @@ export default function ManagerStatisticsContainer() {
               <ManagerTicketPeriodStatus />
               <ManagerPeriod />
             </div>
-            <CategoryTicketStatus />
+            <CategoryTicketStatus isMonthly />
           </div>
         </section>
       )}
