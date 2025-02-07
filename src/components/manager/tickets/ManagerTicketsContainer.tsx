@@ -1,19 +1,19 @@
-// 담당자 - 티켓 관리 대시보드 (전체)
+// 담당자 - 담당자 본인 요청 티켓 관리
 
+import {useState} from 'react';
 import TopMenu from '../../common/TopMenu';
-import TicketAnalytics from './TicketAnalytics';
-import TicketAwaitingList from './pending/TicketAwaitingList';
-import TicketPersonalManageList from './TicketPersonalManageList';
+import UserTicketFilter from '../../user/home/UserTicketFilter';
+import UserTicketList from '../../user/home/UserTicketList';
+import {TicketViewType} from '../../../interfaces/ticket';
 export default function ManagerTicketsContainer() {
+  const [selectedFilter, setSelectedFilter] = useState<TicketViewType>('전체');
+
   return (
     <div className="flex flex-col max-w-1200 mb-20">
-      <TopMenu boldGrayText="담당자 티켓 관리" />
-      <div className="mt-5 flex gap-6">
-        <TicketAnalytics />
-      </div>
+      <TopMenu boldGrayText="요청 티켓 관리" />
 
-      <TicketAwaitingList />
-      <TicketPersonalManageList />
+      <UserTicketFilter onFilterChange={setSelectedFilter} />
+      <UserTicketList selectedFilter={selectedFilter} />
     </div>
   );
 }
