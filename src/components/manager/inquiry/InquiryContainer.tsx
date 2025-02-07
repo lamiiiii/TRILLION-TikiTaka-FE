@@ -1,12 +1,12 @@
-import {InquiryData} from '../../../interfaces/interfaces';
-import Pagenation from '../../common/Pagenation';
-import Inquiry from './Inquiry';
+import { Inquiry as InquiryType } from "../../../api/service/inquiry"; // 🔥 타입에 별칭 적용
+import Pagenation from "../../common/Pagenation";
+import InquiryCard from "./Inquiry"; // 🔥 Inquiry.tsx에서 가져오는 컴포넌트 이름 변경
 
 interface InquiryContainerProps {
-  inquiries: InquiryData[];
+  inquiries: InquiryType[];
 }
 
-export default function InquiryContainer({inquiries}: InquiryContainerProps) {
+export default function InquiryContainer({ inquiries }: InquiryContainerProps) {
   return (
     <>
       <section className="flex flex-col gap-5 bg-gray-18 p-6 pb-[38px] mt-3 mb-[100px]">
@@ -17,9 +17,10 @@ export default function InquiryContainer({inquiries}: InquiryContainerProps) {
           <p>문의 상태</p>
         </div>
 
-        {inquiries.map((inquiry, index) => (
-          <Inquiry key={index} data={inquiry} />
+        {inquiries.map((inquiry) => (
+          <InquiryCard key={inquiry.inquiryId} data={inquiry} />
         ))}
+
         <Pagenation />
       </section>
     </>

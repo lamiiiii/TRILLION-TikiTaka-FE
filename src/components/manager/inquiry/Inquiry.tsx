@@ -1,12 +1,12 @@
-import {useState} from 'react';
-import {InquiryData} from '../../../interfaces/interfaces';
-import {DownIcon} from '../../common/Icon';
+import { Inquiry as InquiryType } from "../../../api/service/inquiry"; // 타입 별칭 적용
+import { useState } from "react";
+import { DownIcon } from "../../common/Icon";
 
 interface InquiryProps {
-  data: InquiryData;
+  data: InquiryType;
 }
 
-export default function Inquiry({data}: InquiryProps) {
+export default function InquiryCard({ data }: InquiryProps) { // 🔥 컴포넌트 이름 `InquiryCard` 유지
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
 
   const toggleAnswerVisibility = () => {
@@ -21,17 +21,17 @@ export default function Inquiry({data}: InquiryProps) {
           <p>{data.title}</p>
           <p className="w-[450px] text-gray-6 text-body-regular mt-1 mr-[120px]">{data.content}</p>
         </div>
-        <p className="mr-[55px]">{data.date}</p>
+        <p className="mr-[55px]">{data.createdAt}</p>
         <div className="relative flex gap-2">
           <p>{data.status}</p>
 
-          {data.status === '답변 완료' && (
+          {data.status === "답변 완료" && (
             <div
               className="absolute top-0 left-16"
               style={{
-                color: 'black',
-                transform: isAnswerVisible ? 'rotate(180deg)' : 'rotate(0deg)',
-                transition: 'transform 0.3s ease',
+                color: "black",
+                transform: isAnswerVisible ? "rotate(180deg)" : "rotate(0deg)",
+                transition: "transform 0.3s ease",
               }}
               onClick={toggleAnswerVisibility}
             >
