@@ -7,7 +7,6 @@ import {useEffect, useState} from 'react';
 
 export default function TicketOpstionsSecond() {
   const {manager, ticketType, template, setManager, setTicketType, setTemplate} = useNewTicketStore();
-
   const [ticketTypes, setTicketTypes] = useState<{typeId: number; typeName: string}[]>([]);
 
   // todo 담당자 조회 API가 없음

@@ -53,6 +53,13 @@ export interface NewTicketStore {
   setDueTime: (time: string) => void;
 }
 
+export interface NewTicketFormStore {
+  mustDescription: string;
+  description: string;
+  setMustDescription: (mustDescription: string) => void;
+  setDescription: (description: string) => void;
+}
+
 // 기타 interface
 
 export type PriorityType = (typeof PRIORITY)[number];

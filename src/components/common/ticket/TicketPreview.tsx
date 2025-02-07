@@ -56,8 +56,8 @@ export default function TicketPreview() {
           transition={{duration: 0.2}}
           style={{overflow: 'hidden'}}
         >
-          <div className="flex gap-4 items-center">
-            <p className="text-main">#0</p>
+          <div className="flex gap-8 items-center">
+            <p className="text-main">#No.</p>
             <div className="flex flex-col w-32">
               <p className={`${firstCategory ? '' : 'text-gray-4'}`}>{firstCategory?.name || '1차 카테고리 미지정'}</p>
               <p className={`text-body-regular ${secondCategory ? 'text-gray-6' : 'text-gray-4'}`}>

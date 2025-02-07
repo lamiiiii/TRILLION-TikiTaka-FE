@@ -1,7 +1,7 @@
 import TopMenu from '../../common/TopMenu';
 import TicketPreview from '../../common/ticket/TicketPreview';
 import TicketOptions from '../../common/ticket/TicketOptions';
-import {useNewTicketStore, useUserStore} from '../../../store/store';
+import {useNewTicketFormStore, useNewTicketStore, useUserStore} from '../../../store/store';
 import NewTicketContent from '../../common/ticket/NewTicketContent';
 import {useRef, useState} from 'react';
 import TemplateContainer from '../../common/template/TemplateContainer';
@@ -14,6 +14,7 @@ import {useNavigate} from 'react-router-dom';
 export default function NewTicketContainer() {
   const navigate = useNavigate();
   const {role} = useUserStore();
+  const {mustDescription} = useNewTicketFormStore();
   const {
     title,
     content,
@@ -140,9 +141,10 @@ export default function NewTicketContainer() {
           <TicketPreview />
           <TicketOptions />
           {firstCategory && secondCategory && (
-            <div className="flex items-center text-body-regular gap-2">
+            <div className="flex items-center text-body-regular gap-3">
               <ReferredIcon />
               필수 입력 사항:
+              <div className="text-error ">{mustDescription}</div>
             </div>
           )}
           <div className="flex flex-col gap-3 text-body-bold whitespace-nowrap">

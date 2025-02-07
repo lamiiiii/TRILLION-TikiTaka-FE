@@ -2,7 +2,7 @@
 
 import {create} from 'zustand'; // create로 zustand를 불러옵니다.
 import {tokenStorage} from '../utils/token';
-import {CategoryStore, NewTicketStore, TicketStore, TokenStore, UserStore} from '../interfaces/interfaces';
+import {CategoryStore, NewTicketFormStore, NewTicketStore, TicketStore, TokenStore, UserStore} from '../interfaces/interfaces';
 
 // 역할 임시 전달 - user, manager, admin (추후 로그인시 전달 받아와서 저장)
 // 시스템 사용자 정보 저장 전역변수
@@ -60,4 +60,11 @@ export const useNewTicketStore = create<NewTicketStore>((set) => ({
   setTemplate: (template) => set({template}),
   setDueDate: (date) => set({dueDate: date}),
   setDueTime: (time) => set({dueTime: time}),
+}));
+
+export const useNewTicketFormStore = create<NewTicketFormStore>((set) => ({
+  mustDescription: '',
+  setMustDescription: (mustDescription) => set({mustDescription: mustDescription}),
+  description: '',
+  setDescription: (description) => set({description}),
 }));
