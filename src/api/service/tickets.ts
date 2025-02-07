@@ -1,11 +1,9 @@
 import instance from '../axiosInstance';
 
 // INTF-21: 티켓 폼 생성
-export async function createTicketForm( firstCategoryId: number, secondCategoryId: number, formData: CreateTicketFormData) {
+export async function createTicketForm(firstCategoryId: number, secondCategoryId: number, formData: CreateTicketFormData) {
   try {
-    const {data} = await instance.post(`/tickets/forms/${firstCategoryId}/${secondCategoryId}`, formData, {
-      
-    });
+    const {data} = await instance.post(`/tickets/forms/${firstCategoryId}/${secondCategoryId}`, formData, {});
     return data;
   } catch (error) {
     console.error('티켓 폼 생성 실패:', error);
@@ -16,14 +14,13 @@ export async function createTicketForm( firstCategoryId: number, secondCategoryI
 // INTF-22: 티켓 폼 조회
 export async function getTicketForm(firstCategoryId: number, secondCategoryId: number) {
   try {
-    const { data } = await instance.get(`/tickets/forms/${firstCategoryId}/${secondCategoryId}`);
+    const {data} = await instance.get(`/tickets/forms/${firstCategoryId}/${secondCategoryId}`);
     return data.data; // 요청 양식이 있는 경우 반환
   } catch (error) {
     console.error('티켓 폼 조회 실패:', error);
     return null; // 요청 양식이 없는 경우 null 반환
   }
 }
-
 
 // INTF-23: 티켓 폼 수정
 export async function updateTicketForm(token: string, firstCategoryId: number, secondCategoryId: number, formData: UpdateTicketFormData) {
@@ -213,7 +210,7 @@ export async function updateTicket(ticketId: number, params: UpdateTicketParams)
 // INTF-37: 티켓 상태 수정
 export async function updateTicketStatus(ticketId: number, status: string) {
   try {
-    const {data} = await instance.patch(`/tickets/status/${ticketId}`, status);
+    const {data} = await instance.patch(`/tickets/${ticketId}/status`, {status});
     return data;
   } catch (error) {
     console.error('티켓 상태 수정 실패:', error);
@@ -224,7 +221,7 @@ export async function updateTicketStatus(ticketId: number, status: string) {
 // INTF-38: 티켓 우선순위 수정
 export async function updateTicketPriority(ticketId: number, priority: string) {
   try {
-    const {data} = await instance.patch(`/tickets/priority/${ticketId}`, priority);
+    const {data} = await instance.patch(`/tickets/${ticketId}/priority`, {priority});
     return data;
   } catch (error) {
     console.error('티켓 우선순위 수정 실패:', error);
