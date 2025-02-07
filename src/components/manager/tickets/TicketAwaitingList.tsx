@@ -5,6 +5,7 @@ import {useQuery} from '@tanstack/react-query';
 import {getPendingApprovalCount} from '../../../api/service/tickets';
 import PendingTicketFilter from './PendingTicketFilter';
 import PendingTicketList from './PendingTicketList';
+import {useUserStore} from '../../../store/store';
 
 export default function TicketAwaitingList() {
   const [isListVisible, setIsListVisible] = useState(false);
@@ -14,10 +15,12 @@ export default function TicketAwaitingList() {
     setIsListVisible((prev) => !prev);
   };
 
-  //승인 대기 티켓 수 조회
+  const {userId} = useUserStore();
+
+  //티켓 수 조회
   const {data: pendingApprovalCount} = useQuery({
-    queryKey: ['pendingApprovalCount'],
-    queryFn: getPendingApprovalCount,
+    queryKey: ['pendingTicketCount', userId],
+    queryFn: () => getPendingApprovalCount(userId),
     refetchInterval: 60000, // 1분마다 자동으로 데이터 갱신 (필요에 따라 조정)
   });
 
@@ -31,13 +34,13 @@ export default function TicketAwaitingList() {
           <h1 className="text-title-bold">승인 대기</h1>
           {pendingApprovalCount && (
             <div className={`px-4 h-[16px] flex place-items-center rounded-full bg-gray-9 text-white mb-0.5`}>
-              <div className="mt-0.5 text-caption-bold">{pendingApprovalCount?.totalPending}</div>
+              <div className="mt-0.5 text-caption-bold">{pendingApprovalCount?.totalPendingTicket}</div>
             </div>
           )}
           {pendingApprovalCount && (
             <div className={`px-4 h-[16px] flex place-items-center gap-1 rounded-full bg-error text-white mb-0.5`}>
               <AlertIcon />
-              <div className="mt-0.5 text-caption-bold">{pendingApprovalCount?.totalPendingUrgent}</div>
+              <div className="mt-0.5 text-caption-bold">{pendingApprovalCount?.urgentPendingTicket}</div>
             </div>
           )}
         </div>

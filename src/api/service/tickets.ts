@@ -136,25 +136,12 @@ export async function getTicketDetails(ticketId: number) {
 }
 
 // INTF-32: 티켓 승인 대기 조회
-export async function getPendingApprovalCount() {
+export async function getPendingApprovalCount(managerId: number) {
   try {
-    const {data} = await instance.get<{message: string; data: PendingApprovalCount}>('/tickets/list/my/pending');
+    const {data} = await instance.get<{message: string; data: PendingApprovalCount}>(`/tickets/list/pending?manager=${managerId}`);
     return data.data;
   } catch (error) {
     console.error('승인 대기 티켓 조회 실패:', error);
-    throw error;
-  }
-}
-
-// INTF-33: 대기 티켓 수 조회
-export async function getPendingTicketCount(token: string) {
-  try {
-    const {data} = await instance.get<{message: string; data: PendingTicketCount}>('/tickets/list/pending', {
-      headers: {Authorization: `Bearer ${token}`},
-    });
-    return data.data;
-  } catch (error) {
-    console.error('대기 티켓 수 조회 실패:', error);
     throw error;
   }
 }

@@ -61,8 +61,10 @@ declare interface TicketDetails {
 }
 
 declare interface PendingApprovalCount {
-  totalPending: number;
-  totalPendingUrgent: number;
+  myPendingTicket: number;
+  unassignedPendingTicket: number;
+  totalPendingTicket: number;
+  urgentPendingTicket: number;
 }
 
 declare interface PendingTicketCount {

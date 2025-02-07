@@ -1,10 +1,7 @@
 import {useEffect, useRef, useState} from 'react';
-
-// 상태와 티켓 개수 데이터 정의
-const ticketData: {type: string; count: number}[] = [
-  {type: '전체', count: 140},
-  {type: '내 요청 ', count: 100},
-];
+import {useUserStore} from '../../../store/store';
+import {useQuery} from '@tanstack/react-query';
+import {getPendingApprovalCount} from '../../../api/service/tickets';
 
 // 개별 필터 아이템 컴포넌트
 function FilterItem({type, count, isSelected, onClick}: {type: string; count: number; isSelected: boolean; onClick: () => void}) {
@@ -40,6 +37,31 @@ export default function PendingTicketFilter({selectedFilter, onFilterChange}: Pe
   const [selectedType, setSelectedType] = useState('전체');
   const [indicatorStyle, setIndicatorStyle] = useState({left: 0, width: 0});
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const {userId} = useUserStore();
+
+  //티켓 수 조회
+  const {data: pendingApprovalCount} = useQuery({
+    queryKey: ['pendingTicketCount', userId],
+    queryFn: () => getPendingApprovalCount(userId),
+    refetchInterval: 60000, // 1분마다 자동으로 데이터 갱신 (필요에 따라 조정)
+  });
+
+  // 티켓 데이터 상태
+  const [ticketData, setTicketData] = useState([
+    {type: '전체', count: 0},
+    {type: '나의 요청', count: 0},
+  ]);
+
+  // pendingTicketCount 데이터가 변경될 때마다 ticketData 업데이트
+  useEffect(() => {
+    if (pendingApprovalCount) {
+      setTicketData([
+        {type: '전체', count: pendingApprovalCount?.totalPendingTicket},
+        {type: '나의 요청', count: pendingApprovalCount?.myPendingTicket},
+      ]);
+    }
+  }, [pendingApprovalCount]);
 
   useEffect(() => {
     if (containerRef.current) {
