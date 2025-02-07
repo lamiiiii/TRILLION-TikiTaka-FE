@@ -18,6 +18,7 @@ export default function TicketContent({data}: TicketContentProps) {
   const queryClient = useQueryClient();
 
   const {userId} = useUserStore();
+  console.log(userId);
 
   const deleteMutation = useMutation({
     mutationFn: () => deleteTicket(ticketId),
