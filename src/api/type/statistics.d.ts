@@ -151,3 +151,14 @@ declare interface MonthlyCategorySummary {
   message: string;
   data: CategoryData[];
 }
+
+declare interface DailyTicketTypeSummary {
+  ticketTypeId: number;
+  ticketTypeName: string;
+  ticketCount: number;
+}
+
+declare interface DailyTicketTypeSummaryResponse {
+  message: string;
+  data: DailyTicketTypeSummary[];
+}

@@ -25,6 +25,17 @@ export async function getDailyCategorySummary(): Promise<FirstCategory[]> {
   }
 }
 
+// INTF-52: 일간 유형별 티켓 생성 현황
+export async function getDailyTicketTypeSummary(): Promise<DailyTicketTypeSummary[]> {
+  try {
+    const {data} = await instance.get<DailyTicketTypeSummaryResponse>('/statistics/daily/typeSummary');
+    return data.data;
+  } catch (error) {
+    console.error('일간 유형별 티켓 생성 현황 조회 실패:', error);
+    throw error;
+  }
+}
+
 // INTF-52: 월간 카테고리별 티켓 생성 현황
 export async function getMonthlyCategorySummary(year: number, month: number): Promise<MonthlyCategorySummary> {
   try {
