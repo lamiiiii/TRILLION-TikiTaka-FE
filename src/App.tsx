@@ -23,12 +23,13 @@ import AdminStatistics from './pages/admin/AdminStatistics';
 import ManagerNewTicket from './pages/manager/ManagerNewTicket';
 import UserTicketDetail from './pages/user/UserTicketDetail';
 import Layout from './Layout';
+import ManagerManageTickets from './pages/manager/ManagerManageTickets';
 
 function App() {
   const managerRoutes = [
     {path: '', element: <ManagerHome />},
     {path: 'statistics', element: <ManagerStatistics />},
-    {path: 'tickets', element: <ManagerTickets />},
+    {path: 'tickets', element: <ManagerManageTickets />},
 
     {path: 'newticket', element: <ManagerNewTicket />},
     {path: 'newtickets', element: <ManagerTickets />}, // todo 담당자 요청 티켓 대시보드
@@ -48,7 +49,7 @@ function App() {
   ];
 
   const adminRoutes = [
-    { path: '', element: <Navigate to="accounts" replace /> },
+    {path: '', element: <Navigate to="accounts" replace />},
     {path: 'accounts', element: <AdminAccounts />},
     {path: 'categories', element: <AdminCategory />},
     {path: 'statistics', element: <AdminStatistics />},
