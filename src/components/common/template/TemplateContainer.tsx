@@ -42,6 +42,11 @@ export default function TemplateContainer({isOpen, onClose}: TemplateContainerPr
     document.addEventListener('mouseup', handleMouseUp);
   };
 
+  const handleDelete = () => {
+    setActiveView('list');
+    setSelectedTemplateId(null);
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -75,7 +80,12 @@ export default function TemplateContainer({isOpen, onClose}: TemplateContainerPr
               }}
             />
           )}
-          {activeView === 'detail' && selectedTemplateId !== null && <TemplateDetailView templateId={selectedTemplateId} />}
+          {activeView === 'detail' && selectedTemplateId && (
+            <TemplateDetailView
+              templateId={selectedTemplateId}
+              onDelete={handleDelete} // 부모에서 onDelete 전달
+            />
+          )}
           {activeView === 'create' && <TemplateCreateView onCancel={() => setActiveView('list')} />}
         </div>
       </div>
