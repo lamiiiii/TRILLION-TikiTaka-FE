@@ -66,7 +66,7 @@ export default function NewTicketContainer() {
       setHasChanges(true);
     }
   }, [title, content, isUrgent, firstCategory, secondCategory, ticketType, dueDate, dueTime, manager]);
-  
+
   const onClickBtn = () => {
     const missingFields = [];
     if (!ticketType) missingFields.push('유형');
@@ -177,10 +177,7 @@ export default function NewTicketContainer() {
               <div className="flex items-center gap-1">
                 마감 기한 <RequiredIcon />
               </div>
-              <div
-                className={`flex items-center gap-5 p-2 px-8 bg-white border 
-    ${dueDate || dueTime ? 'border-gray-2' : 'border-blue'}`}
-              >
+              <div className={`flex items-center gap-5 p-2 px-8 bg-white border border-gray-2`}>
                 {' '}
                 <input
                   type="date"

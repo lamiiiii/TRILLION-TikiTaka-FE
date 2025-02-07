@@ -2,17 +2,12 @@ import {useEffect, useRef, useState} from 'react';
 
 import PageNations from '../../common/PageNations';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {approveTicket, getTicketList, rejectTicket} from '../../../../api/service/tickets';
+import {approveTicket, getTicketList, getTicketTypes, rejectTicket} from '../../../../api/service/tickets';
 import DropDown from '../../../common/Dropdown';
 import Ticket from '../../../common/ticket/Ticket';
 import {useUserStore} from '../../../../store/store';
-
-const dropdownData: {label: string; options: string[]}[] = [
-  {label: '담당자', options: ['곽서연', '김규리', '김낙도']},
-  {label: '1차 카테고리', options: ['카테고리1', '카테고리2', '카테고리3']},
-  {label: '2차 카테고리', options: ['서브1', '서브2', '서브3']},
-  {label: '요청', options: ['요청1', '요청2', '요청3', '요청4', '요청5', '요청6']},
-];
+import {getManagerList} from '../../../../api/service/users';
+import {getCategoryList} from '../../../../api/service/categories';
 
 interface TicketListProps {
   selectedFilter: '전체' | '나의 요청'; // 필터 상태 추가
@@ -48,6 +43,57 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
         managerId: managerId,
       }),
   });
+
+  // 유저 정보 (담당자 리스트)
+  const {data: userData} = useQuery({
+    queryKey: ['managers'],
+    queryFn: getManagerList,
+    select: (data) => data.users,
+  });
+
+  // 티켓 타입 데이터
+  const {data: ticketData} = useQuery({
+    queryKey: ['types'],
+    queryFn: getTicketTypes,
+  });
+
+  // 카테고리 데이터
+  const {data: categories = []} = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const primaryCategories = await getCategoryList();
+      const secondaryRequests = primaryCategories.map(async (primary) => {
+        const secondaries = await getCategoryList(primary.id);
+        return {primary, secondaries};
+      });
+
+      return Promise.all(secondaryRequests);
+    },
+  });
+
+  // 드롭다운 데이터 설정
+  const dropdownData = [
+    {
+      label: '담당자',
+      options: userData?.map((user: any) => user.username), // 담당자 목록
+    },
+    {
+      label: '1차 카테고리',
+      options: categories.map((cat: any) => cat.primary.name), // 1차 카테고리
+    },
+    {
+      label: '2차 카테고리',
+      options: selectedFilters['1차 카테고리']
+        ? (categories
+            .find((cat: any) => cat.primary.name === selectedFilters['1차 카테고리'])
+            ?.secondaries.map((secondary: any) => secondary.name) ?? []) // 2차 카테고리, null 처리
+        : [], // 1차 카테고리가 선택되지 않으면 빈 배열 반환
+    },
+    {
+      label: '요청',
+      options: ticketData?.map((type: any) => type.typeName), // 요청 타입
+    },
+  ];
 
   //다음 페이지 preFetch
   useEffect(() => {
@@ -96,7 +142,19 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
   };
 
   const handleSelect = (label: string, value: string) => {
-    setSelectedFilters((prev) => ({...prev, [label]: value}));
+    // 1차 카테고리가 선택되면 2차 카테고리 초기화
+    if (label === '1차 카테고리') {
+      setSelectedFilters((prev) => ({
+        ...prev,
+        ['1차 카테고리']: value,
+        ['2차 카테고리']: '', // 2차 카테고리 초기화
+      }));
+    } else {
+      setSelectedFilters((prev) => ({
+        ...prev,
+        [label]: value,
+      }));
+    }
   };
 
   const handleAssigneeChange = (ticketId: number, newAssignee: string) => {

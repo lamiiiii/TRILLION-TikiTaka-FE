@@ -45,7 +45,6 @@ instance.interceptors.response.use(
         if (!refreshTokenPromise) {
           refreshTokenPromise = postReissueToken()
             .then(({accessToken}) => {
-              console.log('새로운 액세스 토큰:', accessToken); // 로그 추가
 
               refreshTokenPromise = null;
 

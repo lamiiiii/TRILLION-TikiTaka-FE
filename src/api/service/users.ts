@@ -1,11 +1,10 @@
 import instance from '../axiosInstance';
 
 // INTF-7: 비밀번호 변경
-export async function patchUserPassword(token: string, passwordData: PasswordChangeData) {
+export async function patchUserPassword(passwordData: PasswordChangeData) {
   try {
-    const {data} = await instance.patch('/users/password', passwordData, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const response = await instance.patch('/users/password', passwordData, {});
+    const {data} = response;
     return data;
   } catch (error) {
     console.error('비밀번호 변경 실패:', error);
