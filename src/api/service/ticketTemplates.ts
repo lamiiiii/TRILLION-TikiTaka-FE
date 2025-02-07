@@ -27,11 +27,9 @@ export async function getTicketTemplate(token: string, templateId: number) {
 }
 
 // INTF-59: 템플릿 목록 조회
-export async function getTicketTemplatesList(token: string) {
+export async function getTicketTemplatesList() {
   try {
-    const {data} = await instance.get<{message: string; data: TemplateListItem[]}>('/ticketTemplates', {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.get<{message: string; data: TemplateListItem[]}>('/ticketTemplates', {});
     return data.data;
   } catch (error) {
     console.error('템플릿 목록 조회 실패:', error);

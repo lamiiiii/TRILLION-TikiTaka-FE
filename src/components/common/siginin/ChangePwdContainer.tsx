@@ -172,7 +172,7 @@ export default function ChangePwdContainer() {
             변경 완료
           </button>
           <div className="flex justify-end w-full">
-            <Link to={`/${role}`} className="text-sm text-gray-2 cursor-pointer hover:underline hover:text-gray-15">
+            <Link to={`/${role.toLowerCase()}`} className="text-sm text-gray-2 cursor-pointer hover:underline hover:text-gray-15">
               다음에 변경하기
             </Link>
           </div>

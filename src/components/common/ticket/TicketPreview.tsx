@@ -67,15 +67,15 @@ export default function TicketPreview() {
             <div className="flex flex-col w-80">
               <div className="flex items-center gap-1">
                 <p>{isUrgent && <AlertIcon className="text-error w-4 h-4" />}</p>
-                <p className={`${ticketType.typeId !== 0 ? '' : 'text-error'}`}>[{ticketType.typeName || '유형'}]</p>
-                <p className={`${title ? '' : 'text-error'} truncate`}>{title || '제목을 작성해주세요'}</p>
+                <p className={`${ticketType.typeId !== 0 ? '' : 'text-blue'}`}>[{ticketType.typeName || '유형'}]</p>
+                <p className={`${title ? '' : 'text-blue'} truncate`}>{title || '제목을 작성해주세요'}</p>
               </div>
-              <p className={`text-body-regular ${content ? 'text-gray-6' : 'text-error'} truncate`}>{content || '내용을 작성해주세요'}</p>
+              <p className={`text-body-regular ${content ? 'text-gray-6' : 'text-blue'} truncate`}>{content || '내용을 작성해주세요'}</p>
             </div>
           </div>
           <div className="flex gap-8 items-center">
-            <p className={`${formattedDate ? '' : 'text-error'}`}>{formattedDate || '-'}</p>
-            <div className="bg-white border border-gray-2 py-1 px-4 my-2 rounded items-center">{manager || '전체 담당자'}</div>
+            <p className={`${formattedDate ? '' : 'text-blue'}`}>{formattedDate || '-'}</p>
+            <div className="bg-white border border-gray-2 py-1 px-4 my-2 rounded items-center">{manager?.username || '전체 담당자'}</div>
           </div>
         </motion.div>
       )}

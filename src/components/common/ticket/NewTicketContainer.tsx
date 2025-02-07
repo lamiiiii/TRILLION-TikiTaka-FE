@@ -24,6 +24,7 @@ export default function NewTicketContainer() {
     ticketType,
     dueDate,
     dueTime,
+    manager,
     setTitle,
     setContent,
     setIsUrgent,
@@ -32,6 +33,7 @@ export default function NewTicketContainer() {
     setTicketType,
     setDueDate,
     setDueTime,
+    setManager,
   } = useNewTicketStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<File[]>([]);
@@ -85,6 +87,7 @@ export default function NewTicketContainer() {
       setFirstCategory(null);
       setSecondCategory(null);
       setTicketType({typeId: 0, typeName: ''});
+      setManager(null);
     }
 
     const formattedDueDate = `${dueDate} ${dueTime}`; // "yyyy-MM-dd HH:mm" 형식
@@ -94,7 +97,7 @@ export default function NewTicketContainer() {
       urgent: isUrgent,
       typeId: ticketType.typeId,
       deadline: formattedDueDate,
-      // manager_id: manager, // manager_id
+      managerId: manager?.userId,
       firstCategoryId: firstCategory?.id,
       secondCategoryId: secondCategory?.id,
     };
@@ -140,7 +143,7 @@ export default function NewTicketContainer() {
         <div className="flex flex-col bg-bg-1 p-6 gap-8 min-w-[600px]">
           <TicketPreview />
           <TicketOptions />
-          {firstCategory && secondCategory && (
+          {firstCategory && secondCategory && mustDescription && (
             <div className="flex items-center text-body-regular gap-3">
               <ReferredIcon />
               필수 입력 사항:
@@ -152,7 +155,11 @@ export default function NewTicketContainer() {
               <div className="flex items-center gap-1">
                 마감 기한 <RequiredIcon />
               </div>
-              <div className="flex itmes-center gap-5 p-2 px-8 bg-white border border-gray-2">
+              <div
+                className={`flex items-center gap-5 p-2 px-8 bg-white border 
+    ${dueDate || dueTime ? 'border-gray-2' : 'border-blue'}`}
+              >
+                {' '}
                 <input
                   type="date"
                   value={dueDate}

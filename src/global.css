@@ -153,6 +153,10 @@ textarea {
     @apply flex items-center gap-9 w-[340px];
   }
 
+  .selection-2 {
+    @apply flex items-center gap-9 w-[280px];
+  }
+
   /* 티켓 생성 선택지 text */
   .selection-text {
     @apply text-body-regular text-gray-6;

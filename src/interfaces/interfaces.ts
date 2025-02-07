@@ -36,7 +36,7 @@ export interface NewTicketStore {
   secondCategory: Category | null;
   title: string;
   content: string;
-  manager: string;
+  manager: UserListResponse['users'][number] | null;
   ticketType: {typeId: number; typeName: string};
   template: string;
   dueDate: string;
@@ -46,11 +46,26 @@ export interface NewTicketStore {
   setSecondCategory: (category: Category | null) => void;
   setTitle: (title: string) => void;
   setContent: (content: string) => void;
-  setManager: (manager: string) => void;
+  setManager: (manager: UserListResponse['users'][number] | null) => void;
   setTicketType: (ticketType: {typeId: number; typeName: string}) => void;
   setTemplate: (template: string) => void;
   setDueDate: (date: string) => void;
   setDueTime: (time: string) => void;
+}
+
+export interface TemplateStore {
+  firstCategory: Category | null;
+  secondCategory: Category | null;
+  title: string;
+  content: string;
+  manager: string;
+  ticketType: {typeId: number; typeName: string};
+  setFirstCategory: (category: Category | null) => void;
+  setSecondCategory: (category: Category | null) => void;
+  setTitle: (title: string) => void;
+  setContent: (content: string) => void;
+  setManager: (manager: string) => void;
+  setTicketType: (ticketType: {typeId: number; typeName: string}) => void;
 }
 
 export interface NewTicketFormStore {

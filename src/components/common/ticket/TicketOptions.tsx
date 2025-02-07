@@ -39,7 +39,7 @@ export default function TicketOptions() {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex items-center justify-end text-error text-xs pr-2">
+      <div className="flex items-center justify-end text-blue text-xs pr-2">
         <RequiredIcon />
         &nbsp;는 필수항목입니다.
       </div>

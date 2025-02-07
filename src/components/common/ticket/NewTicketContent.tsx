@@ -7,7 +7,7 @@ import Modal from '../Modal';
 
 export default function NewTicketContent() {
   const {title, content, firstCategory, secondCategory, setTitle, setContent} = useNewTicketStore();
-  const {description, setDescription, setMustDescription} = useNewTicketFormStore();
+  const {description, mustDescription, setDescription, setMustDescription} = useNewTicketFormStore();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,7 +26,6 @@ export default function NewTicketContent() {
           const formData = await getTicketForm(firstCategory.id, secondCategory.id);
           setMustDescription(formData.mustDescription);
           setDescription(formData.description);
-          setIsModalOpen(true);
         } catch (error) {
           console.error('티켓 폼 조회 실패:', error);
         }
@@ -35,6 +34,12 @@ export default function NewTicketContent() {
 
     fetchRequestForm();
   }, [firstCategory?.id, secondCategory?.id, setMustDescription]);
+
+  useEffect(() => {
+    if (mustDescription || description) {
+      setIsModalOpen(true);
+    }
+  }, [mustDescription, description]);
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
@@ -62,7 +67,7 @@ export default function NewTicketContent() {
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-[660px] text-subtitle-regular border border-gray-2 bg-white py-2 px-4"
+          className={`w-[660px] text-subtitle-regular border bg-white py-2 px-4  ${title ? 'border-gray-2' : 'border-blue'}`}
           placeholder="요청 사항에 대한 제목을 입력해주세요"
         />
       </div>
@@ -76,8 +81,8 @@ export default function NewTicketContent() {
           ref={textareaRef}
           value={content}
           onChange={handleContentChange}
-          className="w-[800px] min-h-48 text-subtitle-regular border border-gray-2 bg-white py-2 px-4 resize-none"
-          placeholder="요청 내용을 입력해주세요"
+          className={`w-[800px] min-h-48 text-subtitle-regular border bg-white py-2 px-4 resize-none ${content ? 'border-gray-2' : 'border-blue'}`}
+          placeholder={`요청 내용을 자세히 입력해주세요. \nMarkdown 문법을 지원합니다. \n 예: # 제목, **강조**, - 리스트, [링크](https://example.com)**`}
         />
       </div>
 
@@ -89,14 +94,10 @@ export default function NewTicketContent() {
       {isModalOpen && (
         <Modal
           title="요청 양식 제공"
-          content={
-            description
-              ? `2차 카테고리에 따른 요청 양식이 적용됩니다. \n 기존 내용에 덮어쓰시겠습니까?`
-              : `요청 양식이 없습니다. \n 자유롭게 작성해주세요.`
-          }
-          backBtn={description ? '취소' : undefined} // description이 없으면 취소 버튼 없음
+          content={`2차 카테고리에 따른 요청 양식이 적용됩니다. \n 기존 내용에 덮어쓰시겠습니까?`}
+          backBtn="취소"
           onBackBtnClick={onCancel}
-          checkBtn={description ? '확인' : ''}
+          checkBtn="확인"
           onBtnClick={onOverwrite}
         />
       )}

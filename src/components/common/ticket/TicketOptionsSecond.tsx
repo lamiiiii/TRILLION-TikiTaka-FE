@@ -4,35 +4,55 @@ import DropDown from '../Dropdown';
 import {RequiredIcon} from '../Icon';
 import {getTicketTypes} from '../../../api/service/tickets';
 import {useEffect, useState} from 'react';
+import {getManagerList} from '../../../api/service/users';
 
 export default function TicketOpstionsSecond() {
-  const {manager, ticketType, template, setManager, setTicketType, setTemplate} = useNewTicketStore();
+  const {manager, setManager, ticketType, template, setTicketType, setTemplate} = useNewTicketStore();
   const [ticketTypes, setTicketTypes] = useState<{typeId: number; typeName: string}[]>([]);
 
-  // todo 담당자 조회 API가 없음
+  const {
+    data: userData,
+    isLoading: isUserLoading,
+    error: userError,
+  } = useQuery({
+    queryKey: ['managers'],
+    queryFn: getManagerList,
+    select: (data) => data.users,
+  });
 
-  const {data, isLoading, error} = useQuery({
+  const {
+    data: ticketData,
+    isLoading: isTicketLoading,
+    error: ticketError,
+  } = useQuery({
     queryKey: ['types'],
-    queryFn: async () => {
-      const response = await getTicketTypes();
-      return response;
-    },
+    queryFn: getTicketTypes,
   });
 
   useEffect(() => {
-    if (data) {
-      setTicketTypes(data);
+    if (ticketData) {
+      setTicketTypes(ticketData);
     }
-  }, [data]);
+  }, [ticketData]);
 
-  if (isLoading) return null;
-  if (error) return null;
+  if (isTicketLoading || isUserLoading) return null;
+  if (ticketError || userError) return null;
 
   return (
     <div className="flex flex-col gap-3">
       <div className="selection">
         <p className="w-12">담당자</p>
-        <DropDown label="담당자" options={['alex', 'yeon', 'hohoho', 'juju']} value={manager} onSelect={(value) => setManager(value)} />
+        <DropDown
+          label="담당자"
+          options={userData?.map((user) => user.username) || []}
+          value={manager?.username}
+          onSelect={(value) => {
+            const selectedUser = userData?.find((user) => user.username === value);
+            if (selectedUser) {
+              setManager(selectedUser);
+            }
+          }}
+        />
       </div>
       <div className="selection">
         <div className="flex items-center gap-1 w-12">
