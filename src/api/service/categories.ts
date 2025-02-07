@@ -6,7 +6,6 @@ export async function createCategory(parentId: number | null, categoryData: {nam
     const url = parentId !== null ? `/categories?parentId=${parentId}` : '/categories';
 
     const data = await instance.post(url, categoryData, {});
-    console.log('데이터', data);
     return data;
   } catch (error) {
     console.error('카테고리 생성 실패:', error);
