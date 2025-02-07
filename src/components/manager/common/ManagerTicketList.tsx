@@ -4,8 +4,8 @@ import {useUserStore} from '../../../store/store'; // role 가져오기
 import Dropdown from '../../common/Dropdown';
 import PageNations from '../../manager/common/PageNations';
 import DashTicket from './DashTicket';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'react-toastify';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {toast} from 'react-toastify';
 
 const dropdownData = [
   {label: '담당자', options: ['곽서연', '김규리', '김낙도']},
@@ -16,21 +16,21 @@ const dropdownData = [
 
 const mapFilterToStatus = (filter: string): string | undefined => {
   switch (filter) {
-    case "대기중":
-      return "PENDING";
-    case "진행중":
-      return "IN_PROGRESS";
-    case "검토 요청":
-      return "REVIEW";
-    case "완료":
-      return "DONE";
+    case '대기중':
+      return 'PENDING';
+    case '진행중':
+      return 'IN_PROGRESS';
+    case '검토 요청':
+      return 'REVIEW';
+    case '완료':
+      return 'DONE';
     default:
       return undefined; // 전체는 status 필터 없이 모든 티켓 조회
   }
 };
 
 const pageSizeOptions = ['20개씩', '30개씩', '50개씩'];
-const orderByOptions = ['최신순', '생성순'];
+// const orderByOptions = ['최신순', '마감기한순', '오래된순'];
 
 // TicketListProps
 interface TicketListProps {
@@ -38,7 +38,7 @@ interface TicketListProps {
   ticketCounts: TicketStatusCount | null;
 }
 
-export default function ManagerTicketList({selectedFilter, ticketCounts }: TicketListProps) {
+export default function ManagerTicketList({selectedFilter, ticketCounts}: TicketListProps) {
   const role = useUserStore((state) => state.role).toLowerCase(); // 전역 상태에서 role 가져오기
   const [ticketList, setTicketList] = useState<TicketListItem[]>([]);
   const [totalPages, setTotalPages] = useState(1);
@@ -49,66 +49,66 @@ export default function ManagerTicketList({selectedFilter, ticketCounts }: Ticke
   const queryClient = useQueryClient();
   // const [totalTickets, setTotalTickets] = useState(0);
 
-  
-
   // 티켓 목록 가져오기 (React Query)
-  const { data } = useQuery({
-    queryKey: ["tickets", selectedFilter ?? "", currentPage ?? 1, pageSize ?? 20, orderBy ?? "최신순"],
+  const {data} = useQuery({
+    queryKey: ['tickets', selectedFilter ?? '', currentPage ?? 1, pageSize ?? 20, orderBy ?? '최신순'],
     queryFn: async () => {
-      const statusParam = mapFilterToStatus(selectedFilter ?? "전체");
-      const orderParam = orderBy === "최신순" ? "desc" : "asc";
-  
+      const statusParam = mapFilterToStatus(selectedFilter ?? '전체');
+
       const ticketData = await getTicketList({
         page: (currentPage ?? 1) - 1,
         size: pageSize ?? 20,
         status: statusParam,
-        orderBy: orderParam,
       });
-  
+
       let sortedTickets = [...ticketData.content];
-  
-      if (selectedFilter === "긴급") {
-        sortedTickets = sortedTickets.filter((ticket) => ticket.urgent === true);
-      }
-  
+
+      // ✅ 긴급 티켓(urgent) 항상 상단에 위치하도록 정렬
       sortedTickets.sort((a, b) => {
         if (a.urgent && !b.urgent) return -1;
         if (!a.urgent && b.urgent) return 1;
-        return orderBy === "최신순" ? b.ticketId - a.ticketId : a.ticketId - b.ticketId;
+
+        // ✅ 정렬 기준 적용
+        if (orderBy === '최신순') {
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        } else if (orderBy === '마감기한순') {
+          return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
+        } else if (orderBy === '오래된순') {
+          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        }
+        return 0;
       });
-  
-      return { ...ticketData, content: sortedTickets };
+
+      return {...ticketData, content: sortedTickets};
     },
   });
 
   useEffect(() => {
-
     if (data?.content) {
-      console.log("📌 티켓 리스트 업데이트:", data.content); // 데이터 확인용
+      console.log('📌 티켓 리스트 업데이트:', data.content); // 데이터 확인용
       setTicketList(data.content);
     }
-  
+
     if (data?.totalPages) {
-      console.log("📌 총 페이지 수 업데이트:", data.totalPages);
+      console.log('📌 총 페이지 수 업데이트:', data.totalPages);
       setTotalPages(data.totalPages);
     }
   }, [data?.content, data?.totalPages]);
-  
 
   const selectedCount = ticketCounts
-    ? selectedFilter === "전체"
+    ? selectedFilter === '전체'
       ? ticketCounts.total
-      : selectedFilter === "대기중"
-      ? ticketCounts.pending
-      : selectedFilter === "진행중"
-      ? ticketCounts.inProgress
-      : selectedFilter === "검토 요청"
-      ? ticketCounts.reviewing
-      : selectedFilter === "완료"
-      ? ticketCounts.completed
-      : selectedFilter === "긴급"
-      ? ticketCounts.urgent
-      : 0
+      : selectedFilter === '대기중'
+        ? ticketCounts.pending
+        : selectedFilter === '진행중'
+          ? ticketCounts.inProgress
+          : selectedFilter === '검토 요청'
+            ? ticketCounts.reviewing
+            : selectedFilter === '완료'
+              ? ticketCounts.completed
+              : selectedFilter === '긴급'
+                ? ticketCounts.urgent
+                : 0
     : 0;
 
   // 페이지네이션 변경 핸들러
@@ -137,8 +137,8 @@ export default function ManagerTicketList({selectedFilter, ticketCounts }: Ticke
   const approveMutation = useMutation({
     mutationFn: (ticketId: number) => approveTicket(ticketId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tickets"] });
-      toast.success(" 티켓이 승인되었습니다.")
+      queryClient.invalidateQueries({queryKey: ['tickets']});
+      toast.success(' 티켓이 승인되었습니다.');
     },
   });
 
@@ -146,37 +146,36 @@ export default function ManagerTicketList({selectedFilter, ticketCounts }: Ticke
   const rejectMutation = useMutation({
     mutationFn: (ticketId: number) => rejectTicket(ticketId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tickets"] });
-      alert(" 티켓이 반려되었습니다.")
+      queryClient.invalidateQueries({queryKey: ['tickets']});
+      alert(' 티켓이 반려되었습니다.');
     },
   });
-  
+
   // ✅ 티켓 상태 변경 요청
   const updateStatusMutation = useMutation({
-    mutationFn: ({ ticketId, newStatus }: { ticketId: number; newStatus: string }) =>
-      updateTicketStatus(ticketId, newStatus),
-    onSuccess: (_, { newStatus }) => {
-      queryClient.invalidateQueries({ queryKey: ["tickets"] });
-      queryClient.setQueryData(["ticketStatusCounts"], (prev: any) => ({
+    mutationFn: ({ticketId, newStatus}: {ticketId: number; newStatus: string}) => updateTicketStatus(ticketId, newStatus),
+    onSuccess: (_, {newStatus}) => {
+      queryClient.invalidateQueries({queryKey: ['tickets']});
+      queryClient.setQueryData(['ticketStatusCounts'], (prev: any) => ({
         ...prev,
-        inProgress: newStatus === "DONE" ? prev.inProgress - 1 : prev.inProgress,
-        reviewing: newStatus === "DONE" ? prev.reviewing - 1 : prev.reviewing,
-        completed: newStatus === "DONE" ? prev.completed + 1 : prev.completed,
+        inProgress: newStatus === 'DONE' ? prev.inProgress - 1 : prev.inProgress,
+        reviewing: newStatus === 'DONE' ? prev.reviewing - 1 : prev.reviewing,
+        completed: newStatus === 'DONE' ? prev.completed + 1 : prev.completed,
       }));
       toast.success(`티켓 상태가 완료로 변경되었습니다.`);
     },
     onError: () => {
-      toast.error("티켓 상태 변경 실패. 다시 시도하세요.");
+      toast.error('티켓 상태 변경 실패. 다시 시도하세요.');
     },
   });
 
   const handleStatusChange = (ticketId: number, newStatus: string) => {
-    updateStatusMutation.mutate({ ticketId, newStatus });
+    updateStatusMutation.mutate({ticketId, newStatus});
   };
 
   return (
     <div className="w-full mt- relative mb-[100px]">
-      <div className='flex mb-2 justify-end gap-3'>
+      <div className="flex mb-2 justify-end gap-3">
         <Dropdown
           label="20개씩"
           options={pageSizeOptions}
@@ -184,16 +183,17 @@ export default function ManagerTicketList({selectedFilter, ticketCounts }: Ticke
           onSelect={(value) => setPageSize(parseInt(value))}
           paddingX="px-3"
           border={false}
-          textColor=''
+          textColor=""
         />
         <Dropdown
-              label="최신순"
-              options={orderByOptions}
-              value={orderBy}
-              onSelect={(value) => setOrderBy(value)}
-              paddingX="px-3"
-              border={false}
-            />
+          label="정렬 기준"
+          options={['최신순', '마감기한순', '오래된순']}
+          value={orderBy || '정렬 기준'}
+          onSelect={(value) => setOrderBy(value)}
+          paddingX="px-4"
+          border={false}
+          textColor=""
+        />
       </div>
       <div className="bg-gray-18 h-full shadow-[0px_1px_3px_1px_rgba(0,0,0,0.15)] flex flex-col justify-start p-4">
         {/* 드롭다운 필터 */}
@@ -237,7 +237,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts }: Ticke
                 onAssigneeChange={(newAssignee) => handleAssigneeChange(ticket.ticketId, newAssignee)}
                 onApprove={() => approveMutation.mutate(ticket.ticketId)}
                 onReject={() => rejectMutation.mutate(ticket.ticketId)}
-                onStatusChange={handleStatusChange }
+                onStatusChange={handleStatusChange}
               />
             ))
           ) : (

@@ -89,6 +89,7 @@ declare interface TicketListItem {
   status: string;
   urgent: boolean;
   deadline: string;
+  createdAt:string;
 }
 
 declare interface TicketListResponse {
@@ -130,6 +131,7 @@ declare interface TicketListParams {
   managerId?: number;
   requesterId?: number;
   orderBy?: string;
+  createdAt?:string;
 }
 
 declare interface UpdateTicketParams {
