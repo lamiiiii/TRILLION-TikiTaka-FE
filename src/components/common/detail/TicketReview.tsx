@@ -17,7 +17,7 @@ export default function TicketReview() {
           {reviewers.map((reviewer, index) => (
             <li key={index} className="flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <Profile name={reviewer.name} backgroundColor="manager" size="md" />
+                <Profile name={reviewer.name} backgroundColor="MANAGER" size="md" />
                 <div className="flex flex-col ml-2">
                   <span>{reviewer.name}</span>
                   {reviewer.reviewed && <span className="text-caption-regular">{reviewer.reviewDate} 검토 완료</span>}

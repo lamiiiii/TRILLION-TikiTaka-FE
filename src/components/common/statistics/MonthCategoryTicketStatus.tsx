@@ -1,44 +1,65 @@
 import {useState} from 'react';
 import {Bar, BarChart, XAxis, PieChart, Pie, Cell, Tooltip} from 'recharts';
 import {useQuery} from '@tanstack/react-query';
-import {getDailyCategorySummary} from '../../../api/service/statistics';
+import {getMonthlyCategorySummary} from '../../../api/service/statistics';
 import {commonTooltipStyle} from '../../../constants/constants';
 const COLORS = ['#F6D47A', '#FFB74D', '#FFD700']; // 색상 팔레트
 
-export default function CategoryTicketStatus() {
+interface CategoryData {
+  firstCategoryName: string;
+  secondCategoryName: string | null;
+  totalCreated: number;
+}
+
+export default function MonthCategoryTicketStatus() {
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  // 현재 날짜로 year와 month 초기화
+  const currentDate = new Date();
+  const [year, _setYear] = useState(currentDate.getFullYear());
+  const [month, _setMonth] = useState(currentDate.getMonth() + 1);
 
   const {
     data: categoryData,
     isLoading,
     isError,
-  } = useQuery({
-    queryKey: ['dailyCategorySummary'],
-    queryFn: getDailyCategorySummary,
+  } = useQuery<MonthlyCategorySummary, Error>({
+    queryKey: ['monthlyCategorySummary', year, month],
+    queryFn: () => getMonthlyCategorySummary(year, month),
   });
 
   if (isLoading) return <div>로딩 중...</div>;
   if (isError) return <div>에러가 발생했습니다.</div>;
 
-  const primaryData =
-    categoryData?.map((category) => ({
-      name: category.firstCategoryName,
-      ticket: category.totalTicketCount,
-    })) || [];
+  const processData = (data: CategoryData[]) => {
+    const primaryData = data
+      .filter((item) => item.secondCategoryName === null)
+      .map((item) => ({
+        name: item.firstCategoryName,
+        ticket: item.totalCreated,
+      }));
 
-  const secondaryData =
-    categoryData?.reduce(
-      (acc, category) => {
-        acc[category.firstCategoryName] = category.secondCategories?.map((subCat) => ({
-          name: subCat.secondCategoryName,
-          value: subCat.ticketCount,
-        }));
+    const secondaryData = data.reduce(
+      (acc, item) => {
+        if (item.secondCategoryName) {
+          if (!acc[item.firstCategoryName]) {
+            acc[item.firstCategoryName] = [];
+          }
+          acc[item.firstCategoryName].push({
+            name: item.secondCategoryName,
+            value: item.totalCreated,
+          });
+        }
         return acc;
       },
       {} as Record<string, {name: string; value: number}[]>
-    ) || {};
+    );
 
+    return {primaryData, secondaryData};
+  };
+
+  const {primaryData, secondaryData} = processData(categoryData?.data ?? []);
   return (
     <div className="flex flex-col w-full h-[500px] bg-gray-18 p-5">
       <div className="flex items-center gap-4">

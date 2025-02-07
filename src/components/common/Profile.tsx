@@ -4,7 +4,7 @@ import ProfilePopup from './ProfilePopup';
 interface ProfileInitialProps {
   name: string;
   size?: 'sm' | 'md' | 'lg';
-  backgroundColor: 'manager' | 'user' | 'admin';
+  backgroundColor: 'MANAGER' | 'USER' | 'ADMIN';
 }
 
 const sizeClasses = {
@@ -14,9 +14,9 @@ const sizeClasses = {
 };
 
 const colorClasses = {
-  manager: 'bg-gray-7',
-  user: 'bg-main2-1',
-  admin: 'bg-admin-2',
+  MANAGER: 'bg-gray-7',
+  USER: 'bg-main2-1',
+  ADMIN: 'bg-admin-2',
 };
 
 export default function Profile({name, size = 'sm', backgroundColor}: ProfileInitialProps) {

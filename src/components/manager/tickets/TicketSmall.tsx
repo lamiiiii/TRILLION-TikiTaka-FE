@@ -47,7 +47,7 @@ const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(
     }, []);
 
     return (
-      <div ref={ref} {...props} className="relative bg-white border border-gray-2 rounded p-3 ">
+      <div ref={ref} {...props} className="relative bg-white border border-gray-2 rounded p-3 hover:border-main">
         <div className="flex items-start">
           <div className="text-body-regular bg-gray-18 border border-gray-2 rounded px-2 mr-4">#{id}</div>
           <Link className="group relative" to={`/manager/detail/${id}`}>
@@ -97,7 +97,7 @@ const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(
               value={status}
               textColor="text-gray-15"
             />
-            <Profile name={assignee} backgroundColor="manager" size="sm" />
+            <Profile name={assignee} backgroundColor="MANAGER" size="sm" />
           </div>
         </div>
       </div>

@@ -3,10 +3,10 @@ import CategoryTicketStatus from '../../common/statistics/CategoryTicketStatus';
 import TopMenu from '../../common/TopMenu';
 import ManagerTicketStatus from './daily/ManagerTicketStatus';
 import StatisticsFilter from './StatisticsFilter';
-
 import TodayTicketStatus from './daily/TodayTicketStatus';
 import ManagerTicketPeriodStatus from './monthly/ManagerTicketPeriodStatus';
-import ManagerPeriod from './monthly/ManagerPeriod';
+import MonthlyTicketStatus from './monthly/MonthlyTicketStatus';
+import MonthCategoryTicketStatus from '../../common/statistics/MonthCategoryTicketStatus';
 
 export default function ManagerStatisticsContainer() {
   const [selectedFilter, setSelectedFilter] = useState('일별');
@@ -17,8 +17,8 @@ export default function ManagerStatisticsContainer() {
       <StatisticsFilter onFilterChange={setSelectedFilter} />
 
       {selectedFilter === '일별' ? (
-        <section className="flex bg-gray-18 p-6 pb-[38px] mt-3 mb-[100px]">
-          <div className="flex flex-col">
+        <section className="flex bg-gray-18 p-6 mt-3 mb-[100px]">
+          <div className="flex flex-col mb-[100px]">
             <div className="w-full grid grid-cols-2">
               <TodayTicketStatus />
               <ManagerTicketStatus />
@@ -27,13 +27,13 @@ export default function ManagerStatisticsContainer() {
           </div>
         </section>
       ) : (
-        <section className="flex bg-gray-18 p-6 pb-[38px] mt-3 mb-[100px]">
-          <div className="flex flex-col">
+        <section className="flex bg-gray-18 p-6 mt-3 mb-[100px]">
+          <div className="flex flex-col mb-[100px]">
             <div className="w-full grid grid-cols-2">
               <ManagerTicketPeriodStatus />
-              <ManagerPeriod />
+              <MonthlyTicketStatus />
             </div>
-            <CategoryTicketStatus />
+            <MonthCategoryTicketStatus />
           </div>
         </section>
       )}
