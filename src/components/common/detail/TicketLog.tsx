@@ -1,58 +1,42 @@
-// 임시 데이터 - 로그
-const logData = [
-  {
-    updater: 'Yeon',
-    action: '담당자 변경',
-    details: 'Yeon -> Jojo',
-    date: '2025.02.06',
-  },
-  {
-    updater: 'Yeon',
-    action: '상태 변경',
-    details: 'Open -> In Progress',
-    date: '2025.02.05',
-  },
-  {
-    updater: 'Yeon',
-    action: '우선순위 변경',
-    details: 'Low -> High',
-    date: '2025.02.04',
-  },
-  {
-    updater: 'Yeon',
-    action: '우선순위 변경',
-    details: 'Low -> High',
-    date: '2025.02.04',
-  },
-  {
-    updater: 'Honggildong',
-    action: '우선순위 변경',
-    details: 'Low -> High',
-    date: '2025.02.04',
-  },
-  {
-    updater: 'Honggildong',
-    action: '우선순위 변경',
-    details: 'Low -> High',
-    date: '2025.02.04',
-  },
-];
+import {useQuery} from '@tanstack/react-query';
+import {getChangeHistory} from '../../../api/service/histories';
+import {useParams} from 'react-router-dom';
+import {UPDATE_TYPE_MAP} from '../../../constants/constants';
 
+type UpdateType = keyof typeof UPDATE_TYPE_MAP;
 export default function TicketLog() {
+  const {id} = useParams<{id: string}>();
+  const ticketId = Number(id);
+
+  const {data: logData, isLoading} = useQuery({
+    queryKey: ['ticketHistory', Number(ticketId)],
+    queryFn: () => getChangeHistory(Number(ticketId)),
+  });
+
+  const getKoreanUpdateType = (updateType: string) => {
+    return UPDATE_TYPE_MAP[updateType as UpdateType] || updateType;
+  };
+
   return (
     <div className="flex flex-col gap-1 ">
       <label className="text-body-bold">Log</label>
       <div className="w-full p-5 border border-gray-2 rounded-[4px] bg-white text-subtitle-regular text-gray-15 h-[300px] max-h-[300px] overflow-y-scroll">
-        {logData.map((log, index) => (
-          <div key={index} className="bg-main text-white rounded-md p-4 my-2 flex flex-col">
-            <div className="flex gap-2">
-              <p className="text-body-regular">{log.updater}</p>
-              <p className="text-body-regular">{log.action}</p>
+        {isLoading ? (
+          <div className="text-gray-500 text-center py-4">Loading...</div>
+        ) : logData?.content && logData.content.length > 0 ? (
+          logData.content.map((log) => (
+            <div key={log.id} className="bg-main text-white rounded-md p-4 my-2 flex flex-col">
+              <div className="flex gap-4">
+                <p className="text-body-bold">{log.updatedByUsername}님 </p>
+                <p className="text-body-regular">{getKoreanUpdateType(log.updateType)}</p>
+              </div>
+              <p className="text-body-bold">{log.ticketTitle}</p>
+              <p className="text-caption-regular text-right mt-1">{new Date(log.updatedAt).toLocaleDateString()}</p>
             </div>
-            <p className="text-body-bold">{log.details}</p>
-            <p className="text-caption-regular text-right mt-1">{log.date}</p>
-          </div>
-        ))}
+          ))
+        ) : (
+          <div className="text-gray-500 text-center py-4">해당 티켓 변경 이력이 없습니다.</div>
+        )}
       </div>
     </div>
   );

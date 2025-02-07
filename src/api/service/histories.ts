@@ -1,12 +1,27 @@
+import {AxiosResponse} from 'axios';
 import instance from '../axiosInstance';
 
-export async function getChangeHistory(token: string, ticketId: number): Promise<ChangeHistoryItem[]> {
+export async function getChangeHistory(
+  ticketId: number,
+  page: number = 0,
+  size: number = 20,
+  updatedById?: number,
+  updatedType?: string
+): Promise<ChangeHistoryResponse> {
   try {
-    const {data} = await instance.get<{message: string; data: ChangeHistoryItem[]}>(`/histories/${ticketId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const params = new URLSearchParams({
+      page: page.toString(),
+      size: size.toString(),
+      ticketId: ticketId.toString(),
     });
+
+    if (updatedById) params.append('updatedById', updatedById.toString());
+    if (updatedType) params.append('updatedType', updatedType);
+
+    const {data}: AxiosResponse<ApiResponse> = await instance.get(`/history`, {
+      params,
+    });
+
     return data.data;
   } catch (error) {
     console.error('변경 이력 조회 실패:', error);

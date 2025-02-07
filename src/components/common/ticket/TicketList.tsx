@@ -140,7 +140,7 @@ export default function TicketList({role, selectedFilter}: TicketListProps) {
 
   return (
     <div className="w-full mt-[20px] relative mb-[100px]">
-      <div className="bg-gray-18 h-full shadow-[0px_1px_3px_1px_rgba(0,0,0,0.15)] flex flex-col justify-start p-4">
+      <div className="bg-gray-18 h-full flex flex-col justify-start p-4">
         <div className="flex items-center gap-4 leading-none mt-4 px-2">
           {dropdownData.map((data) => (
             <Dropdown
