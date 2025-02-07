@@ -75,3 +75,21 @@ declare interface DailyManagerTicketSummaryResponse {
   message: string;
   data: ManagerTicketSummary[];
 }
+
+declare interface SecondCategory {
+  secondCategoryId: number;
+  secondCategoryName: string;
+  ticketCount: number;
+}
+
+declare interface FirstCategory {
+  firstCategoryId: number;
+  firstCategoryName: string;
+  secondCategories: SecondCategory[];
+  totalTicketCount: number;
+}
+
+declare interface DailyCategorySummary {
+  message: string;
+  data: FirstCategory[];
+}

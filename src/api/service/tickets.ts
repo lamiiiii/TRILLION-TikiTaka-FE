@@ -138,7 +138,7 @@ export async function getTicketDetails(ticketId: number) {
 // INTF-32: 티켓 승인 대기 조회
 export async function getPendingApprovalCount(managerId: number) {
   try {
-    const {data} = await instance.get<{message: string; data: PendingApprovalCount}>(`/tickets/list/pending?manager=${managerId}`);
+    const {data} = await instance.get<{message: string; data: PendingApprovalCount}>(`/tickets/list/pending?managerId=${managerId}`);
     return data.data;
   } catch (error) {
     console.error('승인 대기 티켓 조회 실패:', error);

@@ -13,19 +13,6 @@ export async function getWeeklyTicketStats(token: string) {
   }
 }
 
-// INTF-52: 일일 생성 현황
-export async function getDailyCreationStats(token: string) {
-  try {
-    const {data} = await instance.get<{message: string; data: DailyCreationStatsResponse}>('/statistics/day/creation', {
-      headers: {Authorization: `Bearer ${token}`},
-    });
-    return data.data;
-  } catch (error) {
-    console.error('일일 생성 현황 조회 실패:', error);
-    throw error;
-  }
-}
-
 //FIX: 수정 필요
 // 일일 처리 현황 (INTF-52)
 export async function getDailyHandledStats(token: string) {
@@ -63,6 +50,17 @@ export async function getMonthlyHandlingStats(token: string) {
     return data.data;
   } catch (error) {
     console.error('월간 처리 현황 조회 실패:', error);
+    throw error;
+  }
+}
+
+// INTF-52: 일간 카테고리별 티켓 생성 현황
+export async function getDailyCategorySummary(): Promise<FirstCategory[]> {
+  try {
+    const {data} = await instance.get<DailyCategorySummary>('/statistics/daily/catSummary');
+    return data.data;
+  } catch (error) {
+    console.error('일간 카테고리별 티켓 생성 현황 조회 실패:', error);
     throw error;
   }
 }

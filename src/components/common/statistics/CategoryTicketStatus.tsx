@@ -1,43 +1,42 @@
 import {useState} from 'react';
 import {Bar, BarChart, LabelList, XAxis, PieChart, Pie, Cell, Tooltip} from 'recharts';
-
-// 임시 데이터 - 1차 카테고리
-const primaryData = [
-  {name: '인프라', ticket: 100},
-  {name: '네트워크', ticket: 30},
-  {name: '시스템', ticket: 50},
-  {name: '공통 플랫폼', ticket: 60},
-];
-
-// 임시 데이터 - 2차 카테고리
-const secondaryData = {
-  인프라: [
-    {name: '서버', value: 40},
-    {name: '스토리지', value: 30},
-    {name: '클라우드', value: 30},
-  ],
-  네트워크: [
-    {name: '보안', value: 50},
-    {name: '라우팅', value: 30},
-    {name: '모니터링', value: 20},
-  ],
-  시스템: [
-    {name: 'OS', value: 60},
-    {name: '미들웨어', value: 25},
-    {name: '배포', value: 15},
-  ],
-  '공통 플랫폼': [
-    {name: 'DB', value: 45},
-    {name: '인증', value: 35},
-    {name: '로그', value: 20},
-  ],
-};
-
+import {useQuery} from '@tanstack/react-query';
+import {getDailyCategorySummary} from '../../../api/service/statistics';
 const COLORS = ['#F6D47A', '#FFB74D', '#FFD700']; // 색상 팔레트
 
 export default function CategoryTicketStatus() {
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  const {
+    data: categoryData,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['dailyCategorySummary'],
+    queryFn: getDailyCategorySummary,
+  });
+
+  if (isLoading) return <div>로딩 중...</div>;
+  if (isError) return <div>에러가 발생했습니다.</div>;
+
+  const primaryData =
+    categoryData?.map((category) => ({
+      name: category.firstCategoryName,
+      ticket: category.totalTicketCount,
+    })) || [];
+
+  const secondaryData =
+    categoryData?.reduce(
+      (acc, category) => {
+        acc[category.firstCategoryName] = category.secondCategories.map((subCat) => ({
+          name: subCat.secondCategoryName,
+          value: subCat.ticketCount,
+        }));
+        return acc;
+      },
+      {} as Record<string, {name: string; value: number}[]>
+    ) || {};
 
   return (
     <div className="flex flex-col w-full h-[500px] bg-gray-18 p-5">
@@ -53,20 +52,21 @@ export default function CategoryTicketStatus() {
             <div className="flex items-center justify-center text-subtitle bg-main text-white rounded-full px-3 py-2 w-fit">
               1차 카테고리
             </div>
-            <section>
+            <section className="ml-10">
               {/* 1차 카테고리 Bar 차트 */}
-              <BarChart width={200} height={300} data={primaryData}>
+              <BarChart width={240} height={340} data={primaryData} margin={{left: 20, right: 10, top: 10, bottom: 0}}>
                 <XAxis
                   dataKey="name"
-                  tick={{fontSize: 12}}
+                  tick={{fontSize: 10}}
                   axisLine={false}
                   tickLine={false}
-                  angle={-30} // 틱 텍스트 회전 각도
-                  height={60}
-                  textAnchor="end" // 텍스트 정렬 방식
-                  tickFormatter={(tick: string) => tick} // 문자열 반환 함수
+                  angle={-45}
+                  width={400}
+                  height={120}
+                  padding={{left: 25}}
+                  textAnchor="end"
+                  tickFormatter={(tick: string) => tick}
                 />
-
                 <Bar
                   dataKey="ticket"
                   fill="#F6D47A"
@@ -75,14 +75,10 @@ export default function CategoryTicketStatus() {
                   onMouseLeave={() => setHoverIndex(null)}
                   onClick={(data) => setSelectedCategory(data.name)}
                 >
-                  {primaryData.map((_, index) => (
+                  {primaryData?.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={
-                        hoverIndex === index || selectedCategory === primaryData[index].name
-                          ? '#D4A946' // 호버/선택 시 더 진한 색상
-                          : '#F6D47A'
-                      }
+                      fill={hoverIndex === index || selectedCategory === primaryData[index].name ? '#D4A946' : '#F6D47A'}
                     />
                   ))}
                   <LabelList dataKey="ticket" position="center" fill="#FFFFFF" fontSize={10} />
@@ -92,7 +88,7 @@ export default function CategoryTicketStatus() {
           </div>
 
           {/* 2차 카테고리 파이 차트 */}
-          {selectedCategory && (
+          {selectedCategory && secondaryData[selectedCategory] && (
             <div className="flex flex-col gap-8">
               <div className="flex items-center justify-center text-subtitle bg-main text-white rounded-full px-3 py-2 w-fit">
                 2차 카테고리
@@ -100,15 +96,8 @@ export default function CategoryTicketStatus() {
               <section className="ml-10 grid grid-cols-2 text-subtitle">
                 <div className="flex flex-col items-center gap-4">
                   <PieChart width={200} height={200}>
-                    <Pie
-                      data={secondaryData[selectedCategory as keyof typeof secondaryData]}
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={80}
-                      innerRadius={30}
-                      dataKey="value"
-                    >
-                      {secondaryData[selectedCategory as keyof typeof secondaryData].map((_, index) => (
+                    <Pie data={secondaryData[selectedCategory]} cx="50%" cy="50%" outerRadius={80} innerRadius={30} dataKey="value">
+                      {secondaryData[selectedCategory].map((_, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
@@ -126,7 +115,7 @@ export default function CategoryTicketStatus() {
                 </div>
 
                 <div className="flex flex-col justify-center gap-3 ml-10">
-                  {secondaryData[selectedCategory as keyof typeof secondaryData].map((item, index) => (
+                  {secondaryData[selectedCategory].map((item, index) => (
                     <div key={item.name} className="flex items-center gap-2">
                       <div className="w-3 h-3 rounded-full" style={{backgroundColor: COLORS[index % COLORS.length]}} />
                       <span>{item.name}</span>
