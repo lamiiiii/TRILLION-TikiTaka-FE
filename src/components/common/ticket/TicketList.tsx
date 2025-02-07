@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import Dropdown from '../Dropdown';
 import Ticket from './Ticket';
 import PageNations from '../../manager/common/PageNations';
@@ -21,8 +21,9 @@ interface TicketListProps {
 export default function TicketList({role, selectedFilter}: TicketListProps) {
   const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
   const [currentPage, setCurrentPage] = useState(1);
-  const ticketsPerPage = 5;
-  const totalPages = 5;
+  const listRef = useRef<HTMLDivElement>(null);
+
+  const ticketsPerPage = 20;
 
   const queryClient = useQueryClient();
 
@@ -37,6 +38,25 @@ export default function TicketList({role, selectedFilter}: TicketListProps) {
       }),
   });
 
+  //다음 페이지 preFetch
+  useEffect(() => {
+    if (ticketListData?.totalPages && currentPage < ticketListData.totalPages) {
+      const nextPage = currentPage + 1;
+      queryClient.prefetchQuery({
+        queryKey: ['ticketList', nextPage, selectedFilter, selectedFilters],
+        queryFn: () => getTicketList({page: nextPage}),
+      });
+    }
+  }, [currentPage, queryClient, ticketListData?.totalPages, selectedFilter, selectedFilters]);
+
+  // 페이지 변경 시 스크롤 위치 조정
+  useEffect(() => {
+    if (listRef.current) {
+      listRef.current.scrollIntoView();
+    }
+  }, [currentPage]);
+
+  // 티켓 승인
   const approveMutation = useMutation({
     mutationFn: (ticketId: number) => approveTicket(ticketId),
     onSuccess: () => {
@@ -47,6 +67,7 @@ export default function TicketList({role, selectedFilter}: TicketListProps) {
     },
   });
 
+  // 티켓 반려
   const rejectMutation = useMutation({
     mutationFn: (ticketId: number) => rejectTicket(ticketId),
     onSuccess: () => {
@@ -56,8 +77,9 @@ export default function TicketList({role, selectedFilter}: TicketListProps) {
       alert('티켓 반려에 실패했습니다. 다시 시도해 주세요.');
     },
   });
+
   const handlePageChange = (newPage: number) => {
-    if (newPage >= 1 && newPage <= totalPages) {
+    if (ticketListData?.totalPages && newPage >= 1 && newPage <= ticketListData?.totalPages) {
       setCurrentPage(newPage);
     }
   };
@@ -79,7 +101,7 @@ export default function TicketList({role, selectedFilter}: TicketListProps) {
   };
 
   return (
-    <div className="w-full mt-[20px] relative mb-[100px]">
+    <div ref={listRef} className="w-full mt-[20px] relative mb-[100px]">
       <div className="bg-gray-18 h-full shadow-[0px_1px_3px_1px_rgba(0,0,0,0.15)] flex flex-col justify-start p-4">
         <div className="flex items-center gap-4 leading-none mt-4 px-2">
           {dropdownData.map((data) => (
@@ -93,7 +115,7 @@ export default function TicketList({role, selectedFilter}: TicketListProps) {
             />
           ))}
           <div className="ml-auto text-gray-700 text-subtitle">
-            조회 건수 <span className="text-black text-title-bold ml-1">{ticketListData?.content?.length}건</span>
+            조회 건수 <span className="text-black text-title-bold ml-1">{ticketListData?.totalElements}건</span>
           </div>
         </div>
 
@@ -107,7 +129,8 @@ export default function TicketList({role, selectedFilter}: TicketListProps) {
         </div>
 
         <div className="flex flex-col gap-4">
-          {ticketListData?.content && ticketListData?.content?.length > 0 ? (
+          {ticketListData?.content &&
+            ticketListData?.content?.length > 0 &&
             ticketListData?.content?.map((ticket: any) => (
               <Ticket
                 key={ticket.ticketId}
@@ -117,13 +140,10 @@ export default function TicketList({role, selectedFilter}: TicketListProps) {
                 onApprove={() => handleApprove(ticket.ticketId)}
                 onReject={() => handleReject(ticket.ticketId)}
               />
-            ))
-          ) : (
-            <div className="text-gray-500 text-center py-4">해당 상태의 티켓이 없습니다.</div>
-          )}
+            ))}
         </div>
 
-        <PageNations currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+        <PageNations currentPage={currentPage} totalPages={ticketListData?.totalPages} onPageChange={handlePageChange} />
       </div>
     </div>
   );
