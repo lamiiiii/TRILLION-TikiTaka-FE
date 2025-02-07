@@ -15,9 +15,6 @@ export async function getRegistrationList(params: RegistrationListParams) {
         size: params.size || 20,
         status: params.status,
       },
-      headers: {
-        Authorization: `Bearer ${params.token}`,
-      },
     });
     return data;
   } catch (error) {
@@ -26,16 +23,13 @@ export async function getRegistrationList(params: RegistrationListParams) {
   }
 }
 
-// INTF-3: POST: 계정 등록 승인/거절
 export async function updateRegistrationStatus(params: RegistrationUpdateParams) {
   try {
     const {data} = await instance.post(
-      `/registrations/${params.registrationId}?status=${params.status}&role=${params.role}`,
-      {},
+      `/registrations/${params.registrationId}?status=${params.status}`, // ✅ status만 query로 보내기
       {
-        headers: {
-          Authorization: `Bearer ${params.token}`,
-        },
+        role: params.role,
+        reason: params.reason // ✅ role을 Body로 이동
       }
     );
     return data;

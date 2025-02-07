@@ -4,6 +4,7 @@ declare interface CreateTicketFormData {
 }
 
 declare interface UpdateTicketFormData {
+  mustDescription: string;
   description: string;
 }
 

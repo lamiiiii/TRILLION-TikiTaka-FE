@@ -23,11 +23,9 @@ export async function getTicketForm(firstCategoryId: number, secondCategoryId: n
 }
 
 // INTF-23: 티켓 폼 수정
-export async function updateTicketForm(token: string, firstCategoryId: number, secondCategoryId: number, formData: UpdateTicketFormData) {
+export async function updateTicketForm( firstCategoryId: number, secondCategoryId: number, formData: UpdateTicketFormData) {
   try {
-    const {data} = await instance.patch(`/tickets/forms/${firstCategoryId}/${secondCategoryId}`, formData, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.patch(`/tickets/forms/${firstCategoryId}/${secondCategoryId}`, formData);
     return data;
   } catch (error) {
     console.error('티켓 폼 수정 실패:', error);
@@ -36,11 +34,9 @@ export async function updateTicketForm(token: string, firstCategoryId: number, s
 }
 
 // INTF-24: 티켓 폼 삭제
-export async function deleteTicketForm(token: string, firstCategoryId: number, secondCategoryId: number) {
+export async function deleteTicketForm( firstCategoryId: number, secondCategoryId: number) {
   try {
-    const {data} = await instance.delete(`/tickets/forms/${firstCategoryId}/${secondCategoryId}`, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.delete(`/tickets/forms/${firstCategoryId}/${secondCategoryId}`);
     return data;
   } catch (error) {
     console.error('티켓 폼 삭제 실패:', error);

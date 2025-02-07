@@ -33,11 +33,9 @@ export async function getCategoryList( parentId?: number) {
 }
 
 // INTF-19: 카테고리 수정
-export async function updateCategory(token: string, categoryId: number, categoryData: UpdateCategoryData) {
+export async function updateCategory(categoryId: number, categoryData: UpdateCategoryData) {
   try {
-    const {data} = await instance.patch(`/categories/${categoryId}`, categoryData, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.patch(`/categories/${categoryId}`, categoryData);
     return data;
   } catch (error) {
     console.error('카테고리 수정 실패:', error);

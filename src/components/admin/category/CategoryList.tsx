@@ -37,7 +37,7 @@ export default function CategoryList() {
   }, []);
 
   return (
-    <div className="w-[550px] mt-[20px] relative mb-[100px] bg-slate-300">
+    <div className="w-[550px] mt-[20px] relative mb-[100px] bg-slate-300 scrollbar-hide">
       <div className="bg-gray-18 h-full shadow-[0px_1px_3px_1px_rgba(0,0,0,0.15)] flex flex-col justify-start p-4">
         <div className="flex justify-between gap-4 text-gray-700 text-title-bold mt-3 mb-5 px-4 items-center">
           <div className="w-[36%]">카테고리 조회</div>

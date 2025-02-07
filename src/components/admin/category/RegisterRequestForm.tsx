@@ -3,7 +3,7 @@ import {useState} from 'react';
 import {PlusCircle, RightArrowIcon} from '../../common/Icon';
 import { createTicketForm } from '../../../api/service/tickets';
 import { toast } from 'react-toastify';
-import ConfirmModal from '../common/ConfirmModal';
+import Modal from '../../common/Modal';
 
 interface RegisterRequestFormProps {
   onClose: () => void;
@@ -42,6 +42,7 @@ export default function RegisterRequestForm({onClose, name, firstCategoryId, sec
       
       await createTicketForm(firstCategoryId, secondCategoryId, { mustDescription, description });
       toast.success('요청 양식이 성공적으로 생성되었습니다.');
+      onClose();
       setTimeout(() => {
         window.location.reload(); // 등록 후 새로고침
       }, 1000);
@@ -108,12 +109,12 @@ export default function RegisterRequestForm({onClose, name, firstCategoryId, sec
 
       {/* 등록 전 확인 모달 */}
       {isConfirmOpen && (
-        <ConfirmModal
-          isOpen={isConfirmOpen}
-          onClose={() => setIsConfirmOpen(false)}
-          onConfirm={handleSubmit}
-          message="요청 양식을 등록하시겠습니까?"
-        />
+        <Modal title="요청 양식 등록"
+        content={`정말로 "${name}" 요청 양식을 등록하시겠습니까?`}
+        backBtn="취소"
+        onBackBtnClick={() => setIsConfirmOpen(false)}
+        checkBtn="등록"
+        onBtnClick={handleSubmit}/>
       )}
     </AnimatePresence>
   );
