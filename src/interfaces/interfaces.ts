@@ -4,7 +4,9 @@ import {Category} from './newTicket';
 // 사용자 정보
 export interface UserStore {
   userId: number; // 사용자 아이디
+  userName: string;
   setUserId: (id: number) => void;
+  setUserName: (userName: string) => void;
   role: 'MANAGER' | 'USER' | 'ADMIN';
   setRole: (newRole: 'MANAGER' | 'USER' | 'ADMIN') => void; // 역할 값의 타입을 정확히 제한
 }

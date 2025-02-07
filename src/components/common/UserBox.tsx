@@ -3,7 +3,7 @@ import {useUserStore} from '../../store/store';
 import {getUserInfo} from '../../api/service/users';
 
 export default function UserBox() {
-  const {userId, setUserId, role, setRole} = useUserStore();
+  const {userId, setUserId, role, setRole, setUserName} = useUserStore();
   const [userInfo, setUserInfo] = useState<UserDetailResponse | null>(null);
 
   const getRoleColor = () => {
@@ -25,6 +25,7 @@ export default function UserBox() {
         const data = await getUserInfo();
         setUserId(data.userId);
         setRole(data.role);
+        setUserName(data?.username);
         setUserInfo(data);
       } catch (error) {
         console.error('Failed to fetch user details:', error);

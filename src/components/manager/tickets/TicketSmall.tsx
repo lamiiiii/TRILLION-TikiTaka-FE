@@ -97,7 +97,7 @@ const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(
               value={status}
               textColor="text-gray-15"
             />
-            <Profile name={assignee} backgroundColor="manager" size="sm" />
+            <Profile name={assignee} backgroundColor="MANAGER" size="sm" />
           </div>
         </div>
       </div>
