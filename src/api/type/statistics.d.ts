@@ -124,3 +124,25 @@ declare interface MonthlyCategorySummaryResponse {
   message: string;
   data: FirstCategory[];
 }
+
+declare interface MonthlyTicketSummary {
+  create: number;
+  urgent: number;
+  complete: number;
+}
+
+declare interface MonthlyTicketSummaryResponse {
+  message: string;
+  data: MonthlyTicketSummary;
+}
+
+declare interface MonthlyTicketSummary {
+  create: number;
+  urgent: number;
+  complete: number;
+}
+
+declare interface MonthlyTicketSummaryResponse {
+  message: string;
+  data: MonthlyTicketSummary;
+}

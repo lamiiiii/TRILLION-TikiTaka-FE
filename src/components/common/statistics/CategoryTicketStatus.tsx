@@ -35,7 +35,7 @@ export default function CategoryTicketStatus({isMonthly}: {isMonthly?: boolean})
   const secondaryData =
     categoryData?.reduce(
       (acc, category) => {
-        acc[category.firstCategoryName] = category.secondCategories.map((subCat) => ({
+        acc[category.firstCategoryName] = category.secondCategories?.map((subCat) => ({
           name: subCat.secondCategoryName,
           value: subCat.ticketCount,
         }));
@@ -111,7 +111,7 @@ export default function CategoryTicketStatus({isMonthly}: {isMonthly?: boolean})
                       innerRadius={30}
                       dataKey="value"
                     >
-                      {secondaryData[selectedCategory].map((_, index) => (
+                      {secondaryData[selectedCategory]?.map((_, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
@@ -121,7 +121,7 @@ export default function CategoryTicketStatus({isMonthly}: {isMonthly?: boolean})
                 </div>
 
                 <div className="flex flex-col justify-center gap-3 ml-10">
-                  {secondaryData[selectedCategory].map((item, index) => (
+                  {secondaryData[selectedCategory]?.map((item, index) => (
                     <div key={item.name} className="flex items-center gap-2">
                       <div className="w-3 h-3 rounded-full" style={{backgroundColor: COLORS[index % COLORS.length]}} />
                       <span>{item.name}</span>
