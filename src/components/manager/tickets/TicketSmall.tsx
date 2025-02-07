@@ -11,7 +11,7 @@ interface TicketSmallProps {
   deadline: string;
   initialStatus: string;
   assignee: string;
-  onStatusChange: (id: string, newStatus: '대기 중' | '진행 중' | '진행 완료') => void;
+  onStatusChange: (id: number, newStatus: '대기 중' | '진행 중' | '진행 완료') => void;
   [key: string]: any;
 }
 

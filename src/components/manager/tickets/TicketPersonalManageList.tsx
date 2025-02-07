@@ -4,11 +4,11 @@ import {useEffect, useState} from 'react';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {getTicketList, updateTicketStatus} from '../../../api/service/tickets';
 import {useUserStore} from '../../../store/store';
-import {STATUS_MAP} from '../../../constants/constants';
+import {STATUS_MAP, TicketStatus} from '../../../constants/constants';
 import useReverseMap from '../../../hooks/useReverseMap';
 
 export interface TicketDataProps {
-  id: string;
+  id: number;
   title: string;
   content: string;
   category: string;
@@ -16,7 +16,7 @@ export interface TicketDataProps {
   deadline: string;
   assignee: string;
   isUrgent: boolean;
-  status: '대기 중' | '진행 중' | '진행 완료';
+  status: TicketStatus;
 }
 
 export default function TicketPersonalManageList() {
@@ -28,7 +28,6 @@ export default function TicketPersonalManageList() {
   });
 
   const {userId} = useUserStore();
-
   const queryClient = useQueryClient();
 
   // 티켓 리스트 조회
@@ -37,20 +36,27 @@ export default function TicketPersonalManageList() {
     queryFn: () => getTicketList({managerId: userId}),
   });
 
-  // 티켓 상태 수정
-  const updateStatusMutation = useMutation({
-    mutationFn: ({ticketId, newStatus}: {ticketId: number; newStatus: string}) => {
-      // 한글 상태를 영문 키로 변환
-      const statusKey = REVERSE_STATUS_MAP[newStatus] as keyof typeof STATUS_MAP;
-      return updateTicketStatus(ticketId, statusKey);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['ticketList']});
-    },
-    onError: () => {
-      alert('티켓 상태 변경에 실패했습니다. 다시 시도해 주세요.');
-    },
-  });
+  // 티켓 상태 업데이트
+  const updateTicketState = (ticketId: number, newStatus: TicketStatus) => {
+    setTickets((prevTickets) => {
+      const updatedTickets = {...prevTickets};
+      let movedTicket: TicketDataProps | undefined;
+
+      Object.keys(updatedTickets).forEach((status) => {
+        const ticketIndex = updatedTickets[status].findIndex((ticket) => ticket.id === ticketId);
+        if (ticketIndex !== -1) {
+          [movedTicket] = updatedTickets[status].splice(ticketIndex, 1);
+        }
+      });
+
+      if (movedTicket) {
+        movedTicket.status = newStatus;
+        updatedTickets[newStatus].push(movedTicket);
+      }
+
+      return updatedTickets;
+    });
+  };
 
   useEffect(() => {
     if (ticketListData?.content) {
@@ -62,7 +68,7 @@ export default function TicketPersonalManageList() {
 
       ticketListData?.content.forEach((ticket) => {
         const newTicket: TicketDataProps = {
-          id: String(ticket.ticketId),
+          id: ticket.ticketId,
           title: ticket.title,
           content: ticket.description,
           category: ticket.firstCategoryName,
@@ -89,51 +95,35 @@ export default function TicketPersonalManageList() {
     }
   }, [ticketListData]);
 
-  const handleStatusChange = (ticketId: number, newStatus: '대기 중' | '진행 중' | '진행 완료') => {
-    const updatedTickets = {...tickets};
+  // 티켓 상태 수정
+  const updateStatusMutation = useMutation({
+    mutationFn: ({ticketId, newStatus}: {ticketId: number; newStatus: string}) => {
+      const statusKey = REVERSE_STATUS_MAP[newStatus] as keyof typeof STATUS_MAP;
+      return updateTicketStatus(ticketId, statusKey);
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({queryKey: ['ticketList']});
+      updateTicketState(variables.ticketId, variables.newStatus as TicketStatus);
+    },
+    onError: () => {
+      alert('티켓 상태 변경에 실패했습니다. 다시 시도해 주세요.');
+    },
+  });
 
-    // 모든 상태 목록을 순회하며 티켓 찾기
-    Object.keys(updatedTickets).forEach((status) => {
-      const ticketIndex = updatedTickets[status].findIndex((ticket) => Number(ticket.id) === Number(ticketId));
-      if (ticketIndex !== -1) {
-        const [movedTicket] = updatedTickets[status].splice(ticketIndex, 1);
-        movedTicket.status = newStatus;
-        updatedTickets[newStatus].push(movedTicket);
-
-        // API를 통해 상태 변경
-        updateStatusMutation.mutate({
-          ticketId: Number(movedTicket.id),
-          newStatus: movedTicket.status,
-        });
-      }
-    });
+  const handleStatusChange = (ticketId: number, newStatus: TicketStatus) => {
+    updateStatusMutation.mutate({ticketId, newStatus});
   };
 
   // 드래그 앤 드롭 핸들러
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) return;
 
-    const sourceList = [...tickets[result.source.droppableId]];
-    const destList = [...tickets[result.destination.droppableId]];
-    const [movedItem] = sourceList.splice(result.source.index, 1);
+    const ticketId = Number(result.draggableId);
+    const newStatus = result.destination.droppableId as TicketStatus;
 
     if (result.source.droppableId !== result.destination.droppableId) {
-      movedItem.status = result.destination.droppableId as '대기 중' | '진행 중' | '진행 완료';
-
-      // API를 통해 상태 변경
-      updateStatusMutation.mutate({
-        ticketId: Number(movedItem.id),
-        newStatus: movedItem.status,
-      });
+      updateStatusMutation.mutate({ticketId, newStatus});
     }
-
-    destList.splice(result.destination.index, 0, movedItem);
-
-    setTickets({
-      ...tickets,
-      [result.source.droppableId]: sourceList,
-      [result.destination.droppableId]: destList,
-    });
   };
 
   return (
