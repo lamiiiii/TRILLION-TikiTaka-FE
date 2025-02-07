@@ -25,7 +25,6 @@ export default function SecCategoryCard({id, parentId, name, onDelete}: SecCateg
     async function fetchRequestForm() {
       try {
         const formData = await getTicketForm(parentId, id);
-        console.log('데이터', formData);
 
         // ✅ 요청 양식이 빈 값인지 확인하고 없으면 null 처리
         if (!formData.description && !formData.mustDescription) {
