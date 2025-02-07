@@ -13,11 +13,9 @@ export async function patchUserPassword(passwordData: PasswordChangeData) {
 }
 
 // INTF-12: 계정 삭제
-export async function patchDeleteUser(token: string, userId: number) {
+export async function patchDeleteUser( userId: number) {
   try {
-    const {data} = await instance.patch(`/users/${userId}`, null, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.delete(`/users/${userId}`);
     return data;
   } catch (error) {
     console.error('계정 삭제 실패:', error);
@@ -52,7 +50,9 @@ export async function getManagerList() {
 // INTF-14: 시스템 사용자 목록 조회
 export async function getUserList() {
   try {
-    const {data} = await instance.get<{message: string; data: UserListResponse}>('/users', {});
+    const {data} = await instance.get<{message: string; data: UserListResponse}>('/users', {
+      
+    });
     return data.data;
   } catch (error) {
     console.error('사용자 목록 조회 실패:', error);
@@ -85,11 +85,9 @@ export async function getUserInfo() {
 }
 
 // INTF-16: 시스템 사용자 역할 변경
-export async function patchUserRole(token: string, userId: number, roleData: RoleChangeData) {
+export async function patchUserRole( userId: number, roleData: RoleChangeData) {
   try {
-    const {data} = await instance.patch(`/users/${userId}/role`, roleData, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.patch(`/users/${userId}/role`, roleData,);
     return data;
   } catch (error) {
     console.error('사용자 역할 변경 실패:', error);

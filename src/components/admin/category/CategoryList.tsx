@@ -9,11 +9,11 @@ export default function CategoryList() {
   const [isRegModalOpen, setIsRegModalOpen] = useState(false);
 
   const openRegModal = () => {
-    setIsRegModalOpen(true); // 1차 카테고리 모달 열기
+    setIsRegModalOpen(true); 
   };
 
   const closeRegModal = () => {
-    setIsRegModalOpen(false); // 1차 카테고리 모달 닫기
+    setIsRegModalOpen(false); 
   };
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function CategoryList() {
         const secondaryRequests = primaryCategories.map((primary) =>
           getCategoryList(primary.id).then((secondaries) => ({
             primary,
-            secondaries, // ✅ 원래의 2차 카테고리 데이터만 포함
+            secondaries, 
           }))
         );
 
@@ -63,7 +63,7 @@ export default function CategoryList() {
                     category.primary.id === primaryId
                       ? {
                           ...category,
-                          secondaries: [...category.secondaries, {id: newSubCategory.id, name: newSubCategory.name, parentId: primaryId}], // ✅ parentId 포함하여 업데이트
+                          secondaries: [...category.secondaries, { id: newSubCategory.id, name: newSubCategory.name, parentId: primaryId }], // parentId 포함하여 업데이트
                         }
                       : category
                   )
@@ -74,14 +74,14 @@ export default function CategoryList() {
             {secondaries.map((secondary) => (
               <SecCategoryCard
                 key={secondary.id}
-                id={secondary.id} // 2차 카테고리 ID 추가
+                id={secondary.id} 
                 parentId={primary.id}
                 name={secondary.name}
                 onDelete={(categoryId) => {
                   setCategories((prev) =>
                     prev.map(({primary, secondaries}) => ({
                       primary,
-                      secondaries: secondaries.filter((sub) => sub.id !== categoryId), // 삭제된 항목 제외
+                      secondaries: secondaries.filter((sub) => sub.id !== categoryId), 
                     }))
                   );
                 }}

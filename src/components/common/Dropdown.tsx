@@ -42,7 +42,7 @@ export default function DropDown({
   }, [isOpen]);
 
   return (
-    <div className="relative inline-block">
+    <div className="relative inline-block ">
       {/* 드롭다운 버튼 */}
       <button
         className={`${border ? 'border border-gray-6' : 'border-none'} 

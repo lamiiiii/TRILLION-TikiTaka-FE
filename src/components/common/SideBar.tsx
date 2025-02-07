@@ -1,5 +1,5 @@
 import {useTokenStore, useUserStore} from '../../store/store';
-import {AccountIcon, CategoryIcon, DbIcon, LgRightIcon, LogoutIcon, MyIcon, NewTicketIcon, StatIcon, TicketIcon} from './Icon';
+import {AccountIcon, CategoryIcon, DbIcon, InquiryIcon, LgRightIcon, LogoutIcon, MyIcon, NewTicketIcon, StatIcon, TicketIcon} from './Icon';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import MenuItem from './MenuItem';
 import SubMenuItem from './SubMenuItem';
@@ -78,8 +78,8 @@ export default function SideBar() {
           <>
             <MenuItem icon={AccountIcon} text="계정 관리" to="/admin/accounts" />
             <MenuItem icon={CategoryIcon} text="카테고리 관리" to="/admin/categories" />
-            <MenuItem icon={StatIcon} text="통계 관리" to="/admin/statistics" />
-            {/* <MenuItem icon={InquiryIcon} text="문의/요청 관리" to="/admin/inquiries" /> */}
+            {/* <MenuItem icon={StatIcon} text="통계 관리" to="/admin/statistics" /> */}
+            <MenuItem icon={InquiryIcon} text="문의/요청 관리" to="/admin/inquiries" />
           </>
         )}
       </div>

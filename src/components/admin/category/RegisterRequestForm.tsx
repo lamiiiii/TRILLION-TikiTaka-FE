@@ -3,7 +3,7 @@ import {useState} from 'react';
 import {PlusCircle, RightArrowIcon} from '../../common/Icon';
 import { createTicketForm } from '../../../api/service/tickets';
 import { toast } from 'react-toastify';
-import ConfirmModal from '../common/ConfirmModal';
+import Modal from '../../common/Modal';
 
 interface RegisterRequestFormProps {
   onClose: () => void;
@@ -42,9 +42,10 @@ export default function RegisterRequestForm({onClose, name, firstCategoryId, sec
       
       await createTicketForm(firstCategoryId, secondCategoryId, { mustDescription, description });
       toast.success('요청 양식이 성공적으로 생성되었습니다.');
+      onClose();
       setTimeout(() => {
         window.location.reload(); // 등록 후 새로고침
-      }, 1000);
+      }, 500);
     } catch (error) {
       toast.error('요청 양식 생성에 실패했습니다.');
     } 
@@ -83,7 +84,7 @@ export default function RegisterRequestForm({onClose, name, firstCategoryId, sec
             </div>
 
             <div className="mt-4">
-              <label className="block text-gray-700 font-semibold">요청 내용</label>
+              <label className="block text-gray-700 font-semibold mb-2">요청 내용</label>
               <textarea
                 rows={5}
                 className="w-full h-[320px] px-3 py-2 border border-gray-300 rounded mt-1 text-body-regular"
@@ -108,12 +109,12 @@ export default function RegisterRequestForm({onClose, name, firstCategoryId, sec
 
       {/* 등록 전 확인 모달 */}
       {isConfirmOpen && (
-        <ConfirmModal
-          isOpen={isConfirmOpen}
-          onClose={() => setIsConfirmOpen(false)}
-          onConfirm={handleSubmit}
-          message="요청 양식을 등록하시겠습니까?"
-        />
+        <Modal title="요청 양식 등록"
+        content={`정말로 "${name}" 요청 양식을 등록하시겠습니까?`}
+        backBtn="취소"
+        onBackBtnClick={() => setIsConfirmOpen(false)}
+        checkBtn="등록"
+        onBtnClick={handleSubmit}/>
       )}
     </AnimatePresence>
   );
