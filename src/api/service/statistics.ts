@@ -66,3 +66,25 @@ export async function getMonthlyHandlingStats(token: string) {
     throw error;
   }
 }
+
+// INTF-69: 일간 담당자별 티켓 처리 현황
+export async function getDailyManagerTicketSummary(): Promise<ManagerTicketSummary[]> {
+  try {
+    const {data} = await instance.get<DailyManagerTicketSummaryResponse>('/statistics/daily/manSummary');
+    return data.data;
+  } catch (error) {
+    console.error('일간 담당자별 티켓 처리 현황 조회 실패:', error);
+    throw error;
+  }
+}
+
+// INTF-70: 일간 티켓 처리 현황
+export async function getDailyTicketSummary(): Promise<DailyTicketSummary> {
+  try {
+    const {data} = await instance.get('/statistics/daily/summary');
+    return data.data;
+  } catch (error) {
+    console.error('일간 티켓 처리 현황 조회 실패:', error);
+    throw error;
+  }
+}

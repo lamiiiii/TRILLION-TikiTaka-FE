@@ -1,4 +1,6 @@
+import {useQuery} from '@tanstack/react-query';
 import {Cell, Pie, PieChart, ResponsiveContainer, Tooltip} from 'recharts';
+import {getDailyTicketSummary} from '../../../../api/service/statistics';
 
 // 임시 데이터 - 당일 티켓 처리 현황
 const data = [
@@ -11,6 +13,19 @@ const data = [
 const COLORS = ['#F6D47A', '#FFDF5F', '#F0C000'];
 
 export default function TodayTicketStatus() {
+  const {data: ticketData} = useQuery({
+    queryKey: ['dailyTicketSummary'],
+    queryFn: getDailyTicketSummary,
+  });
+  // 데이터 변환
+  const chartData = ticketData
+    ? [
+        {name: '생성', ticket: ticketData?.createdTickets},
+        {name: '처리 중', ticket: ticketData?.inProgressTickets},
+        {name: '완료', ticket: ticketData?.doneTickets},
+      ]
+    : [];
+
   // 오늘 날짜 가져오기
   const today = new Date();
   const formattedDate = `${today.getMonth() + 1}월 ${today.getDate()}일`;
@@ -26,7 +41,7 @@ export default function TodayTicketStatus() {
           <section className="w-[200px] h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={data} cx="50%" cy="50%" labelLine={false} outerRadius={80} fill="#8884d8" dataKey="ticket">
+                <Pie data={chartData} cx="50%" cy="50%" labelLine={false} outerRadius={80} fill="#8884d8" dataKey="ticket">
                   {data.map((entry, index) => (
                     <Cell key={`cell-${index}-${entry}`} fill={COLORS[index % COLORS.length]} />
                   ))}
@@ -46,7 +61,7 @@ export default function TodayTicketStatus() {
 
           <section className="grid grid-cols-2 gap-8 text-subtitle">
             <div className="space-y-4">
-              {data.map((item) => (
+              {chartData.map((item) => (
                 <div key={item.name} className="truncate whitespace-nowrap">
                   {item.name}
                 </div>
@@ -54,7 +69,7 @@ export default function TodayTicketStatus() {
             </div>
 
             <div className="text-right text-main2-3 space-y-4">
-              {data.map((item) => (
+              {chartData.map((item) => (
                 <div key={item.name}>{item.ticket}건</div>
               ))}
             </div>
