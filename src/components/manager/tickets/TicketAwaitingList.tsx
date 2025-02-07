@@ -1,13 +1,14 @@
 import {useState} from 'react';
 import {AlertIcon, DownIcon} from '../../common/Icon';
-import TicketList from '../../common/ticket/TicketList';
-import TicketFilter from './TicketFilter';
-import {motion, AnimatePresence} from 'framer-motion';
+import {AnimatePresence} from 'framer-motion';
 import {useQuery} from '@tanstack/react-query';
 import {getPendingApprovalCount} from '../../../api/service/tickets';
+import PendingTicketFilter from './PendingTicketFilter';
+import PendingTicketList from './PendingTicketList';
 
 export default function TicketAwaitingList() {
   const [isListVisible, setIsListVisible] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState<'전체' | '나의 요청'>('전체');
 
   const toggleListVisibility = () => {
     setIsListVisible((prev) => !prev);
@@ -47,10 +48,10 @@ export default function TicketAwaitingList() {
 
       <AnimatePresence>
         {isListVisible && (
-          <motion.div initial={{opacity: 0, height: 0, y: -20}} animate={{opacity: 1, height: 'auto', y: 0}} transition={{duration: 0.3}}>
-            <TicketFilter />
-            <TicketList role="manager" selectedFilter={'전체'} />
-          </motion.div>
+          <div>
+            <PendingTicketFilter selectedFilter={selectedFilter} onFilterChange={setSelectedFilter} />
+            <PendingTicketList selectedFilter={selectedFilter} />
+          </div>
         )}
       </AnimatePresence>
     </div>

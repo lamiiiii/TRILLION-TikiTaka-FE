@@ -1,10 +1,9 @@
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useState} from 'react';
+import {ticketDummy} from '../../../data/ticketData';
 import Dropdown from '../Dropdown';
 import Ticket from './Ticket';
 import PageNations from '../../manager/common/PageNations';
-import {TicketViewType} from '../../../interfaces/ticket';
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {approveTicket, getTicketList, rejectTicket} from '../../../api/service/tickets';
+import {TicketDataProps, TicketStatusType, TicketViewType} from '../../../interfaces/ticket';
 
 const dropdownData: {label: string; options: string[]}[] = [
   {label: '담당자', options: ['곽서연', '김규리', '김낙도']},
@@ -18,68 +17,59 @@ interface TicketListProps {
   selectedFilter: TicketViewType; // 필터 상태 추가
 }
 
+// TicketViewType을 실제 API status 값으로 변환하는 함수
+const mapViewTypeToStatus = (viewType: TicketViewType): TicketStatusType | null => {
+  switch (viewType) {
+    case '대기중':
+      return 'PENDING';
+    case '진행중':
+    case '검토 요청':
+      return 'IN_PROGRESS';
+    case '완료':
+      return 'COMPLETED';
+    default:
+      return null; // 전체/긴급은 따로 처리
+  }
+};
+
 export default function TicketList({role, selectedFilter}: TicketListProps) {
   const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
+  const [filteredTickets, setFilteredTickets] = useState<TicketDataProps[]>([]);
+
   const [currentPage, setCurrentPage] = useState(1);
-  const listRef = useRef<HTMLDivElement>(null);
+  const ticketsPerPage = 5;
 
-  const ticketsPerPage = 20;
-
-  const queryClient = useQueryClient();
-
-  //티켓 리스트 조회
-  const {data: ticketListData} = useQuery({
-    queryKey: ['ticketList', currentPage, selectedFilter, selectedFilters],
-    queryFn: () =>
-      getTicketList({
-        page: currentPage - 1,
-        size: ticketsPerPage,
-        status: 'PENDING', //승인 대기 티켓 조회
-      }),
-  });
-
-  //다음 페이지 preFetch
   useEffect(() => {
-    if (ticketListData?.totalPages && currentPage < ticketListData.totalPages) {
-      const nextPage = currentPage + 1;
-      queryClient.prefetchQuery({
-        queryKey: ['ticketList', nextPage, selectedFilter, selectedFilters],
-        queryFn: () => getTicketList({page: nextPage}),
+    let updatedTickets = [...ticketDummy];
+
+    const mappedStatus = mapViewTypeToStatus(selectedFilter);
+
+    // 필터 적용
+    if (selectedFilter !== '전체') {
+      updatedTickets = updatedTickets.filter((ticket) => {
+        if (selectedFilter === '긴급') return ticket.urgent;
+        return mappedStatus ? ticket.status === mappedStatus : true;
       });
     }
-  }, [currentPage, queryClient, ticketListData?.totalPages, selectedFilter, selectedFilters]);
 
-  // 페이지 변경 시 스크롤 위치 조정
-  useEffect(() => {
-    if (listRef.current) {
-      listRef.current.scrollIntoView();
-    }
-  }, [currentPage]);
+    // 🔹 긴급 티켓이 가장 위로, 기한이 오래된 순으로 정렬
+    updatedTickets.sort((a, b) => {
+      if (a.urgent !== b.urgent) return b.urgent ? 1 : -1;
+      return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
+    });
 
-  // 티켓 승인
-  const approveMutation = useMutation({
-    mutationFn: (ticketId: number) => approveTicket(ticketId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['ticketList']});
-    },
-    onError: () => {
-      alert('티켓 승인에 실패했습니다. 다시 시도해 주세요.');
-    },
-  });
+    setFilteredTickets(updatedTickets);
+    setCurrentPage(1); // 필터 변경 시 첫 페이지로 초기화
+  }, [selectedFilter, selectedFilters]);
 
-  // 티켓 반려
-  const rejectMutation = useMutation({
-    mutationFn: (ticketId: number) => rejectTicket(ticketId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['ticketList']});
-    },
-    onError: () => {
-      alert('티켓 반려에 실패했습니다. 다시 시도해 주세요.');
-    },
-  });
+  const indexOfLastTicket = currentPage * ticketsPerPage;
+  const indexOfFirstTicket = indexOfLastTicket - ticketsPerPage;
+  const currentTickets = filteredTickets.slice(indexOfFirstTicket, indexOfLastTicket);
+
+  const totalPages = Math.max(1, Math.ceil(filteredTickets.length / ticketsPerPage)); // totalPages 최소 1 유지
 
   const handlePageChange = (newPage: number) => {
-    if (ticketListData?.totalPages && newPage >= 1 && newPage <= ticketListData?.totalPages) {
+    if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
     }
   };
@@ -93,15 +83,15 @@ export default function TicketList({role, selectedFilter}: TicketListProps) {
   };
 
   const handleApprove = (ticketId: number) => {
-    approveMutation.mutate(ticketId);
+    console.log(`티켓 ${ticketId} 진행`);
   };
 
   const handleReject = (ticketId: number) => {
-    rejectMutation.mutate(ticketId);
+    console.log(`티켓 ${ticketId} 반려`);
   };
 
   return (
-    <div ref={listRef} className="w-full mt-[20px] relative mb-[100px]">
+    <div className="w-full mt-[20px] relative mb-[100px]">
       <div className="bg-gray-18 h-full shadow-[0px_1px_3px_1px_rgba(0,0,0,0.15)] flex flex-col justify-start p-4">
         <div className="flex items-center gap-4 leading-none mt-4 px-2">
           {dropdownData.map((data) => (
@@ -115,23 +105,22 @@ export default function TicketList({role, selectedFilter}: TicketListProps) {
             />
           ))}
           <div className="ml-auto text-gray-700 text-subtitle">
-            조회 건수 <span className="text-black text-title-bold ml-1">{ticketListData?.totalElements}건</span>
+            조회 건수 <span className="text-black text-title-bold ml-1">{filteredTickets.length}건</span>
           </div>
         </div>
 
         <div className="flex gap-4 py-2 text-gray-700 text-title-regular mt-5 mb-5 px-2">
           <div className="w-[6%]">티켓 ID</div>
           <div className="w-[12%]">카테고리</div>
-          <div className="w-[30%]">요청 내용</div>
+          <div className={role === 'user' ? 'w-[51%]' : 'w-[36%]'}>요청 내용</div>
           <div className="w-[12%]">기한</div>
-          <div className="w-[16%]">담당자</div>
+          <div className="w-[10%]">담당자</div>
           {role !== 'user' && <div className="w-[15%]">승인 여부</div>}
         </div>
 
         <div className="flex flex-col gap-4">
-          {ticketListData?.content &&
-            ticketListData?.content?.length > 0 &&
-            ticketListData?.content?.map((ticket: any) => (
+          {currentTickets.length > 0 ? (
+            currentTickets.map((ticket) => (
               <Ticket
                 key={ticket.ticketId}
                 {...ticket}
@@ -140,10 +129,13 @@ export default function TicketList({role, selectedFilter}: TicketListProps) {
                 onApprove={() => handleApprove(ticket.ticketId)}
                 onReject={() => handleReject(ticket.ticketId)}
               />
-            ))}
+            ))
+          ) : (
+            <div className="text-gray-500 text-center py-4">해당 상태의 티켓이 없습니다.</div>
+          )}
         </div>
 
-        <PageNations currentPage={currentPage} totalPages={ticketListData?.totalPages} onPageChange={handlePageChange} />
+        <PageNations currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
       </div>
     </div>
   );

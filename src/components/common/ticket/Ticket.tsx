@@ -70,7 +70,7 @@ export default function Ticket({
         <div className="w-[6%] text-subtitle-regular text-gray-700 px-2">#{ticketId}</div>
 
         {/* 카테고리 */}
-        <div className="w-[12%] text-subtitle-regular">
+        <div className="w-[14%] text-subtitle-regular">
           <span>{firstCategoryName}</span>
           <br />
           <span className="text-gray-6 text-body-regular">{secondCategoryName}</span>
@@ -90,7 +90,7 @@ export default function Ticket({
         <div className="w-[12%] text-body-regular text-gray-15">{deadline}</div>
 
         {/* 담당자 */}
-        <div className="w-[16%]" onClick={handleClick}>
+        <div className="w-[14%]" onClick={handleClick}>
           <Dropdown
             label={selectedAssignee === 'all' ? 'all' : selectedAssignee}
             options={assigneeOptions}

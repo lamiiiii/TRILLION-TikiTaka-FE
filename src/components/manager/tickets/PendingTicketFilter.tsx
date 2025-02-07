@@ -2,7 +2,7 @@ import {useEffect, useRef, useState} from 'react';
 
 // 상태와 티켓 개수 데이터 정의
 const ticketData: {type: string; count: number}[] = [
-  {type: '전체 요청', count: 140},
+  {type: '전체', count: 140},
   {type: '내 요청 ', count: 100},
 ];
 
@@ -30,9 +30,14 @@ function FilterItem({type, count, isSelected, onClick}: {type: string; count: nu
   );
 }
 
+interface PendingTicketFilterProps {
+  selectedFilter: '전체' | '나의 요청';
+  onFilterChange: (filter: '전체' | '나의 요청') => void;
+}
+
 // 전체 필터 컴포넌트
-export default function TicketFilter() {
-  const [selectedType, setSelectedType] = useState('전체 요청');
+export default function PendingTicketFilter({selectedFilter, onFilterChange}: PendingTicketFilterProps) {
+  const [selectedType, setSelectedType] = useState('전체');
   const [indicatorStyle, setIndicatorStyle] = useState({left: 0, width: 0});
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -59,8 +64,11 @@ export default function TicketFilter() {
             <FilterItem
               type={item.type}
               count={item.count}
-              isSelected={item.type === selectedType}
-              onClick={() => setSelectedType(item.type)}
+              isSelected={item.type === selectedFilter}
+              onClick={() => {
+                setSelectedType(item.type as '전체' | '나의 요청');
+                onFilterChange(item.type as '전체' | '나의 요청');
+              }}
             />
           </div>
         ))}
