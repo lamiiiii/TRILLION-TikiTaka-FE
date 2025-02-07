@@ -32,6 +32,11 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
   const managerId = selectedFilter === '전체' ? undefined : userId; // 조건부로 managerId 설정
   console.log(managerId);
 
+  // selectedFilter가 변경될 때 currentPage를 1로 리셋
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedFilter]);
+
   //티켓 리스트 조회
   const {data: ticketListData} = useQuery({
     queryKey: ['ticketList', currentPage, selectedFilter, selectedFilters, userId],
