@@ -127,7 +127,7 @@ export default function Ticket({
               </button>
             </>
           )}
-          {ticketStatus === 'IN_PROGRESS' && (
+          {ticketStatus === 'IN_PROGRESS' && role !== 'USER' && (
             <Dropdown
               label="진행중"
               options={['진행중', '완료']}
