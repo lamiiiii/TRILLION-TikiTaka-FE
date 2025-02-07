@@ -257,10 +257,9 @@ export async function reviewTicket(token: string, ticketId: number) {
 }
 
 // INTF-43: 티켓 검토 내역 조회
-export async function getTicketReviews(token: string, ticketId: number) {
+export async function getTicketReviews(ticketId: number) {
   try {
     const {data} = await instance.get(`/tickets/${ticketId}/reviews`, {
-      headers: {Authorization: `Bearer ${token}`},
     });
     return data;
   } catch (error) {
