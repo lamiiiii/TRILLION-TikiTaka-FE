@@ -3,15 +3,15 @@ import {Link} from 'react-router-dom';
 import {useUserStore} from '../../../store/store';
 import {AlertIcon} from '../../common/Icon';
 import TicketDropdown from './TicketDropdown';
-import { useQuery } from '@tanstack/react-query';
-import { getManagerList } from "../../../api/service/users";
+import {useQuery} from '@tanstack/react-query';
+import {getManagerList} from '../../../api/service/users';
 
 interface DashTicketProps extends TicketListItem {
   detailLink: string; // 상세 조회 링크 추가
   onAssigneeChange?: (newAssignee: string) => void; // 선택한 담당자 변경 핸들러 (Optional로 설정)
   onApprove?: (ticketId: number) => void; // ✅ 승인 핸들러 추가
   onReject?: (ticketId: number) => void;
-  onStatusChange?: (newStatus: string) => void;
+  onStatusChange: (ticketId: number, newStatus: string) => void;
 }
 
 export default function DashTicket({
@@ -42,13 +42,13 @@ export default function DashTicket({
   };
 
   // 담당자 목록 불러오기 (React Query)
-const { data: managerData} = useQuery({
-  queryKey: ["managers"],
-  queryFn: getManagerList,
-});
+  const {data: managerData} = useQuery({
+    queryKey: ['managers'],
+    queryFn: getManagerList,
+  });
 
-// 불러온 데이터에서 담당자 이름만 추출
-const managerList = managerData?.users.map((user) => user.username) || [];
+  // 불러온 데이터에서 담당자 이름만 추출
+  const managerList = managerData?.users.map((user) => user.username) || [];
 
   // 상태 변환 (영문 → 한글)
   const statusMapping: Record<string, string> = {
@@ -57,6 +57,12 @@ const managerList = managerData?.users.map((user) => user.username) || [];
     REVIEW: '검토 요청',
     DONE: '완료',
     REJECTED: '반려',
+  };
+
+  const reverseStatusMapping: Record<string, string> = {
+    대기중: 'PENDING',
+    진행중: 'IN_PROGRESS',
+    완료: 'DONE',
   };
 
   // 긴급 티켓 스타일
@@ -121,23 +127,28 @@ const managerList = managerData?.users.map((user) => user.username) || [];
           </>
         ) : status === 'IN_PROGRESS' || status === 'REVIEW' ? (
           <TicketDropdown
-            label={statusMapping[status]} // 기본 상태
-            options={['완료']} // 선택 가능한 옵션
-            onSelect={() => onStatusChange && onStatusChange('DONE')} // ✅ 상태 변경 핸들러 호출
+            label={statusMapping[status]} // 현재 상태 표시
+            options={['대기중', '진행중', '완료']} // 가능한 옵션
+            onSelect={(selectedStatus) => {
+              const newStatus = reverseStatusMapping[selectedStatus];
+              if (newStatus !== 'IN_PROGRESS') {
+                onStatusChange(ticketId, newStatus);
+              }
+            }}
             paddingX="px-3"
             border={true}
             textColor="text-gray-15"
           />
         ) : (
           <div
-      className={`px-10 h-[30px] text-[12px] leading-none border rounded-md flex items-center justify-center 
-        ${status === "DONE" ? "bg-blue/15 text-body-regular " : ""}
-        ${status === "REJECTED" ? "bg-error/15 text-body-regular " : ""}
-        ${status !== "DONE" && status !== "REJECTED" ? "bg-gray-1 text-gray-700 border-gray-6" : ""}
+            className={`px-10 h-[30px] text-[12px] leading-none border rounded-md flex items-center justify-center 
+        ${status === 'DONE' ? 'bg-blue/15 text-body-regular ' : ''}
+        ${status === 'REJECTED' ? 'bg-error/15 text-body-regular ' : ''}
+        ${status !== 'DONE' && status !== 'REJECTED' ? 'bg-gray-1 text-gray-700 border-gray-6' : ''}
       `}
-    >
-      {statusMapping[status] || "상태 없음"}
-    </div>
+          >
+            {statusMapping[status] || '상태 없음'}
+          </div>
         )}
       </div>
     </div>

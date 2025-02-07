@@ -71,8 +71,8 @@ export default function DropDown({
                 className={`px-4 py-1.5 text-center cursor-pointer leading-none m-2 
                   ${
                     selected === option
-                      ? "bg-gray-1 text-caption-bold rounded-md mx-2 border border-gray-2 text-gray-900 "
-                      : "text-gray-700 text-caption-regular hover:bg-gray-1 rounded-md "
+                    ? 'bg-gray-1 text-caption-bold rounded-md mx-2 border border-gray-2 text-gray-900'
+                    : 'text-gray-700 text-caption-regular hover:bg-gray-1 rounded-md'
                   }`}
                 onClick={() => handleSelect(option)}
               >

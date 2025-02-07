@@ -147,7 +147,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts }: Ticke
     mutationFn: (ticketId: number) => rejectTicket(ticketId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tickets"] });
-      toast.error(" 티켓이 반려되었습니다.")
+      alert(" 티켓이 반려되었습니다.")
     },
   });
   
@@ -169,6 +169,10 @@ export default function ManagerTicketList({selectedFilter, ticketCounts }: Ticke
       toast.error("티켓 상태 변경 실패. 다시 시도하세요.");
     },
   });
+
+  const handleStatusChange = (ticketId: number, newStatus: string) => {
+    updateStatusMutation.mutate({ ticketId, newStatus });
+  };
 
   return (
     <div className="w-full mt- relative mb-[100px]">
@@ -233,9 +237,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts }: Ticke
                 onAssigneeChange={(newAssignee) => handleAssigneeChange(ticket.ticketId, newAssignee)}
                 onApprove={() => approveMutation.mutate(ticket.ticketId)}
                 onReject={() => rejectMutation.mutate(ticket.ticketId)}
-                onStatusChange={(newStatus) =>
-                  updateStatusMutation.mutate({ ticketId: ticket.ticketId, newStatus })
-                }
+                onStatusChange={handleStatusChange }
               />
             ))
           ) : (
