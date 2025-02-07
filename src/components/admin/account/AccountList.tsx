@@ -11,7 +11,7 @@ export default function AccountList({selectedTab}: {selectedTab: '승인 대기'
   const [accounts, setAccounts] = useState(accountDummy);
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8; 
+  const itemsPerPage = 8;
 
   // 역할 변경
   const handleRoleChange = (id: string, newRole: string) => {
@@ -60,14 +60,9 @@ export default function AccountList({selectedTab}: {selectedTab: '승인 대기'
 
   return (
     <div className="w-full mt-[20px] relative mb-[100px]">
-      <div className="bg-gray-18 h-full shadow-[0px_1px_3px_1px_rgba(0,0,0,0.15)] flex flex-col justify-start p-4">
+      <div className="bg-gray-18 h-full  flex flex-col justify-start p-4">
         <div className="flex items-center justify-between px-2">
-          <Dropdown
-            label="승인 상태"
-            options={['전체', '승인', '대기중']} 
-            onSelect={() => {}} 
-            paddingX="px-3"
-          />
+          <Dropdown label="승인 상태" options={['전체', '승인', '대기중']} onSelect={() => {}} paddingX="px-3" />
           <div className="flex gap-6 text-gray-15 text-subtitle-regular">
             <span>
               {ROLE[0]} <span className="text-black text-title-bold ml-2">60명</span>
