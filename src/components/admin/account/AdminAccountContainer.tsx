@@ -1,6 +1,6 @@
 import { useState } from "react";
 import AccountFilter from "./AccountFilter";
-import AccountList from "./AccountList"; // ✅ 승인 대기 목록 (페이지네이션 O)
+import AccountList from "./AccountList"; 
 import UserList from "./UserList";
 
 export default function AdminAccountContainer() {

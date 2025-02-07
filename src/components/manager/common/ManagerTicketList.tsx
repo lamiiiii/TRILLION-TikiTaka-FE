@@ -59,12 +59,12 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
 
       let sortedTickets = [...ticketData.content];
 
-      // ✅ 긴급 티켓(urgent) 항상 상단에 위치하도록 정렬
+      // 긴급 티켓(urgent) 항상 상단에 위치하도록 정렬
       sortedTickets.sort((a, b) => {
         if (a.urgent && !b.urgent) return -1;
         if (!a.urgent && b.urgent) return 1;
 
-        // ✅ 정렬 기준 적용
+        // 정렬 기준 적용
         if (orderBy === '최신순') {
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
         } else if (orderBy === '마감기한순') {
@@ -210,7 +210,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     },
   });
 
-  // ✅ 티켓 상태 변경 요청
+  // 티켓 상태 변경 요청
   const updateStatusMutation = useMutation({
     mutationFn: ({ticketId, newStatus}: {ticketId: number; newStatus: string}) => updateTicketStatus(ticketId, newStatus),
     onSuccess: (_, {newStatus}) => {
@@ -221,7 +221,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
         reviewing: newStatus === 'DONE' ? prev.reviewing - 1 : prev.reviewing,
         completed: newStatus === 'DONE' ? prev.completed + 1 : prev.completed,
       }));
-       // ✅ 상태 변경 메시지 동적 설정
+       // 상태 변경 메시지 동적 설정
     const statusMessage: Record<string, string> = {
       PENDING: "티켓 상태가 대기중으로 변경되었습니다.",
       DONE: "티켓 상태가 완료로 변경되었습니다.",

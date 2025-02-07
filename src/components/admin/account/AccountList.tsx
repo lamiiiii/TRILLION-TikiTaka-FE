@@ -6,7 +6,6 @@ import AccountCard from "./AccountCard";
 import Dropdown from "../../common/Dropdown";
 import PageNations from "../../manager/common/PageNations";
 
-// 승인 대기 목록 인터페이스
 interface RegistrationAccount {
   registrationId: number;
   username: string;

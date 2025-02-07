@@ -1,8 +1,10 @@
 import {useState, useRef, useEffect} from 'react';
 import {PlusCircle, VerticalDotIcon} from '../../common/Icon';
-import {createCategory, deleteCategory} from '../../../api/service/categories';
+import {createCategory, deleteCategory, updateCategory} from '../../../api/service/categories';
 import DeleteConfirmModal from '../common/DeleteConfirmModal';
 import { toast } from 'react-toastify';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
 
 interface CategoryCardProps {
   id: number; // 1차 카테고리 ID (2차 카테고리의 parentId)
@@ -13,37 +15,77 @@ interface CategoryCardProps {
 }
 
 export default function CategoryCard({id, name,  onDelete, onAddSubCategory}: CategoryCardProps) {
+  const queryClient = useQueryClient();
   const [isEditing, setIsEditing] = useState(false);
-  const [subCategoryName, setSubCategoryName] = useState(''); // 입력된 2차 카테고리 이름
-  // const [subCategories, setSubCategories] = useState<{id: number; name: string}[]>([]); // 추가된 2차 카테고리 목록
+  const [subCategoryName, setSubCategoryName] = useState(''); 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false); 
+  const [newCategoryName, setNewCategoryName] = useState(name);
   
 
-  // PlusCircle 클릭 시 Input 표시
+  // 카테고리 수정 API 
+  const updateCategoryMutation = useMutation({
+    mutationFn: () => updateCategory(id, { name: newCategoryName }), 
+    onSuccess: () => {
+      toast.success("카테고리가 성공적으로 수정되었습니다.");
+      queryClient.invalidateQueries({ queryKey: ["categories"] }); 
+      setIsEditModalOpen(false); // 모달 닫기
+    },
+    onError: () => {
+      toast.error("카테고리 수정에 실패했습니다.");
+    },
+  });
+
+  // 카테고리 삭제 API 
+  const deleteCategoryMutation = useMutation({
+    mutationFn: () => deleteCategory(id),
+    onSuccess: () => {
+      toast.success("카테고리가 성공적으로 삭제되었습니다.");
+      queryClient.invalidateQueries({ queryKey: ["categories"] }); // 데이터 갱신
+      onDelete(id);
+      setIsDeleteModalOpen(false);
+    },
+    onError: () => {
+      toast.error("카테고리 삭제에 실패했습니다.");
+    },
+  });
+
+  
   const handleAddSubCategory = () => {
     setIsEditing(true);
   };
 
-  // 삭제 버튼 클릭 시 모달 열기
+  
   const openDeleteModal = () => {
     setIsDeleteModalOpen(true);
     setIsMenuOpen(false);
   };
 
-  const handleDelete = async () => {
-      try {
-        await deleteCategory(id);
-        onDelete(id); // 삭제 후 부모에서 리스트 업데이트
-        toast.success('카테고리가 성공적으로 삭제되었습니다.');
-      } catch (error) {
-        toast.error('카테고리 삭제에 실패했습니다.');
-      } finally {
-        setIsDeleteModalOpen(false);
-      }
-    };
+  const openEditModal = () => {
+    setNewCategoryName(name); 
+    setIsEditModalOpen(true);
+    setIsMenuOpen(false);
+  };
+
+  const handleUpdate = () => {
+    if (!newCategoryName.trim()) {
+      toast.error("카테고리 이름을 입력하세요.");
+      return;
+    }
+    updateCategoryMutation.mutate(); 
+    setTimeout(() => {
+      window.location.reload(); 
+    }, 500);
+  };
+
+  const handleDelete = () => {
+    deleteCategoryMutation.mutate(); 
+  };
+
+  
 
   // Enter 키 입력 시 API 요청
   const handleSubmit = async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -52,7 +94,7 @@ export default function CategoryCard({id, name,  onDelete, onAddSubCategory}: Ca
         const response = await createCategory( id, { name: subCategoryName });
         const newSubCategory = { id: response.data.id, name: subCategoryName };
 
-        // ✅ 부모 컴포넌트(CategoryList.tsx)에서만 2차 카테고리 추가하도록 콜백 실행
+        // 부모 컴포넌트(CategoryList.tsx)에서만 2차 카테고리 추가하도록 콜백 실행
         onAddSubCategory(id, newSubCategory);
 
         setSubCategoryName('');
@@ -64,7 +106,7 @@ export default function CategoryCard({id, name,  onDelete, onAddSubCategory}: Ca
     }
   };
 
-  // 화면 다른 곳 클릭 시 Input 숨기기
+  
   const handleOutsideClick = (e: MouseEvent) => {
     if (inputRef.current && !inputRef.current.contains(e.target as Node)) {
       setIsEditing(false);
@@ -72,14 +114,12 @@ export default function CategoryCard({id, name,  onDelete, onAddSubCategory}: Ca
     }
   };
 
-  // 화면 다른 곳 클릭 시 메뉴 닫기
   const handleOutMenuClick = (e: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
       setIsMenuOpen(false);
     }
   };
 
-  // 이벤트 리스너 추가 및 정리
   useEffect(() => {
     if (isEditing) {
       document.addEventListener('mousedown', handleOutsideClick);
@@ -114,7 +154,7 @@ export default function CategoryCard({id, name,  onDelete, onAddSubCategory}: Ca
           {/* 수정/삭제 메뉴 */}
           {isMenuOpen && (
             <div ref={menuRef} className="absolute top-[32px] right-[16px] mt-2 w-24 bg-white border border-gray-300 shadow-md rounded-md z-10">
-              <button className="w-full px-4 py-2 text-body-bold text-center hover:bg-gray-100">수정</button>
+              <button className="w-full px-4 py-2 text-body-bold text-center hover:bg-gray-100" onClick={openEditModal}>수정</button>
               <button className="w-full px-4 py-2 text-body-bold text-center hover:bg-gray-100" onClick={openDeleteModal}>
                 삭제
               </button>
@@ -123,7 +163,7 @@ export default function CategoryCard({id, name,  onDelete, onAddSubCategory}: Ca
         </div>
       </div>
 
-      {/* PlusCircle 클릭 시 Input 나타남 */}
+      {/* PlusCircle 클릭 */}
       {isEditing && (
         <div className="px-4 pb-3">
           <input
@@ -139,15 +179,32 @@ export default function CategoryCard({id, name,  onDelete, onAddSubCategory}: Ca
         </div>
       )}
 
-      
-      {/* ✅ 추가된 2차 카테고리 리스트 */}
-      {/* {subCategories.length > 0 && (
-        <div className="px-4 pb-3">
-          {subCategories.map((sub) => (
-            <SecCategoryCard key={sub.id} id={sub.id} name={sub.name} token={token} onDelete={onDelete}/>
-          ))}
+      {/* 수정 모달 */}
+      {isEditModalOpen && (
+        <motion.div className="overlay" initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}}>
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded shadow-lg w-[400px]">
+            <h2 className="text-xl font-semibold mb-4">카테고리 수정</h2>
+            <input
+              type="text"
+              className="border border-gray-3 rounded px-2 py-1 w-full text-body-regular"
+              placeholder={name} 
+              value={newCategoryName}
+              onChange={(e) => setNewCategoryName(e.target.value)}
+            />
+            <div className="flex justify-end mt-4 gap-2">
+              <button className="px-4 py-2 bg-gray-200 rounded" onClick={() => setIsEditModalOpen(false)}>
+                취소
+              </button>
+              <button className="px-4 py-2 bg-main text-white rounded" onClick={handleUpdate}>
+                확인
+              </button>
+            </div>
+          </div>
         </div>
-      )} */}
+        </motion.div>
+      )}
+
 
       {/* 삭제 모달 */}
       <DeleteConfirmModal 

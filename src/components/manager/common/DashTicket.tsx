@@ -9,7 +9,7 @@ import {getManagerList} from '../../../api/service/users';
 interface DashTicketProps extends TicketListItem {
   detailLink: string; // 상세 조회 링크 추가
   onAssigneeChange?: (newAssignee: string) => void; // 선택한 담당자 변경 핸들러 (Optional로 설정)
-  onApprove?: (ticketId: number) => void; // ✅ 승인 핸들러 추가
+  onApprove?: (ticketId: number) => void; // 승인 핸들러 추가
   onReject?: (ticketId: number) => void;
   onStatusChange: (ticketId: number, newStatus: string) => void;
 }
@@ -121,13 +121,13 @@ export default function DashTicket({
           <>
             <button
               className="px-6 h-[30px] text-[12px] leading-none border border-gray-6 rounded-md hover:bg-gray-8 hover:text-white"
-              onClick={() => onApprove && onApprove(ticketId)} // ✅ 승인 핸들러 호출
+              onClick={() => onApprove && onApprove(ticketId)} // 승인 핸들러 호출
             >
               승인
             </button>
             <button
               className="px-6 h-[30px] text-[12px] leading-none border border-gray-6 rounded-md hover:bg-error/80 hover:text-white"
-              onClick={() => onReject && onReject(ticketId)} // ✅ 반려 핸들러 호출
+              onClick={() => onReject && onReject(ticketId)} // 반려 핸들러 호출
             >
               반려
             </button>

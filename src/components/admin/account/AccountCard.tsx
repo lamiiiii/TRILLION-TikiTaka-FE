@@ -26,7 +26,7 @@ export default function AccountCard({ registrationId, username, email, status }:
       updateRegistrationStatus({
         registrationId,
         status: "APPROVED",
-        role: "USER", // 🚀 API에서 요구하는 형식으로 변환
+        role: "USER", 
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["registrationAccounts"] });
@@ -42,7 +42,7 @@ export default function AccountCard({ registrationId, username, email, status }:
         registrationId,
         status: "REJECTED",
         role: "USER",
-        // reason: rejectReason, // 거절 사유 포함
+        // reason: rejectReason, 
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["registrationAccounts"] });
@@ -54,11 +54,11 @@ export default function AccountCard({ registrationId, username, email, status }:
     },
   });
 
-  //승인 처리 (역할 변경 후 승인)
+  //승인 처리 
   const handleApprove = async () => {
     try {
       
-      await approveMutation.mutateAsync(); //이후 승인 요청
+      await approveMutation.mutateAsync(); 
     } catch (error) {
       console.error("승인 과정에서 오류 발생:", error);
     }
@@ -66,10 +66,7 @@ export default function AccountCard({ registrationId, username, email, status }:
 
   //거절 처리
   const handleReject = async () => {
-    // if (!rejectReason.trim()) {
-    //   alert("거절 사유를 입력해주세요.");
-    //   return;
-    // }
+    
     try {
       await rejectMutation.mutateAsync();
     } catch (error) {
@@ -84,20 +81,19 @@ export default function AccountCard({ registrationId, username, email, status }:
         <div className="w-[16%]">{username}</div>
         <div className="w-[44%]">{email}</div>
         <div className="w-[16%]">
-          {/*역할 선택 드롭다운 (한글 표시) */}
           사용자
         </div>
         <div className="w-[20%] flex gap-2">
           {status === "PENDING" ? (
             <>
-              {/*승인 버튼 (모달 열기) */}
+              {/*승인 버튼  */}
               <button
                 onClick={() => setShowApproveModal(true)}
                 className="px-4 py-1 text-subtitle-regular border rounded hover:bg-gray-8 hover:text-white whitespace-nowrap"
               >
                 승인
               </button>
-              {/*거절 버튼 (모달 열기) */}
+              {/*거절 버튼 */}
               <button
                 onClick={() => setShowRejectModal(true)}
                 className="px-4 py-1 text-subtitle-regular border rounded hover:bg-red/80 hover:text-white"
@@ -122,7 +118,7 @@ export default function AccountCard({ registrationId, username, email, status }:
           backBtn="취소"
           onBackBtnClick={() => setShowApproveModal(false)}
           checkBtn="승인"
-          onBtnClick={handleApprove} //승인 핸들러 실행
+          onBtnClick={handleApprove} 
         />
       )}
 
@@ -134,7 +130,7 @@ export default function AccountCard({ registrationId, username, email, status }:
           backBtn="취소"
           onBackBtnClick={() => setShowRejectModal(false)}
           checkBtn="거절"
-          onBtnClick={handleReject} //거절 핸들러 실행
+          onBtnClick={handleReject} 
         />
       )}
     </>
