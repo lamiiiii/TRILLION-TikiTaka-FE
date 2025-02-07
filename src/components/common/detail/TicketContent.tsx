@@ -3,6 +3,7 @@ import {useState} from 'react';
 import {Link, useParams} from 'react-router-dom';
 import {deleteTicket} from '../../../api/service/tickets';
 import Modal from '../Modal';
+import {useUserStore} from '../../../store/store';
 
 interface TicketContentProps {
   data: TicketDetails;
@@ -14,6 +15,8 @@ export default function TicketContent({data}: TicketContentProps) {
   const {id} = useParams();
   const ticketId = Number(id);
   const queryClient = useQueryClient();
+
+  const {userId} = useUserStore();
 
   const deleteMutation = useMutation({
     mutationFn: () => deleteTicket(ticketId),
@@ -48,9 +51,11 @@ export default function TicketContent({data}: TicketContentProps) {
             편집
           </Link>
         )}
-        <button className="text-gray-8 hover:text-gray-15" onClick={handleDelete}>
-          삭제
-        </button>
+        {data?.requesterId === userId && (
+          <button className="text-gray-8 hover:text-gray-15" onClick={handleDelete}>
+            삭제
+          </button>
+        )}
       </div>
       <div className="w-full h-[400px] overflow-scroll p-5 border border-gray-2 rounded-[4px] bg-white text-subtitle-regular text-gray-15">
         {data?.description}
