@@ -1,13 +1,14 @@
 import {useEffect, useState} from 'react';
-import {getTicketTemplate} from '../../../api/service/ticketTemplates';
+import {deleteTicketTemplate, getTicketTemplate, updateTicketTemplate} from '../../../api/service/ticketTemplates';
 import {useNewTicketStore} from '../../../store/store';
 import Modal from '../Modal';
 
 interface TemplateDetailViewProps {
   templateId: number;
+  onDelete: (templateId: number) => void;  // onDelete 속성 추가
 }
 
-export default function TemplateDetailView({templateId}: TemplateDetailViewProps) {
+export default function TemplateDetailView({ templateId, onDelete }: TemplateDetailViewProps) {
   const [template, setTemplate] = useState<TemplateListItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -44,6 +45,42 @@ export default function TemplateDetailView({templateId}: TemplateDetailViewProps
     setIsModalOpen(false);
   };
 
+  const onEditClick = async () => {
+    if (!template) return;
+
+    const updatedTemplate = {
+      templateTitle: template.templateTitle,
+      title: template.title,
+      description: template.description,
+      typeId: template.typeId,
+      firstCategoryId: template.firstCategoryId,
+      secondCategoryId: template.secondCategoryId,
+      managerId: template.managerId,
+    };
+
+    try {
+      await updateTicketTemplate(templateId, updatedTemplate);
+      alert('템플릿 수정이 완료되었습니다.');
+    } catch (error) {
+      alert('템플릿 수정에 실패했습니다.');
+    }
+  };
+
+  const onDeleteClick = async () => {
+    if (!template) return;
+
+    const confirmDelete = window.confirm('정말로 이 템플릿을 삭제하시겠습니까?');
+    if (confirmDelete) {
+      try {
+        await deleteTicketTemplate(templateId);
+        alert('템플릿 삭제가 완료되었습니다.');
+        onDelete(templateId);
+      } catch (error) {
+        alert('템플릿 삭제에 실패했습니다.');
+      }
+    }
+  };
+
   const renderTemplateDetail = (label: string, value: string | undefined) => (
     <div className="flex items-center">
       <div className="text-body-bold w-24">{label}</div>
@@ -60,10 +97,10 @@ export default function TemplateDetailView({templateId}: TemplateDetailViewProps
       <div className="flex text-title-bold text-black justify-between">
         <p className="text-title-bold">{template.templateTitle}</p>
         <div className="flex gap-4 justify-center">
-          <button onClick={() => console.log('템플릿 수정')} className="main-button">
+          <button onClick={onEditClick} className="main-button">
             템플릿 수정
           </button>
-          <button onClick={() => console.log('템플릿 삭제')} className="main-button">
+          <button onClick={onDeleteClick} className="main-button">
             템플릿 삭제
           </button>
         </div>

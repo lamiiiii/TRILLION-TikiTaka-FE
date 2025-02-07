@@ -12,10 +12,9 @@ export async function createTicketTemplate(params: CreateTemplateParams): Promis
 }
 
 // INTF-58: 템플릿 단일 조회
-export async function getTicketTemplate( templateId: number) {
+export async function getTicketTemplate(templateId: number) {
   try {
-    const {data} = await instance.get<{message: string; data: TemplateDetail}>(`/ticket/templates/${templateId}`, {
-    });
+    const {data} = await instance.get<{message: string; data: TemplateDetail}>(`/ticket/templates/${templateId}`, {});
     return data.data;
   } catch (error) {
     console.error('템플릿 조회 실패:', error);
@@ -35,9 +34,9 @@ export async function getTicketTemplatesList() {
 }
 
 // INTF-60: 템플릿 수정
-export async function updateTicketTemplate(token: string, templateId: number, params: UpdateTemplateParams) {
+export async function updateTicketTemplate(templateId: number, params: UpdateTemplateParams) {
   try {
-    const {data} = await instance.patch(`/ticketTemplates/${templateId}`, params, {headers: {Authorization: `Bearer ${token}`}});
+    const {data} = await instance.patch(`/ticket/templates/${templateId}`, params);
     return data;
   } catch (error) {
     console.error('템플릿 수정 실패:', error);
@@ -46,9 +45,9 @@ export async function updateTicketTemplate(token: string, templateId: number, pa
 }
 
 // INTF-61: 템플릿 삭제
-export async function deleteTicketTemplate(token: string, templateId: number) {
+export async function deleteTicketTemplate(templateId: number) {
   try {
-    const {data} = await instance.delete(`/ticketTemplates/${templateId}`, {headers: {Authorization: `Bearer ${token}`}});
+    const {data} = await instance.delete(`/ticket/templates/${templateId}`);
     return data;
   } catch (error) {
     console.error('템플릿 삭제 실패:', error);
