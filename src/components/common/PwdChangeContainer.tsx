@@ -6,7 +6,7 @@ import Modal from './Modal';
 import {patchUserPassword} from '../../api/service/users';
 
 export default function PwdChangeContainer() {
-  const {role} = useUserStore();
+  const {role, userId} = useUserStore();
   const navigate = useNavigate();
 
   const [pwd, setPwd] = useState('');
@@ -96,7 +96,7 @@ export default function PwdChangeContainer() {
     };
 
     try {
-      await patchUserPassword(requestData);
+      await patchUserPassword(requestData, userId);
 
       setModalState({open: true, type: 'success'});
     } catch (error) {
