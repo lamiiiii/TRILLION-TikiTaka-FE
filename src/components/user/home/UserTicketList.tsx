@@ -1,9 +1,9 @@
-import {useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import PageNations from '../../manager/common/PageNations';
 import {TicketViewType} from '../../../interfaces/ticket';
 import DropDown from '../../common/Dropdown';
 import Ticket from '../../common/ticket/Ticket';
-import {useQuery} from '@tanstack/react-query';
+import {useQuery, useQueryClient} from '@tanstack/react-query';
 import {getTicketList} from '../../../api/service/tickets';
 
 const dropdownData: {label: string; options: string[]}[] = [
@@ -25,7 +25,7 @@ const STATUS_MAP = {
   REJECTED: '반려',
 };
 
-// STATUS_MAP을 역으로 만듭니다.
+// STATUS_MAP을 역으로
 const REVERSE_STATUS_MAP = Object.entries(STATUS_MAP).reduce(
   (acc, [key, value]) => {
     acc[value] = key;
@@ -34,10 +34,13 @@ const REVERSE_STATUS_MAP = Object.entries(STATUS_MAP).reduce(
   {} as Record<string, string>
 );
 
+const ticketsPerPage = 20;
+
 export default function UserTicketList({selectedFilter}: TicketListProps) {
   const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
   const [currentPage, setCurrentPage] = useState(1);
-  const ticketsPerPage = 5;
+  const listRef = useRef<HTMLDivElement>(null);
+  const queryClient = useQueryClient();
 
   const apiStatus = useMemo(() => {
     if (selectedFilter === '전체') return undefined;
@@ -54,16 +57,53 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
         status: apiStatus,
       }),
   });
+  const filteredTickets = useMemo(() => {
+    if (!ticketListResponse?.content) return [];
 
-  const filteredTickets = ticketListResponse?.content || [];
-  const totalPages = ticketListResponse?.totalPages || 1;
+    if (selectedFilter === '긴급') {
+      return ticketListResponse.content.filter((ticket) => ticket.urgent);
+    }
+
+    return ticketListResponse.content;
+  }, [ticketListResponse, selectedFilter]);
+
+  // 총 건수 계산 로직 수정
+  const totalElements = useMemo(() => {
+    if (selectedFilter === '긴급') {
+      return filteredTickets.length;
+    }
+    return ticketListResponse?.totalElements || 0;
+  }, [selectedFilter, filteredTickets, ticketListResponse?.totalElements]);
 
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedFilter, selectedFilters]);
 
+  // 페이지 변경 시 스크롤 위치 조정
+  useEffect(() => {
+    if (listRef.current) {
+      listRef.current.scrollIntoView({behavior: 'smooth'});
+    }
+  }, [currentPage]);
+
+  // 다음 페이지 preFetch
+  useEffect(() => {
+    if (ticketListResponse?.totalPages && currentPage < ticketListResponse?.totalPages) {
+      const nextPage = currentPage + 1;
+      queryClient.prefetchQuery({
+        queryKey: ['ticketList', apiStatus, selectedFilters, nextPage],
+        queryFn: () =>
+          getTicketList({
+            page: nextPage - 1,
+            size: ticketsPerPage,
+            status: apiStatus,
+          }),
+      });
+    }
+  }, [currentPage, queryClient, ticketListResponse?.totalPages, apiStatus, selectedFilters]);
+
   const handlePageChange = (newPage: number) => {
-    if (newPage >= 1 && newPage <= totalPages) {
+    if (ticketListResponse?.totalPages && newPage >= 1 && newPage <= ticketListResponse?.totalPages) {
       setCurrentPage(newPage);
     }
   };
@@ -77,7 +117,7 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
   };
 
   return (
-    <div className="w-full mt-[20px] relative mb-[100px]">
+    <div ref={listRef} className="w-full mt-[20px] relative mb-[100px]">
       <div className="bg-gray-18 h-full shadow-[0px_1px_3px_1px_rgba(0,0,0,0.15)] flex flex-col justify-start p-4">
         <div className="flex items-center gap-4 leading-none mt-4 px-2">
           {dropdownData.map((data) => (
@@ -91,7 +131,7 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
             />
           ))}
           <div className="ml-auto text-gray-700 text-subtitle">
-            조회 건수 <span className="text-black text-title-bold ml-1">{filteredTickets.length}건</span>
+            조회 건수 <span className="text-black text-title-bold ml-1">{totalElements}건</span>
           </div>
         </div>
 
@@ -120,7 +160,7 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
           )}
         </div>
 
-        <PageNations currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+        <PageNations currentPage={currentPage} totalPages={ticketListResponse?.totalPages} onPageChange={handlePageChange} />
       </div>
     </div>
   );
