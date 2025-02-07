@@ -5,7 +5,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteTicketForm, updateTicketForm } from '../../../api/service/tickets';
 import { toast } from 'react-toastify';
 import Modal from '../../common/Modal';
-import UpdateFormModal from '../common/UpdateFormModal';
 
 interface RequestFormDetailProps {
   mustDescription: string;
@@ -19,7 +18,7 @@ interface RequestFormDetailProps {
 export default function RequestFormDetail({firstCategoryId, secondCategoryId,mustDescription, description, onClose, name}: RequestFormDetailProps) {
   const queryClient = useQueryClient();
   const [isClosing, setIsClosing] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [newMustDescription, setNewMustDescription] = useState(mustDescription);
   const [newDescription, setNewDescription] = useState(description);
@@ -34,7 +33,7 @@ export default function RequestFormDetail({firstCategoryId, secondCategoryId,mus
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["ticketForms"] });
       toast.success("티켓 양식이 수정되었습니다.");
-      setShowEditModal(false);
+      setIsEditing(false);
     },
     onError: () => {
       toast.error("티켓 양식 수정에 실패했습니다.");
@@ -50,7 +49,7 @@ export default function RequestFormDetail({firstCategoryId, secondCategoryId,mus
       setShowDeleteModal(false);
       setTimeout(() => {
         window.location.reload(); // 페이지 새로고침
-      }, 1000);
+      }, 500);
       
     },
     onError: () => {
@@ -80,51 +79,73 @@ export default function RequestFormDetail({firstCategoryId, secondCategoryId,mus
           </button>
           <div className="flex justify-between items-center">
             <div className="text-title-bold text-gray-800 ">{name}</div>
-            <div className="flex justify-start gap-4 ">
-              <button className="px-6 py-1 bg-main text-white text-body-bold rounded" onClick={() => setShowEditModal(true)}>요청양식 수정</button>
-              <button className="px-6 py-1 bg-gray-8 text-white text-body-bold  rounded" onClick={() => setShowDeleteModal(true)}>요청양식 삭제</button>
+            <div className="flex justify-start gap-4">
+              {/* ✅ 수정 모드 진입 */}
+              {!isEditing ? (
+                <button
+                  className="px-6 py-1 bg-main text-white text-body-bold rounded"
+                  onClick={() => setIsEditing(true)}
+                >
+                  요청양식 수정
+                </button>
+              ) : (
+                <button
+                  className="px-6 py-1 bg-gray-8 text-white text-body-bold rounded"
+                  onClick={() => setIsEditing(false)}
+                >
+                  취소
+                </button>
+              )}
+              {/* ✅ 삭제 버튼 */}
+              <button
+                className="px-6 py-1 bg-main text-white text-body-bold rounded"
+                onClick={() => deleteMutation.mutate()}
+              >
+                요청양식 삭제
+              </button>
             </div>
           </div>
-          <div className="w-[780px] h-[550px] bg-gray-18 mt-4 px-4 mx-auto shadow-[0px_1px_3px_1px_rgba(0,0,0,0.15)]">
-            <div className="mt-4">
-              <div className="block text-gray-700 font-semibold mb-2">필수 입력 사항</div>
-              <div className="text-gray-600 text-body-regular">{mustDescription}</div>
+          {isEditing ? (
+            <div className="w-[780px] h-[550px] bg-gray-18 mt-4 px-4 mx-auto shadow-[0px_1px_3px_1px_rgba(0,0,0,0.15)]">
+              <div className="mt-4">
+                <label className="block text-gray-700 font-semibold mb-2">필수 입력 사항</label>
+                <textarea
+                  className="w-full px-3 py-2 border border-gray-300 rounded mt-1 text-body-regular resize-none"
+                  value={newMustDescription}
+                  onChange={(e) => setNewMustDescription(e.target.value)}
+                />
+              </div>
+              <div className="mt-6">
+                <label className="block text-gray-700 font-semibold mb-2">요청 내용</label>
+                <textarea
+                  className="w-full h-[280px] px-3 py-2 border border-gray-300 rounded mt-1 text-body-regular resize-none"
+                  value={newDescription}
+                  onChange={(e) => setNewDescription(e.target.value)}
+                />
+              </div>
+              <div className="mt-6 flex justify-center">
+                <button
+                  className="px-5 py-1 main-btn bg-main text-white text-body-bold rounded"
+                  onClick={() => editMutation.mutate()}
+                >
+                  요청 양식 수정
+                </button>
+              </div>
             </div>
-            <div className="mt-6">
-              <div className="block text-gray-700 font-semibold mb-2">요청 양식</div>
-              <div className="text-gray-600 text-body-regular whitespace-pre-wrap">{description}</div>
+          ) : (
+            // ✅ 기본 상세 보기 UI
+            <div className="w-[780px] h-[550px] bg-gray-18 mt-4 px-4 mx-auto shadow-[0px_1px_3px_1px_rgba(0,0,0,0.15)]">
+              <div className="mt-4">
+                <div className="block text-gray-700 font-semibold mb-2">필수 입력 사항</div>
+                <div className="text-gray-600 text-body-regular">{mustDescription}</div>
+              </div>
+              <div className="mt-6">
+                <div className="block text-gray-700 font-semibold mb-2">요청 양식</div>
+                <div className="text-gray-600 text-body-regular whitespace-pre-wrap">{description}</div>
+              </div>
             </div>
-          </div>
-          {/* ✅ 수정 모달 */}
-          {showEditModal && (
-            <UpdateFormModal
-              title="요청 양식 수정"
-              content={
-                <div className="flex flex-col gap-4">
-                  <div>
-                    <label className="block text-gray-700 text-sm font-semibold mb-1">필수 입력 사항</label>
-                    <textarea
-                      className="border border-gray-300 p-2 w-full rounded-md"
-                      value={newMustDescription}
-                      onChange={(e) => setNewMustDescription(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 text-sm font-semibold mb-1">요청 양식</label>
-                    <textarea
-                      className="border border-gray-300 p-2 w-full rounded-md"
-                      value={newDescription}
-                      onChange={(e) => setNewDescription(e.target.value)}
-                    />
-                  </div>
-                </div>
-              }
-              backBtn="취소"
-              onBackBtnClick={() => setShowEditModal(false)}
-              checkBtn="수정"
-              onBtnClick={() => editMutation.mutate()}
-            />
           )}
+        
 
           {/* ✅ 삭제 확인 모달 */}
           {showDeleteModal && (

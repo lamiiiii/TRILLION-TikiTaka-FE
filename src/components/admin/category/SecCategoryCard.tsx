@@ -15,6 +15,7 @@ interface SecCategoryCardProps {
 }
 
 export default function SecCategoryCard({id, parentId, name, onDelete}: SecCategoryCardProps) {
+  
   const [isReqFormOpen, setIsReqFormOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);

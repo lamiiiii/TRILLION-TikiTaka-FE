@@ -45,7 +45,7 @@ export default function RegisterRequestForm({onClose, name, firstCategoryId, sec
       onClose();
       setTimeout(() => {
         window.location.reload(); // 등록 후 새로고침
-      }, 1000);
+      }, 500);
     } catch (error) {
       toast.error('요청 양식 생성에 실패했습니다.');
     } 
@@ -84,7 +84,7 @@ export default function RegisterRequestForm({onClose, name, firstCategoryId, sec
             </div>
 
             <div className="mt-4">
-              <label className="block text-gray-700 font-semibold">요청 내용</label>
+              <label className="block text-gray-700 font-semibold mb-2">요청 내용</label>
               <textarea
                 rows={5}
                 className="w-full h-[320px] px-3 py-2 border border-gray-300 rounded mt-1 text-body-regular"
