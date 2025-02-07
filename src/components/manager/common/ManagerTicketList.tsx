@@ -1,9 +1,11 @@
 import {useEffect, useState} from 'react';
-import {getTicketList} from '../../../api/service/tickets';
-import {useUserStore} from '../../../store/store'; // ✅ role 가져오기
+import {approveTicket, getTicketList, rejectTicket, updateTicketStatus} from '../../../api/service/tickets';
+import {useUserStore} from '../../../store/store'; // role 가져오기
 import Dropdown from '../../common/Dropdown';
 import PageNations from '../../manager/common/PageNations';
 import DashTicket from './DashTicket';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 
 const dropdownData = [
   {label: '담당자', options: ['곽서연', '김규리', '김낙도']},
@@ -30,60 +32,68 @@ const mapFilterToStatus = (filter: string): string | undefined => {
 const pageSizeOptions = ['20개씩', '30개씩', '50개씩'];
 const orderByOptions = ['최신순', '생성순'];
 
-// ✅ TicketListProps
+// TicketListProps
 interface TicketListProps {
   selectedFilter: string; // 필터 상태
   ticketCounts: TicketStatusCount | null;
 }
 
 export default function ManagerTicketList({selectedFilter, ticketCounts }: TicketListProps) {
-  const role = useUserStore((state) => state.role).toLowerCase(); // ✅ 전역 상태에서 role 가져오기
+  const role = useUserStore((state) => state.role).toLowerCase(); // 전역 상태에서 role 가져오기
   const [ticketList, setTicketList] = useState<TicketListItem[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
   const [pageSize, setPageSize] = useState(20);
   const [orderBy, setOrderBy] = useState('최신순');
+  const queryClient = useQueryClient();
   // const [totalTickets, setTotalTickets] = useState(0);
 
-  // ✅ API 요청: 티켓 목록 불러오기
-  useEffect(() => {
-    async function fetchTickets() {
-      try {
-        const statusParam = mapFilterToStatus(selectedFilter);
-        const orderParam = orderBy === "최신순" ? "desc" : "asc";
-        console.log(`🔹 API 요청: orderBy=${orderParam}, sortBy=createdAt`);
-        const data = await getTicketList({
-          page: currentPage - 1,
-          size: pageSize,
-          status: statusParam,
-          orderBy: orderParam,
-          
-        });
+  
 
-        let filteredTickets  = [...data.content];
-
-        if (selectedFilter === '긴급') {
-          filteredTickets = filteredTickets.filter((ticket) => ticket.urgent === true);
-        }
-
-        // 🔹 프론트엔드에서 ticketId 기준 정렬
-        if (orderBy === '최신순') {
-          filteredTickets .sort((a, b) => b.ticketId - a.ticketId); // ticketId 내림차순 (최신순)
-        } else {
-          filteredTickets .sort((a, b) => a.ticketId - b.ticketId); // ticketId 오름차순 (생성순)
-        }
-        
-        setTicketList(filteredTickets);
-        // setTotalTickets(data.totalElements);
-        setTotalPages(data.totalPages);
-      } catch (error) {
-        console.error('티켓 목록 조회 실패:', error);
+  // 티켓 목록 가져오기 (React Query)
+  const { data } = useQuery({
+    queryKey: ["tickets", selectedFilter ?? "", currentPage ?? 1, pageSize ?? 20, orderBy ?? "최신순"],
+    queryFn: async () => {
+      const statusParam = mapFilterToStatus(selectedFilter ?? "전체");
+      const orderParam = orderBy === "최신순" ? "desc" : "asc";
+  
+      const ticketData = await getTicketList({
+        page: (currentPage ?? 1) - 1,
+        size: pageSize ?? 20,
+        status: statusParam,
+        orderBy: orderParam,
+      });
+  
+      let sortedTickets = [...ticketData.content];
+  
+      if (selectedFilter === "긴급") {
+        sortedTickets = sortedTickets.filter((ticket) => ticket.urgent === true);
       }
-    }
+  
+      sortedTickets.sort((a, b) => {
+        if (a.urgent && !b.urgent) return -1;
+        if (!a.urgent && b.urgent) return 1;
+        return orderBy === "최신순" ? b.ticketId - a.ticketId : a.ticketId - b.ticketId;
+      });
+  
+      return { ...ticketData, content: sortedTickets };
+    },
+  });
 
-    fetchTickets();
-  }, [selectedFilter, currentPage, pageSize, orderBy]);
+  useEffect(() => {
+
+    if (data?.content) {
+      console.log("📌 티켓 리스트 업데이트:", data.content); // 데이터 확인용
+      setTicketList(data.content);
+    }
+  
+    if (data?.totalPages) {
+      console.log("📌 총 페이지 수 업데이트:", data.totalPages);
+      setTotalPages(data.totalPages);
+    }
+  }, [data?.content, data?.totalPages]);
+  
 
   const selectedCount = ticketCounts
     ? selectedFilter === "전체"
@@ -101,14 +111,14 @@ export default function ManagerTicketList({selectedFilter, ticketCounts }: Ticke
       : 0
     : 0;
 
-  // ✅ 페이지네이션 변경 핸들러
+  // 페이지네이션 변경 핸들러
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
     }
   };
 
-  // ✅ 드롭다운 선택 핸들러
+  // 드롭다운 선택 핸들러
   const handleSelect = (label: string, value: string) => {
     setSelectedFilters((prev) => ({...prev, [label]: value}));
   };
@@ -122,6 +132,43 @@ export default function ManagerTicketList({selectedFilter, ticketCounts }: Ticke
   const handleAssigneeChange = (ticketId: number, newAssignee: string) => {
     console.log(`티켓 ${ticketId}의 담당자가 ${newAssignee}(으)로 변경되었습니다.`);
   };
+
+  // 승인 요청 (React Query Mutation)
+  const approveMutation = useMutation({
+    mutationFn: (ticketId: number) => approveTicket(ticketId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tickets"] });
+      toast.success(" 티켓이 승인되었습니다.")
+    },
+  });
+
+  // 반려 요청 (React Query Mutation)
+  const rejectMutation = useMutation({
+    mutationFn: (ticketId: number) => rejectTicket(ticketId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tickets"] });
+      toast.error(" 티켓이 반려되었습니다.")
+    },
+  });
+  
+  // ✅ 티켓 상태 변경 요청
+  const updateStatusMutation = useMutation({
+    mutationFn: ({ ticketId, newStatus }: { ticketId: number; newStatus: string }) =>
+      updateTicketStatus(ticketId, newStatus),
+    onSuccess: (_, { newStatus }) => {
+      queryClient.invalidateQueries({ queryKey: ["tickets"] });
+      queryClient.setQueryData(["ticketStatusCounts"], (prev: any) => ({
+        ...prev,
+        inProgress: newStatus === "DONE" ? prev.inProgress - 1 : prev.inProgress,
+        reviewing: newStatus === "DONE" ? prev.reviewing - 1 : prev.reviewing,
+        completed: newStatus === "DONE" ? prev.completed + 1 : prev.completed,
+      }));
+      toast.success(`티켓 상태가 완료로 변경되었습니다.`);
+    },
+    onError: () => {
+      toast.error("티켓 상태 변경 실패. 다시 시도하세요.");
+    },
+  });
 
   return (
     <div className="w-full mt- relative mb-[100px]">
@@ -184,6 +231,11 @@ export default function ManagerTicketList({selectedFilter, ticketCounts }: Ticke
                 {...ticket}
                 detailLink={getDetailLink(ticket.ticketId)}
                 onAssigneeChange={(newAssignee) => handleAssigneeChange(ticket.ticketId, newAssignee)}
+                onApprove={() => approveMutation.mutate(ticket.ticketId)}
+                onReject={() => rejectMutation.mutate(ticket.ticketId)}
+                onStatusChange={(newStatus) =>
+                  updateStatusMutation.mutate({ ticketId: ticket.ticketId, newStatus })
+                }
               />
             ))
           ) : (

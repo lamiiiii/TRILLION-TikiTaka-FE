@@ -10,6 +10,7 @@ interface DropdownProps {
   border?: boolean; // 테두리 여부
   textColor?: string; // 텍스트 색상 (Tailwind 클래스)
   disabled?: boolean; // 비활성화 여부
+  bgColor?:string;
 }
 
 export default function DropDown({
@@ -22,6 +23,7 @@ export default function DropDown({
     border = true,
     textColor = "text-gray-900",
     disabled = false,
+    
   }: DropdownProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [selected, setSelected] = useState(defaultSelected);
@@ -37,9 +39,9 @@ export default function DropDown({
         {/* 드롭다운 버튼 */}
         <button
           className={`flex justify-between items-center w-full 
-          ${border ? "border border-gray-6" : "border-none"} 
-          ${value ? textColor : "text-gray-6"} 
-          ${value ? "bg-white" : "bg-gray-100"} 
+          ${border ? "border border-gray-4" : "border-none"} 
+          ${value ? textColor : "text-gray-8"} 
+          ${value ? "bg-white" : "bg-gray-18"} 
           rounded-md py-1 ${paddingX} text-body-regular
           ${disabled ? "bg-gray-1 text-gray-3 cursor-not-allowed" : ""}`}
           onClick={() => setIsOpen(!isOpen)}

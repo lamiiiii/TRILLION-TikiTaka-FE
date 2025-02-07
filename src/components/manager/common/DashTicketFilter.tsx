@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import { getTicketStatusCount } from "../../../api/service/tickets";
 import { useUserStore } from "../../../store/store";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface TicketFilterProps {
   onFilterChange: (type: string) => void;
@@ -9,23 +10,24 @@ interface TicketFilterProps {
 
 export default function DashTicketFilter({ onFilterChange, onCountUpdate }: TicketFilterProps) {
   const role = useUserStore((state) => state.role);
-  const [ticketCounts, setTicketCounts] = useState<TicketStatusCount | null>(null);
   const [selectedType, setSelectedType] = useState<string>("전체");
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+  const queryClient = useQueryClient();
 
+  // ✅ 1. React Query를 사용하여 티켓 상태 개수 가져오기
+  const { data: ticketCounts } = useQuery({
+    queryKey: ["ticketStatusCounts"],
+    queryFn: getTicketStatusCount,
+    staleTime: 1000 * 60, // 1분 동안 캐싱된 데이터 사용
+  });
+
+  // ✅ 2. 새로운 데이터가 로드되면 부모 컴포넌트로 전달
   useEffect(() => {
-    async function fetchTicketCounts() {
-      try {
-        const data = await getTicketStatusCount();
-        setTicketCounts(data);
-        onCountUpdate(data);
-      } catch (error) {
-        console.error("티켓 상태 개수 조회 실패", error);
-      }
+    if (ticketCounts) {
+      onCountUpdate(ticketCounts);
     }
-    fetchTicketCounts();
-  }, []);
+  }, [ticketCounts, onCountUpdate]);
 
   const filteredTicketData = useMemo(() => {
     if (!ticketCounts) return [];
@@ -58,6 +60,10 @@ export default function DashTicketFilter({ onFilterChange, onCountUpdate }: Tick
     }
   }, [selectedType, filteredTicketData]);
 
+  const refreshTicketCounts = () => {
+    queryClient.invalidateQueries({ queryKey: ["ticketStatusCounts"] });
+  };
+
   return (
     <div className="w-full mt-10 relative">
       <div className="flex w-full h-8 gap-6 items-center" ref={containerRef}>
@@ -70,6 +76,7 @@ export default function DashTicketFilter({ onFilterChange, onCountUpdate }: Tick
             onClick={() => {
               setSelectedType(item.type);
               onFilterChange(item.type);
+              refreshTicketCounts();
             }}
           >
             <span

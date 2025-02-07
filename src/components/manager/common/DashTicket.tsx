@@ -1,14 +1,15 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useUserStore } from '../../../store/store'; // ✅ role 가져오기
-import { AlertIcon } from '../../common/Icon';
+import {useState} from 'react';
+import {Link} from 'react-router-dom';
+import {useUserStore} from '../../../store/store';
+import {AlertIcon} from '../../common/Icon';
 import TicketDropdown from './TicketDropdown';
 
 interface DashTicketProps extends TicketListItem {
-  detailLink: string; // ✅ 상세 조회 링크 추가
-  onAssigneeChange?: (newAssignee: string) => void; // ✅ 선택한 담당자 변경 핸들러 (Optional로 설정)
-  onApprove?: () => void;
-  onReject?: () => void;
+  detailLink: string; // 상세 조회 링크 추가
+  onAssigneeChange?: (newAssignee: string) => void; // 선택한 담당자 변경 핸들러 (Optional로 설정)
+  onApprove?: (ticketId: number) => void; // ✅ 승인 핸들러 추가
+  onReject?: (ticketId: number) => void;
+  onStatusChange?: (newStatus: string) => void;
 }
 
 export default function DashTicket({
@@ -19,13 +20,16 @@ export default function DashTicket({
   firstCategoryName,
   secondCategoryName,
   managerName,
-  status, // ✅ props로 받은 status만 사용
+  status, // props로 받은 status만 사용
   urgent,
   deadline,
   detailLink,
   onAssigneeChange,
+  onApprove,
+  onReject,
+  onStatusChange,
 }: DashTicketProps) {
-  const role = useUserStore((state) => state.role).toLowerCase(); // ✅ 전역 상태에서 role 가져오기
+  const role = useUserStore((state) => state.role).toLowerCase();
   const [selectedAssignee, setSelectedAssignee] = useState(managerName ?? 'all');
 
   const handleAssigneeSelect = (selectedOption: string) => {
@@ -39,8 +43,8 @@ export default function DashTicket({
   const statusMapping: Record<string, string> = {
     PENDING: '대기중',
     IN_PROGRESS: '진행중',
-    REVIEWING: '검토 요청',
-    COMPLETED: '완료',
+    REVIEW: '검토 요청',
+    DONE: '완료',
     REJECTED: '반려',
   };
 
@@ -48,12 +52,11 @@ export default function DashTicket({
   const ticketClass = urgent ? 'border-error bg-white hover:bg-red/5' : 'border-gray-2 bg-white hover:bg-gray-1';
 
   return (
-    <div
-      className={`flex gap-4 py-3 px-2 border items-center rounded cursor-pointer transition-all duration-200 ${ticketClass}`}
-    >
-    
+    <div className={`flex gap-4 py-3 px-2 border items-center rounded cursor-pointer transition-all duration-200 ${ticketClass}`}>
       {/* 티켓 ID */}
-      <Link to={detailLink} className="w-[6%] text-subtitle-regular text-gray-700 px-2">#{ticketId}</Link>
+      <Link to={detailLink} className="w-[6%] text-subtitle-regular text-gray-700 px-2">
+        #{ticketId}
+      </Link>
       {/* 카테고리 */}
       <Link to={detailLink} className="w-[12%] text-subtitle-regular">
         <span>{firstCategoryName || '1차 카테고리 미지정'}</span>
@@ -73,8 +76,10 @@ export default function DashTicket({
       </Link>
 
       {/* 기한 */}
-      <Link to={detailLink} className="w-[12%] text-body-regular text-gray-15">{deadline}</Link>
-      
+      <Link to={detailLink} className="w-[12%] text-body-regular text-gray-15">
+        {deadline}
+      </Link>
+
       {/* 담당자 */}
       <div className="w-[10%]">
         <TicketDropdown
@@ -88,9 +93,41 @@ export default function DashTicket({
         />
       </div>
       <div className="w-[15%] flex gap-2">
-        <div className="px-6 h-[30px] text-[12px] leading-none border border-gray-6 rounded-md bg-gray-1 flex items-center justify-center">
-          {statusMapping[status] || '상태 없음'}
-        </div>
+        {status === 'PENDING' ? (
+          <>
+            <button
+              className="px-6 h-[30px] text-[12px] leading-none border border-gray-6 rounded-md hover:bg-gray-8 hover:text-white"
+              onClick={() => onApprove && onApprove(ticketId)} // ✅ 승인 핸들러 호출
+            >
+              승인
+            </button>
+            <button
+              className="px-6 h-[30px] text-[12px] leading-none border border-gray-6 rounded-md hover:bg-error/80 hover:text-white"
+              onClick={() => onReject && onReject(ticketId)} // ✅ 반려 핸들러 호출
+            >
+              반려
+            </button>
+          </>
+        ) : status === 'IN_PROGRESS' || status === 'REVIEW' ? (
+          <TicketDropdown
+            label={statusMapping[status]} // 기본 상태
+            options={['완료']} // 선택 가능한 옵션
+            onSelect={() => onStatusChange && onStatusChange('DONE')} // ✅ 상태 변경 핸들러 호출
+            paddingX="px-3"
+            border={true}
+            textColor="text-gray-15"
+          />
+        ) : (
+          <div
+      className={`px-10 h-[30px] text-[12px] leading-none border rounded-md flex items-center justify-center 
+        ${status === "DONE" ? "bg-blue/15 text-body-regular " : ""}
+        ${status === "REJECTED" ? "bg-error/15 text-body-regular " : ""}
+        ${status !== "DONE" && status !== "REJECTED" ? "bg-gray-1 text-gray-700 border-gray-6" : ""}
+      `}
+    >
+      {statusMapping[status] || "상태 없음"}
+    </div>
+        )}
       </div>
     </div>
   );
