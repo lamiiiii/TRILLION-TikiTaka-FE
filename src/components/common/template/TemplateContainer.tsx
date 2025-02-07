@@ -46,7 +46,7 @@ export default function TemplateContainer({isOpen, onClose}: TemplateContainerPr
 
   return (
     <motion.div
-      className="fixed top-14 right-0 h-full bg-white shadow-2xl transition-all"
+      className="fixed top-14 right-0 h-full bg-white shadow-lg shadow-gray-500/50 transition-all"
       animate={{width}}
       transition={{duration: 0.3, ease: 'easeInOut'}}
     >

@@ -3,7 +3,7 @@ import TicketPreview from '../../common/ticket/TicketPreview';
 import TicketOptions from '../../common/ticket/TicketOptions';
 import {useNewTicketFormStore, useNewTicketStore, useUserStore} from '../../../store/store';
 import NewTicketContent from '../../common/ticket/NewTicketContent';
-import {useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import TemplateContainer from '../../common/template/TemplateContainer';
 import {ReferredIcon, RequiredIcon} from '../Icon';
 import Modal from '../Modal';
@@ -35,6 +35,9 @@ export default function NewTicketContainer() {
     setDueTime,
     setManager,
   } = useNewTicketStore();
+
+  const [hasChanges, setHasChanges] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<File[]>([]);
   const [fileNames, setFileNames] = useState<string[]>([]);
@@ -44,8 +47,29 @@ export default function NewTicketContainer() {
   const [modalMessage, setModalMessage] = useState('');
   const [ticketId, setTicketId] = useState(0);
 
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (hasChanges) {
+        event.returnValue = '변경 사항이 저장되지 않았습니다. 계속 진행하시겠습니까?';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [hasChanges]);
+
+  useEffect(() => {
+    if (title || content || isUrgent || firstCategory || secondCategory || ticketType || dueDate || dueTime || manager) {
+      setHasChanges(true);
+    }
+  }, [title, content, isUrgent, firstCategory, secondCategory, ticketType, dueDate, dueTime, manager]);
+  
   const onClickBtn = () => {
     const missingFields = [];
+    if (!ticketType) missingFields.push('유형');
     if (!title) missingFields.push('요청 제목');
     if (!content) missingFields.push('요청 내용');
     if (!dueDate) missingFields.push('마감기한');
@@ -56,14 +80,12 @@ export default function NewTicketContainer() {
       return;
     }
 
-    // 모든 필수 값이 입력되었으면 확인 모달을 띄움
     setModalMessage('⚠️ 티켓을 생성하면 알림이 발송됩니다. 진행하시겠습니까?');
     setIsModalOpen(true);
   };
 
   const queryClient = useQueryClient();
 
-  // 티켓 생성 Mutation
   const mutation = useMutation({
     mutationFn: async (formData: FormData) => createTicket(formData),
     onSuccess: (data) => {
@@ -79,18 +101,21 @@ export default function NewTicketContainer() {
 
   const confirmSubmit = async () => {
     setIsModalOpen(!isModalOpen);
+    setTitle('');
+    setContent('');
+    setIsUrgent(false);
+    setFirstCategory(null);
+    setSecondCategory(null);
+    setTicketType({typeId: 0, typeName: ''});
+    setDueDate('');
+    setDueTime('');
+    setManager(null);
+
     if (ticketId) {
       navigate(`/${role}/detail/${ticketId}`, {replace: true});
-      setTitle('');
-      setContent('');
-      setIsUrgent(false);
-      setFirstCategory(null);
-      setSecondCategory(null);
-      setTicketType({typeId: 0, typeName: ''});
-      setManager(null);
     }
 
-    const formattedDueDate = `${dueDate} ${dueTime}`; // "yyyy-MM-dd HH:mm" 형식
+    const formattedDueDate = `${dueDate} ${dueTime}`;
     const requestData = {
       title,
       description: content,
@@ -102,14 +127,11 @@ export default function NewTicketContainer() {
       secondCategoryId: secondCategory?.id,
     };
 
-    // FormData 생성
     const formData = new FormData();
     formData.append('request', new Blob([JSON.stringify(requestData)], {type: 'application/json'}));
 
-    // 파일 추가
     files.forEach((file) => formData.append('files', file));
 
-    // API 호출
     mutation.mutate(formData);
   };
 

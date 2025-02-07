@@ -1,16 +1,14 @@
 import {useQuery} from '@tanstack/react-query';
-import {useNewTicketStore} from '../../../store/store';
+import {useTemplateStore} from '../../../store/store';
 import DropDown from '../Dropdown';
 import {RequiredIcon} from '../Icon';
 import {getTicketTypes} from '../../../api/service/tickets';
 import {useEffect, useState} from 'react';
-import {getManagerList} from '../../../api/service/users';
-import {getTicketTemplatesList} from '../../../api/service/ticketTemplates';
+import { getManagerList } from '../../../api/service/users';
 
-export default function TicketOpstionsSecond() {
-  const {manager, setManager, ticketType, template, setTicketType, setTemplate} = useNewTicketStore();
+export default function TemplateOptionsSecond() {
+  const {manager, ticketType, setManager, setTicketType} = useTemplateStore();
   const [ticketTypes, setTicketTypes] = useState<{typeId: number; typeName: string}[]>([]);
-  const [templates, setTemplates] = useState<TemplateListItem[]>([]);
 
   const {
     data: userData,
@@ -31,29 +29,18 @@ export default function TicketOpstionsSecond() {
     queryFn: getTicketTypes,
   });
 
-  const {data: templateData} = useQuery({
-    queryKey: ['ticketTemplates'],
-    queryFn: getTicketTemplatesList,
-  });
-
   useEffect(() => {
     if (ticketData) {
       setTicketTypes(ticketData);
     }
   }, [ticketData]);
 
-  useEffect(() => {
-    if (templateData) {
-      setTemplates(templateData);
-    }
-  }, [templateData]);
-
   if (isTicketLoading || isUserLoading) return null;
   if (ticketError || userError) return null;
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="selection">
+      <div className="selection-2">
         <p className="w-12">담당자</p>
         <DropDown
           label="담당자"
@@ -65,9 +52,9 @@ export default function TicketOpstionsSecond() {
               setManager(selectedUser);
             }
           }}
-        />
+        />{' '}
       </div>
-      <div className="selection">
+      <div className="selection-2">
         <div className="flex items-center gap-1 w-12">
           유형 <RequiredIcon />
         </div>
@@ -79,20 +66,6 @@ export default function TicketOpstionsSecond() {
             const selectedType = ticketTypes.find((t) => t.typeName === value);
             if (selectedType) {
               setTicketType(selectedType);
-            }
-          }}
-        />
-      </div>
-      <div className="selection">
-        <p className="w-12">템플릿</p>
-        <DropDown
-          label="템플릿"
-          options={templates.map((t) => t.templateTitle)}
-          value={template.templateTitle}
-          onSelect={(value) => {
-            const selectedTemplate = templates.find((t) => t.templateTitle === value);
-            if (selectedTemplate) {
-              setTemplate(selectedTemplate);
             }
           }}
         />

@@ -60,13 +60,12 @@ export default function SignInContainer() {
           login(accessToken);
           if (data.passwordChangeNeeded) {
             navigate('/changepwd', {replace: true});
-          } else {
-            if (data.role && data.id) {
-              setRole(data.role);
-              setUserId(data.id);
-              navigate(`/${data.role.toLowerCase()}`, {replace: true});
-            }
           }
+        }
+        if (data.role && data.id) {
+          setRole(data.role);
+          setUserId(data.id);
+          navigate(`/${data.role.toLowerCase()}`, {replace: true});
         }
       }
     } catch (error: any) {

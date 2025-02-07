@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import DropDown from '../../common/Dropdown';
-import {ReferredIcon, RequiredIcon, WhiteCheckIcon} from '../../common/Icon';
+import {QuestionIcon, RequiredIcon, WhiteCheckIcon} from '../../common/Icon';
 import {useNewTicketStore} from '../../../store/store';
 import {getCategoryList} from '../../../api/service/categories';
 import {useQuery} from '@tanstack/react-query';
@@ -75,7 +75,7 @@ export default function TicketOptions() {
             <div className="flex items-center gap-1 whitespace-nowrap relative">
               2차 카테고리
               <span className="relative cursor-help" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
-                <ReferredIcon />
+                <QuestionIcon />
                 {isHovered && (
                   <div className="absolute left-0 mt-1 bg-gray-1 border border-gray-2 rounded-md py-1 px-3 text-xs text-gray-15 shadow-md">
                     2차 카테고리 선택 시 해당 카테고리 템플릿이 적용됩니다.
