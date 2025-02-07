@@ -146,3 +146,8 @@ declare interface MonthlyTicketSummaryResponse {
   message: string;
   data: MonthlyTicketSummary;
 }
+
+declare interface MonthlyCategorySummary {
+  message: string;
+  data: CategoryData[];
+}

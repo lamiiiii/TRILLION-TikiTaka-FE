@@ -26,10 +26,13 @@ export async function getDailyCategorySummary(): Promise<FirstCategory[]> {
 }
 
 // INTF-52: 월간 카테고리별 티켓 생성 현황
-export async function getMonthlyCategorySummary(year: number, month: number): Promise<FirstCategory[]> {
+export async function getMonthlyCategorySummary(year: number, month: number): Promise<MonthlyCategorySummary> {
   try {
-    const {data} = await instance.get<MonthlyCategorySummaryResponse>(`/statistic/monCategory?year=${year}&month=${month}`);
-    return data.data;
+    const response = await instance.get<MonthlyCategorySummaryResponse>(`/statistic/monCategory?year=${year}&month=${month}`);
+    return {
+      message: response.data.message,
+      data: response.data.data,
+    };
   } catch (error) {
     console.error('월간 카테고리별 티켓 생성 현황 조회 실패:', error);
     throw error;

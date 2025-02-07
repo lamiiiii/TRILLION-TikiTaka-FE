@@ -17,7 +17,7 @@ export default function ManagerTicketPeriodStatus() {
   // 현재 날짜 가져오기
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
-  const currentMonth = currentDate.getMonth() + 1; // JavaScript의 월은 0부터 시작하므로 1을 더합니다.
+  const currentMonth = currentDate.getMonth() + 1;
 
   const {
     data: managerData,
@@ -38,10 +38,10 @@ export default function ManagerTicketPeriodStatus() {
   };
 
   return (
-    <div className="flex flex-col w-full h-[430px] bg-gray-18 p-5">
+    <div className="flex flex-col w-full h-[430px] bg-gray-18 p-5 ">
       <h1 className="text-title-bold">담당자별 티켓 처리 현황</h1>
       <div className="h-full relative flex flex-col items-center bg-white rounded border border-gray-2 py-10 mt-4 overflow-hidden">
-        <div className="w-full overflow-hidden">
+        <div className="w-full overflow-hidden mt-10">
           <div
             className="flex transition-transform duration-300 ease-in-out"
             style={{
@@ -50,7 +50,7 @@ export default function ManagerTicketPeriodStatus() {
             }}
           >
             {Array.from({length: totalPages}).map((_, pageIndex) => (
-              <div key={pageIndex} className="flex w-full justify-between mx-4">
+              <div key={pageIndex} className="flex w-full justify-start mx-4">
                 {managerData &&
                   managerData.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage).map((manager) => (
                     <div key={manager.userId} className="w-1/3 px-1">
