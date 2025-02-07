@@ -3,6 +3,8 @@ import {Link} from 'react-router-dom';
 import {useUserStore} from '../../../store/store';
 import {AlertIcon} from '../../common/Icon';
 import TicketDropdown from './TicketDropdown';
+import { useQuery } from '@tanstack/react-query';
+import { getManagerList } from "../../../api/service/users";
 
 interface DashTicketProps extends TicketListItem {
   detailLink: string; // 상세 조회 링크 추가
@@ -38,6 +40,15 @@ export default function DashTicket({
       onAssigneeChange(selectedOption);
     }
   };
+
+  // 담당자 목록 불러오기 (React Query)
+const { data: managerData} = useQuery({
+  queryKey: ["managers"],
+  queryFn: getManagerList,
+});
+
+// 불러온 데이터에서 담당자 이름만 추출
+const managerList = managerData?.users.map((user) => user.username) || [];
 
   // 상태 변환 (영문 → 한글)
   const statusMapping: Record<string, string> = {
@@ -84,7 +95,7 @@ export default function DashTicket({
       <div className="w-[10%]">
         <TicketDropdown
           label={selectedAssignee}
-          options={['곽서연', '김규리', '김낙도']} // 실제 담당자 리스트 필요
+          options={managerList ?? []} // 실제 담당자 리스트 필요
           defaultSelected={selectedAssignee}
           onSelect={handleAssigneeSelect}
           paddingX="px-3"
