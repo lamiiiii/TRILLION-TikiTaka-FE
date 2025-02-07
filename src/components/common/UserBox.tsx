@@ -23,7 +23,7 @@ export default function UserBox() {
     const fetchUserInfo = async () => {
       try {
         const data = await getUserInfo();
-        setUserId(data.id);
+        setUserId(data.userId);
         setRole(data.role);
         setUserInfo(data);
       } catch (error) {

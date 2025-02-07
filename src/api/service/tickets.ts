@@ -136,27 +136,12 @@ export async function getTicketDetails(ticketId: number) {
 }
 
 // INTF-32: 티켓 승인 대기 조회
-export async function getPendingApprovalCount(token: string) {
+export async function getPendingApprovalCount(managerId: number) {
   try {
-    const {data} = await instance.get<{message: string; data: PendingApprovalCount}>('/tickets/list/my/pending', {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.get<{message: string; data: PendingApprovalCount}>(`/tickets/list/pending?manager=${managerId}`);
     return data.data;
   } catch (error) {
     console.error('승인 대기 티켓 조회 실패:', error);
-    throw error;
-  }
-}
-
-// INTF-33: 대기 티켓 수 조회
-export async function getPendingTicketCount(token: string) {
-  try {
-    const {data} = await instance.get<{message: string; data: PendingTicketCount}>('/tickets/list/pending', {
-      headers: {Authorization: `Bearer ${token}`},
-    });
-    return data.data;
-  } catch (error) {
-    console.error('대기 티켓 수 조회 실패:', error);
     throw error;
   }
 }
@@ -175,10 +160,9 @@ export async function getPersonalTicketStatus(token: string) {
 }
 
 // INTF-35: 티켓 목록 조회
-export async function getTicketList(token: string, params: TicketListParams = {}) {
+export async function getTicketList(params: TicketListParams = {}) {
   try {
     const {data} = await instance.get<{message: string; data: TicketListResponse}>('/tickets/list', {
-      headers: {Authorization: `Bearer ${token}`},
       params: {
         page: params.page || 0,
         size: params.size || 20,
