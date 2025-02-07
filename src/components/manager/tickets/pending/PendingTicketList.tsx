@@ -1,11 +1,11 @@
 import {useEffect, useRef, useState} from 'react';
 
-import PageNations from '../common/PageNations';
+import PageNations from '../../common/PageNations';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {approveTicket, getTicketList, rejectTicket} from '../../../api/service/tickets';
-import DropDown from '../../common/Dropdown';
-import Ticket from '../../common/ticket/Ticket';
-import {useUserStore} from '../../../store/store';
+import {approveTicket, getTicketList, rejectTicket} from '../../../../api/service/tickets';
+import DropDown from '../../../common/Dropdown';
+import Ticket from '../../../common/ticket/Ticket';
+import {useUserStore} from '../../../../store/store';
 
 const dropdownData: {label: string; options: string[]}[] = [
   {label: '담당자', options: ['곽서연', '김규리', '김낙도']},

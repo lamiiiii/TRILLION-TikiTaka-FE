@@ -6,16 +6,15 @@ import {WhiteCheckIcon} from '../Icon';
 import {useParams} from 'react-router-dom';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {approveTicket, rejectTicket, updateTicket, updateTicketPriority, updateTicketStatus} from '../../../api/service/tickets';
+import useReverseMap from '../../../hooks/useReverseMap';
 
 interface StatusBarProps {
   data: TicketDetails;
   status?: keyof typeof STATUS_MAP;
 }
 
-// STATUS_MAP의 키와 값을 뒤집은 객체 생성
-const REVERSE_STATUS_MAP = Object.fromEntries(Object.entries(STATUS_MAP).map(([key, value]) => [value, key]));
-
 export default function StatusBar({data, status}: StatusBarProps) {
+  const REVERSE_STATUS_MAP = useReverseMap(STATUS_MAP);
   const [currentStatus, setCurrentStatus] = useState<string>(status ? STATUS_MAP[status] : '대기 중');
   const {priority, setPriority} = useTicketStore();
   const [isUrgent, setIsUrgent] = useState(data?.urgent);

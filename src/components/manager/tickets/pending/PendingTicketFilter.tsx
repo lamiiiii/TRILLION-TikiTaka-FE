@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from 'react';
-import {useUserStore} from '../../../store/store';
+import {useUserStore} from '../../../../store/store';
 import {useQuery} from '@tanstack/react-query';
-import {getPendingApprovalCount} from '../../../api/service/tickets';
+import {getPendingApprovalCount} from '../../../../api/service/tickets';
 
 // 개별 필터 아이템 컴포넌트
 function FilterItem({type, count, isSelected, onClick}: {type: string; count: number; isSelected: boolean; onClick: () => void}) {

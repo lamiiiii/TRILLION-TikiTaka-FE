@@ -1,9 +1,11 @@
-import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
+import {DragDropContext, Droppable, Draggable, DropResult} from 'react-beautiful-dnd';
 import TicketSmall from './TicketSmall';
 import {useEffect, useState} from 'react';
-import {useQuery} from '@tanstack/react-query';
-import {getTicketList} from '../../../api/service/tickets';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {getTicketList, updateTicketStatus} from '../../../api/service/tickets';
 import {useUserStore} from '../../../store/store';
+import {STATUS_MAP} from '../../../constants/constants';
+import useReverseMap from '../../../hooks/useReverseMap';
 
 export interface TicketDataProps {
   id: string;
@@ -18,6 +20,7 @@ export interface TicketDataProps {
 }
 
 export default function TicketPersonalManageList() {
+  const REVERSE_STATUS_MAP = useReverseMap(STATUS_MAP);
   const [tickets, setTickets] = useState<Record<string, TicketDataProps[]>>({
     '대기 중': [],
     '진행 중': [],
@@ -26,10 +29,27 @@ export default function TicketPersonalManageList() {
 
   const {userId} = useUserStore();
 
+  const queryClient = useQueryClient();
+
   // 티켓 리스트 조회
   const {data: ticketListData} = useQuery({
     queryKey: ['ticketList'],
     queryFn: () => getTicketList({managerId: userId}),
+  });
+
+  // 티켓 상태 수정
+  const updateStatusMutation = useMutation({
+    mutationFn: ({ticketId, newStatus}: {ticketId: number; newStatus: string}) => {
+      // 한글 상태를 영문 키로 변환
+      const statusKey = REVERSE_STATUS_MAP[newStatus] as keyof typeof STATUS_MAP;
+      return updateTicketStatus(ticketId, statusKey);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['ticketList']});
+    },
+    onError: () => {
+      alert('티켓 상태 변경에 실패했습니다. 다시 시도해 주세요.');
+    },
   });
 
   useEffect(() => {
@@ -69,25 +89,28 @@ export default function TicketPersonalManageList() {
     }
   }, [ticketListData]);
 
-  const handleStatusChange = (ticketId: string, newStatus: '대기 중' | '진행 중' | '진행 완료') => {
+  const handleStatusChange = (ticketId: number, newStatus: '대기 중' | '진행 중' | '진행 완료') => {
     const updatedTickets = {...tickets};
 
     // 모든 상태 목록을 순회하며 티켓 찾기
     Object.keys(updatedTickets).forEach((status) => {
-      const ticketIndex = updatedTickets[status].findIndex((ticket) => ticket.id === ticketId);
+      const ticketIndex = updatedTickets[status].findIndex((ticket) => Number(ticket.id) === Number(ticketId));
       if (ticketIndex !== -1) {
         const [movedTicket] = updatedTickets[status].splice(ticketIndex, 1);
         movedTicket.status = newStatus;
         updatedTickets[newStatus].push(movedTicket);
+
+        // API를 통해 상태 변경
+        updateStatusMutation.mutate({
+          ticketId: Number(movedTicket.id),
+          newStatus: movedTicket.status,
+        });
       }
     });
-
-    setTickets(updatedTickets);
   };
 
   // 드래그 앤 드롭 핸들러
-  const onDragEnd = (result: any) => {
-    console.log(result);
+  const onDragEnd = (result: DropResult) => {
     if (!result.destination) return;
 
     const sourceList = [...tickets[result.source.droppableId]];
@@ -96,6 +119,12 @@ export default function TicketPersonalManageList() {
 
     if (result.source.droppableId !== result.destination.droppableId) {
       movedItem.status = result.destination.droppableId as '대기 중' | '진행 중' | '진행 완료';
+
+      // API를 통해 상태 변경
+      updateStatusMutation.mutate({
+        ticketId: Number(movedItem.id),
+        newStatus: movedItem.status,
+      });
     }
 
     destList.splice(result.destination.index, 0, movedItem);
@@ -106,9 +135,10 @@ export default function TicketPersonalManageList() {
       [result.destination.droppableId]: destList,
     });
   };
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="flex items-center w-full h-15 bg-gray-1 border border-gray-2 rounded py-4 px-[30px] mb-6">
+      <div className="flex items-center w-full h-15  bg-gray-1 border border-gray-2 rounded py-4 px-[30px] my-6">
         <h1 className="text-title-bold">나의 티켓 관리</h1>
       </div>
 

@@ -1,11 +1,11 @@
 import {useState} from 'react';
-import {AlertIcon, DownIcon} from '../../common/Icon';
+import {AlertIcon, DownIcon} from '../../../common/Icon';
 import {AnimatePresence} from 'framer-motion';
 import {useQuery} from '@tanstack/react-query';
-import {getPendingApprovalCount} from '../../../api/service/tickets';
+import {getPendingApprovalCount} from '../../../../api/service/tickets';
 import PendingTicketFilter from './PendingTicketFilter';
 import PendingTicketList from './PendingTicketList';
-import {useUserStore} from '../../../store/store';
+import {useUserStore} from '../../../../store/store';
 
 export default function TicketAwaitingList() {
   const [isListVisible, setIsListVisible] = useState(false);
@@ -21,7 +21,7 @@ export default function TicketAwaitingList() {
   const {data: pendingApprovalCount} = useQuery({
     queryKey: ['pendingTicketCount', userId],
     queryFn: () => getPendingApprovalCount(userId),
-    refetchInterval: 60000, // 1분마다 자동으로 데이터 갱신 (필요에 따라 조정)
+    refetchInterval: 3000,
   });
 
   return (
