@@ -1,11 +1,11 @@
 import {DragDropContext, Droppable, Draggable, DropResult} from 'react-beautiful-dnd';
 import TicketSmall from './TicketSmall';
 import {useEffect, useState} from 'react';
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {getTicketList, updateTicketStatus} from '../../../api/service/tickets';
+import {useQuery} from '@tanstack/react-query';
+import {getTicketList} from '../../../api/service/tickets';
 import {useUserStore} from '../../../store/store';
-import {STATUS_MAP, TicketStatus} from '../../../constants/constants';
-import useReverseMap from '../../../hooks/useReverseMap';
+import {TicketStatus} from '../../../constants/constants';
+import {useUpdateTicketStatus} from '../../../api/hooks/useUpdateTicketStatus';
 
 export interface TicketDataProps {
   id: number;
@@ -20,7 +20,6 @@ export interface TicketDataProps {
 }
 
 export default function TicketPersonalManageList() {
-  const REVERSE_STATUS_MAP = useReverseMap(STATUS_MAP);
   const [tickets, setTickets] = useState<Record<string, TicketDataProps[]>>({
     '대기 중': [],
     '진행 중': [],
@@ -28,7 +27,6 @@ export default function TicketPersonalManageList() {
   });
 
   const {userId} = useUserStore();
-  const queryClient = useQueryClient();
 
   // 티켓 리스트 조회
   const {data: ticketListData} = useQuery({
@@ -37,6 +35,12 @@ export default function TicketPersonalManageList() {
   });
 
   // 티켓 상태 업데이트
+  const updateStatusMutation = useUpdateTicketStatus({
+    onSuccess: (ticketId, newStatus) => {
+      updateTicketState(ticketId, newStatus);
+    },
+  });
+
   const updateTicketState = (ticketId: number, newStatus: TicketStatus) => {
     setTickets((prevTickets) => {
       const updatedTickets = {...prevTickets};
@@ -94,21 +98,6 @@ export default function TicketPersonalManageList() {
       setTickets(newTickets);
     }
   }, [ticketListData]);
-
-  // 티켓 상태 수정
-  const updateStatusMutation = useMutation({
-    mutationFn: ({ticketId, newStatus}: {ticketId: number; newStatus: string}) => {
-      const statusKey = REVERSE_STATUS_MAP[newStatus] as keyof typeof STATUS_MAP;
-      return updateTicketStatus(ticketId, statusKey);
-    },
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({queryKey: ['ticketList']});
-      updateTicketState(variables.ticketId, variables.newStatus as TicketStatus);
-    },
-    onError: () => {
-      alert('티켓 상태 변경에 실패했습니다. 다시 시도해 주세요.');
-    },
-  });
 
   const handleStatusChange = (ticketId: number, newStatus: TicketStatus) => {
     updateStatusMutation.mutate({ticketId, newStatus});
