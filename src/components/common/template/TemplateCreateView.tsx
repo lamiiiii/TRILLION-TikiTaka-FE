@@ -1,16 +1,171 @@
+import {useEffect, useState} from 'react';
+import {useTemplateStore} from '../../../store/store';
+import {PlusCircle, RequiredIcon, SmRightIcon} from '../Icon';
+import TemplateContent from './TemplateContent';
+import TemplateOptions from './TemplateOptions';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
+import Modal from '../Modal';
+import {createTicketTemplate} from '../../../api/service/ticketTemplates';
+
 interface TemplateCreateViewProps {
   onCancel: () => void;
 }
 
 export default function TemplateCreateView({onCancel}: TemplateCreateViewProps) {
+  const {
+    templateTitle,
+    title,
+    content,
+    firstCategory,
+    secondCategory,
+    ticketType,
+    manager,
+    setTemplateTitle,
+    setTitle,
+    setContent,
+    setFirstCategory,
+    setSecondCategory,
+    setManager,
+    setTicketType,
+  } = useTemplateStore();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [templateId, setTemplateId] = useState(0);
+
+  const [hasChanges, setHasChanges] = useState(false);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (hasChanges) {
+        event.returnValue = '변경 사항이 저장되지 않았습니다. 계속 진행하시겠습니까?';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [hasChanges]);
+
+  useEffect(() => {
+    if (templateTitle || title || content || firstCategory || secondCategory || ticketType || manager) {
+      setHasChanges(true);
+    }
+  }, [templateTitle, title, content, firstCategory, secondCategory, ticketType, manager]);
+
+  const onClickBtn = () => {
+    const missingFields = [];
+    if (!templateTitle) missingFields.push('템플릿 제목');
+    if (!ticketType.typeId) missingFields.push('유형');
+    if (!title) missingFields.push('요청 제목');
+    if (!content) missingFields.push('요청 내용');
+
+    if (missingFields.length > 0) {
+      setModalMessage(`다음 필수 항목을 입력해주세요:\n${missingFields.join(', ')}`);
+      setIsModalOpen(true);
+      return;
+    }
+
+    setModalMessage('템플릿을 저장하시겠습니까?');
+    setIsModalOpen(true);
+  };
+
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async (params: CreateTemplateParams) => createTicketTemplate(params),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({queryKey: ['templates']});
+      const templateId = data;
+      setModalMessage(`템플릿이 저장되었습니다! #${templateId}`);
+
+      setTemplateId(Number(templateId));
+      setIsModalOpen(true);
+    },
+  });
+  const confirmSubmit = async () => {
+    try {
+      const templateParams: CreateTemplateParams = {
+        templateTitle,
+        title,
+        description: content,
+        typeId: ticketType.typeId,
+        firstCategoryId: firstCategory?.id,
+        secondCategoryId: secondCategory?.id,
+        managerId: manager?.userId,
+      };
+
+      mutation.mutate(templateParams);
+
+      // 템플릿 저장 후 초기화
+      setTemplateTitle('');
+      setTitle('');
+      setContent('');
+      setFirstCategory(null);
+      setSecondCategory(null);
+      setTicketType({typeId: 0, typeName: ''});
+      setManager(null);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('템플릿 저장 실패:', error);
+      setModalMessage('템플릿 저장에 실패했습니다. 다시 시도해주세요.');
+      setIsModalOpen(true);
+    }
+  };
+
   return (
-    <div className="p-4">
-      <h2 className="text-lg font-bold">템플릿 생성</h2>
-      <input className="w-full p-2 border mt-2" placeholder="템플릿 이름 입력" />
-      <button className="mt-4 p-2 bg-blue-500 text-white">생성</button>
-      <button className="mt-4 p-2 bg-gray-200 ml-2" onClick={onCancel}>
-        취소
-      </button>
+    <div className="flex flex-col p-4 gap-4">
+      <div className="flex w-full justify-between">
+        <div className="flex gap-2 text-title-bold text-black">
+          <PlusCircle />
+          템플릿 생성
+        </div>
+        <div className="flex text-black text-xs gap-2 cursor-pointer pr-4" onClick={onCancel}>
+          이전으로
+          <SmRightIcon strokeColor="#222222" />
+        </div>
+      </div>
+      <div className="flex flex-col w-full min-h-[600px] bg-gray-18 p-6 gap-6">
+        <div className="flex gap-5 items-center">
+          <div className="flex items-center gap-1 text-body-bold w-28 px-3">
+            템플릿 제목 <RequiredIcon />
+          </div>
+          <input
+            type="text"
+            value={templateTitle}
+            onChange={(e) => setTemplateTitle(e.target.value)}
+            className={`w-[400px] text-subtitle-regular border bg-white py-2 px-4  ${templateTitle ? 'border-gray-2' : 'border-blue'}`}
+            placeholder="템플릿 제목을 입력해주세요."
+          />
+        </div>
+        <TemplateOptions />
+        <TemplateContent />
+      </div>
+      <div className="flex w-full justify-center">
+        <button onClick={onClickBtn} className="btn mb-4">
+          템플릿 저장
+        </button>
+      </div>
+      {isModalOpen && (
+        <Modal
+          title={
+            modalMessage.includes('입력해주세요')
+              ? '필수 입력 항목 누락'
+              : modalMessage.includes('#')
+                ? `템플릿 번호 - #${templateId}`
+                : '템플릿 저장'
+          }
+          content={modalMessage}
+          backBtn="닫기"
+          onBackBtnClick={() => {
+            setIsModalOpen(false);
+          }}
+          checkBtn={modalMessage.includes('입력해주세요') || modalMessage.includes('#') ? undefined : '확인'}
+          onBtnClick={modalMessage.includes('입력해주세요') || modalMessage.includes('#') ? undefined : confirmSubmit}
+        />
+      )}
     </div>
   );
 }

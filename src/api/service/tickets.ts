@@ -62,11 +62,9 @@ export async function createTicketType(token: string, typeData: CreateTicketType
 }
 
 // INTF-26: 티켓 유형 조회
-export async function getTicketTypes(token: string) {
+export async function getTicketTypes() {
   try {
-    const {data} = await instance.get('/tickets/types/list', {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.get('/tickets/types/list', {});
     return data.data;
   } catch (error) {
     console.error('티켓 유형 조회 실패:', error);
@@ -101,11 +99,9 @@ export async function deleteTicketType(token: string, typeId: number) {
 }
 
 // INTF-29: 티켓 생성
-export async function createTicket(token: string, ticketData: CreateTicketData) {
+export async function createTicket(formData: FormData) {
   try {
-    const {data} = await instance.post('/tickets', ticketData, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.post('/tickets', formData, {});
     return data;
   } catch (error) {
     console.error('티켓 생성 실패:', error);

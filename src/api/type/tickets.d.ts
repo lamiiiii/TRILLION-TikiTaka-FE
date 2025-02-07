@@ -16,16 +16,15 @@ declare interface UpdateTicketTypeData {
 }
 
 declare interface CreateTicketData {
-  title?: string;
-  description?: string;
+  title: string;
+  description: string;
   urgent: boolean;
-  type_id: number;
-  primary_category_id: number;
-  secondary_category_id?: number;
+  typeId: number;
   deadline: string; // yyyy-MM-dd HH:mm
-  requester_id: number;
-  manager_id?: number;
-  status: string;
+  primaryCategoryId?: number;
+  secondaryCategoryId?: number;
+  managerId?: number;
+  files?: File[];
 }
 
 declare interface TicketStatusCount {

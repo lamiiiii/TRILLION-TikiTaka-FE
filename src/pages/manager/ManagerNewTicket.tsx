@@ -6,7 +6,7 @@ export default function ManagerNewTicket() {
   const {isAuthenticated} = useTokenStore();
 
   return (
-    <AuthGuard isAuthenticated={isAuthenticated}>
+    <AuthGuard isAuthenticated = {isAuthenticated}>
       <NewTicketContainer />
     </AuthGuard>
   );

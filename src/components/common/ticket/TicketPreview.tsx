@@ -22,16 +22,23 @@ export default function TicketPreview() {
     const dueDateTime = new Date(`${dueDateString}T${dueTimeString}`);
     const now = new Date();
     const timeDiff = dueDateTime.getTime() - now.getTime(); // 밀리초 단위 차이
-    const hoursLeft = Math.floor(timeDiff / (1000 * 3600)); // 남은 시간 계산
+    // const hoursLeft = Math.floor(timeDiff / (1000 * 3600)); // 남은 시간 계산
 
-    if (timeDiff <= 24 * 60 * 60 * 1000 && timeDiff > 0)  {
-      return `(${hoursLeft} h)`; // 24시간 이내라면 시간으로 표시
+    if (isNaN(dueDateTime.getTime())) {
+      return ''; // dueTime이 없는 경우 공백을 반환
     }
 
-    return ''; // 24시간 이상일 경우 빈 문자열 반환
+    const hours = String(dueDateTime.getHours()).padStart(2, '0');
+    const minutes = String(dueDateTime.getMinutes()).padStart(2, '0');
+
+    if (timeDiff <= 24 * 60 * 60 * 1000 && timeDiff > 0) {
+      return `${formatDate(dueDateString)} ${hours}:${minutes}`; // 24시간 이내라면 날짜와 시간 표시
+    }
+
+    return `${formatDate(dueDateString)} ${hours}:${minutes}`; // 24시간 이상일 경우 날짜와 시간 표시
   };
 
-  const formattedDate = dueDate ? `${formatDate(dueDate)} ${formatTimeLeft(dueDate, dueTime)}` : '';
+  const formattedDate = dueDate ? `${formatTimeLeft(dueDate, dueTime)}` : '';
 
   return (
     <div className="preview">
@@ -49,8 +56,8 @@ export default function TicketPreview() {
           transition={{duration: 0.2}}
           style={{overflow: 'hidden'}}
         >
-          <div className="flex gap-4 items-center">
-            <p>#112</p>
+          <div className="flex gap-8 items-center">
+            <p className="text-main">#No.</p>
             <div className="flex flex-col w-32">
               <p className={`${firstCategory ? '' : 'text-gray-4'}`}>{firstCategory?.name || '1차 카테고리 미지정'}</p>
               <p className={`text-body-regular ${secondCategory ? 'text-gray-6' : 'text-gray-4'}`}>
@@ -60,15 +67,15 @@ export default function TicketPreview() {
             <div className="flex flex-col w-80">
               <div className="flex items-center gap-1">
                 <p>{isUrgent && <AlertIcon className="text-error w-4 h-4" />}</p>
-                <p className={`${ticketType ? '' : 'text-gray-4'}`}> [{ticketType || '유형'}]</p>
-                <p className={`${title ? '' : 'text-gray-4'} truncate`}>{title || '제목을 작성해주세요'}</p>
+                <p className={`${ticketType.typeId !== 0 ? '' : 'text-blue'}`}>[{ticketType.typeName || '유형'}]</p>
+                <p className={`${title ? '' : 'text-blue'} truncate`}>{title || '제목을 작성해주세요'}</p>
               </div>
-              <p className={`text-body-regular ${content ? 'text-gray-6' : 'text-gray-4'} truncate`}>{content || '내용을 작성해주세요'}</p>
+              <p className={`text-body-regular ${content ? 'text-gray-6' : 'text-blue'} truncate`}>{content || '내용을 작성해주세요'}</p>
             </div>
           </div>
           <div className="flex gap-8 items-center">
-            <p>{formattedDate || '-'}</p>
-            <div className="bg-white border border-gray-2 py-1 px-4 my-2 rounded items-center">{manager || '전체 담당자'}</div>
+            <p className={`${formattedDate ? '' : 'text-blue'}`}>{formattedDate || '-'}</p>
+            <div className="bg-white border border-gray-2 py-1 px-4 my-2 rounded items-center">{manager?.username || '전체 담당자'}</div>
           </div>
         </motion.div>
       )}

@@ -38,7 +38,7 @@ export default function UserBox() {
   }
 
   return (
-    <div className="flex flex-col w-full h-32 border-b border-gray-2 p-2 pb-2 mb-2 justify-center gap-1">
+    <div className="flex flex-col w-full h-32 border-b border-gray-2 p-2 pb-4 justify-center gap-1">
       <div className="w-12 h-12 rounded-full my-2">
         {userInfo.profileImageUrl ? (
           <img src={userInfo.profileImageUrl} alt="Profile" className="w-full h-full object-cover rounded-full" />
