@@ -3,8 +3,8 @@ import Dropdown from '../Dropdown';
 import Ticket from './Ticket';
 import PageNations from '../../manager/common/PageNations';
 import {TicketViewType} from '../../../interfaces/ticket';
-import {useQuery} from '@tanstack/react-query';
-import {getTicketList} from '../../../api/service/tickets';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {approveTicket, getTicketList, rejectTicket} from '../../../api/service/tickets';
 
 const dropdownData: {label: string; options: string[]}[] = [
   {label: '담당자', options: ['곽서연', '김규리', '김낙도']},
@@ -24,6 +24,9 @@ export default function TicketList({role, selectedFilter}: TicketListProps) {
   const ticketsPerPage = 5;
   const totalPages = 5;
 
+  const queryClient = useQueryClient();
+
+  //티켓 리스트 조회
   const {data: ticketListData} = useQuery({
     queryKey: ['ticketList', currentPage, selectedFilter, selectedFilters],
     queryFn: () =>
@@ -34,6 +37,25 @@ export default function TicketList({role, selectedFilter}: TicketListProps) {
       }),
   });
 
+  const approveMutation = useMutation({
+    mutationFn: (ticketId: number) => approveTicket(ticketId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['ticketList']});
+    },
+    onError: () => {
+      alert('티켓 승인에 실패했습니다. 다시 시도해 주세요.');
+    },
+  });
+
+  const rejectMutation = useMutation({
+    mutationFn: (ticketId: number) => rejectTicket(ticketId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['ticketList']});
+    },
+    onError: () => {
+      alert('티켓 반려에 실패했습니다. 다시 시도해 주세요.');
+    },
+  });
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
@@ -49,11 +71,11 @@ export default function TicketList({role, selectedFilter}: TicketListProps) {
   };
 
   const handleApprove = (ticketId: number) => {
-    console.log(`티켓 ${ticketId} 진행`);
+    approveMutation.mutate(ticketId);
   };
 
   const handleReject = (ticketId: number) => {
-    console.log(`티켓 ${ticketId} 반려`);
+    rejectMutation.mutate(ticketId);
   };
 
   return (

@@ -96,7 +96,7 @@ export default function StatusBar({data, status}: StatusBarProps) {
     },
   });
 
-  // 티켷 반려
+  // 티켓 반려
   const rejectMutation = useMutation({
     mutationFn: () => rejectTicket(ticketId),
     onSuccess: () => {
