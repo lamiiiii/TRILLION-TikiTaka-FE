@@ -28,6 +28,12 @@ export default function StatusBar({data, status}: StatusBarProps) {
 
   const queryClient = useQueryClient();
 
+  useEffect(() => {
+    if (data?.priority) {
+      setPriority(data.priority);
+    }
+  }, [data?.priority, setPriority]);
+
   // 티켓 긴급 여부 수정
   const updateUrgentMutation = useMutation({
     mutationFn: (urgent: boolean) =>
@@ -57,6 +63,7 @@ export default function StatusBar({data, status}: StatusBarProps) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['ticket', ticketId]});
+      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
     },
     onError: () => {
       alert('티켓 상태 변경에 실패했습니다. 다시 시도해 주세요.');
@@ -64,12 +71,12 @@ export default function StatusBar({data, status}: StatusBarProps) {
   });
 
   //티켓 우선순위 수정
-  // FIX: cors 해결 후 요청 형식 맞는지 검토하기
   const updatePriorityMutation = useMutation({
     mutationFn: (newPriority: string) => updateTicketPriority(ticketId, newPriority),
     onSuccess: (data) => {
+      setPriority(data.priority);
       queryClient.invalidateQueries({queryKey: ['ticket', ticketId]});
-      setPriority(data.priority); // API 응답의 priority로 전역 상태 업데이트
+      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
     },
     onError: () => {
       alert('티켓 우선순위 변경에 실패했습니다. 다시 시도해 주세요.');
@@ -164,7 +171,7 @@ export default function StatusBar({data, status}: StatusBarProps) {
                 currentStatus === option ? 'bg-main text-white' : 'bg-white-100'
               } rounded-md py-1 px-6 text-caption-regular border border-main`}
             >
-              {updateStatusMutation.isPending && currentStatus === option ? 'Updating...' : option}
+              {option}
             </button>
           ))}
         </section>
