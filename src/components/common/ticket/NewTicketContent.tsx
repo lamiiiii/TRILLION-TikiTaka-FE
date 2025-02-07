@@ -1,19 +1,21 @@
-import {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useNewTicketFormStore, useNewTicketStore} from '../../../store/store';
 import {RequiredIcon} from '../Icon';
 import MarkdownPreview from '../MarkdownPreview';
 import {getTicketForm} from '../../../api/service/tickets';
+import Modal from '../Modal';
 
 export default function NewTicketContent() {
   const {title, content, firstCategory, secondCategory, setTitle, setContent} = useNewTicketStore();
-  const {setDescription, setMustDescription} = useNewTicketFormStore();
+  const {description, setDescription, setMustDescription} = useNewTicketFormStore();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // 텍스트가 변경될 때마다 텍스트 영역 크기 조정
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   useEffect(() => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto'; // 우선 높이를 auto로 설정해줌
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`; // 콘텐츠에 맞게 높이 조정
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   }, [content]);
 
@@ -24,6 +26,7 @@ export default function NewTicketContent() {
           const formData = await getTicketForm(firstCategory.id, secondCategory.id);
           setMustDescription(formData.mustDescription);
           setDescription(formData.description);
+          setIsModalOpen(true);
         } catch (error) {
           console.error('티켓 폼 조회 실패:', error);
         }
@@ -31,10 +34,22 @@ export default function NewTicketContent() {
     };
 
     fetchRequestForm();
-  }, [firstCategory?.id, secondCategory?.id, setMustDescription]); // 의존성 배열 추가
+  }, [firstCategory?.id, secondCategory?.id, setMustDescription]);
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(e.target.value); // 엔터 키로 줄바꿈이 가능하도록 setContent로 상태 변경
+    setContent(e.target.value);
+  };
+
+  const onOverwrite = () => {
+    if (description) {
+      setContent('');
+      setContent(description);
+    }
+    setIsModalOpen(false);
+  };
+
+  const onCancel = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -70,6 +85,21 @@ export default function NewTicketContent() {
       <div className="w-[800px] ml-[97px] mt-4 p-4 border border-gray-3 bg-gray-1">
         {content ? <MarkdownPreview content={content} /> : <div className="text-center text-gray-6">요청 내용 미리보기 화면</div>}{' '}
       </div>
+
+      {isModalOpen && (
+        <Modal
+          title="요청 양식 제공"
+          content={
+            description
+              ? `2차 카테고리에 따른 요청 양식이 적용됩니다. \n 기존 내용에 덮어쓰시겠습니까?`
+              : `요청 양식이 없습니다. \n 자유롭게 작성해주세요.`
+          }
+          backBtn={description ? '취소' : undefined} // description이 없으면 취소 버튼 없음
+          onBackBtnClick={onCancel}
+          checkBtn={description ? '확인' : ''}
+          onBtnClick={onOverwrite}
+        />
+      )}
     </>
   );
 }
