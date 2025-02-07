@@ -46,3 +46,108 @@ declare interface WeeklyTicketSummaryResponse {
   dayUrgentTickets: number;
   weekTickets: number;
 }
+
+// 응답 데이터 타입을 위한 interface
+declare interface DailyTicketSummary {
+  createdTickets: number;
+  inProgressTickets: number;
+  doneTickets: number;
+}
+
+// API 응답 전체 구조를 위한 interface
+declare interface DailyTicketSummaryResponse {
+  message: string;
+  data: DailyTicketSummary;
+}
+
+// 담당자별 티켓 처리 현황 타입
+declare interface ManagerTicketSummary {
+  userName: string;
+  userId: number;
+  userEmail: string;
+  userProfile: string;
+  doneTickets: number;
+  inProgressTickets: number;
+}
+
+// API 응답 타입
+declare interface DailyManagerTicketSummaryResponse {
+  message: string;
+  data: ManagerTicketSummary[];
+}
+
+declare interface SecondCategory {
+  secondCategoryId: number;
+  secondCategoryName: string;
+  ticketCount: number;
+}
+
+declare interface FirstCategory {
+  firstCategoryId: number;
+  firstCategoryName: string;
+  secondCategories: SecondCategory[];
+  totalTicketCount: number;
+}
+
+declare interface DailyCategorySummary {
+  message: string;
+  data: FirstCategory[];
+}
+
+declare interface MonthlyManagerTicketSummary {
+  userName: string;
+  userId: number;
+  userEmail: string;
+  userProfile: string;
+  totalManagingCreatedTicket: number;
+}
+
+declare interface MonthlyManagerTicketSummaryResponse {
+  message: string;
+  data: MonthlyManagerTicketSummary[];
+}
+
+declare interface SecondCategory {
+  secondCategoryId: number;
+  secondCategoryName: string;
+  ticketCount: number;
+}
+
+declare interface FirstCategory {
+  firstCategoryId: number;
+  firstCategoryName: string;
+  secondCategories: SecondCategory[];
+  totalTicketCount: number;
+}
+
+declare interface MonthlyCategorySummaryResponse {
+  message: string;
+  data: FirstCategory[];
+}
+
+declare interface MonthlyTicketSummary {
+  create: number;
+  urgent: number;
+  complete: number;
+}
+
+declare interface MonthlyTicketSummaryResponse {
+  message: string;
+  data: MonthlyTicketSummary;
+}
+
+declare interface MonthlyTicketSummary {
+  create: number;
+  urgent: number;
+  complete: number;
+}
+
+declare interface MonthlyTicketSummaryResponse {
+  message: string;
+  data: MonthlyTicketSummary;
+}
+
+declare interface MonthlyCategorySummary {
+  message: string;
+  data: CategoryData[];
+}

@@ -3,6 +3,7 @@ import Profile from '../Profile';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {createTicketComment} from '../../../api/service/tickets';
 import {useParams} from 'react-router-dom';
+import {useUserStore} from '../../../store/store';
 
 export default function CommentInput() {
   const [content, setContent] = useState('');
@@ -10,6 +11,7 @@ export default function CommentInput() {
   const [files, setFiles] = useState<File[]>([]);
   const [fileNames, setFileNames] = useState<string[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const {userName, role} = useUserStore();
 
   const {id} = useParams();
   const ticketId = Number(id);
@@ -105,7 +107,7 @@ export default function CommentInput() {
       </div>
       <div className="relative mt-3">
         <div className="flex gap-2 mb-2">
-          <Profile name="yeon" size="sm" backgroundColor="manager" />
+          <Profile name={userName} size="sm" backgroundColor={role} />
           <textarea
             ref={textareaRef}
             className="comment-textarea"
