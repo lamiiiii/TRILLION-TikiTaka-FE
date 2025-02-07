@@ -1,14 +1,21 @@
 import {useQuery} from '@tanstack/react-query';
 import {getChangeHistory} from '../../../api/service/histories';
-import {useUserStore} from '../../../store/store';
+import {useParams} from 'react-router-dom';
+import {UPDATE_TYPE_MAP} from '../../../constants/constants';
 
+type UpdateType = keyof typeof UPDATE_TYPE_MAP;
 export default function TicketLog() {
-  const {userId} = useUserStore();
+  const {id} = useParams<{id: string}>();
+  const ticketId = Number(id);
 
   const {data: logData, isLoading} = useQuery({
-    queryKey: ['ticketHistory', userId],
-    queryFn: () => getChangeHistory(Number(userId)),
+    queryKey: ['ticketHistory', Number(ticketId)],
+    queryFn: () => getChangeHistory(Number(ticketId)),
   });
+
+  const getKoreanUpdateType = (updateType: string) => {
+    return UPDATE_TYPE_MAP[updateType as UpdateType] || updateType;
+  };
 
   return (
     <div className="flex flex-col gap-1 ">
@@ -19,9 +26,9 @@ export default function TicketLog() {
         ) : logData?.content && logData.content.length > 0 ? (
           logData.content.map((log) => (
             <div key={log.id} className="bg-main text-white rounded-md p-4 my-2 flex flex-col">
-              <div className="flex gap-2">
-                <p className="text-body-regular">{log.updatedByUsername}</p>
-                <p className="text-body-regular">{log.updateType}</p>
+              <div className="flex gap-4">
+                <p className="text-body-bold">{log.updatedByUsername}님 </p>
+                <p className="text-body-regular">{getKoreanUpdateType(log.updateType)}</p>
               </div>
               <p className="text-body-bold">{log.ticketTitle}</p>
               <p className="text-caption-regular text-right mt-1">{new Date(log.updatedAt).toLocaleDateString()}</p>

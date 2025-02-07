@@ -87,3 +87,16 @@ export const commonTooltipStyle = {
   boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
   fontSize: '14px',
 };
+
+export const UPDATE_TYPE_MAP = {
+  TICKET_CREATED: '티켓 생성',
+  TICKET_EDITED: '수정(사용자)',
+  TYPE_CHANGE: '유형 변경',
+  STATUS_CHANGE: '상태 변경',
+  MANAGER_CHANGE: '담당자 변경',
+  PRIORITY_CHANGE: '우선순위 변경',
+  CATEGORY_CHANGE: '카테고리 변경',
+  DEADLINE_CHANGE: '마감기한 변경',
+  TICKET_DELETE: '티켓 삭제',
+  OTHER: '기타',
+};
