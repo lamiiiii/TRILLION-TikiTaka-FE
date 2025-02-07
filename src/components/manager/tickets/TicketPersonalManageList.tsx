@@ -41,6 +41,7 @@ export default function TicketPersonalManageList() {
     },
   });
 
+  // 티켓 상태 업데이트
   const updateTicketState = (ticketId: number, newStatus: TicketStatus) => {
     setTickets((prevTickets) => {
       const updatedTickets = {...prevTickets};

@@ -3,7 +3,7 @@ import DropDown from '../../common/Dropdown';
 import {StarIcon} from '../../common/Icon';
 import Profile from '../../common/Profile';
 import {Link} from 'react-router-dom';
-import {PRIORITY, PRIORITY_COLOR} from '../../../constants/constants';
+import {PRIORITY, PRIORITY_COLOR, TicketStatus} from '../../../constants/constants';
 
 interface TicketSmallProps {
   id: number;
@@ -11,7 +11,8 @@ interface TicketSmallProps {
   deadline: string;
   initialStatus: string;
   assignee: string;
-  onStatusChange: (id: number, newStatus: '대기 중' | '진행 중' | '진행 완료') => void;
+  priority: string;
+  onStatusChange: (id: number, newStatus: TicketStatus) => void;
   [key: string]: any;
 }
 
@@ -22,7 +23,7 @@ const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(
     const [priority, setPriority] = useState('');
     const priorityRef = useRef<HTMLDivElement>(null);
 
-    const handleStatusChange = (selectedStatus: '대기 중' | '진행 중' | '진행 완료') => {
+    const handleStatusChange = (selectedStatus: TicketStatus) => {
       setStatus(selectedStatus);
       onStatusChange(id, selectedStatus);
     };

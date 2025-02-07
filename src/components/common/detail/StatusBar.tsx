@@ -5,8 +5,9 @@ import {useEffect, useState} from 'react';
 import {WhiteCheckIcon} from '../Icon';
 import {useParams} from 'react-router-dom';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {approveTicket, rejectTicket, updateTicket, updateTicketPriority, updateTicketStatus} from '../../../api/service/tickets';
+import {approveTicket, rejectTicket, updateTicket, updateTicketStatus} from '../../../api/service/tickets';
 import useReverseMap from '../../../hooks/useReverseMap';
+import {useUpdateTicketPriority} from '../../../api/hooks/useUpdateTicketPriority';
 
 interface StatusBarProps {
   data: TicketDetails;
@@ -70,15 +71,9 @@ export default function StatusBar({data, status}: StatusBarProps) {
   });
 
   //티켓 우선순위 수정
-  const updatePriorityMutation = useMutation({
-    mutationFn: (newPriority: string) => updateTicketPriority(ticketId, newPriority),
+  const updatePriorityMutation = useUpdateTicketPriority(ticketId, {
     onSuccess: (data) => {
       setPriority(data.priority);
-      queryClient.invalidateQueries({queryKey: ['ticket', ticketId]});
-      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
-    },
-    onError: () => {
-      alert('티켓 우선순위 변경에 실패했습니다. 다시 시도해 주세요.');
     },
   });
 

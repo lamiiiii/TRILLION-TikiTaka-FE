@@ -15,10 +15,10 @@ export const TICKET_STATUS = {
 } as const;
 export type TicketStatus = (typeof TICKET_STATUS)[keyof typeof TICKET_STATUS];
 
-export const PRIORITY = ['HIGH', 'MEDIUM', 'LOW'];
+export const PRIORITY = ['HIGH', 'MIDDLE', 'LOW'];
 export const PRIORITY_COLOR: {[key in (typeof PRIORITY)[number]]: string} = {
   HIGH: '#F24949',
-  MEDIUM: '#F4B540',
+  MIDDLE: '#F4B540',
   LOW: '#93CF1A',
 };
 
