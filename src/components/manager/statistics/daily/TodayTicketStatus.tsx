@@ -1,6 +1,7 @@
 import {useQuery} from '@tanstack/react-query';
 import {BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell} from 'recharts';
 import {getDailyTicketSummary} from '../../../../api/service/statistics';
+import {commonTooltipStyle} from '../../../../constants/constants';
 
 // 임시 색상
 const COLORS = ['#F6D47A', '#FFDF5F', '#F0C000'];
@@ -35,17 +36,8 @@ export default function TodayTicketStatus() {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} layout="vertical">
                 <XAxis axisLine={false} tickLine={false} type="number" padding={{right: 25}} />
-                <YAxis axisLine={false} tickLine={false} dataKey="name" type="category" width={80} />
-                <Tooltip
-                  cursor={false}
-                  contentStyle={{
-                    backgroundColor: '#fff',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px',
-                    padding: '12px',
-                  }}
-                  formatter={(value) => [`${value}건`]}
-                />
+                <YAxis axisLine={false} tick={{fontSize: 12, fontWeight: 700}} tickLine={false} dataKey="name" type="category" width={80} />
+                <Tooltip cursor={false} contentStyle={commonTooltipStyle} formatter={(value) => [`${value}건`]} />
                 <Bar radius={100} height={20} dataKey="ticket" fill="#8884d8">
                   {chartData.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

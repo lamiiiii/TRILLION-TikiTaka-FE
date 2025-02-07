@@ -1,7 +1,8 @@
 import {useState} from 'react';
-import {Bar, BarChart, LabelList, XAxis, PieChart, Pie, Cell, Tooltip} from 'recharts';
+import {Bar, BarChart, XAxis, PieChart, Pie, Cell, Tooltip} from 'recharts';
 import {useQuery} from '@tanstack/react-query';
 import {getDailyCategorySummary} from '../../../api/service/statistics';
+import {commonTooltipStyle} from '../../../constants/constants';
 const COLORS = ['#F6D47A', '#FFB74D', '#FFD700']; // 색상 팔레트
 
 export default function CategoryTicketStatus() {
@@ -57,7 +58,7 @@ export default function CategoryTicketStatus() {
               <BarChart width={240} height={340} data={primaryData} margin={{left: 20, right: 10, top: 10, bottom: 0}}>
                 <XAxis
                   dataKey="name"
-                  tick={{fontSize: 10}}
+                  tick={{fontSize: 10, fontWeight: 700}}
                   axisLine={false}
                   tickLine={false}
                   angle={-45}
@@ -67,6 +68,7 @@ export default function CategoryTicketStatus() {
                   textAnchor="end"
                   tickFormatter={(tick: string) => tick}
                 />
+                <Tooltip cursor={false} contentStyle={commonTooltipStyle} formatter={(value, name) => [`${value}건`, name]} />
                 <Bar
                   dataKey="ticket"
                   fill="#F6D47A"
@@ -81,7 +83,6 @@ export default function CategoryTicketStatus() {
                       fill={hoverIndex === index || selectedCategory === primaryData[index].name ? '#D4A946' : '#F6D47A'}
                     />
                   ))}
-                  <LabelList dataKey="ticket" position="center" fill="#FFFFFF" fontSize={10} />
                 </Bar>
               </BarChart>
             </section>
@@ -96,20 +97,20 @@ export default function CategoryTicketStatus() {
               <section className="ml-10 grid grid-cols-2 text-subtitle">
                 <div className="flex flex-col items-center gap-4">
                   <PieChart width={200} height={200}>
-                    <Pie data={secondaryData[selectedCategory]} cx="50%" cy="50%" outerRadius={80} innerRadius={30} dataKey="value">
+                    <Pie
+                      key={selectedCategory}
+                      data={secondaryData[selectedCategory]}
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={80}
+                      innerRadius={30}
+                      dataKey="value"
+                    >
                       {secondaryData[selectedCategory].map((_, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: '#fff',
-                        border: '1px solid #e5e7eb',
-                        borderRadius: '8px',
-                        padding: '12px',
-                      }}
-                      formatter={(value, name) => [`${value}건`, name]}
-                    />
+                    <Tooltip contentStyle={commonTooltipStyle} formatter={(value, name) => [`${value}건`, name]} />
                   </PieChart>
                   <div className="text-main2-3 text-center">{selectedCategory} 세부 분류</div>
                 </div>

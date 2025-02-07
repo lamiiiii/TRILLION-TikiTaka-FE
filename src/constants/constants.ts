@@ -78,3 +78,12 @@ export const SECONDARY_CATEGORIES = {
 };
 
 export const TICKET_TYPES = ['생성', '조회', '수정', '삭제', '오류', '기타'];
+
+export const commonTooltipStyle = {
+  backgroundColor: '#fff',
+  border: '1px solid #e5e7eb',
+  borderRadius: '8px',
+  padding: '12px',
+  boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+  fontSize: '14px',
+};
