@@ -31,3 +31,18 @@ declare interface MonthlyHandlingStatsResponse {
   completionRatio: number;
   lastUpdatedAt: string;
 }
+
+declare interface WeeklyTicketSummaryResponse {
+  weeklyTicketCounts: {
+    Mon: number;
+    Tue: number;
+    Wed: number;
+    Thu: number;
+    Fri: number;
+    Sat: number;
+    Sun: number;
+  };
+  dayTickets: number;
+  dayUrgentTickets: number;
+  weekTickets: number;
+}

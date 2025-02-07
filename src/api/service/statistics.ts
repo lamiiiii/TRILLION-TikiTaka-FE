@@ -40,6 +40,20 @@ export async function getDailyHandledStats(token: string) {
   }
 }
 
+// 요일별 티켓 조회 (INTF-52)
+export async function getWeeklyTicketSummary(managerId: number) {
+  try {
+    const {data} = await instance.get<{
+      message: string;
+      data: WeeklyTicketSummaryResponse;
+    }>(`/statistics/weekly/summary?managerId=${managerId}`);
+    return data.data;
+  } catch (error) {
+    console.error('요일별 티켓 조회 실패:', error);
+    throw error;
+  }
+}
+
 // 월간 처리 현황 (INTF-52)
 export async function getMonthlyHandlingStats(token: string) {
   try {
