@@ -1,10 +1,10 @@
 import {useState} from 'react';
 import TopMenu from '../../common/TopMenu';
-import TicketFilter from '../../common/ticket/TicketFilter';
-import TicketList from '../../common/ticket/TicketList';
 import UserTypeAnalytics from './UserTypeAnalytics';
 import UserCountAnalytics from './UserCountAnalytics';
 import {TicketViewType} from '../../../interfaces/ticket';
+import UserTicketFilter from './UserTicketFilter';
+import UserTicketList from './UserTicketList';
 
 export default function UserHomeContainer() {
   const [selectedFilter, setSelectedFilter] = useState<TicketViewType>('전체');
@@ -15,8 +15,8 @@ export default function UserHomeContainer() {
         <UserCountAnalytics />
         <UserTypeAnalytics />
       </div>
-      <TicketFilter role="user" onFilterChange={setSelectedFilter} />
-      <TicketList role="user" selectedFilter={selectedFilter} />
+      <UserTicketFilter onFilterChange={setSelectedFilter} />
+      <UserTicketList selectedFilter={selectedFilter} />
     </div>
   );
 }

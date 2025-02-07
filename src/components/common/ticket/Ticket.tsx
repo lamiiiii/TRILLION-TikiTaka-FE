@@ -7,8 +7,8 @@ import {Link} from 'react-router-dom';
 interface TicketProps extends TicketDataProps {
   role: 'manager' | 'user' | 'admin'; // role 추가
   onAssigneeChange: (newAssignee: string) => void;
-  onApprove: () => void;
-  onReject: () => void;
+  onApprove?: () => void;
+  onReject?: () => void;
 }
 
 // 담당자 목록 (managerName이 null이 아니면 포함)
@@ -46,12 +46,16 @@ export default function Ticket({
 
   const handleApprove = () => {
     setTicketStatus('IN_PROGRESS');
-    onApprove();
+    if (onApprove) {
+      onApprove();
+    }
   };
 
   const handleReject = () => {
     setTicketStatus('REJECTED');
-    onReject();
+    if (onReject) {
+      onReject();
+    }
   };
 
   const handleClick = (e: React.MouseEvent) => {
