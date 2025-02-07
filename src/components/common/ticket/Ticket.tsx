@@ -24,7 +24,6 @@ export default function Ticket({
   status,
   urgent,
   deadline,
-  role, // role 추가
   onAssigneeChange,
   onApprove,
   onReject,
@@ -103,43 +102,42 @@ export default function Ticket({
         </div>
 
         {/* 승인 여부 */}
-        {role === 'manager' && (
-          <div className="w-[15%] flex gap-2" onClick={handleClick}>
-            {ticketStatus === 'PENDING' && (
-              <>
-                <button
-                  className="px-6 h-[30px] text-[12px] leading-none border border-gray-6 rounded-md hover:bg-gray-8 hover:text-white"
-                  onClick={handleApprove}
-                >
-                  진행
-                </button>
-                <button
-                  className="px-6 h-[30px] text-[12px] leading-none border border-gray-6 rounded-md hover:bg-error/80 hover:text-white"
-                  onClick={handleReject}
-                >
-                  반려
-                </button>
-              </>
-            )}
-            {ticketStatus === 'IN_PROGRESS' && (
-              <Dropdown
-                label="진행중"
-                options={['진행중', '완료']}
-                defaultSelected="진행중"
-                onSelect={() => setTicketStatus('COMPLETED')}
-                paddingX="px-5"
-                border={true}
-                textColor="text-gray-15"
-              />
-            )}
-            {ticketStatus === 'COMPLETED' && (
-              <div className="px-8 py-1.5 text-[12px] leading-none border text-blue border-gray-2 bg-gray-1 rounded-md">완료</div>
-            )}
-            {ticketStatus === 'REJECTED' && (
-              <div className="px-8 py-1.5 text-[12px] leading-none border text-error border-error/50 bg-red/10 rounded-md">반려</div>
-            )}
-          </div>
-        )}
+
+        <div className="w-[15%] flex gap-2" onClick={handleClick}>
+          {ticketStatus === 'PENDING' && (
+            <>
+              <button
+                className="px-6 h-[30px] text-[12px] leading-none border border-gray-6 rounded-md hover:bg-gray-8 hover:text-white"
+                onClick={handleApprove}
+              >
+                진행
+              </button>
+              <button
+                className="px-6 h-[30px] text-[12px] leading-none border border-gray-6 rounded-md hover:bg-error/80 hover:text-white"
+                onClick={handleReject}
+              >
+                반려
+              </button>
+            </>
+          )}
+          {ticketStatus === 'IN_PROGRESS' && (
+            <Dropdown
+              label="진행중"
+              options={['진행중', '완료']}
+              defaultSelected="진행중"
+              onSelect={() => setTicketStatus('COMPLETED')}
+              paddingX="px-5"
+              border={true}
+              textColor="text-gray-15"
+            />
+          )}
+          {ticketStatus === 'COMPLETED' && (
+            <div className="px-8 py-1.5 text-[12px] leading-none border text-blue border-gray-2 bg-gray-1 rounded-md">완료</div>
+          )}
+          {ticketStatus === 'REJECTED' && (
+            <div className="px-8 py-1.5 text-[12px] leading-none border text-error border-error/50 bg-red/10 rounded-md">반려</div>
+          )}
+        </div>
       </div>
     </Link>
   );
