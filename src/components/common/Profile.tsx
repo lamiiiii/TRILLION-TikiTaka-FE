@@ -1,6 +1,4 @@
 import {useState} from 'react';
-import ProfilePopup from './ProfilePopup';
-
 interface ProfileInitialProps {
   name: string;
   size?: 'sm' | 'md' | 'lg';
@@ -29,11 +27,11 @@ export default function Profile({name, size = 'sm', backgroundColor}: ProfileIni
 
   return (
     <div className="relative">
-      {isPopupOpen && (
+      {/* {isPopupOpen && (
         <div className="absolute right-full mr-3">
           <ProfilePopup />
         </div>
-      )}
+      )} */}
       <div
         className={`${sizeClasses[size]} ${colorClasses[backgroundColor]} ${backgroundColor} text-white text-base p-3 rounded-full flex items-center justify-center font-bold cursor-pointer`}
         onClick={togglePopup}

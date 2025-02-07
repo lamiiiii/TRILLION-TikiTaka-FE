@@ -1,6 +1,6 @@
 import DropDown from '../Dropdown';
 import {PRIORITY, STATUS_MAP, STATUS_OPTIONS} from '../../../constants/constants';
-import {useTicketStore} from '../../../store/store';
+import {useTicketStore, useUserStore} from '../../../store/store';
 import {useEffect, useState} from 'react';
 import {WhiteCheckIcon} from '../Icon';
 import {useParams} from 'react-router-dom';
@@ -19,6 +19,9 @@ export default function StatusBar({data, status}: StatusBarProps) {
   const [currentStatus, setCurrentStatus] = useState<string>(status ? STATUS_MAP[status] : '대기 중');
   const {priority, setPriority} = useTicketStore();
   const [isUrgent, setIsUrgent] = useState(data?.urgent);
+
+  const {role} = useUserStore();
+  const isUser = role === 'USER';
 
   const isApproved = ['IN_PROGRESS', 'REVIEW', 'DONE'].includes(status || '');
   const isRejected = currentStatus === '반려';
@@ -116,18 +119,22 @@ export default function StatusBar({data, status}: StatusBarProps) {
   };
 
   const handlePrioritySelect = (selectedOption: string) => {
+    if (isUser) return;
     updatePriorityMutation.mutate(selectedOption);
   };
 
   const handleStatusClick = (option: string) => {
+    if (isUser) return;
     updateStatusMutation.mutate(option);
   };
 
   const handleApprove = () => {
+    if (isUser) return;
     approveMutation.mutate();
   };
 
   const handleReject = () => {
+    if (isUser) return;
     rejectMutation.mutate();
   };
 
@@ -174,19 +181,22 @@ export default function StatusBar({data, status}: StatusBarProps) {
       <section className="flex items-center gap-2">
         <button
           onClick={handleApprove}
-          disabled={location.pathname.startsWith('/user')}
-          className={`${
-            isApproved ? 'bg-main text-white' : 'bg-white text-main border border-main hover:bg-main hover:text-white'
-          } rounded-md py-1 px-6 text-caption-regular`}
+          className={`
+    ${isApproved ? 'bg-main text-white' : 'bg-white text-main border border-main'}
+    ${!isUser && 'hover:bg-main hover:text-white'}
+    rounded-md py-1 px-6 text-caption-regular
+  `}
         >
           승인
         </button>
         <button
           onClick={handleReject}
-          disabled={location.pathname.startsWith('/user')}
-          className={`${
-            isRejected ? 'bg-main text-white' : 'bg-white text-main border border-main hover:bg-main hover:text-white'
-          } rounded-md py-1 px-6 text-caption-regular`}
+          className={`
+    ${isRejected ? 'bg-main text-white' : 'bg-white text-main border border-main'}
+    ${!isUser && 'hover:bg-main hover:text-white'}
+    rounded-md py-1 px-6 text-caption-regular
+ 
+  `}
         >
           반려
         </button>

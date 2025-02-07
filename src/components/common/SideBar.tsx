@@ -1,5 +1,5 @@
 import {useTokenStore, useUserStore} from '../../store/store';
-import {AccountIcon, CategoryIcon, DbIcon, InquiryIcon, LgRightIcon, LogoutIcon, MyIcon, NewTicketIcon, StatIcon, TicketIcon} from './Icon';
+import {AccountIcon, CategoryIcon, DbIcon, LgRightIcon, LogoutIcon, MyIcon, NewTicketIcon, StatIcon, TicketIcon} from './Icon';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import MenuItem from './MenuItem';
 import SubMenuItem from './SubMenuItem';
@@ -55,8 +55,8 @@ export default function SideBar() {
               <SubMenuItem to="/manager/newtickets" text="요청 티켓 관리" />
             </MenuItem>
             <MenuItem icon={StatIcon} text="통계 관리" to="/manager/statistics" />
-            <MenuItem icon={MyIcon} text="마이페이지" to="/manager/inquiry">
-              <SubMenuItem to="/manager/inquiry" text="문의내역 확인" />
+            <MenuItem icon={MyIcon} text="마이페이지" to="/manager/pwdChange">
+              {/* <SubMenuItem to="/manager/inquiry" text="문의내역 확인" /> */}
               <SubMenuItem to="/manager/pwdChange" text="비밀번호 변경" />
             </MenuItem>
           </>
@@ -66,8 +66,8 @@ export default function SideBar() {
         {role === 'USER' && (
           <>
             <MenuItem icon={NewTicketIcon} text="티켓 생성" to="/user/newticket" />
-            <MenuItem icon={MyIcon} text="마이페이지" to="/user/inquiry">
-              <SubMenuItem to="/user/inquiry" text="문의내역 확인" />
+            <MenuItem icon={MyIcon} text="마이페이지" to="/user/pwdChange">
+              {/* <SubMenuItem to="/user/inquiry" text="문의내역 확인" /> */}
               <SubMenuItem to="/user/pwdChange" text="비밀번호 변경" />
             </MenuItem>
           </>
@@ -79,7 +79,7 @@ export default function SideBar() {
             <MenuItem icon={AccountIcon} text="계정 관리" to="/admin/accounts" />
             <MenuItem icon={CategoryIcon} text="카테고리 관리" to="/admin/categories" />
             <MenuItem icon={StatIcon} text="통계 관리" to="/admin/statistics" />
-            <MenuItem icon={InquiryIcon} text="문의/요청 관리" to="/admin/inquiries" />
+            {/* <MenuItem icon={InquiryIcon} text="문의/요청 관리" to="/admin/inquiries" /> */}
           </>
         )}
       </div>

@@ -18,6 +18,7 @@ export default function TicketContent({data}: TicketContentProps) {
   const queryClient = useQueryClient();
 
   const {userId} = useUserStore();
+  console.log(userId);
 
   const deleteMutation = useMutation({
     mutationFn: () => deleteTicket(ticketId),
@@ -46,8 +47,8 @@ export default function TicketContent({data}: TicketContentProps) {
   return (
     <div className="relative">
       <div className="flex justify-end gap-2 text-body-regular">
-        {location.pathname.startsWith('/user') && (
-          // 귤님 여기 링크 수정해야합니다!
+        {location.pathname.startsWith('/user') && data?.requesterId === userId && (
+          // FIX: 귤님 여기 링크 수정해야합니다!
           <Link to="/user/newticket" className="text-gray-8 hover:text-gray-15">
             편집
           </Link>
