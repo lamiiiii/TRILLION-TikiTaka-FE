@@ -135,7 +135,7 @@ export default function SignUpContainer() {
           <button onClick={onClickSubmit} className="main-btn-lg w-full">
             신청 완료
           </button>
-          <div className="flex justify-end w-full">
+          <div className="flex justify-end w-full pr-4">
             <Link to="/" className="text-sm text-gray-2 cursor-pointer hover:underline hover:text-gray-15">
               로그인하러 가기
             </Link>
