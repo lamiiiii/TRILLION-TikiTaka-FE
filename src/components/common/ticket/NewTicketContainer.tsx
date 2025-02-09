@@ -69,7 +69,7 @@ export default function NewTicketContainer() {
 
   const onClickBtn = () => {
     const missingFields = [];
-    if (!ticketType) missingFields.push('유형');
+    if (!ticketType.typeId) missingFields.push('유형');
     if (!title) missingFields.push('요청 제목');
     if (!content) missingFields.push('요청 내용');
     if (!dueDate) missingFields.push('마감기한');
