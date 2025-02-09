@@ -2,7 +2,7 @@ import axios, {AxiosInstance} from 'axios';
 import {tokenStorage} from '../utils/token';
 import {postReissueToken} from './service/auth';
 
-const config = {
+export const config = {
   backend: {
     baseURL: process.env.REACT_APP_BASE_URL,
   },
@@ -12,7 +12,7 @@ const server = config.backend.baseURL;
 
 const instance: AxiosInstance = axios.create({
   baseURL: server,
-  withCredentials: true, // 쿠키를 포함한 인증 정보를 서버에 전송
+  withCredentials: false, // 일반 전송시에는 쿠키값을 보내면 안됨.
 });
 
 // 토큰 재발급 요청이 중복되지 않도록 Promise 공유
@@ -32,27 +32,31 @@ instance.interceptors.response.use(
   (response) => {
     return response;
   },
-  
+
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response && error.response.status === 401 && !originalRequest._retry) {
-      // 401 에러가 발생하고, 재시도가 이루어지지 않았을 경우
+    if (!error.response) {
+      alert('서버와 연결할 수 없습니다. 네트워크 상태를 확인해주세요.');
+      return Promise.reject(error);
+    }
+
+    const {status} = error.response;
+
+    if (status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
-        // 중복된 토큰 재발급 요청 방지
+        config;
         if (!refreshTokenPromise) {
           refreshTokenPromise = postReissueToken()
             .then(({accessToken}) => {
-
               refreshTokenPromise = null;
 
               return accessToken;
             })
             .catch((err) => {
               refreshTokenPromise = null;
-              console.error('토큰 재발급 실패:', err); // 에러 로그 추가
 
               throw err;
             });
@@ -65,12 +69,26 @@ instance.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return instance(originalRequest);
       } catch (reissueError) {
-        console.error('토큰 재발급 실패, 로그아웃 처리:', reissueError);
+        alert('세션이 만료되었습니다. 다시 로그인해주세요.');
         tokenStorage.remove(); // 저장된 토큰 삭제
-        window.location.href = '/'; // 로그인 페이지로 리디렉트
+        window.location.href = '/';
         return Promise.reject(reissueError);
       }
     }
+    if (status === 403) {
+      alert('이 페이지에 접근할 권한이 없습니다.');
+      tokenStorage.remove();
+      window.location.href = '/';
+      return Promise.reject(error);
+    }
+
+    if (status === 419) {
+      alert('로그인 세션이 만료되었습니다. 다시 로그인해주세요.');
+      tokenStorage.remove();
+      window.location.href = '/';
+      return Promise.reject(error);
+    }
+
     return Promise.reject(error);
   }
 );

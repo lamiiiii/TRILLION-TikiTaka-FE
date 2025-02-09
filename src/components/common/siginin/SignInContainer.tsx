@@ -67,7 +67,6 @@ export default function SignInContainer() {
         }
       }
     } catch (error: any) {
-      console.error('로그인 실패:', error);
       setIsModalOpen(true);
       setModalTitle('로그인 안내');
       setModalMessage(error.response?.data?.message || '다시 시도해주세요.');
