@@ -27,7 +27,6 @@ export default function AccountList() {
 
   const accounts: RegistrationAccount[] = data?.data?.content ?? [];
   const totalPages = data?.totalPages ?? 1;
-  console.log("데이터",data)
 
   // 최신순 정렬
   const sortedAccounts = accounts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());

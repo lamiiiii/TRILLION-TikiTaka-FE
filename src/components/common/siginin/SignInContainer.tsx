@@ -7,8 +7,6 @@ import {postLogin} from '../../../api/service/auth';
 import Modal from '../Modal';
 import {useEnterKeyHandler} from '../../../hooks/useEnterKeyHandler';
 
-// 연속 5회 설정한 비밀번호가 틀렸을 경우 30분간 잠금
-// 토큰값 있으면 리다이렉트
 export default function SignInContainer() {
   const navigate = useNavigate();
   const {isAuthenticated, login} = useTokenStore();
@@ -69,10 +67,9 @@ export default function SignInContainer() {
         }
       }
     } catch (error: any) {
-      console.error('로그인 실패:', error);
       setIsModalOpen(true);
       setModalTitle('로그인 안내');
-      setModalMessage(error.response?.data?.message || '알 수 없는 오류가 발생했습니다.');
+      setModalMessage(error.response?.data?.message || '다시 시도해주세요.');
     }
   };
   useEnterKeyHandler(onClickLogin);
@@ -93,8 +90,6 @@ export default function SignInContainer() {
   }, []);
 
   return (
-    // <div className="flex h-screen">
-    //   <div className="top-container items-center">
     <InitialLayout>
       <div className="w-full absolute right-0 top-0 min-h-screen flex items-center justify-center">
         <div className="flex flex-col justify-center items-start gap-10 w-[400px]">
@@ -135,18 +130,17 @@ export default function SignInContainer() {
           <button onClick={onClickLogin} className=" w-full main-btn-lg">
             로그인
           </button>
-          <div className="flex justify-between px-16 w-full">
-            <Link to="/signup" className="cursor-pointer hover:underline hover:text-gray-15">
+          <div className="flex justify-end w-full pr-4">
+            <Link to="/signup" className="text-sm text-gray-2 cursor-pointer hover:underline hover:text-gray-15">
               계정 등록 신청
             </Link>
-            <Link to="/resetpwd" className="cursor-pointer hover:underline hover:text-gray-15">
+            {/* <Link to="/resetpwd" className="cursor-pointer hover:underline hover:text-gray-15">
               비밀번호 재설정
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>
       {isModalOpen && <Modal title={modalTitle} content={modalMessage} backBtn="확인" onBackBtnClick={closeModal} />}
     </InitialLayout>
-    // </div>
   );
 }
