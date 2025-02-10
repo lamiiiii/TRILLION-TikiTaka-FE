@@ -1,10 +1,12 @@
 import {useEffect, useState} from 'react';
 import DropDown from '../Dropdown';
 import {useTicketStore} from '../../../store/store';
-import {PRIMARY_CATEGORIES, PRIORITY, SECONDARY_CATEGORIES, TICKET_TYPES} from '../../../constants/constants';
+import {PRIORITY} from '../../../constants/constants';
 import {useParams} from 'react-router-dom';
-import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {updateTicketDeadline, updateTicketManager, updateTicketPriority} from '../../../api/service/tickets';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {getTicketTypes, updateTicketDeadline, updateTicketManager, updateTicketPriority} from '../../../api/service/tickets';
+import {getManagerList} from '../../../api/service/users';
+import {getCategoryList} from '../../../api/service/categories';
 
 interface TicketSettingProps {
   data: TicketDetails;
@@ -17,6 +19,7 @@ export default function TicketSetting({data}: TicketSettingProps) {
   const [ticketType, setTicketType] = useState(data.typeName);
   const [deadlineDate, setDeadlineDate] = useState('');
   const [deadlineTime, setDeadlineTime] = useState('');
+  const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
 
   const {id} = useParams();
   const ticketId = Number(id);
@@ -58,6 +61,7 @@ export default function TicketSetting({data}: TicketSettingProps) {
     },
   });
 
+  // 마감기한 업데이트
   const updateDeadlineMutation = useMutation({
     mutationFn: (deadline: string) => updateTicketDeadline(ticketId, deadline),
     onSuccess: () => {
@@ -65,6 +69,33 @@ export default function TicketSetting({data}: TicketSettingProps) {
     },
     onError: () => {
       alert('티켓 마감기한 변경에 실패했습니다. 다시 시도해 주세요.');
+    },
+  });
+
+  // 유저 정보 (담당자 리스트)
+  const {data: userData} = useQuery({
+    queryKey: ['managers'],
+    queryFn: getManagerList,
+    select: (data) => data.users,
+  });
+
+  // 티켓 타입 데이터
+  const {data: ticketData} = useQuery({
+    queryKey: ['types'],
+    queryFn: getTicketTypes,
+  });
+
+  // 카테고리 데이터
+  const {data: categories = []} = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const primaryCategories = await getCategoryList();
+      const secondaryRequests = primaryCategories.map(async (primary) => {
+        const secondaries = await getCategoryList(primary.id);
+        return {primary, secondaries};
+      });
+
+      return Promise.all(secondaryRequests);
     },
   });
 
@@ -86,6 +117,7 @@ export default function TicketSetting({data}: TicketSettingProps) {
 
   const handlePrimaryCategorySelect = (selectedOption: string) => {
     setPrimaryCategory(selectedOption);
+    setSelectedFilters((prev) => ({...prev, '1차 카테고리': selectedOption}));
   };
 
   const handleSecondaryCategorySelect = (selectedOption: string) => {
@@ -115,7 +147,7 @@ export default function TicketSetting({data}: TicketSettingProps) {
               <DropDown
                 label="담당자"
                 value={selectedAssignee}
-                options={['Jojo', 'Alex', 'Yeon']}
+                options={userData?.map((user: any) => user.username) || []}
                 defaultSelected={selectedAssignee}
                 onSelect={handleAssigneeSelect}
                 border={false}
@@ -144,20 +176,31 @@ export default function TicketSetting({data}: TicketSettingProps) {
             )}
             <DropDown
               label="1차 카테고리"
-              options={PRIMARY_CATEGORIES}
+              options={categories?.map((cat: any) => cat.primary.name)}
               value={primaryCategory}
               onSelect={handlePrimaryCategorySelect}
               border={false}
             />
             <DropDown
               label="2차 카테고리"
-              options={primaryCategory ? SECONDARY_CATEGORIES[primaryCategory as keyof typeof SECONDARY_CATEGORIES] : []}
+              options={
+                selectedFilters['1차 카테고리']
+                  ? (categories
+                      .find((cat: any) => cat.primary.name === selectedFilters['1차 카테고리'])
+                      ?.secondaries?.map((secondary: any) => secondary.name) ?? [])
+                  : []
+              }
               value={secondaryCategory}
               onSelect={handleSecondaryCategorySelect}
               border={false}
-              disabled={!primaryCategory}
             />
-            <DropDown label="타입" options={TICKET_TYPES} value={ticketType} onSelect={handleTicketTypeSelect} border={false} />
+            <DropDown
+              label="타입"
+              options={ticketData?.map((type: any) => type.typeName)}
+              value={ticketType}
+              onSelect={handleTicketTypeSelect}
+              border={false}
+            />
           </div>
         </div>
       </div>
