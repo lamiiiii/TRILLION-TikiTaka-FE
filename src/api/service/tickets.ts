@@ -250,11 +250,9 @@ export async function deleteTicket(ticketId: number) {
 }
 
 // INTF-42: 티켓 검토
-export async function reviewTicket(token: string, ticketId: number) {
+export async function reviewTicket(ticketId: number) {
   try {
-    const {data} = await instance.post(`/tickets/${ticketId}/reviews`, null, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.post(`/tickets/${ticketId}/reviews`);
     return data;
   } catch (error) {
     console.error('티켓 검토 실패:', error);

@@ -73,7 +73,7 @@ export default function DetailContainer() {
         </div>
 
         <section className="flex flex-col gap-5 w-[400px]">
-          {ticket && ticket.status === 'REVIEW' && <TicketReview />}
+          {ticket && ticket.status === 'REVIEW' && <TicketReview managerId={ticket?.managerId} />}
           {ticket && (
             <>
               <TicketDetail data={ticket} />
