@@ -221,7 +221,7 @@ export async function updateTicketManager(ticketId: number, managerId: number) {
 // INTF-40: 티켓 마감기한 수정
 export async function updateTicketDeadline(ticketId: number, deadline: string) {
   try {
-    const {data} = await instance.patch(`/tickets/deadline/${ticketId}`, {deadline});
+    const {data} = await instance.patch(`/tickets/${ticketId}/deadline`, {deadline});
     return data;
   } catch (error) {
     console.error('티켓 마감기한 수정 실패:', error);

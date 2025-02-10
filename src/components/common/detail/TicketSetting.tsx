@@ -3,10 +3,11 @@ import DropDown from '../Dropdown';
 import {useTicketStore} from '../../../store/store';
 import {PRIORITY} from '../../../constants/constants';
 import {useParams} from 'react-router-dom';
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {useQuery} from '@tanstack/react-query';
 import {getTicketTypes, updateTicketDeadline, updateTicketManager, updateTicketPriority} from '../../../api/service/tickets';
 import {getManagerList} from '../../../api/service/users';
 import {getCategoryList} from '../../../api/service/categories';
+import {useCreateMutation} from '../../../api/hooks/useCreateMutation';
 
 interface TicketSettingProps {
   data: TicketDetails;
@@ -24,8 +25,6 @@ export default function TicketSetting({data}: TicketSettingProps) {
   const {id} = useParams();
   const ticketId = Number(id);
 
-  const queryClient = useQueryClient();
-
   const priority = useTicketStore((state) => state.priority);
   const setPriority = useTicketStore((state) => state.setPriority);
 
@@ -38,40 +37,23 @@ export default function TicketSetting({data}: TicketSettingProps) {
     }
   }, [data.deadline]);
 
-  // 우선순위 업데이트
-  const updatePriorityMutation = useMutation({
-    mutationFn: (newPriority: string) => updateTicketPriority(ticketId, newPriority),
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
-      setPriority(data.priority);
-    },
-    onError: () => {
-      alert('티켓 우선순위 변경에 실패했습니다. 다시 시도해 주세요.');
-    },
-  });
+  const updatePriorityMutation = useCreateMutation(
+    (newPriority: string) => updateTicketPriority(ticketId, newPriority),
+    '티켓 우선순위 변경에 실패했습니다. 다시 시도해 주세요.',
+    ticketId
+  );
 
-  // 담당자 업데이트
-  const updateManagerMutation = useMutation({
-    mutationFn: (managerId: number) => updateTicketManager(ticketId, managerId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
-    },
-    onError: () => {
-      alert('티켓 담당자 변경에 실패했습니다. 다시 시도해 주세요.');
-    },
-  });
-  console.log(updateManagerMutation);
+  const updateManagerMutation = useCreateMutation(
+    (managerId: number) => updateTicketManager(ticketId, managerId),
+    '티켓 담당자 변경에 실패했습니다. 다시 시도해 주세요.',
+    ticketId
+  );
 
-  // 마감기한 업데이트
-  const updateDeadlineMutation = useMutation({
-    mutationFn: (deadline: string) => updateTicketDeadline(ticketId, deadline),
-    onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
-    },
-    onError: () => {
-      alert('티켓 마감기한 변경에 실패했습니다. 다시 시도해 주세요.');
-    },
-  });
+  const updateDeadlineMutation = useCreateMutation(
+    (deadline: string) => updateTicketDeadline(ticketId, deadline),
+    '티켓 마감기한 변경에 실패했습니다. 다시 시도해 주세요.',
+    ticketId
+  );
 
   // 유저 정보 (담당자 리스트) 조회
   const {data: userData} = useQuery({
@@ -100,41 +82,32 @@ export default function TicketSetting({data}: TicketSettingProps) {
     },
   });
 
-  const handlePrioritySelect = (selectedOption: string) => {
-    updatePriorityMutation.mutate(selectedOption);
+  const handleSelect = (setter: (value: any) => void, mutation?: any) => (selectedOption: string) => {
+    setter(selectedOption);
+    if (mutation) {
+      mutation.mutate(selectedOption);
+    }
   };
 
   const handleAssigneeSelect = (selectedOption: string) => {
     const selectedUser = userData?.find((user: any) => user.username === selectedOption);
     if (selectedUser) {
-      updateManagerMutation.mutate(selectedUser.userId, {
-        onSuccess: () => {
-          setSelectedAssignee(selectedOption);
-        },
-        onError: () => {
-          alert('담당자 변경에 실패했습니다. 다시 시도해 주세요.');
-        },
-      });
+      updateManagerMutation.mutate(selectedUser?.userId);
+      setSelectedAssignee(selectedOption);
     }
   };
 
-  const handleDeadlineChange = () => {
-    const newDeadline = `${deadlineDate} ${deadlineTime}`;
-    updateDeadlineMutation.mutate(newDeadline);
-  };
-
+  const handlePrioritySelect = handleSelect(setPriority, updatePriorityMutation);
   const handlePrimaryCategorySelect = (selectedOption: string) => {
     setPrimaryCategory(selectedOption);
     setSelectedFilters((prev) => ({...prev, '1차 카테고리': selectedOption}));
   };
-
-  const handleSecondaryCategorySelect = (selectedOption: string) => {
-    setSecondaryCategory(selectedOption);
+  const handleDeadlineChange = () => {
+    const newDeadline = `${deadlineDate} ${deadlineTime}`;
+    updateDeadlineMutation.mutate(newDeadline);
   };
-
-  const handleTicketTypeSelect = (selectedOption: string) => {
-    setTicketType(selectedOption);
-  };
+  const handleSecondaryCategorySelect = handleSelect(setSecondaryCategory);
+  const handleTicketTypeSelect = handleSelect(setTicketType);
 
   return (
     <div className="flex flex-col gap-1">
