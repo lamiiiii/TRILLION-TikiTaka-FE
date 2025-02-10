@@ -7,9 +7,9 @@ import {useQuery} from '@tanstack/react-query';
 import {getManagerList} from '../../../api/service/users';
 
 interface DashTicketProps extends TicketListItem {
-  detailLink: string; // 상세 조회 링크 추가
-  onAssigneeChange?: (newAssignee: string) => void; // 선택한 담당자 변경 핸들러 (Optional로 설정)
-  onApprove?: (ticketId: number) => void; // 승인 핸들러 추가
+  detailLink: string; 
+  onAssigneeChange?: (newAssignee: string) => void; 
+  onApprove?: (ticketId: number) => void;
   onReject?: (ticketId: number) => void;
   onStatusChange: (ticketId: number, newStatus: string) => void;
 }
@@ -22,7 +22,7 @@ export default function DashTicket({
   firstCategoryName,
   secondCategoryName,
   managerName,
-  status, // props로 받은 status만 사용
+  status, 
   urgent,
   deadline,
   detailLink,
@@ -41,16 +41,13 @@ export default function DashTicket({
     }
   };
 
-  // 담당자 목록 불러오기 (React Query)
   const {data: managerData} = useQuery({
     queryKey: ['managers'],
     queryFn: getManagerList,
   });
 
-  // 불러온 데이터에서 담당자 이름만 추출
   const managerList = managerData?.users.map((user) => user.username) || [];
 
-  // 상태 변환 (영문 → 한글)
   const statusMapping: Record<string, string> = {
     PENDING: '대기중',
     IN_PROGRESS: '진행중',
@@ -72,23 +69,18 @@ export default function DashTicket({
     ETC: "기타",
   };
 
-  // 긴급 티켓 스타일
   const ticketClass = urgent ? 'border-error bg-white hover:bg-red/5' : 'border-gray-2 bg-white hover:bg-gray-1';
 
   return (
     <div className={`flex gap-4 py-3 px-2 border items-center rounded cursor-pointer transition-all duration-200 ${ticketClass}`}>
-      {/* 티켓 ID */}
       <Link to={detailLink} className="w-[6%] text-subtitle-regular text-gray-700 px-2">
         #{ticketId}
       </Link>
-      {/* 카테고리 */}
       <Link to={detailLink} className="w-[12%] text-subtitle-regular">
         <span>{firstCategoryName || '1차 카테고리 미지정'}</span>
         <br />
         <span className="text-gray-6 text-body-regular">{secondCategoryName || '2차 카테고리 미지정'}</span>
       </Link>
-
-      {/* 요청 내용 */}
       <Link to={detailLink} className={role === 'manager' ? 'w-[36%]' : 'w-[51%]'} style={{textAlign: 'left'}}>
         <div className="flex items-center gap-1">
           {urgent && <AlertIcon className="text-error w-4 h-4" />}
@@ -98,17 +90,13 @@ export default function DashTicket({
         </div>
         <div className="text-gray-6 text-body-regular">{description.length > 40 ? `${description.slice(0, 40)}...` : description}</div>
       </Link>
-
-      {/* 기한 */}
       <Link to={detailLink} className="w-[12%] text-body-regular text-gray-15">
         {deadline}
       </Link>
-
-      {/* 담당자 */}
       <div className="w-[10%]">
         <TicketDropdown
           label={selectedAssignee}
-          options={managerList ?? []} // 실제 담당자 리스트 필요
+          options={managerList ?? []} 
           defaultSelected={selectedAssignee}
           onSelect={handleAssigneeSelect}
           paddingX="px-3"
@@ -121,21 +109,21 @@ export default function DashTicket({
           <>
             <button
               className="px-6 h-[30px] text-[12px] leading-none border border-gray-6 rounded-md hover:bg-gray-8 hover:text-white"
-              onClick={() => onApprove && onApprove(ticketId)} // 승인 핸들러 호출
+              onClick={() => onApprove && onApprove(ticketId)} 
             >
               승인
             </button>
             <button
               className="px-6 h-[30px] text-[12px] leading-none border border-gray-6 rounded-md hover:bg-error/80 hover:text-white"
-              onClick={() => onReject && onReject(ticketId)} // 반려 핸들러 호출
+              onClick={() => onReject && onReject(ticketId)} 
             >
               반려
             </button>
           </>
         ) : status === 'IN_PROGRESS' || status === 'REVIEW' ? (
           <TicketDropdown
-            label={statusMapping[status]} // 현재 상태 표시
-            options={['대기중', '진행중', '완료']} // 가능한 옵션
+            label={statusMapping[status]} 
+            options={['대기중', '진행중', '완료']} 
             onSelect={(selectedStatus) => {
               const newStatus = reverseStatusMapping[selectedStatus];
               if (newStatus !== 'IN_PROGRESS') {
