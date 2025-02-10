@@ -127,6 +127,7 @@ export default function TicketSetting({data}: TicketSettingProps) {
       // 2차 카테고리 초기화
       setSecondaryCategory('');
       setSecondaryCategoryId(0); // 또는 적절한 초기값
+      alert('2차 카테고리를 변경해 주세요.');
     }
   };
 
