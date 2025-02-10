@@ -289,7 +289,11 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
                 key={data.label}
                 label={data.label}
                 options={data.options}
-                value={selectedFilters[data.label]}
+                value={
+                  data.label === "요청"
+                    ? typeMapping[selectedFilters[data.label]] || selectedFilters[data.label]
+                    : selectedFilters[data.label]
+                }
                 onSelect={(value) => handleSelect(data.label, value)}
                 paddingX="px-3"
               />

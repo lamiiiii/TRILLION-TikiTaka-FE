@@ -3,9 +3,8 @@ import {getUserList} from '../../../api/service/users';
 import {ACCOUNT_MENU} from '../../../constants/admin';
 import UserCard from './UserCard';
 
-// ✅ 계정 목록 인터페이스
 interface UserAccount {
-  userId: number; // ✅ userId 사용
+  userId: number; 
   username: string;
   email: string;
   role: string;
@@ -13,7 +12,6 @@ interface UserAccount {
 }
 
 export default function UserList() {
-  // ✅ 계정 목록 API 요청
   const {data} = useQuery<UserListResponse>({
     queryKey: ['userAccounts'],
     queryFn: getUserList,
@@ -24,7 +22,6 @@ export default function UserList() {
   return (
     <div className="w-full mt-[20px] relative mb-[100px]">
       <div className="bg-gray-18 h-full shadow-md flex flex-col justify-start p-4">
-        {/* 조회 건수 */}
         <div className="flex items-center justify-between px-2">
             <div className='text-[14px]'>시스템 사용자 목록 조회</div>
         <div className="ml-auto text-gray-700 text-subtitle text-right mt-2 mb-3 gap-4">
@@ -40,7 +37,6 @@ export default function UserList() {
         </div>
         </div>
 
-        {/* 테이블 헤더 */}
         <div className="flex gap-4 py-2 text-gray-700 text-title-regular mt-5 mb-5 px-4">
           <div className="w-[12%]">{ACCOUNT_MENU[0]}</div>
           <div className="w-[16%]">{ACCOUNT_MENU[1]}</div>
@@ -49,7 +45,6 @@ export default function UserList() {
           <div className="w-[20%]">{ACCOUNT_MENU[4]}</div>
         </div>
 
-        {/* 계정 목록 데이터 */}
         <div className="flex flex-col gap-4">
           {accounts.map((account) => (
             <UserCard key={account.userId} {...account} />

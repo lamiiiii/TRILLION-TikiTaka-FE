@@ -7,7 +7,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 
 interface CategoryCardProps {
-  id: number; // 1차 카테고리 ID (2차 카테고리의 parentId)
+  id: number; 
   name: string;
   
   onDelete: (categoryId: number) => void;
@@ -25,26 +25,23 @@ export default function CategoryCard({id, name,  onDelete, onAddSubCategory}: Ca
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); 
   const [newCategoryName, setNewCategoryName] = useState(name);
   
-
-  // 카테고리 수정 API 
   const updateCategoryMutation = useMutation({
     mutationFn: () => updateCategory(id, { name: newCategoryName }), 
     onSuccess: () => {
       toast.success("카테고리가 성공적으로 수정되었습니다.");
       queryClient.invalidateQueries({ queryKey: ["categories"] }); 
-      setIsEditModalOpen(false); // 모달 닫기
+      setIsEditModalOpen(false); 
     },
     onError: () => {
       toast.error("카테고리 수정에 실패했습니다.");
     },
   });
 
-  // 카테고리 삭제 API 
   const deleteCategoryMutation = useMutation({
     mutationFn: () => deleteCategory(id),
     onSuccess: () => {
       toast.success("카테고리가 성공적으로 삭제되었습니다.");
-      queryClient.invalidateQueries({ queryKey: ["categories"] }); // 데이터 갱신
+      queryClient.invalidateQueries({ queryKey: ["categories"] }); 
       onDelete(id);
       setIsDeleteModalOpen(false);
     },
@@ -85,16 +82,12 @@ export default function CategoryCard({id, name,  onDelete, onAddSubCategory}: Ca
     deleteCategoryMutation.mutate(); 
   };
 
-  
-
-  // Enter 키 입력 시 API 요청
   const handleSubmit = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && subCategoryName.trim()) {
       try {
         const response = await createCategory( id, { name: subCategoryName });
         const newSubCategory = { id: response.data.id, name: subCategoryName };
 
-        // 부모 컴포넌트(CategoryList.tsx)에서만 2차 카테고리 추가하도록 콜백 실행
         onAddSubCategory(id, newSubCategory);
 
         setSubCategoryName('');
@@ -143,7 +136,6 @@ export default function CategoryCard({id, name,  onDelete, onAddSubCategory}: Ca
           </span>
           <span className="text-subtitle-regular leading-none">{name}</span>
         </div>
-        {/* 1차 카테고리 이름 */}
         <div className="flex items-center gap-2">
           <button onClick={handleAddSubCategory}>
             <PlusCircle />
@@ -151,7 +143,6 @@ export default function CategoryCard({id, name,  onDelete, onAddSubCategory}: Ca
           <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
             <VerticalDotIcon />
           </button>
-          {/* 수정/삭제 메뉴 */}
           {isMenuOpen && (
             <div ref={menuRef} className="absolute top-[32px] right-[16px] mt-2 w-24 bg-white border border-gray-300 shadow-md rounded-md z-10">
               <button className="w-full px-4 py-2 text-body-bold text-center hover:bg-gray-100" onClick={openEditModal}>수정</button>
@@ -163,7 +154,6 @@ export default function CategoryCard({id, name,  onDelete, onAddSubCategory}: Ca
         </div>
       </div>
 
-      {/* PlusCircle 클릭 */}
       {isEditing && (
         <div className="px-4 pb-3">
           <input
@@ -173,13 +163,12 @@ export default function CategoryCard({id, name,  onDelete, onAddSubCategory}: Ca
             placeholder="2차 카테고리 입력"
             value={subCategoryName}
             onChange={(e) => setSubCategoryName(e.target.value)}
-            onKeyDown={handleSubmit} // Enter 입력 처리
+            onKeyDown={handleSubmit} 
             autoFocus
           />
         </div>
       )}
 
-      {/* 수정 모달 */}
       {isEditModalOpen && (
         <motion.div className="overlay" initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}}>
         <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
@@ -205,8 +194,6 @@ export default function CategoryCard({id, name,  onDelete, onAddSubCategory}: Ca
         </motion.div>
       )}
 
-
-      {/* 삭제 모달 */}
       <DeleteConfirmModal 
         isOpen={isDeleteModalOpen} 
         onClose={() => setIsDeleteModalOpen(false)} 

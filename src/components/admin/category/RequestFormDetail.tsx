@@ -9,8 +9,8 @@ import Modal from '../../common/Modal';
 interface RequestFormDetailProps {
   mustDescription: string;
   description: string;
-  firstCategoryId: number; // ✅ 1차 카테고리 ID
-  secondCategoryId: number; // ✅ 2차 카테고리 ID
+  firstCategoryId: number; 
+  secondCategoryId: number; 
   onClose: () => void; 
   name:string;
 }
@@ -23,7 +23,6 @@ export default function RequestFormDetail({firstCategoryId, secondCategoryId,mus
   const [newMustDescription, setNewMustDescription] = useState(mustDescription);
   const [newDescription, setNewDescription] = useState(description);
 
-  // ✅ 티켓 폼 수정 Mutation
   const editMutation = useMutation({
     mutationFn: () =>
       updateTicketForm(firstCategoryId, secondCategoryId, {
@@ -40,7 +39,6 @@ export default function RequestFormDetail({firstCategoryId, secondCategoryId,mus
     },
   });
 
-  // ✅ 티켓 폼 삭제 Mutation
   const deleteMutation = useMutation({
     mutationFn: () => deleteTicketForm(firstCategoryId, secondCategoryId),
     onSuccess: () => {
@@ -48,7 +46,7 @@ export default function RequestFormDetail({firstCategoryId, secondCategoryId,mus
       toast.success("티켓 양식이 삭제되었습니다.");
       setShowDeleteModal(false);
       setTimeout(() => {
-        window.location.reload(); // 페이지 새로고침
+        window.location.reload(); 
       }, 500);
       
     },
@@ -80,7 +78,6 @@ export default function RequestFormDetail({firstCategoryId, secondCategoryId,mus
           <div className="flex justify-between items-center">
             <div className="text-title-bold text-gray-800 ">{name}</div>
             <div className="flex justify-start gap-4">
-              {/* ✅ 수정 모드 진입 */}
               {!isEditing ? (
                 <button
                   className="px-6 py-1 bg-main text-white text-body-bold rounded"
@@ -96,7 +93,6 @@ export default function RequestFormDetail({firstCategoryId, secondCategoryId,mus
                   취소
                 </button>
               )}
-              {/* ✅ 삭제 버튼 */}
               <button
                 className="px-6 py-1 bg-main text-white text-body-bold rounded"
                 onClick={() => deleteMutation.mutate()}
@@ -133,7 +129,6 @@ export default function RequestFormDetail({firstCategoryId, secondCategoryId,mus
               </div>
             </div>
           ) : (
-            // ✅ 기본 상세 보기 UI
             <div className="w-[780px] h-[550px] bg-gray-18 mt-4 px-4 mx-auto shadow-[0px_1px_3px_1px_rgba(0,0,0,0.15)]">
               <div className="mt-4">
                 <div className="block text-gray-700 font-semibold mb-2">필수 입력 사항</div>
@@ -145,9 +140,6 @@ export default function RequestFormDetail({firstCategoryId, secondCategoryId,mus
               </div>
             </div>
           )}
-        
-
-          {/* ✅ 삭제 확인 모달 */}
           {showDeleteModal && (
             <Modal
               title="요청 양식 삭제"
