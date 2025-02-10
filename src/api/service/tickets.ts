@@ -23,7 +23,7 @@ export async function getTicketForm(firstCategoryId: number, secondCategoryId: n
 }
 
 // INTF-23: 티켓 폼 수정
-export async function updateTicketForm( firstCategoryId: number, secondCategoryId: number, formData: UpdateTicketFormData) {
+export async function updateTicketForm(firstCategoryId: number, secondCategoryId: number, formData: UpdateTicketFormData) {
   try {
     const {data} = await instance.patch(`/tickets/forms/${firstCategoryId}/${secondCategoryId}`, formData);
     return data;
@@ -34,7 +34,7 @@ export async function updateTicketForm( firstCategoryId: number, secondCategoryI
 }
 
 // INTF-24: 티켓 폼 삭제
-export async function deleteTicketForm( firstCategoryId: number, secondCategoryId: number) {
+export async function deleteTicketForm(firstCategoryId: number, secondCategoryId: number) {
   try {
     const {data} = await instance.delete(`/tickets/forms/${firstCategoryId}/${secondCategoryId}`);
     return data;
@@ -164,7 +164,7 @@ export async function getTicketList(params: TicketListParams = {}) {
         ticketTypeId: params.ticketTypeId,
         managerId: params.managerId,
         requesterId: params.requesterId,
-        createdAt: params.createdAt
+        createdAt: params.createdAt,
       },
     });
     return data.data;
@@ -210,7 +210,7 @@ export async function updateTicketPriority(ticketId: number, priority: string) {
 // INTF-39: 티켓 담당자 수정
 export async function updateTicketManager(ticketId: number, managerId: number) {
   try {
-    const {data} = await instance.patch(`/tickets/manager/${ticketId}`, {managerId});
+    const {data} = await instance.patch(`/tickets/${ticketId}/manager`, {managerId});
     return data;
   } catch (error) {
     console.error('티켓 담당자 수정 실패:', error);
@@ -256,8 +256,7 @@ export async function reviewTicket(token: string, ticketId: number) {
 // INTF-43: 티켓 검토 내역 조회
 export async function getTicketReviews(ticketId: number) {
   try {
-    const {data} = await instance.get(`/tickets/${ticketId}/reviews`, {
-    });
+    const {data} = await instance.get(`/tickets/${ticketId}/reviews`, {});
     return data;
   } catch (error) {
     console.error('티켓 검토 내역 조회 실패:', error);

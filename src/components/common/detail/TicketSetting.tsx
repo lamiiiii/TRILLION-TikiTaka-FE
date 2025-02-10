@@ -60,6 +60,7 @@ export default function TicketSetting({data}: TicketSettingProps) {
       alert('티켓 담당자 변경에 실패했습니다. 다시 시도해 주세요.');
     },
   });
+  console.log(updateManagerMutation);
 
   // 마감기한 업데이트
   const updateDeadlineMutation = useMutation({
@@ -72,20 +73,20 @@ export default function TicketSetting({data}: TicketSettingProps) {
     },
   });
 
-  // 유저 정보 (담당자 리스트)
+  // 유저 정보 (담당자 리스트) 조회
   const {data: userData} = useQuery({
     queryKey: ['managers'],
     queryFn: getManagerList,
     select: (data) => data.users,
   });
 
-  // 티켓 타입 데이터
+  // 티켓 타입 데이터 조회
   const {data: ticketData} = useQuery({
     queryKey: ['types'],
     queryFn: getTicketTypes,
   });
 
-  // 카테고리 데이터
+  // 카테고리 데이터 조회
   const {data: categories = []} = useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
@@ -104,10 +105,17 @@ export default function TicketSetting({data}: TicketSettingProps) {
   };
 
   const handleAssigneeSelect = (selectedOption: string) => {
-    setSelectedAssignee(selectedOption);
-    // FIX: 사용자 정보에서 매니저 정보 연결 필요
-    const managerId = 1;
-    updateManagerMutation.mutate(managerId);
+    const selectedUser = userData?.find((user: any) => user.username === selectedOption);
+    if (selectedUser) {
+      updateManagerMutation.mutate(selectedUser.userId, {
+        onSuccess: () => {
+          setSelectedAssignee(selectedOption);
+        },
+        onError: () => {
+          alert('담당자 변경에 실패했습니다. 다시 시도해 주세요.');
+        },
+      });
+    }
   };
 
   const handleDeadlineChange = () => {
