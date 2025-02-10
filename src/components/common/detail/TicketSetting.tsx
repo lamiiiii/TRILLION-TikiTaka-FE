@@ -4,7 +4,13 @@ import {useTicketStore} from '../../../store/store';
 import {PRIORITY} from '../../../constants/constants';
 import {useParams} from 'react-router-dom';
 import {useQuery} from '@tanstack/react-query';
-import {getTicketTypes, updateTicket, updateTicketDeadline, updateTicketManager, updateTicketPriority} from '../../../api/service/tickets';
+import {
+  getTicketTypes,
+  updateTicketCategory,
+  updateTicketDeadline,
+  updateTicketManager,
+  updateTicketPriority,
+} from '../../../api/service/tickets';
 import {getManagerList} from '../../../api/service/users';
 import {getCategoryList} from '../../../api/service/categories';
 import {useCreateMutation} from '../../../api/hooks/useCreateMutation';
@@ -24,7 +30,6 @@ export default function TicketSetting({data}: TicketSettingProps) {
 
   const [primaryCategoryId, setPrimaryCategoryId] = useState(data.firstCategoryId);
   const [secondaryCategoryId, setSecondaryCategoryId] = useState(data.secondCategoryId);
-  const [ticketTypeId, setTicketTypeId] = useState(data.typeId);
 
   const {id} = useParams();
   const ticketId = Number(id);
@@ -59,12 +64,11 @@ export default function TicketSetting({data}: TicketSettingProps) {
     ticketId
   );
 
-  const updateTicketMutation = useCreateMutation(
-    (params: UpdateTicketParams) => updateTicket(ticketId, params),
-    '티켓 정보 변경에 실패했습니다. 다시 시도해 주세요.',
+  const updateCategoryMutation = useCreateMutation<UpdateTicketCategoryParams>(
+    (categoryIds: UpdateTicketCategoryParams) => updateTicketCategory(ticketId, categoryIds),
+    '카테고리 변경에 실패했습니다. 다시 시도해 주세요.',
     ticketId
   );
-
   // 유저 정보 (담당자 리스트) 조회
   const {data: userData} = useQuery({
     queryKey: ['managers'],
@@ -111,25 +115,14 @@ export default function TicketSetting({data}: TicketSettingProps) {
     updateDeadlineMutation.mutate(newDeadline);
   };
 
-  const updateTicketDetails = () => {
-    const updateParams: UpdateTicketParams = {
-      firstCategoryId: primaryCategoryId,
-      secondaryCategoryId: secondaryCategoryId,
-      typeId: ticketTypeId,
-      title: data.title,
-      description: data.description,
-      urgent: data.urgent,
-    };
-    updateTicketMutation.mutate(updateParams);
-  };
-
   const handlePrimaryCategorySelect = (selectedOption: string) => {
     const selectedCategory = categories.find((cat: any) => cat.primary.name === selectedOption);
     if (selectedCategory) {
       setPrimaryCategory(selectedOption);
-      setPrimaryCategoryId(selectedCategory.primary.id);
+      const newPrimaryCategoryId = selectedCategory.primary.id;
+      setPrimaryCategoryId(newPrimaryCategoryId);
       setSelectedFilters((prev) => ({...prev, '1차 카테고리': selectedOption}));
-      updateTicketDetails();
+      updateCategoryMutation.mutate({firstCategoryId: newPrimaryCategoryId, secondCategoryId: secondaryCategoryId});
     }
   };
 
@@ -139,8 +132,9 @@ export default function TicketSetting({data}: TicketSettingProps) {
       ?.secondaries.find((secondary: any) => secondary.name === selectedOption);
     if (selectedCategory) {
       setSecondaryCategory(selectedOption);
-      setSecondaryCategoryId(selectedCategory.id);
-      updateTicketDetails();
+      const newSecondaryCategoryId = selectedCategory.id;
+      setSecondaryCategoryId(newSecondaryCategoryId);
+      updateCategoryMutation.mutate({firstCategoryId: primaryCategoryId, secondCategoryId: newSecondaryCategoryId});
     }
   };
 
@@ -148,8 +142,6 @@ export default function TicketSetting({data}: TicketSettingProps) {
     const selectedType = ticketData?.find((type: any) => type.typeName === selectedOption);
     if (selectedType) {
       setTicketType(selectedOption);
-      setTicketTypeId(selectedType.id);
-      updateTicketDetails();
     }
   };
   return (
