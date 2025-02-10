@@ -2,9 +2,10 @@ import {useState} from 'react';
 import InitialTopBar from './InitialTopBar';
 import Modal from '../Modal';
 import {validateEmail, validatePwd} from '../../../utils/Validation';
-import { Link } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 
 export default function ResetPwdContainer() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
   const [isAuthSent, setIsAuthSent] = useState(false);
@@ -79,7 +80,6 @@ export default function ResetPwdContainer() {
     }
     setIsAuthSent(true);
     // 인증번호 전송 API
-    console.log('카카오워크로 인증번호 전송:', email);
   };
 
   const verifyAuthCode = () => {
@@ -113,13 +113,6 @@ export default function ResetPwdContainer() {
       return;
     }
 
-    const requestData = {
-      email,
-      newPwd,
-    };
-
-    // todo 비밀번호 재설정 완료 모달 추가 및 페이지 이동
-    console.log(requestData);
     setIsModalOpen(true);
   };
 
@@ -228,7 +221,7 @@ export default function ResetPwdContainer() {
           backBtn="로그인하러 가기"
           onBackBtnClick={() => {
             setIsModalOpen(false);
-            window.location.href = '/';
+            navigate('/');
           }}
         />
       )}

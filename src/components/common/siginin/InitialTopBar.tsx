@@ -20,12 +20,12 @@ export default function InitialTopBar() {
         {/* 우측 메뉴 */}
         {location.pathname !== '/changepwd' && (
           <div className="flex items-center gap-3 text-white font-bold text-[13px]">
-            {['/signup', '/', '/resetpwd']
+            {['/signup', '/']
               .filter((path) => path !== location.pathname) // 현재 경로 제외
               .map((path, index, array) => (
                 <React.Fragment key={path}>
                   <Link to={path} className="hover:text-gray-2">
-                    {path === '/signup' ? '계정 등록 신청' : path === '/' ? '로그인' : '비밀번호 재설정'}
+                    {path === '/signup' ? '계정 등록 신청' : '로그인'}
                   </Link>
                   {index < array.length - 1 && <div className="border-r border-gray-4 h-2.5" />}
                 </React.Fragment>

@@ -112,7 +112,7 @@ export default function NewTicketContainer() {
     setManager(null);
 
     if (ticketId) {
-      navigate(`/${role}/detail/${ticketId}`, {replace: true});
+      navigate(`/${role.toLocaleLowerCase()}/detail/${ticketId}`, {replace: true});
     }
 
     const formattedDueDate = `${dueDate} ${dueTime}`;

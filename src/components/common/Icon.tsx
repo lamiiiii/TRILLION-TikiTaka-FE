@@ -560,3 +560,17 @@ export function RequiredIcon() {
     </svg>
   );
 }
+
+export function MoveIcon() {
+  return (
+    <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M4.66675 11.8337L11.3334 5.16699M11.3334 5.16699H4.66675M11.3334 5.16699V11.8337"
+        stroke="#1E1E1E"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}

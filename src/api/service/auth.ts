@@ -1,5 +1,6 @@
+import axios from 'axios';
 import {tokenStorage} from '../../utils/token';
-import instance from '../axiosInstance';
+import instance, { server } from '../axiosInstance';
 
 // INTF-4: 로그인
 export async function postLogin(loginData: LoginData) {
@@ -20,7 +21,6 @@ export async function postLogin(loginData: LoginData) {
       return {...data, accessToken};
     }
   } catch (error) {
-    console.error('로그인 오류:', error);
     throw error;
   }
 }
@@ -32,9 +32,7 @@ export async function postLogout() {
     if (!token) throw new Error('로그인 정보가 없습니다.');
     tokenStorage.remove();
 
-    const response = await instance.post('/logout', null, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const response = await instance.post('/logout', null, {withCredentials: true});
     if (response.status === 200) {
     } else {
       console.error('로그아웃 실패:', response.statusText);
@@ -48,18 +46,19 @@ export async function postLogout() {
 // INTF-6: 토큰 재발급
 export async function postReissueToken() {
   try {
-    const response = await instance.post('/reissue', null);
-
+    // const response = await instance.post('/reissue', null);
+    const response = await axios.post(`${server}/reissue`, null, {
+      withCredentials: true,
+    });
     const {headers} = response;
 
-    // 새로운 accessToken 가져오기
     let newAccessToken = headers['authorization'] || headers['Authorization'];
     if (newAccessToken?.startsWith('Bearer ')) {
       newAccessToken = newAccessToken.replace('Bearer ', '');
     }
 
     if (newAccessToken) {
-      tokenStorage.set(newAccessToken); // 새로운 accessToken 저장
+      tokenStorage.set(newAccessToken);
     }
     return {accessToken: newAccessToken};
   } catch (error) {
