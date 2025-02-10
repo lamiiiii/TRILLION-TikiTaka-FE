@@ -2,32 +2,30 @@ import axios, {AxiosInstance} from 'axios';
 import {tokenStorage} from '../utils/token';
 import {postReissueToken} from './service/auth';
 
-export const config = {
+const config = {
   backend: {
     baseURL: process.env.REACT_APP_BASE_URL,
   },
 };
 
-const server = config.backend.baseURL;
+export const server = config.backend.baseURL;
 
 const instance: AxiosInstance = axios.create({
   baseURL: server,
-  withCredentials: false, // 일반 전송시에는 쿠키값을 보내면 안됨.
+  withCredentials: false,
 });
 
-// 토큰 재발급 요청이 중복되지 않도록 Promise 공유
 let refreshTokenPromise: Promise<string | null> | null = null;
 
-// 요청 인터셉터: Authorization 헤더에 액세스 토큰 추가
 instance.interceptors.request.use((config) => {
   const token = tokenStorage.get();
+
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
 
-// 응답 인터셉터: 응답이 401 (토큰 만료)인 경우 자동으로 리프레시 토큰으로 액세스 토큰 재발급
 instance.interceptors.response.use(
   (response) => {
     return response;
@@ -44,21 +42,23 @@ instance.interceptors.response.use(
     const {status} = error.response;
 
     if (status === 401 && !originalRequest._retry) {
+      // 401 에러가 발생하고, 재시도가 이루어지지 않았을 경우
+
       originalRequest._retry = true;
 
       try {
-        config;
+        // 중복된 토큰 재발급 요청 방지
         if (!refreshTokenPromise) {
           refreshTokenPromise = postReissueToken()
             .then(({accessToken}) => {
-              refreshTokenPromise = null;
-
               return accessToken;
             })
             .catch((err) => {
-              refreshTokenPromise = null;
-
+              console.error('토큰 재발급 실패:', err);
               throw err;
+            })
+            .finally(() => {
+              refreshTokenPromise = null;
             });
         }
 
@@ -70,6 +70,7 @@ instance.interceptors.response.use(
         return instance(originalRequest);
       } catch (reissueError) {
         alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+
         tokenStorage.remove(); // 저장된 토큰 삭제
         window.location.href = '/';
         return Promise.reject(reissueError);
@@ -77,8 +78,6 @@ instance.interceptors.response.use(
     }
     if (status === 403) {
       alert('이 페이지에 접근할 권한이 없습니다.');
-      tokenStorage.remove();
-      window.location.href = '/';
       return Promise.reject(error);
     }
 
