@@ -80,6 +80,13 @@ export interface TemplateStore {
   setContent: (content: string) => void;
   setManager: (manager: UserListResponse['users'][number] | null) => void;
   setTicketType: (ticketType: {typeId: number; typeName: string}) => void;
+
+  firstCategoryId: number;
+  secondCategoryId: number;
+  managerId: number;
+  setFirstCategoryId: (id: number) => void;
+  setSecondCategoryId: (id: number) => void;
+  setManagerId: (id: number) => void;
 }
 
 export interface NewTicketFormStore {

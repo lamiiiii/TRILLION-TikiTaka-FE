@@ -101,7 +101,7 @@ export default function TicketOptions() {
                 <QuestionIcon />
                 {isHovered && (
                   <div className="absolute left-0 mt-1 bg-gray-1 border border-gray-2 rounded-md py-1 px-3 text-xs text-gray-15 shadow-md">
-                    2차 카테고리 선택 시 해당 카테고리 요청 양식이 적용됩니다.
+                    2차 카테고리 선택 시 해당 카테고리 이 적용됩니다.
                   </div>
                 )}
               </span>

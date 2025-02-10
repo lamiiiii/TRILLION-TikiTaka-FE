@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import DropDown from '../../common/Dropdown';
 import {QuestionIcon} from '../../common/Icon';
 import {useTemplateStore} from '../../../store/store';
@@ -7,7 +7,7 @@ import {useQuery} from '@tanstack/react-query';
 import TemplateOptionsSecond from './TemplateOptionsSecond';
 
 export default function TemplateOptions() {
-  const {firstCategory, secondCategory, setFirstCategory, setSecondCategory} = useTemplateStore();
+  const {firstCategory, secondCategory, firstCategoryId, secondCategoryId, setFirstCategory, setSecondCategory} = useTemplateStore();
 
   const [isHovered, setIsHovered] = useState(false);
 
@@ -27,6 +27,28 @@ export default function TemplateOptions() {
       return Promise.all(secondaryRequests);
     },
   });
+
+  useEffect(() => {
+    if (!isLoading && categories.length > 0) {
+      // 1차 카테고리 설정
+      if (firstCategoryId) {
+        const selectedFirstCategory = categories.find((cat) => cat.primary.id === firstCategoryId)?.primary;
+        if (selectedFirstCategory) {
+          setFirstCategory(selectedFirstCategory);
+        }
+      }
+
+      // 2차 카테고리 설정 (1차 카테고리가 설정된 후에만)
+      if (firstCategoryId && secondCategoryId) {
+        const secondaryOptions = categories.find((cat) => cat.primary.id === firstCategoryId)?.secondaries ?? [];
+        const selectedSecondCategory = secondaryOptions.find((cat) => cat.id === secondCategoryId);
+        if (selectedSecondCategory) {
+          setSecondCategory(selectedSecondCategory);
+        }
+      }
+    }
+  }, [categories, firstCategoryId, secondCategoryId, isLoading, setFirstCategory, setSecondCategory]);
+
   if (isLoading) return null;
   if (error) return null;
 
