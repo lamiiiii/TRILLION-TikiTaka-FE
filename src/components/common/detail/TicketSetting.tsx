@@ -10,6 +10,7 @@ import {
   updateTicketDeadline,
   updateTicketManager,
   updateTicketPriority,
+  updateTicketType,
 } from '../../../api/service/tickets';
 import {getManagerList} from '../../../api/service/users';
 import {getCategoryList} from '../../../api/service/categories';
@@ -67,6 +68,12 @@ export default function TicketSetting({data}: TicketSettingProps) {
   const updateCategoryMutation = useCreateMutation<UpdateTicketCategoryParams>(
     (categoryIds: UpdateTicketCategoryParams) => updateTicketCategory(ticketId, categoryIds),
     '카테고리 변경에 실패했습니다. 다시 시도해 주세요.',
+    ticketId
+  );
+
+  const updateTypeMutation = useCreateMutation<UpdateTicketTypeParams>(
+    (params: UpdateTicketTypeParams) => updateTicketType(ticketId, params),
+    '티켓 유형 변경에 실패했습니다. 다시 시도해 주세요.',
     ticketId
   );
 
@@ -144,12 +151,9 @@ export default function TicketSetting({data}: TicketSettingProps) {
   };
 
   const handleTicketTypeSelect = (selectedOption: string) => {
-    const selectedType = ticketData?.find((type: any) => type.typeName === selectedOption);
-    if (selectedType) {
-      setTicketType(selectedOption);
-    }
+    updateTypeMutation.mutate({type: selectedOption});
+    setTicketType(selectedOption);
   };
-
   return (
     <div className="flex flex-col gap-1">
       <label className="text-body-bold">티켓 설정</label>

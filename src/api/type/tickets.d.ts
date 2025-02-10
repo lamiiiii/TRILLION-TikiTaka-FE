@@ -147,3 +147,7 @@ declare interface UpdateTicketCategoryParams {
   firstCategoryId: number;
   secondCategoryId: number;
 }
+
+declare interface UpdateTicketTypeParams {
+  type: string;
+}

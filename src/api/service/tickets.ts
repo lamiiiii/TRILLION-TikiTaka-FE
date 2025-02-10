@@ -68,19 +68,6 @@ export async function getTicketTypes() {
   }
 }
 
-// INTF-27: 티켓 유형 수정
-export async function updateTicketType(token: string, typeId: number, typeData: UpdateTicketTypeData) {
-  try {
-    const {data} = await instance.patch(`/tickets/types/${typeId}`, typeData, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
-    return data;
-  } catch (error) {
-    console.error('티켓 유형 수정 실패:', error);
-    throw error;
-  }
-}
-
 // INTF-28: 티켓 유형 삭제
 export async function deleteTicketType(token: string, typeId: number) {
   try {
@@ -229,6 +216,17 @@ export async function updateTicketCategory(ticketId: number, params: UpdateTicke
   }
 }
 
+// INTF-40: 티켓 유형내용 수정
+export async function updateTicketType(ticketId: number, params: UpdateTicketTypeParams) {
+  try {
+    const {data} = await instance.patch(`/tickets/${ticketId}/type`, params);
+    return data;
+  } catch (error) {
+    console.error('티켓 유형 수정 실패:', error);
+    throw error;
+  }
+}
+
 // INTF-40: 티켓 마감기한 수정
 export async function updateTicketDeadline(ticketId: number, deadline: string) {
   try {
@@ -344,45 +342,3 @@ export async function rejectTicket(ticketId: number) {
     throw error;
   }
 }
-
-// // INTF-46: 티켓 댓글 수정 (PATCH)
-// export async function updateTicketComment(ticketId: number, commentId: number, content: string) {
-//   try {
-//     const response = await fetch(`http://210.109.54.71:8080/tickets/${ticketId}/comments/${commentId}`, {
-//       method: 'PATCH',
-//       headers: {
-//         'Content-Type': 'application/json',
-//         Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWQiOjQsInVzZXJuYW1lIjoibWFuYWdlci50ayIsInJvbGUiOiJNQU5BR0VSIiwiaWF0IjoxNzM4NzY2Mzg4LCJleHAiOjE3Mzg3Njk5ODh9.-fUGrM4_Jabl4F2uDsi057Qchj97ShkD5w5R2akxqEDqNl_I8iTZlywzHG8adEfdMnM8kRj07VJq4dIVjIt5ZQ
-// `,
-//       },
-//       credentials: 'include', // withCredentials: true 대체
-//       body: JSON.stringify({content}),
-//     });
-
-//     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-//     return await response.json();
-//   } catch (error) {
-//     console.error('티켓 댓글 수정 실패:', error);
-//     throw error;
-//   }
-// }
-
-// // INTF-47: 티켓 댓글 삭제 (DELETE)
-// export async function deleteTicketComment(ticketId: number, commentId: number) {
-//   try {
-//     const response = await fetch(`http://210.109.54.71:8080/tickets/${ticketId}/comments/${commentId}`, {
-//       method: 'DELETE',
-//       headers: {
-//         Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWQiOjQsInVzZXJuYW1lIjoibWFuYWdlci50ayIsInJvbGUiOiJNQU5BR0VSIiwiaWF0IjoxNzM4NzY2Mzg4LCJleHAiOjE3Mzg3Njk5ODh9.-fUGrM4_Jabl4F2uDsi057Qchj97ShkD5w5R2akxqEDqNl_I8iTZlywzHG8adEfdMnM8kRj07VJq4dIVjIt5ZQ
-// `,
-//       },
-//       credentials: 'include',
-//     });
-
-//     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-//     return await response.json(); // 서버가 응답 본문을 반환하지 않으면 .text() 사용
-//   } catch (error) {
-//     console.error('티켓 댓글 삭제 실패:', error);
-//     throw error;
-//   }
-// }
