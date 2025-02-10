@@ -45,7 +45,7 @@ export default function StatusBar({data, status}: StatusBarProps) {
         description: data?.description || '',
         urgent: urgent,
         typeId: data?.typeId,
-        primaryCategoryId: data?.firstCategoryId,
+        firstCategoryId: data?.firstCategoryId,
         secondaryCategoryId: data?.secondCategoryId,
       }),
     onSuccess: () => {

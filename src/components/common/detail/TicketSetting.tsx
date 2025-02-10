@@ -4,7 +4,7 @@ import {useTicketStore} from '../../../store/store';
 import {PRIORITY} from '../../../constants/constants';
 import {useParams} from 'react-router-dom';
 import {useQuery} from '@tanstack/react-query';
-import {getTicketTypes, updateTicketDeadline, updateTicketManager, updateTicketPriority} from '../../../api/service/tickets';
+import {getTicketTypes, updateTicket, updateTicketDeadline, updateTicketManager, updateTicketPriority} from '../../../api/service/tickets';
 import {getManagerList} from '../../../api/service/users';
 import {getCategoryList} from '../../../api/service/categories';
 import {useCreateMutation} from '../../../api/hooks/useCreateMutation';
@@ -21,6 +21,10 @@ export default function TicketSetting({data}: TicketSettingProps) {
   const [deadlineDate, setDeadlineDate] = useState('');
   const [deadlineTime, setDeadlineTime] = useState('');
   const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
+
+  const [primaryCategoryId, setPrimaryCategoryId] = useState(data.firstCategoryId);
+  const [secondaryCategoryId, setSecondaryCategoryId] = useState(data.secondCategoryId);
+  const [ticketTypeId, setTicketTypeId] = useState(data.typeId);
 
   const {id} = useParams();
   const ticketId = Number(id);
@@ -52,6 +56,12 @@ export default function TicketSetting({data}: TicketSettingProps) {
   const updateDeadlineMutation = useCreateMutation(
     (deadline: string) => updateTicketDeadline(ticketId, deadline),
     '티켓 마감기한 변경에 실패했습니다. 다시 시도해 주세요.',
+    ticketId
+  );
+
+  const updateTicketMutation = useCreateMutation(
+    (params: UpdateTicketParams) => updateTicket(ticketId, params),
+    '티켓 정보 변경에 실패했습니다. 다시 시도해 주세요.',
     ticketId
   );
 
@@ -88,7 +98,6 @@ export default function TicketSetting({data}: TicketSettingProps) {
       mutation.mutate(selectedOption);
     }
   };
-
   const handleAssigneeSelect = (selectedOption: string) => {
     const selectedUser = userData?.find((user: any) => user.username === selectedOption);
     if (selectedUser) {
@@ -96,19 +105,53 @@ export default function TicketSetting({data}: TicketSettingProps) {
       setSelectedAssignee(selectedOption);
     }
   };
-
   const handlePrioritySelect = handleSelect(setPriority, updatePriorityMutation);
-  const handlePrimaryCategorySelect = (selectedOption: string) => {
-    setPrimaryCategory(selectedOption);
-    setSelectedFilters((prev) => ({...prev, '1차 카테고리': selectedOption}));
-  };
   const handleDeadlineChange = () => {
     const newDeadline = `${deadlineDate} ${deadlineTime}`;
     updateDeadlineMutation.mutate(newDeadline);
   };
-  const handleSecondaryCategorySelect = handleSelect(setSecondaryCategory);
-  const handleTicketTypeSelect = handleSelect(setTicketType);
 
+  const updateTicketDetails = () => {
+    const updateParams: UpdateTicketParams = {
+      firstCategoryId: primaryCategoryId,
+      secondaryCategoryId: secondaryCategoryId,
+      typeId: ticketTypeId,
+      title: data.title,
+      description: data.description,
+      urgent: data.urgent,
+    };
+    updateTicketMutation.mutate(updateParams);
+  };
+
+  const handlePrimaryCategorySelect = (selectedOption: string) => {
+    const selectedCategory = categories.find((cat: any) => cat.primary.name === selectedOption);
+    if (selectedCategory) {
+      setPrimaryCategory(selectedOption);
+      setPrimaryCategoryId(selectedCategory.primary.id);
+      setSelectedFilters((prev) => ({...prev, '1차 카테고리': selectedOption}));
+      updateTicketDetails();
+    }
+  };
+
+  const handleSecondaryCategorySelect = (selectedOption: string) => {
+    const selectedCategory = categories
+      .find((cat: any) => cat.primary.name === selectedFilters['1차 카테고리'])
+      ?.secondaries.find((secondary: any) => secondary.name === selectedOption);
+    if (selectedCategory) {
+      setSecondaryCategory(selectedOption);
+      setSecondaryCategoryId(selectedCategory.id);
+      updateTicketDetails();
+    }
+  };
+
+  const handleTicketTypeSelect = (selectedOption: string) => {
+    const selectedType = ticketData?.find((type: any) => type.typeName === selectedOption);
+    if (selectedType) {
+      setTicketType(selectedOption);
+      setTicketTypeId(selectedType.id);
+      updateTicketDetails();
+    }
+  };
   return (
     <div className="flex flex-col gap-1">
       <label className="text-body-bold">티켓 설정</label>

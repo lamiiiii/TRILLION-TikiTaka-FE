@@ -1,17 +1,28 @@
-import {useQuery} from '@tanstack/react-query';
+import {useQuery, useQueryClient} from '@tanstack/react-query';
 import {getChangeHistory} from '../../../api/service/histories';
 import {useParams} from 'react-router-dom';
 import {UPDATE_TYPE_MAP} from '../../../constants/constants';
+import {useEffect} from 'react';
 
 type UpdateType = keyof typeof UPDATE_TYPE_MAP;
 export default function TicketLog() {
   const {id} = useParams<{id: string}>();
   const ticketId = Number(id);
+  const queryClient = useQueryClient();
 
   const {data: logData, isLoading} = useQuery({
     queryKey: ['ticketHistory', Number(ticketId)],
     queryFn: () => getChangeHistory(Number(ticketId)),
   });
+
+  // 주기적으로 쿼리를 무효화하고 새로운 데이터를 가져오는 효과
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      queryClient.invalidateQueries({queryKey: ['ticketHistory', ticketId]});
+    }, 2000); // 2초에 한 번씩 업데이트
+
+    return () => clearInterval(intervalId);
+  }, [queryClient, ticketId]);
 
   const getKoreanUpdateType = (updateType: string) => {
     return UPDATE_TYPE_MAP[updateType as UpdateType] || updateType;

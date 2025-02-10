@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {tokenStorage} from '../../utils/token';
-import instance, { server } from '../axiosInstance';
+import instance, {server} from '../axiosInstance';
 
 // INTF-4: 로그인
 export async function postLogin(loginData: LoginData) {

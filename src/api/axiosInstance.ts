@@ -15,6 +15,7 @@ const instance: AxiosInstance = axios.create({
   withCredentials: false,
 });
 
+let isRefreshing = false;
 let refreshTokenPromise: Promise<string | null> | null = null;
 
 instance.interceptors.request.use((config) => {
@@ -48,7 +49,7 @@ instance.interceptors.response.use(
 
       try {
         // 중복된 토큰 재발급 요청 방지
-        if (!refreshTokenPromise) {
+        if (!isRefreshing) {
           refreshTokenPromise = postReissueToken()
             .then(({accessToken}) => {
               return accessToken;
@@ -75,10 +76,6 @@ instance.interceptors.response.use(
         window.location.href = '/';
         return Promise.reject(reissueError);
       }
-    }
-    if (status === 403) {
-      alert('이 페이지에 접근할 권한이 없습니다.');
-      return Promise.reject(error);
     }
 
     if (status === 419) {
