@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import InitialTopBar from './InitialTopBar';
-import {SmRightIcon, WhiteCheckIcon} from '../Icon';
+import {SmRightIcon, ValidateIcon, WhiteCheckIcon} from '../Icon';
 import Modal from '../Modal';
 import {validateEmail, validateId} from '../../../utils/Validation';
 import {Link} from 'react-router-dom';
@@ -94,7 +94,10 @@ export default function SignUpContainer() {
                 className={`py-3 px-4 text-subtitle-regular w-full border rounded-md focus:outline-none 
                 ${emailError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
               />
-              <div className={`flex relative text-error text-xs mt-1 ${emailError ? '' : 'hidden'}`}>{emailError}</div>
+              <div className={`flex relative text-error text-xs mt-1 items-center gap-1 ${emailError ? '' : 'hidden'}`}>
+                <ValidateIcon />
+                {emailError}
+              </div>
             </div>
             <div className="id">
               <input
@@ -108,7 +111,10 @@ export default function SignUpContainer() {
                 className={`py-3 px-4 text-subtitle-regular w-full border rounded-md focus:outline-none 
                 ${idError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
               />
-              <div className={`flex relative text-error text-xs mt-1 ${idError ? '' : 'hidden'}`}>{idError}</div>
+              <div className={`flex relative text-error text-xs mt-1 items-center gap-1 ${idError ? '' : 'hidden'}`}>
+                <ValidateIcon />
+                {idError}
+              </div>
             </div>
             <div className="accountTerms">
               <div className="flex w-full py-2 items-center justify-between ">
