@@ -4,6 +4,7 @@ import {PlusCircle, RightArrowIcon} from '../../common/Icon';
 import { createTicketForm } from '../../../api/service/tickets';
 import { toast } from 'react-toastify';
 import Modal from '../../common/Modal';
+import DOMPurify from 'dompurify';
 
 interface RegisterRequestFormProps {
   onClose: () => void;
@@ -91,7 +92,7 @@ export default function RegisterRequestForm({onClose, name, firstCategoryId, sec
                 placeholder="요청 내용을 입력해주세요"
                 style={{ resize: 'none', outline: 'none' }}
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={(e) => setDescription(DOMPurify.sanitize(e.target.value))}
               />
             </div>
             <div className="flex justify-center">

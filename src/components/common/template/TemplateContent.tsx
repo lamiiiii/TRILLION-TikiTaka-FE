@@ -1,7 +1,7 @@
 import {useEffect, useRef} from 'react';
 import {useTemplateStore} from '../../../store/store';
 import {RequiredIcon} from '../Icon';
-// import Modal from '../Modal';
+import DOMPurify from 'dompurify';
 
 export default function TemplateContent() {
   const {title, content, setTitle, setContent} = useTemplateStore();
@@ -15,7 +15,7 @@ export default function TemplateContent() {
   }, [content]);
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(e.target.value);
+    setContent(DOMPurify.sanitize(e.target.value));
   };
 
   return (
@@ -27,7 +27,7 @@ export default function TemplateContent() {
         <input
           type="text"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => setTitle(DOMPurify.sanitize(e.target.value))}
           className={`w-[400px] max-w-[600px] text-subtitle-regular border bg-white py-2 px-4 border-gray-2`}
           placeholder="요청 사항에 대한 제목을 입력해주세요"
         />

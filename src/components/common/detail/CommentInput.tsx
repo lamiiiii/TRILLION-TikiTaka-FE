@@ -4,6 +4,8 @@ import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {createTicketComment} from '../../../api/service/tickets';
 import {useParams} from 'react-router-dom';
 import {useUserStore} from '../../../store/store';
+import DOMPurify from 'dompurify';
+
 
 export default function CommentInput() {
   const [content, setContent] = useState('');
@@ -113,7 +115,7 @@ export default function CommentInput() {
             className="comment-textarea"
             placeholder="댓글 추가"
             value={content}
-            onChange={(e) => setContent(e.target.value)}
+            onChange={(e) => setContent(DOMPurify.sanitize(e.target.value))}
             style={{resize: 'none'}} // 크기 조절 비활성화
           />
         </div>
