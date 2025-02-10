@@ -5,20 +5,20 @@ import Modal from '../Modal';
 
 interface TemplateDetailViewProps {
   templateId: number;
-  onDelete: (templateId: number) => void;  // onDelete 속성 추가
+  onDelete: () => void; // onDelete 속성 추가
 }
 
-export default function TemplateDetailView({ templateId, onDelete }: TemplateDetailViewProps) {
-  const [template, setTemplate] = useState<TemplateListItem | null>(null);
+export default function TemplateDetailView({templateId, onDelete}: TemplateDetailViewProps) {
+  const [templates, setTemplates] = useState<TemplateListItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const {setTitle, setContent, setIsUrgent, setTicketType, setDueDate, setDueTime, setFirstCategoryId, setSecondCategoryId, setManagerId} =
+  const {setTitle, setContent, setIsUrgent, setTicketType, setFirstCategoryId, setSecondCategoryId, setManagerId, setTemplateId} =
     useNewTicketStore();
 
   useEffect(() => {
     const fetchTemplate = async () => {
       const fetchedTemplate = await getTicketTemplate(templateId);
-      setTemplate(fetchedTemplate);
+      setTemplates(fetchedTemplate);
     };
     fetchTemplate();
   }, [templateId]);
@@ -28,17 +28,16 @@ export default function TemplateDetailView({ templateId, onDelete }: TemplateDet
   };
 
   const confirmApply = () => {
-    if (!template) return;
+    if (!templates) return;
 
-    setTitle(template.title);
-    setContent(template.description);
-    setIsUrgent(false); // 기본값으로 설정 (템플릿에서 받아오는 값이 없다고 가정)
-    setTicketType({typeId: template.typeId, typeName: template.typeName ?? ''});
-    setDueDate(''); // 필요하면 템플릿에서 가져올 값 설정
-    setDueTime('');
-    setFirstCategoryId(Number(template.firstCategoryId));
-    setSecondCategoryId(Number(template.secondCategoryId));
-    setManagerId(Number(template.managerId));
+    setTitle(templates.title);
+    setContent(templates.description);
+    setIsUrgent(false);
+    setTicketType({typeId: templates.typeId, typeName: templates.typeName ?? ''});
+    setFirstCategoryId(Number(templates.firstCategoryId));
+    setSecondCategoryId(Number(templates.secondCategoryId));
+    setManagerId(Number(templates.managerId));
+    setTemplateId(Number(templates.templateId));
     setIsModalOpen(false);
   };
   const onCancel = () => {
@@ -46,16 +45,16 @@ export default function TemplateDetailView({ templateId, onDelete }: TemplateDet
   };
 
   const onEditClick = async () => {
-    if (!template) return;
+    if (!templates) return;
 
     const updatedTemplate = {
-      templateTitle: template.templateTitle,
-      title: template.title,
-      description: template.description,
-      typeId: template.typeId,
-      firstCategoryId: template.firstCategoryId,
-      secondCategoryId: template.secondCategoryId,
-      managerId: template.managerId,
+      templateTitle: templates.templateTitle,
+      title: templates.title,
+      description: templates.description,
+      typeId: templates.typeId,
+      firstCategoryId: templates.firstCategoryId,
+      secondCategoryId: templates.secondCategoryId,
+      managerId: templates.managerId,
     };
 
     try {
@@ -67,14 +66,14 @@ export default function TemplateDetailView({ templateId, onDelete }: TemplateDet
   };
 
   const onDeleteClick = async () => {
-    if (!template) return;
+    if (!templates) return;
 
     const confirmDelete = window.confirm('정말로 이 템플릿을 삭제하시겠습니까?');
     if (confirmDelete) {
       try {
         await deleteTicketTemplate(templateId);
         alert('템플릿 삭제가 완료되었습니다.');
-        onDelete(templateId);
+        onDelete();
       } catch (error) {
         alert('템플릿 삭제에 실패했습니다.');
       }
@@ -88,34 +87,34 @@ export default function TemplateDetailView({ templateId, onDelete }: TemplateDet
     </div>
   );
 
-  if (!template) {
+  if (!templates) {
     return <div>로딩 중...</div>;
   }
 
   return (
     <div className="flex flex-col p-4 gap-6">
       <div className="flex text-title-bold text-black justify-between">
-        <p className="text-title-bold">{template.templateTitle}</p>
+        <p className="text-title-bold">{templates.templateTitle}</p>
         <div className="flex gap-4 justify-center">
-          <button onClick={onEditClick} className="main-button">
+          <button onClick={onEditClick} className="px-6 py-1 bg-main text-white text-body-bold rounded hover:bg-gray-8">
             템플릿 수정
           </button>
-          <button onClick={onDeleteClick} className="main-button">
+          <button onClick={onDeleteClick} className="px-6 py-1 bg-main text-white text-body-bold rounded hover:bg-gray-8">
             템플릿 삭제
           </button>
         </div>
       </div>
       {/* 내용 */}
       <div className="flex flex-col w-full min-h-[500px] bg-gray-18 p-7 gap-6 text-body-regular">
-        {renderTemplateDetail('템플릿 제목', template.templateTitle)}
+        {renderTemplateDetail('템플릿 제목', templates.templateTitle)}
         <div className="w-10" />
-        {renderTemplateDetail('1차 카테고리', template.firstCategoryName)}
-        {renderTemplateDetail('2차 카테고리', template.secondCategoryName)}
-        {renderTemplateDetail('담당자', template.managerName)}
-        {renderTemplateDetail('유형', template.typeName)}
+        {renderTemplateDetail('1차 카테고리', templates.firstCategoryName)}
+        {renderTemplateDetail('2차 카테고리', templates.secondCategoryName)}
+        {renderTemplateDetail('담당자', templates.managerName)}
+        {renderTemplateDetail('유형', templates.typeName)}
         <div className="w-10" />
-        {renderTemplateDetail('요청 제목', template.title)}
-        {renderTemplateDetail('요청 내용', template.description)}
+        {renderTemplateDetail('요청 제목', templates.title)}
+        {renderTemplateDetail('요청 내용', templates.description)}
       </div>
       <div className="flex w-full justify-center">
         <button onClick={onApplyClick} className="btn mb-4">

@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import DropDown from '../../common/Dropdown';
 import {QuestionIcon, RequiredIcon, WhiteCheckIcon} from '../../common/Icon';
 import {useNewTicketStore} from '../../../store/store';
@@ -7,7 +7,8 @@ import {useQuery} from '@tanstack/react-query';
 import TicketOpstionsSecond from './TicketOptionsSecond';
 
 export default function TicketOptions() {
-  const {isUrgent, firstCategory, secondCategory, setIsUrgent, setFirstCategory, setSecondCategory} = useNewTicketStore();
+  const {isUrgent, firstCategory, secondCategory, firstCategoryId, secondCategoryId, setIsUrgent, setFirstCategory, setSecondCategory} =
+    useNewTicketStore();
 
   const checkboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = e.target.checked;
@@ -32,6 +33,28 @@ export default function TicketOptions() {
       return Promise.all(secondaryRequests);
     },
   });
+
+  useEffect(() => {
+    if (!isLoading && categories.length > 0) {
+      // 1차 카테고리 설정
+      if (firstCategoryId) {
+        const selectedFirstCategory = categories.find((cat) => cat.primary.id === firstCategoryId)?.primary;
+        if (selectedFirstCategory) {
+          setFirstCategory(selectedFirstCategory);
+        }
+      }
+
+      // 2차 카테고리 설정 (1차 카테고리가 설정된 후에만)
+      if (firstCategoryId && secondCategoryId) {
+        const secondaryOptions = categories.find((cat) => cat.primary.id === firstCategoryId)?.secondaries ?? [];
+        const selectedSecondCategory = secondaryOptions.find((cat) => cat.id === secondCategoryId);
+        if (selectedSecondCategory) {
+          setSecondCategory(selectedSecondCategory);
+        }
+      }
+    }
+  }, [categories, firstCategoryId, secondCategoryId, isLoading, setFirstCategory, setSecondCategory]);
+
   if (isLoading) return null;
   if (error) return null;
 
@@ -78,7 +101,7 @@ export default function TicketOptions() {
                 <QuestionIcon />
                 {isHovered && (
                   <div className="absolute left-0 mt-1 bg-gray-1 border border-gray-2 rounded-md py-1 px-3 text-xs text-gray-15 shadow-md">
-                    2차 카테고리 선택 시 해당 카테고리 템플릿이 적용됩니다.
+                    2차 카테고리 선택 시 해당 카테고리 요청 양식이 적용됩니다.
                   </div>
                 )}
               </span>

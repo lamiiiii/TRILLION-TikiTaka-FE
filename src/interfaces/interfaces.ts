@@ -40,15 +40,7 @@ export interface NewTicketStore {
   content: string;
   manager: UserListResponse['users'][number] | null;
   ticketType: {typeId: number; typeName: string};
-  template: {
-    templateTitle: string;
-    title: string;
-    description: string;
-    typeId: number;
-    firstCategoryId?: number;
-    secondCategoryId?: number;
-    managerId?: number;
-  };
+  template: TemplateListItem | null;
   dueDate: string;
   dueTime: string;
 
@@ -66,9 +58,11 @@ export interface NewTicketStore {
   firstCategoryId: number;
   secondCategoryId: number;
   managerId: number;
+  templateId: number;
   setFirstCategoryId: (id: number) => void;
   setSecondCategoryId: (id: number) => void;
   setManagerId: (id: number) => void;
+  setTemplateId: (id: number) => void;
 }
 
 export interface TemplateStore {
