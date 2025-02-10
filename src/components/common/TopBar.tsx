@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {useTokenStore, useUserStore} from '../../store/store';
-import {DownIcon, LogoIcon, MoveIcon, SmProfileIcon} from './Icon';
+import {DownIcon, LogoIcon, SmProfileIcon} from './Icon';
 import {Link, useNavigate} from 'react-router-dom';
 import {postLogout} from '../../api/service/auth';
 import {useOutsideClick} from '../../hooks/useOutsideClick';
@@ -60,15 +60,14 @@ export default function TopBar() {
                 <ul>
                   {role !== 'ADMIN' && (
                     <li
-                      className="flex gap-2 items-center px-2 py-1.5 text-center cursor-pointer leading-none m-2 text-black text-caption-regular hover:bg-gray-1 hover:text-caption-bold rounded-md"
+                      className="px-2 py-1.5 text-center cursor-pointer leading-none m-2 text-black text-caption-regular hover:bg-gray-1 hover:font-bold rounded-md"
                       onClick={() => navigate(`/${role?.toLowerCase()}/pwdChange`)}
                     >
                       비밀번호 변경
-                      <MoveIcon />
                     </li>
                   )}
                   <li
-                    className="px-2 py-1.5 text-center cursor-pointer leading-none m-2 text-black text-caption-regular hover:bg-gray-1 hover:text-caption-bold rounded-md"
+                    className="px-2 py-1.5 text-center cursor-pointer leading-none m-2 text-black text-caption-regular hover:bg-gray-1 hover:font-bold rounded-md"
                     onClick={onClickLogout}
                   >
                     로그아웃
