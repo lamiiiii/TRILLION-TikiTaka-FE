@@ -11,24 +11,23 @@ interface TemplateContainerProps {
 }
 
 export default function TemplateContainer({isOpen, onClose}: TemplateContainerProps) {
-  const [width, setWidth] = useState(700); // 기본 너비
-  const minWidth = 400; // 최소 너비
-  const maxWidth = 1000; // 최대 너비
-  const widthRef = useRef(width);
-
   const [activeView, setActiveView] = useState<'list' | 'detail' | 'create'>('list');
   const [selectedTemplateId, setSelectedTemplateId] = useState<number | null>(null);
 
+  const minWidth = 400;
+  const maxWidth = 1000;
+  const widthRef = useRef(700);
+
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const startX = e.clientX;
-    const startWidth = width;
+    const startWidth = widthRef.current;
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
       requestAnimationFrame(() => {
         const newWidth = startWidth + (startX - moveEvent.clientX);
         if (newWidth >= minWidth && newWidth <= maxWidth) {
           widthRef.current = newWidth;
-          setWidth(newWidth); // setWidth를 최소화하여 리렌더링을 줄임
+          document.getElementById('template-container')!.style.width = `${newWidth}px`;
         }
       });
     };
@@ -51,9 +50,13 @@ export default function TemplateContainer({isOpen, onClose}: TemplateContainerPr
 
   return (
     <motion.div
-      className="fixed top-14 right-0 h-full bg-white shadow-2xl transition-all"
-      animate={{width}}
+      id="template-container"
+      className="fixed top-14 right-0 h-full bg-white shadow-lg"
+      initial={{width: 0}}
+      animate={{width: widthRef.current}}
+      exit={{width: 0}}
       transition={{duration: 0.3, ease: 'easeInOut'}}
+      style={{width: widthRef.current}}
     >
       <div className="top-container">
         <div className="flex flex-col max-w-1200 py-4 gap-4">
@@ -80,17 +83,15 @@ export default function TemplateContainer({isOpen, onClose}: TemplateContainerPr
               }}
             />
           )}
-          {activeView === 'detail' && selectedTemplateId && (
-            <TemplateDetailView
-              templateId={selectedTemplateId}
-              onDelete={handleDelete} // 부모에서 onDelete 전달
-            />
-          )}
+          {activeView === 'detail' && selectedTemplateId && <TemplateDetailView templateId={selectedTemplateId} onDelete={handleDelete} />}
           {activeView === 'create' && <TemplateCreateView onCancel={() => setActiveView('list')} />}
         </div>
       </div>
       {/* 사이즈 조절 */}
-      <div className="absolute top-0 left-0 w-2 h-full cursor-ew-resize bg-white" onMouseDown={handleMouseDown} />
+      <div
+        className="absolute top-0 left-0 w-2 h-full cursor-ew-resize bg-white border-l border-transparent border-gray-1 hover:border-gray-4 transition-colors duration-300"
+        onMouseDown={handleMouseDown}
+      />
     </motion.div>
   );
 }

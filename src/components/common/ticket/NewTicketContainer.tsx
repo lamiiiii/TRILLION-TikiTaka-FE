@@ -69,7 +69,7 @@ export default function NewTicketContainer() {
 
   const onClickBtn = () => {
     const missingFields = [];
-    if (!ticketType) missingFields.push('유형');
+    if (!ticketType.typeId) missingFields.push('유형');
     if (!title) missingFields.push('요청 제목');
     if (!content) missingFields.push('요청 내용');
     if (!dueDate) missingFields.push('마감기한');
@@ -178,7 +178,6 @@ export default function NewTicketContainer() {
                 마감 기한 <RequiredIcon />
               </div>
               <div className={`flex items-center gap-5 p-2 px-8 bg-white border border-gray-2`}>
-                {' '}
                 <input
                   type="date"
                   value={dueDate}

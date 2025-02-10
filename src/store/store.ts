@@ -58,15 +58,7 @@ export const useNewTicketStore = create<NewTicketStore>((set) => ({
   content: '',
   manager: null,
   ticketType: {typeId: 0, typeName: ''},
-  template: {
-    templateTitle: '',
-    title: '',
-    description: '',
-    typeId: 0,
-    firstCategoryId: 0,
-    secondCategoryId: 0,
-    managerId: 0,
-  },
+  template: null,
   dueDate: '',
   dueTime: '',
   setIsUrgent: (isUrgent) => set({isUrgent}),
@@ -83,9 +75,11 @@ export const useNewTicketStore = create<NewTicketStore>((set) => ({
   firstCategoryId: 0,
   secondCategoryId: 0,
   managerId: 0,
+  templateId: 0,
   setFirstCategoryId: (firstCategoryId) => set({firstCategoryId: firstCategoryId}),
   setSecondCategoryId: (secondCategoryId) => set({secondCategoryId: secondCategoryId}),
   setManagerId: (managerId) => set({managerId: managerId}),
+  setTemplateId: (templateId) => set({templateId: templateId}),
 }));
 
 export const useTemplateStore = create<TemplateStore>((set) => ({

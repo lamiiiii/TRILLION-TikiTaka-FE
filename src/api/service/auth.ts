@@ -1,6 +1,12 @@
 import axios from 'axios';
 import {tokenStorage} from '../../utils/token';
-import instance, {server} from '../axiosInstance';
+import instance from '../axiosInstance';
+
+const config = {
+  backend: {
+    baseURL: process.env.REACT_APP_BASE_URL,
+  },
+};
 
 // INTF-4: 로그인
 export async function postLogin(loginData: LoginData) {
@@ -47,7 +53,7 @@ export async function postLogout() {
 export async function postReissueToken() {
   try {
     // const response = await instance.post('/reissue', null);
-    const response = await axios.post(`${server}/reissue`, null, {
+    const response = await axios.post(`${config.backend.baseURL}/reissue`, null, {
       withCredentials: true,
     });
     const {headers} = response;

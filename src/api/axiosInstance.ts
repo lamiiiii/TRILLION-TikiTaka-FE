@@ -8,7 +8,7 @@ const config = {
   },
 };
 
-export const server = config.backend.baseURL;
+const server = config.backend.baseURL;
 
 const instance: AxiosInstance = axios.create({
   baseURL: server,
