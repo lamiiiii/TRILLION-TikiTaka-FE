@@ -3,7 +3,6 @@ import instance from '../axiosInstance';
 // INTF-7: 비밀번호 변경
 export async function patchUserPassword(passwordData: PasswordChangeData, userId: number) {
   try {
-    console.log(passwordData, userId);
     const response = await instance.patch(`/users/${userId}/password`, passwordData, {});
     const {data} = response;
     return data;

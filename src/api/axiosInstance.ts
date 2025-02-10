@@ -8,36 +8,42 @@ const config = {
   },
 };
 
-const server = config.backend.baseURL;
+export const server = config.backend.baseURL;
 
 const instance: AxiosInstance = axios.create({
   baseURL: server,
-  withCredentials: true, // 쿠키를 포함한 인증 정보를 서버에 전송
+  withCredentials: false,
 });
 
-// 토큰 재발급 요청이 중복되지 않도록 Promise 공유
 let refreshTokenPromise: Promise<string | null> | null = null;
 
-// 요청 인터셉터: Authorization 헤더에 액세스 토큰 추가
 instance.interceptors.request.use((config) => {
   const token = tokenStorage.get();
+
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
 
-// 응답 인터셉터: 응답이 401 (토큰 만료)인 경우 자동으로 리프레시 토큰으로 액세스 토큰 재발급
 instance.interceptors.response.use(
   (response) => {
     return response;
   },
-  
+
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+    if (!error.response) {
+      alert('서버와 연결할 수 없습니다. 네트워크 상태를 확인해주세요.');
+      return Promise.reject(error);
+    }
+
+    const {status} = error.response;
+
+    if (status === 401 && !originalRequest._retry) {
       // 401 에러가 발생하고, 재시도가 이루어지지 않았을 경우
+
       originalRequest._retry = true;
 
       try {
@@ -45,16 +51,14 @@ instance.interceptors.response.use(
         if (!refreshTokenPromise) {
           refreshTokenPromise = postReissueToken()
             .then(({accessToken}) => {
-
-              refreshTokenPromise = null;
-
               return accessToken;
             })
             .catch((err) => {
-              refreshTokenPromise = null;
-              console.error('토큰 재발급 실패:', err); // 에러 로그 추가
-
+              console.error('토큰 재발급 실패:', err);
               throw err;
+            })
+            .finally(() => {
+              refreshTokenPromise = null;
             });
         }
 
@@ -65,12 +69,25 @@ instance.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return instance(originalRequest);
       } catch (reissueError) {
-        console.error('토큰 재발급 실패, 로그아웃 처리:', reissueError);
+        alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+
         tokenStorage.remove(); // 저장된 토큰 삭제
-        window.location.href = '/'; // 로그인 페이지로 리디렉트
+        window.location.href = '/';
         return Promise.reject(reissueError);
       }
     }
+    if (status === 403) {
+      alert('이 페이지에 접근할 권한이 없습니다.');
+      return Promise.reject(error);
+    }
+
+    if (status === 419) {
+      alert('로그인 세션이 만료되었습니다. 다시 로그인해주세요.');
+      tokenStorage.remove();
+      window.location.href = '/';
+      return Promise.reject(error);
+    }
+
     return Promise.reject(error);
   }
 );
