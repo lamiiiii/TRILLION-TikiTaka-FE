@@ -29,7 +29,7 @@ export default function TicketSetting({data}: TicketSettingProps) {
   const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
 
   const [primaryCategoryId, setPrimaryCategoryId] = useState(data.firstCategoryId);
-  const [secondaryCategoryId, setSecondaryCategoryId] = useState(data.secondCategoryId);
+  const [_secondaryCategoryId, setSecondaryCategoryId] = useState(data.secondCategoryId);
 
   const {id} = useParams();
   const ticketId = Number(id);
@@ -69,6 +69,7 @@ export default function TicketSetting({data}: TicketSettingProps) {
     '카테고리 변경에 실패했습니다. 다시 시도해 주세요.',
     ticketId
   );
+
   // 유저 정보 (담당자 리스트) 조회
   const {data: userData} = useQuery({
     queryKey: ['managers'],
@@ -122,7 +123,10 @@ export default function TicketSetting({data}: TicketSettingProps) {
       const newPrimaryCategoryId = selectedCategory.primary.id;
       setPrimaryCategoryId(newPrimaryCategoryId);
       setSelectedFilters((prev) => ({...prev, '1차 카테고리': selectedOption}));
-      updateCategoryMutation.mutate({firstCategoryId: newPrimaryCategoryId, secondCategoryId: secondaryCategoryId});
+
+      // 2차 카테고리 초기화
+      setSecondaryCategory('');
+      setSecondaryCategoryId(0); // 또는 적절한 초기값
     }
   };
 
@@ -144,6 +148,7 @@ export default function TicketSetting({data}: TicketSettingProps) {
       setTicketType(selectedOption);
     }
   };
+
   return (
     <div className="flex flex-col gap-1">
       <label className="text-body-bold">티켓 설정</label>
