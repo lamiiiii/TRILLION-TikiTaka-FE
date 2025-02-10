@@ -5,13 +5,14 @@ import TemplateContent from './TemplateContent';
 import TemplateOptions from './TemplateOptions';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import Modal from '../Modal';
-import {createTicketTemplate} from '../../../api/service/ticketTemplates';
+import {createTicketTemplate, updateTicketTemplate} from '../../../api/service/ticketTemplates';
 
 interface TemplateCreateViewProps {
   onCancel: () => void;
+  templateId?: number;
 }
 
-export default function TemplateCreateView({onCancel}: TemplateCreateViewProps) {
+export default function TemplateCreateView({onCancel, templateId}: TemplateCreateViewProps) {
   const {
     templateTitle,
     title,
@@ -31,7 +32,6 @@ export default function TemplateCreateView({onCancel}: TemplateCreateViewProps) 
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
-  const [templateId, setTemplateId] = useState(0);
 
   const [hasChanges, setHasChanges] = useState(false);
 
@@ -75,13 +75,16 @@ export default function TemplateCreateView({onCancel}: TemplateCreateViewProps) 
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async (params: CreateTemplateParams) => createTicketTemplate(params),
-    onSuccess: (data) => {
+    mutationFn: async (params: CreateTemplateParams) => {
+      if (templateId) {
+        return updateTicketTemplate(templateId, params);
+      }
+      return createTicketTemplate(params);
+    },
+    onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['templates']});
-      const templateId = data;
-      setModalMessage(`템플릿이 저장되었습니다! #${templateId}`);
+      setModalMessage(`템플릿이 저장되었습니다!`);
 
-      setTemplateId(Number(templateId));
       setIsModalOpen(true);
     },
   });
@@ -97,6 +100,7 @@ export default function TemplateCreateView({onCancel}: TemplateCreateViewProps) 
         managerId: manager?.userId,
       };
 
+      console.log(templateParams);
       mutation.mutate(templateParams);
 
       // 템플릿 저장 후 초기화
@@ -108,6 +112,7 @@ export default function TemplateCreateView({onCancel}: TemplateCreateViewProps) 
       setTicketType({typeId: 0, typeName: ''});
       setManager(null);
       setIsModalOpen(false);
+      // onCancel();
     } catch (error) {
       console.error('템플릿 저장 실패:', error);
       setModalMessage('템플릿 저장에 실패했습니다. 다시 시도해주세요.');
@@ -127,7 +132,7 @@ export default function TemplateCreateView({onCancel}: TemplateCreateViewProps) 
           <SmRightIcon strokeColor="#222222" />
         </div>
       </div>
-      <div className="flex flex-col w-full min-h-[600px] bg-gray-18 p-6 gap-6">
+      <div className="flex flex-col w-full min-h-[550px] bg-gray-18 p-6 gap-6">
         <div className="flex gap-5 items-center">
           <div className="flex items-center gap-1 text-body-bold w-28 px-3">
             템플릿 제목 <RequiredIcon />
@@ -136,7 +141,7 @@ export default function TemplateCreateView({onCancel}: TemplateCreateViewProps) 
             type="text"
             value={templateTitle}
             onChange={(e) => setTemplateTitle(e.target.value)}
-            className={`w-[400px] text-subtitle-regular border bg-white py-2 px-4  ${templateTitle ? 'border-gray-2' : 'border-blue'}`}
+            className={`w-[400px] text-subtitle-regular border bg-white py-2 px-4 border-gray-2`}
             placeholder="템플릿 제목을 입력해주세요."
           />
         </div>
@@ -150,17 +155,12 @@ export default function TemplateCreateView({onCancel}: TemplateCreateViewProps) 
       </div>
       {isModalOpen && (
         <Modal
-          title={
-            modalMessage.includes('입력해주세요')
-              ? '필수 입력 항목 누락'
-              : modalMessage.includes('#')
-                ? `템플릿 번호 - #${templateId}`
-                : '템플릿 저장'
-          }
+          title={modalMessage.includes('입력해주세요') ? '필수 입력 항목 누락' : '템플릿 저장'}
           content={modalMessage}
           backBtn="닫기"
           onBackBtnClick={() => {
             setIsModalOpen(false);
+            onCancel();
           }}
           checkBtn={modalMessage.includes('입력해주세요') || modalMessage.includes('#') ? undefined : '확인'}
           onBtnClick={modalMessage.includes('입력해주세요') || modalMessage.includes('#') ? undefined : confirmSubmit}
