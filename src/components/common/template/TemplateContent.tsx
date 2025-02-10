@@ -28,7 +28,7 @@ export default function TemplateContent() {
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className={`w-[400px] max-w-[600px] text-subtitle-regular border bg-white py-2 px-4  ${title ? 'border-gray-2' : 'border-blue'}`}
+          className={`w-[400px] max-w-[600px] text-subtitle-regular border bg-white py-2 px-4 border-gray-2`}
           placeholder="요청 사항에 대한 제목을 입력해주세요"
         />
       </div>
@@ -41,7 +41,7 @@ export default function TemplateContent() {
           ref={textareaRef}
           value={content}
           onChange={handleContentChange}
-          className={`w-[400px] max-w-[700px] min-h-[300px] max-h-[300px] text-subtitle-regular border bg-white py-2 px-4 resize-none ${content ? 'border-gray-2' : 'border-blue'}`}
+          className={`w-[400px] max-w-[700px] min-h-[300px] max-h-[300px] text-subtitle-regular border bg-white py-2 px-4 resize-none border-gray-2`}
           placeholder={`요청 내용을 자세히 입력해주세요. \nMarkdown 문법을 지원합니다. \n 예: # 제목, **강조**, - 리스트, [링크](https://example.com)**`}
         />
       </div>

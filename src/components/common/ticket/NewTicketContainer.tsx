@@ -178,7 +178,6 @@ export default function NewTicketContainer() {
                 마감 기한 <RequiredIcon />
               </div>
               <div className={`flex items-center gap-5 p-2 px-8 bg-white border border-gray-2`}>
-                {' '}
                 <input
                   type="date"
                   value={dueDate}

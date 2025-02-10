@@ -13,6 +13,7 @@ export default function TicketOpstionsSecond() {
     manager,
     ticketType,
     template,
+    templateId,
     managerId,
     setManager,
     setManagerId,
@@ -78,6 +79,15 @@ export default function TicketOpstionsSecond() {
     fetchTemplate();
   }, [selectedTemplateId]);
 
+  useEffect(() => {
+    if (templateId && templates.length > 0) {
+      const selected = templates.find((t) => Number(t.templateId) === Number(templateId));
+      if (selected) {
+        setTemplate(selected);
+      }
+    }
+  }, [templateId, templates]);
+  
   const onTemplateSelect = (value: string) => {
     const selected = templates.find((t) => t.templateTitle === value);
     if (selected) {
