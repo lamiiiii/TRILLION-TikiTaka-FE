@@ -21,9 +21,9 @@ export default function TopBar() {
   const onClickLogout = () => {
     try {
       postLogout();
-      logout(); // 상태 저장
+      logout();
       navigate('/');
-      window.location.reload(); // 로그아웃 후 새로고침
+      window.location.reload();
     } catch (error) {
       console.error('로그아웃 실패:', error);
     }
@@ -33,20 +33,16 @@ export default function TopBar() {
 
   return (
     <div className="bg-main fixed w-full h-14 z-50">
-      {/* 상단바 */}
       <div className="relative w-full h-14 shrink-0 flex justify-between pl-12 pr-24 py-4">
-        {/* 좌측 로고 */}
         <Link to={`/${role.toLowerCase()}`} className="flex items-center gap-2">
           <LogoIcon />
-          <div className="flex gap-3 items-baseline">
+          <div className="flex gap-3 items-center">
             <div className="flex items-center text-white font-bold text-lg ">TIKITAKA</div>
-            <div className="font-bold text-xs text-gray-2">{roleLabel}</div>
+            <div className="text-caption-regular px-2 py-0.5 border border-gray-2 rounded-md text-gray-2 mb-0.5">{roleLabel}</div>
           </div>
         </Link>
 
-        {/* 우측 메뉴 */}
         <div className="flex items-center gap-4">
-          {/* <PushIcon /> */}
           <div className="flex items-center gap-2 text-white cursor-pointer" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
             <div className="relative">
               <SmProfileIcon />
