@@ -12,7 +12,7 @@ const server = config.backend.baseURL;
 
 const instance: AxiosInstance = axios.create({
   baseURL: server,
-  withCredentials: false,
+  withCredentials: true,
 });
 
 let refreshTokenPromise: Promise<string | null> | null = null;
@@ -42,7 +42,6 @@ instance.interceptors.response.use(
     const {status} = error.response;
 
     if (status === 401 && !originalRequest._retry) {
-
       originalRequest._retry = true;
 
       try {
