@@ -280,7 +280,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
           textColor=""
         />
       </div>
-      <div className="bg-gray-18 h-full shadow-[0px_1px_3px_1px_rgba(0,0,0,0.15)] flex flex-col justify-start p-4">
+      <div className="bg-gray-18 h-full flex flex-col justify-start p-4">
         <div className="flex justify-between items-center  mt-4 px-2">
           <div className="flex items-center gap-4 leading-none">
             {dropdownData.map((data) => (
