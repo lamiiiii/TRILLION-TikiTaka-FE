@@ -13,7 +13,7 @@ export async function postLogin(loginData: LoginData) {
   try {
     const existingToken = tokenStorage.get();
     if (existingToken) {
-      tokenStorage.remove(); // 기존 토큰을 지움
+      tokenStorage.remove();
     }
 
     const response = await instance.post('/login', loginData);
@@ -21,9 +21,8 @@ export async function postLogin(loginData: LoginData) {
     const authorizationHeader = headers['authorization'] || headers['Authorization'];
 
     if (authorizationHeader) {
-      // Bearer 토큰에서 'Bearer ' 부분을 제거하고 토큰만 저장
       const accessToken = authorizationHeader.replace('Bearer ', '');
-      tokenStorage.set(accessToken); // 세션 스토리지에 저장
+      tokenStorage.set(accessToken);
       return {...data, accessToken};
     }
   } catch (error) {
@@ -52,7 +51,6 @@ export async function postLogout() {
 // INTF-6: 토큰 재발급
 export async function postReissueToken() {
   try {
-    // const response = await instance.post('/reissue', null);
     const response = await axios.post(`${config.backend.baseURL}/reissue`, null, {
       withCredentials: true,
     });

@@ -6,6 +6,7 @@ import InitialLayout from './InitialLayout';
 import {postLogin} from '../../../api/service/auth';
 import Modal from '../Modal';
 import {useEnterKeyHandler} from '../../../hooks/useEnterKeyHandler';
+import {ValidateIcon} from '../Icon';
 
 export default function SignInContainer() {
   const navigate = useNavigate();
@@ -108,7 +109,10 @@ export default function SignInContainer() {
                 className={`py-3 px-4 text-subtitle-regular w-full border rounded-md focus:outline-none 
                 ${idError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
               />
-              <div className={`flex relative text-error text-xs mt-1 ${idError ? '' : 'hidden'}`}>{idError}</div>
+              <div className={`flex relative text-error text-xs mt-1 items-center gap-1 ${idError ? '' : 'hidden'}`}>
+                <ValidateIcon />
+                {idError}
+              </div>
             </div>
             {/* 비밀번호 */}
             <div className="password">
@@ -123,7 +127,10 @@ export default function SignInContainer() {
                 className={`py-3 px-4 text-subtitle-regular w-full border rounded-md focus:outline-none 
                 ${pwdError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
               />
-              <div className={`flex relative text-error text-xs mt-1 ${pwdError ? '' : 'hidden'}`}>{pwdError}</div>
+              <div className={`flex relative text-error text-xs mt-1 items-center gap-1 ${pwdError ? '' : 'hidden'}`}>
+                <ValidateIcon />
+                {pwdError}
+              </div>
             </div>
           </div>
           {/* 버튼 */}
