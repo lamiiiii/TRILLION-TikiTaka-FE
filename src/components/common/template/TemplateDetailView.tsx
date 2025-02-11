@@ -53,7 +53,7 @@ export default function TemplateDetailView({templateId, onDelete}: TemplateDetai
   const onDeleteClick = async () => {
     if (!templates) return;
 
-    const confirmDelete = window.confirm('정말로 이 템플릿을 삭제하시겠습니까?');
+    const confirmDelete = window.confirm('이 템플릿을 삭제하시겠습니까?');
     if (confirmDelete) {
       try {
         await deleteTicketTemplate(templateId);
