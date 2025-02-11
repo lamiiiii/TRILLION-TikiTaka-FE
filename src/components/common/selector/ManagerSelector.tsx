@@ -49,6 +49,7 @@ const ManagerSelector: React.FC<ManagerSelectorProps> = ({selectedManagerName, o
         options={managers?.map((user: any) => user.username) || []}
         onSelect={handleSelect}
         border={false}
+        paddingX="px-0"
       />
     </div>
   );
