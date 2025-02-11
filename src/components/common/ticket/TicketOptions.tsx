@@ -114,7 +114,7 @@ export default function TicketOptions() {
                 const selectedCategory = secondaryCategoryOptions.find((cat) => cat.name === selectedName);
                 setSecondCategory(selectedCategory ?? null);
               }}
-              disabled={!firstCategory || secondaryCategoryOptions.length === 0} // ✅ 1차 카테고리 없거나 2차 없음 → 비활성화
+              disabled={!firstCategory || secondaryCategoryOptions.length === 0}
             />
           </div>
         </div>
