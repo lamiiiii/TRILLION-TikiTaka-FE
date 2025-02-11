@@ -1,4 +1,5 @@
 import {useEffect, useRef, useState} from 'react';
+import { useOutsideClick } from '../../hooks/useOutsideClick';
 
 interface DropdownProps {
   label: string; // 드롭다운 버튼에 표시될 텍스트
@@ -9,6 +10,7 @@ interface DropdownProps {
   paddingX?: string; // 좌우 여백 (Tailwind 클래스)
   border?: boolean; // 테두리 여부
   textColor?: string; // 텍스트 색상 (Tailwind 클래스)
+  backgroundColor?: string; // 배경 색상 (Tailwind 클래스)
   disabled?: boolean; // 비활성화 여부
 }
 
@@ -20,6 +22,7 @@ export default function DropDown({
   defaultSelected = label,
   paddingX = 'px-4', // 기본 여백 값
   border = true,
+  backgroundColor = '', // ✅ 기본값 유지
   textColor = 'text-gray-900', // ✅ 기본값 유지
   disabled = false,
 }: DropdownProps) {
@@ -27,6 +30,8 @@ export default function DropDown({
   const [selected, setSelected] = useState(defaultSelected);
   const [maxWidth, setMaxWidth] = useState(0);
   const optionsRef = useRef<HTMLDivElement[]>([]); // 타입 명시
+
+  const dropdownRef = useOutsideClick(() => setIsOpen(false));
 
   const handleSelect = (value: string) => {
     setSelected(value);
@@ -42,12 +47,12 @@ export default function DropDown({
   }, [isOpen]);
 
   return (
-    <div className="relative inline-block ">
+    <div className="relative inline-block " ref={dropdownRef}>
       {/* 드롭다운 버튼 */}
       <button
         className={`${border ? 'border border-gray-6' : 'border-none'} 
         ${value ? textColor : 'text-gray-6'} 
-        ${value ? 'bg-white' : 'bg-gray-100'} 
+        ${backgroundColor}
         rounded-md py-1 ${paddingX} text-body-regular flex items-center gap-3 
         ${disabled ? 'bg-gray-1 text-gray-3 cursor-not-allowed' : ''}`}
         onClick={() => setIsOpen(!isOpen)}

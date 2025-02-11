@@ -15,14 +15,12 @@ export default function DashTicketFilter({ onFilterChange, onCountUpdate }: Tick
   const containerRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
 
-  // ✅ 1. React Query를 사용하여 티켓 상태 개수 가져오기
   const { data: ticketCounts } = useQuery({
     queryKey: ["ticketStatusCounts"],
     queryFn: getTicketStatusCount,
-    staleTime: 1000 * 60, // 1분 동안 캐싱된 데이터 사용
+    staleTime: 1000 * 60, 
   });
 
-  // ✅ 2. 새로운 데이터가 로드되면 부모 컴포넌트로 전달
   useEffect(() => {
     if (ticketCounts) {
       onCountUpdate(ticketCounts);

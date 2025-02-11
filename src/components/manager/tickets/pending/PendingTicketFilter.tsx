@@ -57,7 +57,7 @@ export default function PendingTicketFilter({selectedFilter, onFilterChange}: Pe
   useEffect(() => {
     if (pendingApprovalCount) {
       setTicketData([
-        {type: '전체', count: pendingApprovalCount?.totalPendingTicket},
+        {type: '전체', count: pendingApprovalCount?.allPendingTicket},
         {type: '나의 요청', count: pendingApprovalCount?.myPendingTicket},
       ]);
     }

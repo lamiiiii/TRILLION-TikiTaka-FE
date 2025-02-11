@@ -62,8 +62,7 @@ declare interface TicketDetails {
 
 declare interface PendingApprovalCount {
   myPendingTicket: number;
-  unassignedPendingTicket: number;
-  totalPendingTicket: number;
+  allPendingTicket: number;
   urgentPendingTicket: number;
 }
 
@@ -89,7 +88,7 @@ declare interface TicketListItem {
   status: string;
   urgent: boolean;
   deadline: string;
-  createdAt:string;
+  createdAt: string;
 }
 
 declare interface TicketListResponse {
@@ -131,7 +130,7 @@ declare interface TicketListParams {
   managerId?: number;
   requesterId?: number;
   orderBy?: string;
-  createdAt?:string;
+  createdAt?: string;
 }
 
 declare interface UpdateTicketParams {
@@ -139,6 +138,24 @@ declare interface UpdateTicketParams {
   description: string;
   urgent: boolean;
   typeId?: number;
-  primaryCategoryId?: number;
+  firstCategoryId?: number;
   secondaryCategoryId?: number;
+}
+
+declare interface UpdateTicketCategoryParams {
+  firstCategoryId: number;
+  secondCategoryId: number;
+}
+
+declare interface UpdateTicketTypeParams {
+  type: string;
+}
+
+declare interface UpdateTicketUrgentRequest {
+  urgent: boolean;
+}
+
+declare interface UpdateTicketUrgentResponse {
+  message: string;
+  data: null;
 }

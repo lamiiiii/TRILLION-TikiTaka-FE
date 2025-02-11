@@ -47,15 +47,13 @@ export default function CategoryList() {
           </button>
         </div>
         {isRegModalOpen && <RegCateModal onClose={closeRegModal} />}
-        {/* 1차 카테고리 렌더링 */}
         {categories.map(({primary, secondaries}) => (
           <div key={primary.id}>
-            {/* 1차 카테고리 */}
             <CategoryCard
               id={primary.id}
               name={primary.name}
               onDelete={(categoryId) => {
-                setCategories((prev) => prev.filter(({primary}) => primary.id !== categoryId)); // 1차 카테고리 & 하위 2차 카테고리 삭제
+                setCategories((prev) => prev.filter(({primary}) => primary.id !== categoryId)); 
               }}
               onAddSubCategory={(primaryId, newSubCategory) => {
                 setCategories((prev) =>
@@ -70,7 +68,7 @@ export default function CategoryList() {
                 );
               }}
             />
-            {/* 2차 카테고리 리스트 */}
+
             {secondaries.map((secondary) => (
               <SecCategoryCard
                 key={secondary.id}

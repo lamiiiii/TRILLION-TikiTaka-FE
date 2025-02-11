@@ -78,10 +78,6 @@ instance.interceptors.response.use(
         return Promise.reject(reissueError);
       }
     }
-    if (status === 403) {
-      alert('이 페이지에 접근할 권한이 없습니다.');
-      return Promise.reject(error);
-    }
 
     if (status === 419) {
       alert('로그인 세션이 만료되었습니다. 다시 로그인해주세요.');

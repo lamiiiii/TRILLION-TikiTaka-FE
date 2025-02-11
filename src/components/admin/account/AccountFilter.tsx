@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 
 type AccountViewType = "승인 대기" | "계정 목록";
 
-// 필터 데이터
 const statFilters: { type: AccountViewType }[] = [
   { type: "승인 대기" },
   { type: "계정 목록" },
@@ -29,7 +28,6 @@ export default function AccountFilter({ onFilterChange }: { onFilterChange: (typ
 
   return (
     <div className="relative w-full mt-6">
-      {/* 필터 리스트 */}
       <div className="flex w-full h-6  gap-6 relative" ref={containerRef}>
         {statFilters.map((item) => (
           <div
@@ -44,8 +42,6 @@ export default function AccountFilter({ onFilterChange }: { onFilterChange: (typ
           </div>
         ))}
       </div>
-      
-      {/* 하단 이동 Bar */}
       <div
         className="absolute bottom-0 h-0.5 bg-gray-7 transition-all duration-300"
         style={{
