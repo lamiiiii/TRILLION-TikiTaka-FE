@@ -43,13 +43,10 @@ instance.interceptors.response.use(
     const {status} = error.response;
 
     if (status === 401 && !originalRequest._retry) {
-      // 401 에러가 발생하고, 재시도가 이루어지지 않았을 경우
-
       originalRequest._retry = true;
 
       try {
-        // 중복된 토큰 재발급 요청 방지
-        if (!isRefreshing) {
+        if (!refreshTokenPromise) {
           refreshTokenPromise = postReissueToken()
             .then(({accessToken}) => {
               return accessToken;
@@ -63,7 +60,6 @@ instance.interceptors.response.use(
             });
         }
 
-        // 토큰 발급 성공 시 기존 요청 다시 보내기
         const newAccessToken = await refreshTokenPromise;
         if (!newAccessToken) throw new Error('토큰 재발급 실패');
 
@@ -72,7 +68,7 @@ instance.interceptors.response.use(
       } catch (reissueError) {
         alert('세션이 만료되었습니다. 다시 로그인해주세요.');
 
-        tokenStorage.remove(); // 저장된 토큰 삭제
+        tokenStorage.remove();
         window.location.href = '/';
         return Promise.reject(reissueError);
       }

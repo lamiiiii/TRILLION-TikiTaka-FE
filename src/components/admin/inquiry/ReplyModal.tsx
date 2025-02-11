@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { submitAnswer } from "../../../api/service/inquiry";
 import AdminModal from "../common/AdminModal";
+import DOMPurify from 'dompurify';
 
 interface ReplyModalProps {
   inquiryId: number;
@@ -31,7 +32,7 @@ export default function ReplyModal({ inquiryId, onClose, onAnswerSubmit }: Reply
           className="w-full text-[12px] px-3 py-2 border border-gray-300 rounded mt-1 resize-none"
           placeholder="답변을 입력해주세요"
           value={answer}
-          onChange={(e) => setAnswer(e.target.value)}
+          onChange={(e) => setAnswer(DOMPurify.sanitize(e.target.value))}
         />
       </div>
     </AdminModal>

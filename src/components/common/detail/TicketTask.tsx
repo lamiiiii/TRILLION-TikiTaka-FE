@@ -4,6 +4,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {createSubtask, deleteSubtask, getSubtasks, updateSubtaskDescription, updateSubtaskStatus} from '../../../api/service/subtasks';
 import {useParams} from 'react-router-dom';
 import {WhiteCheckIcon} from '../Icon';
+import DOMPurify from 'dompurify';
 
 export default function TicketTask() {
   const [inputValue, setInputValue] = useState('');
@@ -174,7 +175,7 @@ export default function TicketTask() {
                   <textarea
                     className="w-full p-2 border rounded text-main"
                     value={editedContent}
-                    onChange={(e) => setEditedContent(e.target.value)}
+                    onChange={(e) => setEditedContent(DOMPurify.sanitize(e.target.value))}
                     style={{resize: 'none'}} // 크기 조절 비활성화
                   />
                 ) : (
@@ -188,7 +189,7 @@ export default function TicketTask() {
           className="w-full h-[78px] text-subtitle-regular border border-gray-2 rounded-[4px] py-3 px-4 focus:border-main"
           placeholder="하위 태스크 추가"
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={(e) => setInputValue(DOMPurify.sanitize(e.target.value))}
           onKeyDown={handleKeyDown}
         />
       </div>

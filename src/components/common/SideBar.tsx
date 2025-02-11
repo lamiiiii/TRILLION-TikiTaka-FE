@@ -17,7 +17,7 @@ export default function SideBar() {
       postLogout();
       logout(); // 상태 저장
       navigate('/');
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       console.error('로그아웃 실패:', error);
     }

@@ -4,6 +4,7 @@ import {RequiredIcon} from '../Icon';
 import MarkdownPreview from '../MarkdownPreview';
 import {getTicketForm} from '../../../api/service/tickets';
 import Modal from '../Modal';
+import DOMPurify from 'dompurify';
 
 export default function NewTicketContent() {
   const {title, content, firstCategory, secondCategory, setTitle, setContent} = useNewTicketStore();
@@ -42,7 +43,8 @@ export default function NewTicketContent() {
   }, [mustDescription, description]);
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(e.target.value);
+    const sanitizedContent = DOMPurify.sanitize(e.target.value);
+    setContent(sanitizedContent);
   };
 
   const onOverwrite = () => {
@@ -66,7 +68,7 @@ export default function NewTicketContent() {
         <input
           type="text"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => setTitle(DOMPurify.sanitize(e.target.value))}
           className={`w-[660px] text-subtitle-regular border bg-white py-2 px-4  border-gray-2`}
           placeholder="요청 사항에 대한 제목을 입력해주세요"
         />
