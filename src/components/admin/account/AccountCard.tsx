@@ -13,14 +13,11 @@ interface AccountCardProps {
   role:"ADMIN" | "MANAGER" | "USER";
 }
 
-
 export default function AccountCard({ registrationId, username, email, status }: AccountCardProps) {
   const queryClient = useQueryClient();
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
  
-
-  //승인 API
   const approveMutation = useMutation({
     mutationFn: () =>
       updateRegistrationStatus({
@@ -35,14 +32,12 @@ export default function AccountCard({ registrationId, username, email, status }:
     },
   });
 
-  //거절 API
   const rejectMutation = useMutation({
     mutationFn: () =>
       updateRegistrationStatus({
         registrationId,
         status: "REJECTED",
         role: "USER",
-        // reason: rejectReason, 
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["registrationAccounts"] });
@@ -54,7 +49,6 @@ export default function AccountCard({ registrationId, username, email, status }:
     },
   });
 
-  //승인 처리 
   const handleApprove = async () => {
     try {
       
@@ -64,7 +58,6 @@ export default function AccountCard({ registrationId, username, email, status }:
     }
   };
 
-  //거절 처리
   const handleReject = async () => {
     
     try {
@@ -86,14 +79,12 @@ export default function AccountCard({ registrationId, username, email, status }:
         <div className="w-[20%] flex gap-2">
           {status === "PENDING" ? (
             <>
-              {/*승인 버튼  */}
               <button
                 onClick={() => setShowApproveModal(true)}
                 className="px-4 py-1 text-subtitle-regular border rounded hover:bg-gray-8 hover:text-white whitespace-nowrap"
               >
                 승인
               </button>
-              {/*거절 버튼 */}
               <button
                 onClick={() => setShowRejectModal(true)}
                 className="px-4 py-1 text-subtitle-regular border rounded hover:bg-red/80 hover:text-white"
@@ -109,8 +100,6 @@ export default function AccountCard({ registrationId, username, email, status }:
         </div>
       
       </div>
-
-      {/*승인 확인 모달 */}
       {showApproveModal && (
         <Modal
           title="계정 승인"
@@ -122,7 +111,6 @@ export default function AccountCard({ registrationId, username, email, status }:
         />
       )}
 
-      {/*거절 사유 입력 모달 */}
       {showRejectModal && (
         <Modal
           title="계정 거절"

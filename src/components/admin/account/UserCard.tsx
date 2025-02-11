@@ -7,13 +7,12 @@ import {DotIcon} from '../../common/Icon';
 import {toast} from 'react-toastify';
 
 interface UserCardProps {
-    userId: number; // userId로 변경
+    userId: number; 
     username: string;
     email: string;
     role: string;
   }
 
-// 역할 변환 맵핑 (영어 ↔ 한글)
 const roleApiToDisplay: Record<string, string> = {
     ADMIN: "관리자",
     MANAGER: "담당자",
@@ -28,16 +27,15 @@ const roleApiToDisplay: Record<string, string> = {
 
 export default function AccountCard({ userId, username, email, role }: UserCardProps) {
   const queryClient = useQueryClient();
-  const [selectedRole, setSelectedRole] = useState(roleApiToDisplay[role] || "사용자"); // 기본값
+  const [selectedRole, setSelectedRole] = useState(roleApiToDisplay[role] || "사용자"); 
 
   const [showMenu, setShowMenu] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  // 계정 삭제 API (patchDeleteUser 사용)
   const deleteMutation = useMutation({
-    mutationFn: () => patchDeleteUser(userId), // userId로 수정
+    mutationFn: () => patchDeleteUser(userId), 
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["userAccounts"] }); // 삭제 후 UI 갱신
+      queryClient.invalidateQueries({ queryKey: ["userAccounts"] }); 
       toast.success("계정이 삭제되었습니다.");
       setShowDeleteModal(false);
     },
@@ -50,7 +48,7 @@ export default function AccountCard({ userId, username, email, role }: UserCardP
   const updateRoleMutation = useMutation({
     mutationFn: () =>
       patchUserRole(userId, {
-        role: roleDisplayToApi[selectedRole], // UI에서 선택한 값을 API 형식으로 변환
+        role: roleDisplayToApi[selectedRole], 
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["userAccounts"] });
@@ -67,13 +65,12 @@ export default function AccountCard({ userId, username, email, role }: UserCardP
       <div className="w-[16%]">{username}</div>
       <div className="w-[44%]">{email}</div>
       <div className="w-[16%]">
-        {/* 역할 선택 드롭다운 (한글 표시) */}
         <RoleDropdown
           label={selectedRole}
           options={["관리자", "담당자", "사용자"]}
           onSelect={(value) => {
             setSelectedRole(value as "관리자" | "담당자" | "사용자");
-            updateRoleMutation.mutate(); // 선택 즉시 역할 변경 요청
+            updateRoleMutation.mutate(); 
           }}
         />
       </div>
@@ -90,7 +87,6 @@ export default function AccountCard({ userId, username, email, role }: UserCardP
           </div>
         )}
       </div>
-      {/* 계정 삭제 확인 모달 */}
       {showDeleteModal && (
         <Modal
           title="계정 삭제"

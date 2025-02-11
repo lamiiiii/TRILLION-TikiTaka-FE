@@ -9,7 +9,7 @@ interface ModalProps {
   onBackBtnClick: () => void;
   checkBtn?: string;
   onBtnClick?: () => void;
-  children?: React.ReactNode; // 드롭다운/텍스트
+  children?: React.ReactNode;
   blockOutsideClick?: boolean;
 }
 
@@ -19,7 +19,6 @@ export default function CategoryModal({title, content, backBtn, onBackBtnClick, 
   return (
     <Portal>
       <motion.div className="overlay" initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}}>
-        {/* <div className="absolute w-full h-full  flex-center"> */}
         <div ref={ref} className="w-full max-w-[400px] flex flex-col gap-6 bg-white p-6 rounded shadow-1 border border-gray-2">
           <div>
             <div className="flex flex-col items-center gap-4 py-6">
@@ -41,7 +40,6 @@ export default function CategoryModal({title, content, backBtn, onBackBtnClick, 
             )}
           </div>
         </div>
-        {/* </div> */}
       </motion.div>
     </Portal>
   );
