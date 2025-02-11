@@ -15,7 +15,6 @@ const instance: AxiosInstance = axios.create({
   withCredentials: true,
 });
 
-let isRefreshing = false;
 let refreshTokenPromise: Promise<string | null> | null = null;
 
 instance.interceptors.request.use((config) => {
