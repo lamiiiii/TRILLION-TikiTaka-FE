@@ -52,36 +52,6 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     setCurrentPage(1);
   }, [selectedFilter]);
 
-  const {data} = useQuery({
-    queryKey: ['tickets', selectedFilter ?? '', currentPage ?? 1, pageSize ?? 20, orderBy ?? '최신순'],
-    queryFn: async () => {
-      const statusParam = mapFilterToStatus(selectedFilter ?? '전체');
-
-      const ticketData = await getTicketList({
-        page: (currentPage ?? 1) - 1,
-        size: pageSize ?? 20,
-        status: statusParam,
-      });
-
-      let sortedTickets = [...ticketData.content];
-
-      sortedTickets.sort((a, b) => {
-        if (a.urgent && !b.urgent) return -1;
-        if (!a.urgent && b.urgent) return 1;
-
-        if (orderBy === '최신순') {
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-        } else if (orderBy === '마감기한순') {
-          return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
-        } else if (orderBy === '오래된순') {
-          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-        }
-        return 0;
-      });
-
-      return {...ticketData, content: sortedTickets};
-    },
-  });
 
   const {data: userData} = useQuery({
     queryKey: ['managers'],
@@ -89,7 +59,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     select: (data) => data.users,
   });
 
-  const {data: ticketData} = useQuery({
+  const {data: typeData} = useQuery({
     queryKey: ['types'],
     queryFn: getTicketTypes,
   });
@@ -106,6 +76,61 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
       return Promise.all(secondaryRequests);
     },
   });
+
+  const { data } = useQuery({
+    queryKey: [
+      "tickets",
+      selectedFilter ?? "",
+      currentPage ?? 1,
+      pageSize ?? 20,
+      orderBy ?? "최신순",
+      selectedFilters["담당자"],
+      selectedFilters["1차 카테고리"],
+      selectedFilters["2차 카테고리"],
+      selectedFilters["요청"],
+    ],
+    queryFn: async () => {
+      const statusParam = mapFilterToStatus(selectedFilter ?? "전체");
+  
+      // ✅ 선택된 필터에서 ID 값 찾기 (API 요청에 사용)
+      const managerId = userData?.find((user: any) => user.username === selectedFilters["담당자"])?.userId;
+      const firstCategoryId = categories?.find((cat: any) => cat.primary.name === selectedFilters["1차 카테고리"])?.primary.id;
+      const secondCategoryId = categories
+        ?.find((cat: any) => cat.primary.name === selectedFilters["1차 카테고리"])
+        ?.secondaries.find((sub: any) => sub.name === selectedFilters["2차 카테고리"])?.id;
+      const ticketTypeId = typeData?.find((type: any) => type.typeName === selectedFilters["요청"])?.typeId;
+  
+      // ✅ 필터링된 값들을 API 요청에 추가하여 서버에서 필터링된 데이터를 가져옴
+      const ticketData = await getTicketList({
+        page: (currentPage ?? 1) - 1,
+        size: pageSize ?? 20,
+        status: statusParam,
+        managerId, // ✅ 선택된 담당자 ID 추가
+        firstCategoryId, // ✅ 선택된 1차 카테고리 ID 추가
+        secondCategoryId, // ✅ 선택된 2차 카테고리 ID 추가
+        ticketTypeId, // ✅ 선택된 유형 ID 추가
+      });
+  
+      let sortedTickets = [...ticketData.content];
+  
+      sortedTickets.sort((a, b) => {
+        if (a.urgent && !b.urgent) return -1;
+        if (!a.urgent && b.urgent) return 1;
+  
+        if (orderBy === "최신순") {
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        } else if (orderBy === "마감기한순") {
+          return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
+        } else if (orderBy === "오래된순") {
+          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        }
+        return 0;
+      });
+  
+      return { ...ticketData, content: sortedTickets };
+    },
+  });
+  
 
   const dropdownData = [
     {
@@ -126,33 +151,34 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     },
     {
       label: "요청",
-      options: ticketData?.map((type: any) => typeMapping[type.typeName] || type.typeName), 
+      options: typeData?.map((type: any) => typeMapping[type.typeName] || type.typeName), 
     },
   ];
 
   useEffect(() => {
     if (!data?.content) return;
-
+  
     let filtered = [...data.content];
-
-    if (selectedFilters['담당자']) {
-      filtered = filtered.filter((ticket) => ticket.managerName === selectedFilters['담당자']);
+  
+    if (selectedFilters["담당자"]) {
+      filtered = filtered.filter((ticket) => ticket.managerName === selectedFilters["담당자"]);
     }
-
-    if (selectedFilters['1차 카테고리']) {
-      filtered = filtered.filter((ticket) => ticket.firstCategoryName === selectedFilters['1차 카테고리']);
+  
+    if (selectedFilters["1차 카테고리"]) {
+      filtered = filtered.filter((ticket) => ticket.firstCategoryName === selectedFilters["1차 카테고리"]);
     }
-
-    if (selectedFilters['2차 카테고리']) {
-      filtered = filtered.filter((ticket) => ticket.secondCategoryName === selectedFilters['2차 카테고리']);
+  
+    if (selectedFilters["2차 카테고리"]) {
+      filtered = filtered.filter((ticket) => ticket.secondCategoryName === selectedFilters["2차 카테고리"]);
     }
-
-    if (selectedFilters['요청']) {
-      filtered = filtered.filter((ticket) => ticket.typeName === selectedFilters['요청']);
+  
+    if (selectedFilters["요청"]) {
+      filtered = filtered.filter((ticket) => ticket.typeName === selectedFilters["요청"]);
     }
-
+  
     setFilteredTickets(filtered);
-  }, [selectedFilters, data?.content]);
+    setTotalPages(Math.ceil(filtered.length / pageSize)); // ✅ 필터링된 개수 기준으로 totalPages 업데이트
+  }, [selectedFilters, data?.content, pageSize]);
 
   useEffect(() => {
     if (data?.content) {
@@ -163,20 +189,22 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     }
   }, [data?.content, data?.totalPages]);
 
-  const selectedCount = ticketCounts
-    ? selectedFilter === '전체'
+  const selectedCount = Object.values(selectedFilters).some((filter) => filter)
+  ? data?.totalElements || 0  // ✅ API에서 필터링된 개수 가져오기
+  : ticketCounts
+    ? selectedFilter === "전체"
       ? ticketCounts.total
-      : selectedFilter === '대기중'
-        ? ticketCounts.pending
-        : selectedFilter === '진행중'
-          ? ticketCounts.inProgress
-          : selectedFilter === '검토 요청'
-            ? ticketCounts.reviewing
-            : selectedFilter === '완료'
-              ? ticketCounts.completed
-              : selectedFilter === '긴급'
-                ? ticketCounts.urgent
-                : 0
+      : selectedFilter === "대기중"
+      ? ticketCounts.pending
+      : selectedFilter === "진행중"
+      ? ticketCounts.inProgress
+      : selectedFilter === "검토 요청"
+      ? ticketCounts.reviewing
+      : selectedFilter === "완료"
+      ? ticketCounts.completed
+      : selectedFilter === "긴급"
+      ? ticketCounts.urgent
+      : 0
     : 0;
 
   const handlePageChange = (newPage: number) => {
