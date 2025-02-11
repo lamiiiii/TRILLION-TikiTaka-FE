@@ -97,6 +97,13 @@ export const useTemplateStore = create<TemplateStore>((set) => ({
   setContent: (content) => set({content: content}),
   setManager: (manager) => set({manager}),
   setTicketType: (ticketType) => set({ticketType}),
+
+  firstCategoryId: 0,
+  secondCategoryId: 0,
+  managerId: 0,
+  setFirstCategoryId: (firstCategoryId) => set({firstCategoryId: firstCategoryId}),
+  setSecondCategoryId: (secondCategoryId) => set({secondCategoryId: secondCategoryId}),
+  setManagerId: (managerId) => set({managerId: managerId}),
 }));
 
 export const useNewTicketFormStore = create<NewTicketFormStore>((set) => ({

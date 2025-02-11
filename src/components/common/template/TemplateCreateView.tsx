@@ -5,7 +5,7 @@ import TemplateContent from './TemplateContent';
 import TemplateOptions from './TemplateOptions';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import Modal from '../Modal';
-import {createTicketTemplate, updateTicketTemplate} from '../../../api/service/ticketTemplates';
+import {createTicketTemplate, getTicketTemplate, updateTicketTemplate} from '../../../api/service/ticketTemplates';
 
 interface TemplateCreateViewProps {
   onCancel: () => void;
@@ -28,7 +28,11 @@ export default function TemplateCreateView({onCancel, templateId}: TemplateCreat
     setSecondCategory,
     setManager,
     setTicketType,
+    setFirstCategoryId,
+    setSecondCategoryId,
+    setManagerId,
   } = useTemplateStore();
+  const [templates, setTemplates] = useState<TemplateListItem | null>(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
@@ -55,10 +59,30 @@ export default function TemplateCreateView({onCancel, templateId}: TemplateCreat
     }
   }, [templateTitle, title, content, firstCategory, secondCategory, ticketType, manager]);
 
+  useEffect(() => {
+    if (templateId) {
+      const fetchTemplate = async () => {
+        const template = await getTicketTemplate(templateId);
+        setTemplates(template);
+      };
+      fetchTemplate();
+    }
+  }, [templateId]);
+  useEffect(() => {
+    if (templates) {
+      setTemplateTitle(templates.templateTitle);
+      setTitle(templates.title);
+      setContent(templates.description);
+      setTicketType({typeId: templates.typeId, typeName: templates.typeName ?? ''});
+      setFirstCategoryId(Number(templates.firstCategoryId));
+      setSecondCategoryId(Number(templates.secondCategoryId));
+      setManagerId(Number(templates.managerId));
+    }
+  }, [templates]);
+
   const onClickBtn = () => {
     const missingFields = [];
     if (!templateTitle) missingFields.push('템플릿 제목');
-    if (!ticketType.typeId) missingFields.push('유형');
     if (!title) missingFields.push('요청 제목');
     if (!content) missingFields.push('요청 내용');
 
@@ -83,6 +107,8 @@ export default function TemplateCreateView({onCancel, templateId}: TemplateCreat
     },
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['templates']});
+      queryClient.invalidateQueries({queryKey: ['ticketTemplates']});
+
       setModalMessage(`템플릿이 저장되었습니다!`);
 
       setIsModalOpen(true);
@@ -100,7 +126,6 @@ export default function TemplateCreateView({onCancel, templateId}: TemplateCreat
         managerId: manager?.userId,
       };
 
-      console.log(templateParams);
       mutation.mutate(templateParams);
 
       // 템플릿 저장 후 초기화
@@ -112,9 +137,9 @@ export default function TemplateCreateView({onCancel, templateId}: TemplateCreat
       setTicketType({typeId: 0, typeName: ''});
       setManager(null);
       setIsModalOpen(false);
-      // onCancel();
+
+      onCancel();
     } catch (error) {
-      console.error('템플릿 저장 실패:', error);
       setModalMessage('템플릿 저장에 실패했습니다. 다시 시도해주세요.');
       setIsModalOpen(true);
     }
@@ -124,8 +149,7 @@ export default function TemplateCreateView({onCancel, templateId}: TemplateCreat
     <div className="flex flex-col p-4 gap-4">
       <div className="flex w-full justify-between">
         <div className="flex gap-2 text-title-bold text-black">
-          <PlusCircle />
-          템플릿 생성
+          {!templateId && <PlusCircle />} {templateId ? '템플릿 수정' : '템플릿 생성'}
         </div>
         <div className="flex text-black text-xs gap-2 cursor-pointer pr-4" onClick={onCancel}>
           이전으로
@@ -150,7 +174,7 @@ export default function TemplateCreateView({onCancel, templateId}: TemplateCreat
       </div>
       <div className="flex w-full justify-center">
         <button onClick={onClickBtn} className="btn mb-4">
-          템플릿 저장
+          {templateId ? '수정 완료' : '템플릿 저장'}
         </button>
       </div>
       {isModalOpen && (
