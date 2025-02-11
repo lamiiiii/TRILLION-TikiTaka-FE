@@ -27,7 +27,7 @@ const mapFilterToStatus = (filter: string): string | undefined => {
 
 const typeMapping: Record<string, string> = {CREATE: '생성', DELETE: '삭제', ETC: '기타', UPDATE: '수정'};
 
-const pageSizeOptions = ['20개씩', '30개씩', '50개씩'];
+const pageSizeOptions = ['20개씩', '50개씩', '100개씩'];
 interface TicketListProps {
   selectedFilter: string;
   ticketCounts: TicketStatusCount | null;
@@ -259,7 +259,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
           label="20개씩"
           options={pageSizeOptions}
           value={`${pageSize}개씩`}
-          onSelect={(value) => setPageSize(parseInt(value))}
+          onSelect={(value) => setPageSize(parseInt(value.replace('개씩', ''), 10))}
           paddingX="px-3"
           border={false}
           textColor=""
