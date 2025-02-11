@@ -80,7 +80,6 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     queryFn: async () => {
       const statusParam = mapFilterToStatus(selectedFilter ?? '전체');
 
-      // ✅ 선택된 필터에서 ID 값 찾기 (API 요청에 사용)
       const managerId = userData?.find((user: any) => user.username === selectedFilters['담당자'])?.userId;
       const firstCategoryId = categories?.find((cat: any) => cat.primary.name === selectedFilters['1차 카테고리'])?.primary.id;
       const secondCategoryId = categories
