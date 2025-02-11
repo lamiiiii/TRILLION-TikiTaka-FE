@@ -15,6 +15,8 @@ export default function TicketReview({managerId}: {managerId: number}) {
   const {data: reviewers = []} = useQuery({
     queryKey: ['ticketReviews', ticketId],
     queryFn: () => getTicketReviews(ticketId),
+    refetchInterval: 5000, // 5초마다 자동으로 refetch
+    staleTime: Infinity, // 데이터를 항상 fresh 상태로 유지
   });
 
   // 티켓 검토
