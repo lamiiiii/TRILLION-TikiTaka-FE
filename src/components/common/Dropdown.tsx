@@ -1,4 +1,5 @@
 import {useEffect, useRef, useState} from 'react';
+import { useOutsideClick } from '../../hooks/useOutsideClick';
 
 interface DropdownProps {
   label: string; // 드롭다운 버튼에 표시될 텍스트
@@ -28,6 +29,8 @@ export default function DropDown({
   const [maxWidth, setMaxWidth] = useState(0);
   const optionsRef = useRef<HTMLDivElement[]>([]); // 타입 명시
 
+  const dropdownRef = useOutsideClick(() => setIsOpen(false));
+
   const handleSelect = (value: string) => {
     setSelected(value);
     onSelect(value);
@@ -42,7 +45,7 @@ export default function DropDown({
   }, [isOpen]);
 
   return (
-    <div className="relative inline-block ">
+    <div className="relative inline-block " ref={dropdownRef}>
       {/* 드롭다운 버튼 */}
       <button
         className={`${border ? 'border border-gray-6' : 'border-none'} 
