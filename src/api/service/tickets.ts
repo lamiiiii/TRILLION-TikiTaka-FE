@@ -23,7 +23,7 @@ export async function getTicketForm(firstCategoryId: number, secondCategoryId: n
 }
 
 // INTF-23: 티켓 폼 수정
-export async function updateTicketForm( firstCategoryId: number, secondCategoryId: number, formData: UpdateTicketFormData) {
+export async function updateTicketForm(firstCategoryId: number, secondCategoryId: number, formData: UpdateTicketFormData) {
   try {
     const {data} = await instance.patch(`/tickets/forms/${firstCategoryId}/${secondCategoryId}`, formData);
     return data;
@@ -34,7 +34,7 @@ export async function updateTicketForm( firstCategoryId: number, secondCategoryI
 }
 
 // INTF-24: 티켓 폼 삭제
-export async function deleteTicketForm( firstCategoryId: number, secondCategoryId: number) {
+export async function deleteTicketForm(firstCategoryId: number, secondCategoryId: number) {
   try {
     const {data} = await instance.delete(`/tickets/forms/${firstCategoryId}/${secondCategoryId}`);
     return data;
@@ -64,19 +64,6 @@ export async function getTicketTypes() {
     return data.data;
   } catch (error) {
     console.error('티켓 유형 조회 실패:', error);
-    throw error;
-  }
-}
-
-// INTF-27: 티켓 유형 수정
-export async function updateTicketType(token: string, typeId: number, typeData: UpdateTicketTypeData) {
-  try {
-    const {data} = await instance.patch(`/tickets/types/${typeId}`, typeData, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
-    return data;
-  } catch (error) {
-    console.error('티켓 유형 수정 실패:', error);
     throw error;
   }
 }
@@ -164,7 +151,7 @@ export async function getTicketList(params: TicketListParams = {}) {
         ticketTypeId: params.ticketTypeId,
         managerId: params.managerId,
         requesterId: params.requesterId,
-        createdAt: params.createdAt
+        createdAt: params.createdAt,
       },
     });
     return data.data;
@@ -210,7 +197,7 @@ export async function updateTicketPriority(ticketId: number, priority: string) {
 // INTF-39: 티켓 담당자 수정
 export async function updateTicketManager(ticketId: number, managerId: number) {
   try {
-    const {data} = await instance.patch(`/tickets/manager/${ticketId}`, {managerId});
+    const {data} = await instance.patch(`/tickets/${ticketId}/manager`, {managerId});
     return data;
   } catch (error) {
     console.error('티켓 담당자 수정 실패:', error);
@@ -218,10 +205,32 @@ export async function updateTicketManager(ticketId: number, managerId: number) {
   }
 }
 
+// INTF-40: 티켓 카테고리 수정
+export async function updateTicketCategory(ticketId: number, params: UpdateTicketCategoryParams) {
+  try {
+    const {data} = await instance.patch(`/tickets/${ticketId}/category`, params);
+    return data;
+  } catch (error) {
+    console.error('티켓 카테고리 수정 실패:', error);
+    throw error;
+  }
+}
+
+// INTF-40: 티켓 유형내용 수정
+export async function updateTicketType(ticketId: number, params: UpdateTicketTypeParams) {
+  try {
+    const {data} = await instance.patch(`/tickets/${ticketId}/type`, params);
+    return data;
+  } catch (error) {
+    console.error('티켓 유형 수정 실패:', error);
+    throw error;
+  }
+}
+
 // INTF-40: 티켓 마감기한 수정
 export async function updateTicketDeadline(ticketId: number, deadline: string) {
   try {
-    const {data} = await instance.patch(`/tickets/deadline/${ticketId}`, {deadline});
+    const {data} = await instance.patch(`/tickets/${ticketId}/deadline`, {deadline});
     return data;
   } catch (error) {
     console.error('티켓 마감기한 수정 실패:', error);
@@ -241,11 +250,9 @@ export async function deleteTicket(ticketId: number) {
 }
 
 // INTF-42: 티켓 검토
-export async function reviewTicket(token: string, ticketId: number) {
+export async function reviewTicket(ticketId: number) {
   try {
-    const {data} = await instance.post(`/tickets/${ticketId}/reviews`, null, {
-      headers: {Authorization: `Bearer ${token}`},
-    });
+    const {data} = await instance.post(`/tickets/${ticketId}/reviews`);
     return data;
   } catch (error) {
     console.error('티켓 검토 실패:', error);
@@ -256,8 +263,7 @@ export async function reviewTicket(token: string, ticketId: number) {
 // INTF-43: 티켓 검토 내역 조회
 export async function getTicketReviews(ticketId: number) {
   try {
-    const {data} = await instance.get(`/tickets/${ticketId}/reviews`, {
-    });
+    const {data} = await instance.get(`/tickets/${ticketId}/reviews`, {});
     return data;
   } catch (error) {
     console.error('티켓 검토 내역 조회 실패:', error);
@@ -331,6 +337,17 @@ export async function rejectTicket(ticketId: number) {
     return data;
   } catch (error) {
     console.error('티켓 반려 실패:', error);
+    throw error;
+  }
+}
+
+// INTF-81: 티켓 긴급 상태 수정
+export async function updateTicketUrgent(ticketId: number, urgent: boolean): Promise<UpdateTicketUrgentResponse> {
+  try {
+    const {data} = await instance.patch<UpdateTicketUrgentResponse>(`/tickets/${ticketId}/urgent`, {urgent});
+    return data;
+  } catch (error) {
+    console.error('티켓 긴급 상태 수정 실패:', error);
     throw error;
   }
 }

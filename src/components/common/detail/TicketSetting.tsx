@@ -1,27 +1,39 @@
 import {useEffect, useState} from 'react';
 import DropDown from '../Dropdown';
 import {useTicketStore} from '../../../store/store';
-import {PRIMARY_CATEGORIES, PRIORITY, SECONDARY_CATEGORIES, TICKET_TYPES} from '../../../constants/constants';
+import {PRIORITY} from '../../../constants/constants';
 import {useParams} from 'react-router-dom';
-import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {updateTicketDeadline, updateTicketManager, updateTicketPriority} from '../../../api/service/tickets';
+import {useQuery} from '@tanstack/react-query';
+import {
+  getTicketTypes,
+  updateTicketCategory,
+  updateTicketDeadline,
+  updateTicketManager,
+  updateTicketPriority,
+  updateTicketType,
+} from '../../../api/service/tickets';
+import {getCategoryList} from '../../../api/service/categories';
+import {useCreateMutation} from '../../../api/hooks/useCreateMutation';
+import ManagerSelector from '../selector/ManagerSelector';
 
 interface TicketSettingProps {
   data: TicketDetails;
 }
 
 export default function TicketSetting({data}: TicketSettingProps) {
-  const [selectedAssignee, setSelectedAssignee] = useState(data.managerName);
+  const [selectedAssignee] = useState(data.managerName);
   const [primaryCategory, setPrimaryCategory] = useState(data.firstCategoryName);
   const [secondaryCategory, setSecondaryCategory] = useState(data.secondCategoryName);
   const [ticketType, setTicketType] = useState(data.typeName);
   const [deadlineDate, setDeadlineDate] = useState('');
   const [deadlineTime, setDeadlineTime] = useState('');
+  const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
+
+  const [primaryCategoryId, setPrimaryCategoryId] = useState(data.firstCategoryId);
+  const [_secondaryCategoryId, setSecondaryCategoryId] = useState(data.secondCategoryId);
 
   const {id} = useParams();
   const ticketId = Number(id);
-
-  const queryClient = useQueryClient();
 
   const priority = useTicketStore((state) => state.priority);
   const setPriority = useTicketStore((state) => state.setPriority);
@@ -35,67 +47,103 @@ export default function TicketSetting({data}: TicketSettingProps) {
     }
   }, [data.deadline]);
 
-  // 우선순위 업데이트
-  const updatePriorityMutation = useMutation({
-    mutationFn: (newPriority: string) => updateTicketPriority(ticketId, newPriority),
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
-      setPriority(data.priority);
-    },
-    onError: () => {
-      alert('티켓 우선순위 변경에 실패했습니다. 다시 시도해 주세요.');
+  const updatePriorityMutation = useCreateMutation(
+    (newPriority: string) => updateTicketPriority(ticketId, newPriority),
+    '티켓 우선순위 변경에 실패했습니다. 다시 시도해 주세요.',
+    ticketId
+  );
+
+  const updateManagerMutation = useCreateMutation(
+    (managerId: number) => updateTicketManager(ticketId, managerId),
+    '티켓 담당자 변경에 실패했습니다. 다시 시도해 주세요.',
+    ticketId
+  );
+
+  const updateDeadlineMutation = useCreateMutation(
+    (deadline: string) => updateTicketDeadline(ticketId, deadline),
+    '티켓 마감기한 변경에 실패했습니다. 다시 시도해 주세요.',
+    ticketId
+  );
+
+  const updateCategoryMutation = useCreateMutation<UpdateTicketCategoryParams>(
+    (categoryIds: UpdateTicketCategoryParams) => updateTicketCategory(ticketId, categoryIds),
+    '카테고리 변경에 실패했습니다. 다시 시도해 주세요.',
+    ticketId
+  );
+
+  const updateTypeMutation = useCreateMutation<UpdateTicketTypeParams>(
+    (params: UpdateTicketTypeParams) => updateTicketType(ticketId, params),
+    '티켓 유형 변경에 실패했습니다. 다시 시도해 주세요.',
+    ticketId
+  );
+
+  // 티켓 타입 데이터 조회
+  const {data: ticketData} = useQuery({
+    queryKey: ['types'],
+    queryFn: getTicketTypes,
+  });
+
+  // 카테고리 데이터 조회
+  const {data: categories = []} = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const primaryCategories = await getCategoryList();
+      const secondaryRequests = primaryCategories.map(async (primary) => {
+        const secondaries = await getCategoryList(primary.id);
+        return {primary, secondaries};
+      });
+
+      return Promise.all(secondaryRequests);
     },
   });
 
-  // 담당자 업데이트
-  const updateManagerMutation = useMutation({
-    mutationFn: (managerId: number) => updateTicketManager(ticketId, managerId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
-    },
-    onError: () => {
-      alert('티켓 담당자 변경에 실패했습니다. 다시 시도해 주세요.');
-    },
-  });
-
-  const updateDeadlineMutation = useMutation({
-    mutationFn: (deadline: string) => updateTicketDeadline(ticketId, deadline),
-    onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
-    },
-    onError: () => {
-      alert('티켓 마감기한 변경에 실패했습니다. 다시 시도해 주세요.');
-    },
-  });
-
-  const handlePrioritySelect = (selectedOption: string) => {
-    updatePriorityMutation.mutate(selectedOption);
+  const handleSelect = (setter: (value: any) => void, mutation?: any) => (selectedOption: string) => {
+    setter(selectedOption);
+    if (mutation) {
+      mutation.mutate(selectedOption);
+    }
   };
-
-  const handleAssigneeSelect = (selectedOption: string) => {
-    setSelectedAssignee(selectedOption);
-    // FIX: 사용자 정보에서 매니저 정보 연결 필요
-    const managerId = 1;
+  const handleManagerSelect = (managerId: number) => {
     updateManagerMutation.mutate(managerId);
   };
 
+  const handlePrioritySelect = handleSelect(setPriority, updatePriorityMutation);
   const handleDeadlineChange = () => {
     const newDeadline = `${deadlineDate} ${deadlineTime}`;
     updateDeadlineMutation.mutate(newDeadline);
   };
 
   const handlePrimaryCategorySelect = (selectedOption: string) => {
-    setPrimaryCategory(selectedOption);
+    const selectedCategory = categories.find((cat: any) => cat.primary.name === selectedOption);
+    if (selectedCategory) {
+      setPrimaryCategory(selectedOption);
+      const newPrimaryCategoryId = selectedCategory.primary.id;
+      setPrimaryCategoryId(newPrimaryCategoryId);
+      setSelectedFilters((prev) => ({...prev, '1차 카테고리': selectedOption}));
+
+      // 2차 카테고리 초기화
+      setSecondaryCategory('');
+      setSecondaryCategoryId(0); // 또는 적절한 초기값
+      alert('2차 카테고리를 변경해 주세요.');
+    }
   };
 
   const handleSecondaryCategorySelect = (selectedOption: string) => {
-    setSecondaryCategory(selectedOption);
+    const selectedCategory = categories
+      .find((cat: any) => cat.primary.name === selectedFilters['1차 카테고리'])
+      ?.secondaries.find((secondary: any) => secondary.name === selectedOption);
+    if (selectedCategory) {
+      setSecondaryCategory(selectedOption);
+      const newSecondaryCategoryId = selectedCategory.id;
+      setSecondaryCategoryId(newSecondaryCategoryId);
+      updateCategoryMutation.mutate({firstCategoryId: primaryCategoryId, secondCategoryId: newSecondaryCategoryId});
+    }
   };
 
   const handleTicketTypeSelect = (selectedOption: string) => {
+    updateTypeMutation.mutate({type: selectedOption});
     setTicketType(selectedOption);
   };
-
   return (
     <div className="flex flex-col gap-1">
       <label className="text-body-bold">티켓 설정</label>
@@ -111,15 +159,8 @@ export default function TicketSetting({data}: TicketSettingProps) {
           </div>
 
           <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2">
-              <DropDown
-                label="담당자"
-                value={selectedAssignee}
-                options={['Jojo', 'Alex', 'Yeon']}
-                defaultSelected={selectedAssignee}
-                onSelect={handleAssigneeSelect}
-                border={false}
-              />
+            <div className="flex items-center gap-2 px-4">
+              <ManagerSelector selectedManagerName={selectedAssignee} onManagerSelect={handleManagerSelect} />
             </div>
             <div className="flex itmes-center ml-3">
               <input
@@ -144,20 +185,31 @@ export default function TicketSetting({data}: TicketSettingProps) {
             )}
             <DropDown
               label="1차 카테고리"
-              options={PRIMARY_CATEGORIES}
+              options={categories?.map((cat: any) => cat.primary.name)}
               value={primaryCategory}
               onSelect={handlePrimaryCategorySelect}
               border={false}
             />
             <DropDown
               label="2차 카테고리"
-              options={primaryCategory ? SECONDARY_CATEGORIES[primaryCategory as keyof typeof SECONDARY_CATEGORIES] : []}
+              options={
+                selectedFilters['1차 카테고리']
+                  ? (categories
+                      .find((cat: any) => cat.primary.name === selectedFilters['1차 카테고리'])
+                      ?.secondaries?.map((secondary: any) => secondary.name) ?? [])
+                  : []
+              }
               value={secondaryCategory}
               onSelect={handleSecondaryCategorySelect}
               border={false}
-              disabled={!primaryCategory}
             />
-            <DropDown label="타입" options={TICKET_TYPES} value={ticketType} onSelect={handleTicketTypeSelect} border={false} />
+            <DropDown
+              label="타입"
+              options={ticketData?.map((type: any) => type.typeName)}
+              value={ticketType}
+              onSelect={handleTicketTypeSelect}
+              border={false}
+            />
           </div>
         </div>
       </div>

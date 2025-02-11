@@ -4,10 +4,10 @@ import {useTicketStore, useUserStore} from '../../../store/store';
 import {useEffect, useState} from 'react';
 import {WhiteCheckIcon} from '../Icon';
 import {useParams} from 'react-router-dom';
-import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {approveTicket, rejectTicket, updateTicket, updateTicketStatus} from '../../../api/service/tickets';
+import {approveTicket, rejectTicket, updateTicketStatus, updateTicketUrgent} from '../../../api/service/tickets';
 import useReverseMap from '../../../hooks/useReverseMap';
 import {useUpdateTicketPriority} from '../../../api/hooks/useUpdateTicketPriority';
+import {QUERY_KEY, useCreateMutation} from '../../../api/hooks/useCreateMutation';
 
 interface StatusBarProps {
   data: TicketDetails;
@@ -29,49 +29,28 @@ export default function StatusBar({data, status}: StatusBarProps) {
   const {id} = useParams();
   const ticketId = Number(id);
 
-  const queryClient = useQueryClient();
-
   useEffect(() => {
     if (data?.priority) {
       setPriority(data.priority);
     }
   }, [data?.priority, setPriority]);
 
-  // 티켓 긴급 여부 수정
-  const updateUrgentMutation = useMutation({
-    mutationFn: (urgent: boolean) =>
-      updateTicket(ticketId, {
-        title: data?.title || '',
-        description: data?.description || '',
-        urgent: urgent,
-        typeId: data?.typeId,
-        primaryCategoryId: data?.firstCategoryId,
-        secondaryCategoryId: data?.secondCategoryId,
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
-    },
-    onError: () => {
-      alert('티켓 긴급 여부 변경에 실패했습니다. 다시 시도해 주세요.');
-      setIsUrgent(!isUrgent); // 실패 시 상태를 원래대로 되돌림
-    },
-  });
+  const updateUrgentMutation = useCreateMutation(
+    () => updateTicketUrgent(ticketId, isUrgent),
+    '티켓 긴급 여부 변경에 실패했습니다. 다시 시도해 주세요.',
+    ticketId
+  );
 
   //티켓 상태 수정
-  const updateStatusMutation = useMutation({
-    mutationFn: (newStatus: string) => {
-      // 한글 상태를 영문 키로 변환
+  const updateStatusMutation = useCreateMutation<string>(
+    (newStatus) => {
       const statusKey = REVERSE_STATUS_MAP[newStatus] as keyof typeof STATUS_MAP;
       return updateTicketStatus(ticketId, statusKey);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['ticket', ticketId]});
-      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
-    },
-    onError: () => {
-      alert('티켓 상태 변경에 실패했습니다. 다시 시도해 주세요.');
-    },
-  });
+    '티켓 상태 변경에 실패했습니다. 다시 시도해 주세요.',
+    ticketId,
+    [[QUERY_KEY.TICKET_DETAILS, QUERY_KEY.TICKET, String(ticketId)]]
+  );
 
   //티켓 우선순위 수정
   const updatePriorityMutation = useUpdateTicketPriority(ticketId, {
@@ -81,30 +60,14 @@ export default function StatusBar({data, status}: StatusBarProps) {
   });
 
   // 티켓 승인
-  const approveMutation = useMutation({
-    mutationFn: () => approveTicket(ticketId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['ticket', ticketId]});
-      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
-      setCurrentStatus('승인');
-    },
-    onError: () => {
-      alert('티켓 승인에 실패했습니다. 다시 시도해 주세요.');
-    },
-  });
+  const approveMutation = useCreateMutation(() => approveTicket(ticketId), '티켓 승인에 실패했습니다. 다시 시도해 주세요.', ticketId, [
+    [QUERY_KEY.TICKET_DETAILS, String(ticketId)],
+  ]);
 
   // 티켓 반려
-  const rejectMutation = useMutation({
-    mutationFn: () => rejectTicket(ticketId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['ticket', ticketId]});
-      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
-      setCurrentStatus('반려');
-    },
-    onError: () => {
-      alert('티켓 반려에 실패했습니다. 다시 시도해 주세요.');
-    },
-  });
+  const rejectMutation = useCreateMutation(() => rejectTicket(ticketId), '티켓 반려에 실패했습니다. 다시 시도해 주세요.', ticketId, [
+    [QUERY_KEY.TICKET_DETAILS, String(ticketId)],
+  ]);
 
   useEffect(() => {
     if (status) {
@@ -130,12 +93,16 @@ export default function StatusBar({data, status}: StatusBarProps) {
 
   const handleApprove = () => {
     if (isUser) return;
-    approveMutation.mutate();
+    approveMutation.mutate(undefined, {
+      onSuccess: () => setCurrentStatus('승인'),
+    });
   };
 
   const handleReject = () => {
     if (isUser) return;
-    rejectMutation.mutate();
+    rejectMutation.mutate(undefined, {
+      onSuccess: () => setCurrentStatus('반려'),
+    });
   };
 
   // 반려 상태가 아닐 때만 '반려'를 제외한 상태 옵션 표시
