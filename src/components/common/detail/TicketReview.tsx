@@ -55,17 +55,21 @@ export default function TicketReview({managerId}: {managerId: number}) {
             </li>
           )}
           <label className="text-body-bold">검토 내역</label>
-          {reviewers?.data?.map((reviewer: any, index: number) => (
-            <li key={index} className="flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <Profile name={reviewer.reviewerName} backgroundColor="MANAGER" size="md" />
-                <div className="flex flex-col ml-2">
-                  <span>{reviewer.reviewerName}</span>
-                  {reviewer.reviewed && <span className="text-caption-regular">{reviewer.reviewDate} 검토 완료</span>}
+          {reviewers?.data && reviewers.data.length > 0 ? (
+            reviewers.data.map((reviewer: any, index: number) => (
+              <li key={index} className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  {/*<Profile name={reviewer.reviewerName} backgroundColor="MANAGER" size="md" /> 프로필 컴포넌트 제거*/}
+                  <div className="flex flex-col ml-2">
+                    <span>{reviewer.reviewerName}</span>
+                    {reviewer.reviewed && <span className="text-caption-regular">{reviewer.reviewDate} 검토 완료</span>}
+                  </div>
                 </div>
-              </div>
-            </li>
-          ))}
+              </li>
+            ))
+          ) : (
+            <div className="text-gray-500 text-center py-4">검토 내역이 없습니다.</div>
+          )}
         </ul>
       </div>
     </div>
