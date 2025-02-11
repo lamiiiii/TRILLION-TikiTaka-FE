@@ -4,10 +4,11 @@ import {useTicketStore, useUserStore} from '../../../store/store';
 import {useEffect, useState} from 'react';
 import {WhiteCheckIcon} from '../Icon';
 import {useParams} from 'react-router-dom';
-import {approveTicket, rejectTicket, updateTicketStatus, updateTicketUrgent} from '../../../api/service/tickets';
+import {approveTicket, rejectTicket, updateTicketManager, updateTicketStatus, updateTicketUrgent} from '../../../api/service/tickets';
 import useReverseMap from '../../../hooks/useReverseMap';
 import {useUpdateTicketPriority} from '../../../api/hooks/useUpdateTicketPriority';
 import {QUERY_KEY, useCreateMutation} from '../../../api/hooks/useCreateMutation';
+import Modal from '../Modal';
 
 interface StatusBarProps {
   data: TicketDetails;
@@ -19,8 +20,9 @@ export default function StatusBar({data, status}: StatusBarProps) {
   const [currentStatus, setCurrentStatus] = useState<string>(status ? STATUS_MAP[status] : '대기 중');
   const {priority, setPriority} = useTicketStore();
   const [isUrgent, setIsUrgent] = useState(data?.urgent);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const {role} = useUserStore();
+  const {role, userId, userName} = useUserStore();
   const isUser = role === 'USER';
 
   const isApproved = ['IN_PROGRESS', 'REVIEW', 'DONE'].includes(status || '');
@@ -38,6 +40,12 @@ export default function StatusBar({data, status}: StatusBarProps) {
   const updateUrgentMutation = useCreateMutation(
     () => updateTicketUrgent(ticketId, isUrgent),
     '티켓 긴급 여부 변경에 실패했습니다. 다시 시도해 주세요.',
+    ticketId
+  );
+
+  const updateManagerMutation = useCreateMutation(
+    (managerId: number) => updateTicketManager(ticketId, managerId),
+    '티켓 담당자 변경에 실패했습니다. 다시 시도해 주세요.',
     ticketId
   );
 
@@ -88,7 +96,15 @@ export default function StatusBar({data, status}: StatusBarProps) {
 
   const handleStatusClick = (option: string) => {
     if (isUser) return;
-    updateStatusMutation.mutate(option);
+    if (option === '진행 중' && data.managerId !== userId) {
+      setIsModalOpen(true);
+    } else {
+      updateStatusMutation.mutate(option, {
+        onSuccess: () => {
+          setCurrentStatus(option);
+        },
+      });
+    }
   };
 
   const handleApprove = () => {
@@ -103,6 +119,15 @@ export default function StatusBar({data, status}: StatusBarProps) {
     rejectMutation.mutate(undefined, {
       onSuccess: () => setCurrentStatus('반려'),
     });
+  };
+
+  const handleSubmit = () => {
+    updateManagerMutation
+      .mutateAsync(userId)
+      .then(() => updateStatusMutation.mutateAsync('진행 중'))
+      .then(() => {
+        setIsModalOpen(false);
+      });
   };
 
   // 반려 상태가 아닐 때만 '반려'를 제외한 상태 옵션 표시
@@ -168,6 +193,17 @@ export default function StatusBar({data, status}: StatusBarProps) {
           반려
         </button>
       </section>
+
+      {isModalOpen && (
+        <Modal
+          title="담당자 변경"
+          content={`진행중으로 상태 변경시 담당자가 ${userName} 본인으로 변경됩니다.`}
+          backBtn="취소"
+          onBackBtnClick={() => setIsModalOpen(false)}
+          checkBtn="확인"
+          onBtnClick={handleSubmit}
+        />
+      )}
     </div>
   );
 }
