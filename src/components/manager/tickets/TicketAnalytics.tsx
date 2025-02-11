@@ -30,7 +30,7 @@ export default function TicketAnalytics() {
           <section>
             <p className="pl-2 text-caption-regular text-gray-14">단위: 건</p>
             <BarChart width={240} height={120} data={chartData}>
-              <XAxis dataKey="name" tick={{fontSize: 14}} axisLine={false} tickLine={false} />
+              <XAxis dataKey="name" tick={{fontSize: 12}} axisLine={false} tickLine={false} />
               <Bar dataKey="ticket" fill="#F6D47A" radius={100}>
                 <LabelList dataKey="ticket" position="center" fill="#FFFFFF" height={40} fontSize={10} />
               </Bar>
