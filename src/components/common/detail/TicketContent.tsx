@@ -39,8 +39,8 @@ export default function TicketContent({data}: TicketContentProps) {
   });
 
   const handleDelete = () => {
-    if (data.status === 'PENDING') {
-      alert('티켓 대기중 상태에서는 티켓 삭제가 불가능합니다.');
+    if (data.status !== 'PENDING') {
+      alert('티켓이 대기중 상태일 경우만 티켓 삭제가 가능합니다.');
     } else {
       setShowDeleteModal(true);
     }
