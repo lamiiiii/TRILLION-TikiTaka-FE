@@ -58,7 +58,6 @@ export default function TemplateCreateView({onCancel, templateId}: TemplateCreat
   const onClickBtn = () => {
     const missingFields = [];
     if (!templateTitle) missingFields.push('템플릿 제목');
-    if (!ticketType.typeId) missingFields.push('유형');
     if (!title) missingFields.push('요청 제목');
     if (!content) missingFields.push('요청 내용');
 

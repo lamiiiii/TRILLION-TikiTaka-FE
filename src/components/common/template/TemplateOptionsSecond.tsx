@@ -1,7 +1,6 @@
 import {useQuery} from '@tanstack/react-query';
 import {useTemplateStore} from '../../../store/store';
 import DropDown from '../Dropdown';
-import {RequiredIcon} from '../Icon';
 import {getTicketTypes} from '../../../api/service/tickets';
 import {useEffect, useState} from 'react';
 import { getManagerList } from '../../../api/service/users';
@@ -52,11 +51,11 @@ export default function TemplateOptionsSecond() {
               setManager(selectedUser);
             }
           }}
-        />{' '}
+        />
       </div>
       <div className="selection-2">
-        <div className="flex items-center gap-1 w-12">
-          유형 <RequiredIcon />
+        <div className="w-12">
+          유형
         </div>
         <DropDown
           label="유형"

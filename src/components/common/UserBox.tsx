@@ -1,11 +1,12 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useUserStore} from '../../store/store';
-import {getUserInfo} from '../../api/service/users';
+import {getUserInfo, patchUserProfileImage} from '../../api/service/users';
 import {CameraIcon} from './Icon';
 
 export default function UserBox() {
   const {userId, setUserId, setRole, setUserName} = useUserStore();
   const [userInfo, setUserInfo] = useState<UserDetailResponse | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -22,25 +23,24 @@ export default function UserBox() {
     fetchUserInfo();
   }, [userId]);
 
-  // const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (!event.target.files || event.target.files.length === 0) return;
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files || event.target.files.length === 0) return;
 
-  //   const file = event.target.files[0];
+    const file = event.target.files[0];
 
-  //   try {
-  //     // 1️⃣ 파일 업로드 API 호출
-  //     const uploadResponse = await uploadFile(file, userId);
-  //     if (!uploadResponse?.fileUrl) throw new Error('File upload failed');
+    try {
+      const uploadResponse = await patchUserProfileImage(userId, file);
+      if (!uploadResponse) throw new Error('File upload failed');
 
-  //     // 2️⃣ 업로드된 URL을 프로필 이미지로 저장
-  //     await updateUserProfile(userId, uploadResponse.fileUrl);
+      setUserInfo((prev) => prev && {...prev, profileImageUrl: uploadResponse.fileUrl});
+    } catch (error) {
+      console.error('이미지 업로드 실패:', error);
+    }
+  };
 
-  //     // 3️⃣ UI 업데이트
-  //     setUserInfo((prev) => prev && { ...prev, profileImageUrl: uploadResponse.fileUrl });
-  //   } catch (error) {
-  //     console.error('이미지 업로드 실패:', error);
-  //   }
-  // };
+  const handleCameraClick = () => {
+    fileInputRef.current?.click();
+  };
 
   if (!userInfo) return;
 
@@ -52,12 +52,13 @@ export default function UserBox() {
         ) : (
           <img src="/assets/profile.png" alt="Profile" className="w-full h-full rounded-full" />
         )}
-        <div className="absolute bottom-0 right-0">
+        <div className="absolute bottom-0 right-0 cursor-pointer" onClick={handleCameraClick}>
           <CameraIcon />
         </div>
       </div>
       <div className="text-main text-subtitle">{userInfo.username}</div>
       <div className="text-gray-6 text-xs">{userInfo.email}</div>
+      <input ref={fileInputRef} type="file" accept="image/png, image/jpeg" style={{display: 'none'}} onChange={handleImageUpload} />
     </div>
   );
 }
