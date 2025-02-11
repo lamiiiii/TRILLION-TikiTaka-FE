@@ -32,7 +32,7 @@ function App() {
     {path: 'tickets', element: <ManagerManageTickets />},
 
     {path: 'newticket', element: <ManagerNewTicket />},
-    {path: 'newtickets', element: <ManagerTickets />}, // todo 담당자 요청 티켓 대시보드
+    {path: 'newtickets', element: <ManagerTickets />},
 
     {path: 'histories', element: <ManagerHistories />},
     {path: 'detail/:id', element: <ManagerTicketDetail />},

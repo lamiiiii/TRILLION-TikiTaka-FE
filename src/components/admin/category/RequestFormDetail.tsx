@@ -1,10 +1,11 @@
 import {motion, AnimatePresence} from 'framer-motion';
 import {useState} from 'react';
 import {RightArrowIcon} from '../../common/Icon';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteTicketForm, updateTicketForm } from '../../../api/service/tickets';
-import { toast } from 'react-toastify';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {deleteTicketForm, updateTicketForm} from '../../../api/service/tickets';
+import {toast} from 'react-toastify';
 import Modal from '../../common/Modal';
+import DOMPurify from 'dompurify';
 
 interface RequestFormDetailProps {
   mustDescription: string;
@@ -15,7 +16,14 @@ interface RequestFormDetailProps {
   name:string;
 }
 
-export default function RequestFormDetail({firstCategoryId, secondCategoryId,mustDescription, description, onClose, name}: RequestFormDetailProps) {
+export default function RequestFormDetail({
+  firstCategoryId,
+  secondCategoryId,
+  mustDescription,
+  description,
+  onClose,
+  name,
+}: RequestFormDetailProps) {
   const queryClient = useQueryClient();
   const [isClosing, setIsClosing] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -30,46 +38,45 @@ export default function RequestFormDetail({firstCategoryId, secondCategoryId,mus
         description: newDescription,
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["ticketForms"] });
-      toast.success("티켓 양식이 수정되었습니다.");
+      queryClient.invalidateQueries({queryKey: ['ticketForms']});
+      toast.success('티켓 양식이 수정되었습니다.');
       setIsEditing(false);
     },
     onError: () => {
-      toast.error("티켓 양식 수정에 실패했습니다.");
+      toast.error('티켓 양식 수정에 실패했습니다.');
     },
   });
 
   const deleteMutation = useMutation({
     mutationFn: () => deleteTicketForm(firstCategoryId, secondCategoryId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["ticketForms"] });
-      toast.success("티켓 양식이 삭제되었습니다.");
+      queryClient.invalidateQueries({queryKey: ['ticketForms']});
+      toast.success('티켓 양식이 삭제되었습니다.');
       setShowDeleteModal(false);
       setTimeout(() => {
         window.location.reload(); 
       }, 500);
-      
     },
     onError: () => {
-      toast.error("티켓 양식 삭제에 실패했습니다.");
+      toast.error('티켓 양식 삭제에 실패했습니다.');
     },
   });
 
   const handleClose = () => {
-    setIsClosing(true); 
+    setIsClosing(true);
     setTimeout(() => {
-      onClose(); 
-    }, 300); 
+      onClose();
+    }, 300);
   };
 
   return (
     <AnimatePresence>
       {!isClosing && (
         <motion.div
-          initial={{x: '100%'}} 
-          animate={{x: 0}} 
-          exit={{x: '100%'}} 
-          transition={{duration: 0.3, ease: 'easeInOut'}} 
+          initial={{x: '100%'}}
+          animate={{x: 0}}
+          exit={{x: '100%'}}
+          transition={{duration: 0.3, ease: 'easeInOut'}}
           className="fixed top-0 right-0 w-[820px] h-full bg-white shadow-lg z-50 p-6 flex flex-col"
         >
           <button className="text-gray-600 text-lg mb-4 flex justify-start" onClick={handleClose}>
@@ -79,17 +86,11 @@ export default function RequestFormDetail({firstCategoryId, secondCategoryId,mus
             <div className="text-title-bold text-gray-800 ">{name}</div>
             <div className="flex justify-start gap-4">
               {!isEditing ? (
-                <button
-                  className="px-6 py-1 bg-main text-white text-body-bold rounded"
-                  onClick={() => setIsEditing(true)}
-                >
+                <button className="px-6 py-1 bg-main text-white text-body-bold rounded" onClick={() => setIsEditing(true)}>
                   요청양식 수정
                 </button>
               ) : (
-                <button
-                  className="px-6 py-1 bg-gray-8 text-white text-body-bold rounded"
-                  onClick={() => setIsEditing(false)}
-                >
+                <button className="px-6 py-1 bg-gray-8 text-white text-body-bold rounded" onClick={() => setIsEditing(false)}>
                   취소
                 </button>
               )}
@@ -108,7 +109,7 @@ export default function RequestFormDetail({firstCategoryId, secondCategoryId,mus
                 <textarea
                   className="w-full px-3 py-2 border border-gray-300 rounded mt-1 text-body-regular resize-none"
                   value={newMustDescription}
-                  onChange={(e) => setNewMustDescription(e.target.value)}
+                  onChange={(e) => setNewMustDescription(DOMPurify.sanitize(e.target.value))}
                 />
               </div>
               <div className="mt-6">
@@ -116,14 +117,11 @@ export default function RequestFormDetail({firstCategoryId, secondCategoryId,mus
                 <textarea
                   className="w-full h-[280px] px-3 py-2 border border-gray-300 rounded mt-1 text-body-regular resize-none"
                   value={newDescription}
-                  onChange={(e) => setNewDescription(e.target.value)}
+                  onChange={(e) => setNewDescription(DOMPurify.sanitize(e.target.value))}
                 />
               </div>
               <div className="mt-6 flex justify-center">
-                <button
-                  className="px-5 py-1 main-btn bg-main text-white text-body-bold rounded"
-                  onClick={() => editMutation.mutate()}
-                >
+                <button className="px-5 py-1 main-btn bg-main text-white text-body-bold rounded" onClick={() => editMutation.mutate()}>
                   요청 양식 수정
                 </button>
               </div>

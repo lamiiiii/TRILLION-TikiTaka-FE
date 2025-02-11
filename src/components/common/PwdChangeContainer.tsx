@@ -4,6 +4,7 @@ import {useState} from 'react';
 import {validatePwd} from '../../utils/Validation';
 import Modal from './Modal';
 import {patchUserPassword} from '../../api/service/users';
+import {ValidateIcon} from './Icon';
 
 export default function PwdChangeContainer() {
   const {role, userId} = useUserStore();
@@ -121,7 +122,10 @@ export default function PwdChangeContainer() {
               className={`py-3 px-4 text-subtitle-regular w-full border rounded-md focus:outline-none 
                 ${pwdError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
             />
-            <div className={`flex relative text-error text-xs mt-1 ${pwdError ? '' : 'hidden'}`}>{pwdError}</div>
+            <div className={`flex relative text-error text-xs mt-1 items-center gap-1 ${pwdError ? '' : 'hidden'}`}>
+              <ValidateIcon />
+              {pwdError}
+            </div>
           </div>
           {/* 새 비밀번호 */}
           <div className="newPwd">
@@ -136,7 +140,10 @@ export default function PwdChangeContainer() {
               className={`py-3 px-4 text-subtitle-regular w-full border rounded-md focus:outline-none 
                 ${newPwdError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
             />
-            <div className={`flex relative text-error text-xs mt-1 ${newPwdError ? '' : 'hidden'}`}>{newPwdError}</div>
+            <div className={`flex relative text-error text-xs mt-1 items-center gap-1 ${newPwdError ? '' : 'hidden'}`}>
+              <ValidateIcon />
+              {newPwdError}
+            </div>
           </div>
           {/* 새 비밀번호 확인*/}
           <div className="newPwdCheck">
@@ -151,7 +158,10 @@ export default function PwdChangeContainer() {
               className={`py-3 px-4 text-subtitle-regular w-full border rounded-md focus:outline-none 
                 ${newPwdCheckError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
             />
-            <div className={`flex relative text-error text-xs mt-1 ${newPwdCheckError ? '' : 'hidden'}`}>{newPwdCheckError}</div>
+            <div className={`flex relative text-error text-xs mt-1 items-center gap-1 ${newPwdCheckError ? '' : 'hidden'}`}>
+              <ValidateIcon />
+              {newPwdCheckError}
+            </div>
           </div>
         </div>
         {/* 버튼 */}
