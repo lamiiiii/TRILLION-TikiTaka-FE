@@ -5,6 +5,7 @@ import DropDown from '../../common/Dropdown';
 import Ticket from '../../common/ticket/Ticket';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
 import {getTicketList} from '../../../api/service/tickets';
+import {useUserStore} from '../../../store/store';
 
 const dropdownData: {label: string; options: string[]}[] = [
   {label: '담당자', options: ['곽서연', '김규리', '김낙도']},
@@ -41,6 +42,7 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const listRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
+  const {userId} = useUserStore();
 
   const apiStatus = useMemo(() => {
     if (selectedFilter === '전체') return undefined;
@@ -55,6 +57,7 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
         page: currentPage - 1,
         size: ticketsPerPage,
         status: apiStatus,
+        requesterId: userId,
       }),
   });
   const filteredTickets = useMemo(() => {
@@ -97,6 +100,7 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
             page: nextPage - 1,
             size: ticketsPerPage,
             status: apiStatus,
+            requesterId: userId,
           }),
       });
     }
