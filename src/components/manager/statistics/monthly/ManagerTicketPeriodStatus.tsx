@@ -7,6 +7,7 @@ interface ManagerData {
   userId: number;
   userName: string;
   userEmail: string;
+  userProfile: string;
   totalManagingCreatedTicket: number;
 }
 
@@ -54,7 +55,12 @@ export default function ManagerTicketPeriodStatus() {
                 {managerData &&
                   managerData.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage).map((manager) => (
                     <div key={manager.userId} className="w-1/3 px-1">
-                      <ManagerItem name={manager.userName} email={manager.userEmail} totalTickets={manager?.totalManagingCreatedTicket} />
+                      <ManagerItem
+                        profile={manager.userProfile}
+                        name={manager.userName}
+                        email={manager.userEmail}
+                        totalTickets={manager?.totalManagingCreatedTicket}
+                      />
                     </div>
                   ))}
               </div>

@@ -22,19 +22,19 @@ export default function TicketDetail({data}: TicketDetailProps) {
 
           <div className="flex flex-col gap-[7px]">
             <div className="flex items-center gap-2">
-              <Profile name={data?.managerName} backgroundColor="MANAGER" size="md" />
+              {data?.managerName && <Profile name={data?.managerName} backgroundColor="MANAGER" size="md" />}
               <span>{data?.managerName}</span>
             </div>
             <div className="flex items-center gap-2">
               <Profile name={data?.requesterName} backgroundColor="USER" size="md" />
               <span>{data?.requesterName}</span>
             </div>
-            <p>{data?.typeName}</p>
-            <p>{data?.firstCategoryName}</p>
-            <p>{data?.secondCategoryName}</p>
-            <p>{data?.createdAt}</p>
-            <p>{data?.updatedAt}</p>
-            <p>{data?.deadline}</p>
+            <p>{data?.typeName ? data?.typeName : '-'}</p>
+            <p>{data?.firstCategoryName ? data?.firstCategoryName : '-'}</p>
+            <p>{data?.secondCategoryName ? data?.secondCategoryName : '-'}</p>
+            <p>{data?.createdAt ? data?.createdAt : '-'}</p>
+            <p>{data?.updatedAt ? data?.updatedAt : '-'}</p>
+            <p>{data?.deadline ? data?.deadline : '-'}</p>
           </div>
         </div>
       </div>

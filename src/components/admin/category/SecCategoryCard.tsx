@@ -44,7 +44,6 @@ export default function SecCategoryCard({ id, parentId, name, onDelete }: SecCat
     fetchRequestForm();
   }, [id, parentId]);
 
-  //  수정 API Mutation
   const updateCategoryMutation = useMutation({
     mutationFn: () => updateCategory(id, { name: newCategoryName }), 
     onSuccess: () => {
@@ -57,7 +56,6 @@ export default function SecCategoryCard({ id, parentId, name, onDelete }: SecCat
     },
   });
 
-  //  삭제 API Mutation
   const deleteCategoryMutation = useMutation({
     mutationFn: () => deleteCategory(id),
     onSuccess: () => {
@@ -84,20 +82,17 @@ export default function SecCategoryCard({ id, parentId, name, onDelete }: SecCat
     setIsMenuOpen((prev) => !prev);
   };
 
-  // 삭제 버튼 클릭 시 모달 열기
   const openDeleteModal = () => {
     setIsDeleteModalOpen(true);
     setIsMenuOpen(false);
   };
 
-  //  수정 버튼 클릭 시 모달 열기
   const openEditModal = () => {
     setNewCategoryName(name); 
     setIsEditModalOpen(true);
     setIsMenuOpen(false);
   };
 
-  //  카테고리 수정 실행
   const handleUpdate = () => {
     if (!newCategoryName.trim()) {
       toast.error("카테고리 이름을 입력하세요.");
@@ -109,12 +104,10 @@ export default function SecCategoryCard({ id, parentId, name, onDelete }: SecCat
     }, 500);
   };
 
-  //  카테고리 삭제 실행
   const handleDelete = () => {
     deleteCategoryMutation.mutate(); 
   };
 
-  // 화면 다른 곳 클릭 시 메뉴 닫기
   useEffect(() => {
     document.addEventListener("mousedown", (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -135,7 +128,6 @@ export default function SecCategoryCard({ id, parentId, name, onDelete }: SecCat
             <span className="text-subtitle-regular leading-none">{name}</span>
           </div>
           <div className="flex gap-2 items-center relative">
-            {/* 요청 양식 존재 여부에 따라 버튼 변경 */}
             <button
               className={`px-4 py-1 text-body-regular rounded flex justify-center items-center leading-5 cursor-pointer 
     ${requestForm ? "border border-gray-3 text-gray-800 bg-white hover:bg-gray-100 " : "bg-main text-white"}
@@ -159,12 +151,10 @@ export default function SecCategoryCard({ id, parentId, name, onDelete }: SecCat
                 <RegisterRequestForm name={name} firstCategoryId={parentId} secondCategoryId={id} onClose={closeReqForm} />
               ))}
 
-            {/* 메뉴 토글 버튼 */}
             <button onClick={toggleMenu}>
               <VerticalDotIcon />
             </button>
 
-            {/* 수정/삭제 메뉴 */}
             {isMenuOpen && (
               <div ref={menuRef} className="absolute top-[24px] right-0 mt-2 w-24 bg-white border border-gray-300 shadow-md rounded-md z-10">
                 <button className="w-full px-4 py-2 text-body-bold text-center hover:bg-gray-100" onClick={openEditModal}>
@@ -179,7 +169,6 @@ export default function SecCategoryCard({ id, parentId, name, onDelete }: SecCat
         </div>
       </div>
 
-      {/*  수정 모달 */}
       {isEditModalOpen && (
         <motion.div className="overlay" initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}}>
         <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
@@ -205,7 +194,6 @@ export default function SecCategoryCard({ id, parentId, name, onDelete }: SecCat
         </motion.div>
       )}
 
-      {/* 삭제 모달 */}
       <DeleteConfirmModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onConfirm={handleDelete} categoryName={name} />
     </div>
   );

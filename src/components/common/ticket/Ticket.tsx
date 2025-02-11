@@ -4,6 +4,9 @@ import Dropdown from '../Dropdown';
 import {AlertIcon} from '../Icon';
 import {Link} from 'react-router-dom';
 import {useUserStore} from '../../../store/store';
+import ManagerSelector from '../selector/ManagerSelector';
+import {useCreateMutation} from '../../../api/hooks/useCreateMutation';
+import {updateTicketManager} from '../../../api/service/tickets';
 
 interface TicketProps extends TicketDataProps {
   role: 'manager' | 'user' | 'admin'; // role 추가
@@ -25,7 +28,6 @@ export default function Ticket({
   status,
   urgent,
   deadline,
-  onAssigneeChange,
   onApprove,
   onReject,
 }: TicketProps) {
@@ -41,11 +43,6 @@ export default function Ticket({
   useEffect(() => {
     setSelectedAssignee(managerName || 'all');
   }, [managerName]);
-
-  const handleAssigneeSelect = (selectedOption: string) => {
-    setSelectedAssignee(selectedOption);
-    onAssigneeChange(selectedOption);
-  };
 
   const handleApprove = () => {
     setTicketStatus('IN_PROGRESS');
@@ -64,6 +61,16 @@ export default function Ticket({
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+  };
+
+  const updateManagerMutation = useCreateMutation(
+    (managerId: number) => updateTicketManager(ticketId, managerId),
+    '티켓 담당자 변경에 실패했습니다. 다시 시도해 주세요.',
+    ticketId
+  );
+
+  const handleManagerSelect = (managerId: number) => {
+    updateManagerMutation.mutate(managerId);
   };
 
   // 긴급 티켓 스타일
@@ -97,15 +104,7 @@ export default function Ticket({
 
         {/* 담당자 */}
         <div className="w-[14%]" onClick={handleClick}>
-          <Dropdown
-            label={selectedAssignee === 'all' ? 'all' : selectedAssignee}
-            options={assigneeOptions}
-            defaultSelected={selectedAssignee}
-            onSelect={handleAssigneeSelect}
-            paddingX="px-3"
-            border={true}
-            textColor="text-gray-15"
-          />
+          <ManagerSelector selectedManagerName={selectedAssignee} onManagerSelect={handleManagerSelect} />
         </div>
 
         {/* 승인 여부 */}

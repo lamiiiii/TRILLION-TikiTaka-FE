@@ -1,10 +1,11 @@
 import {useState} from 'react';
 import InitialTopBar from './InitialTopBar';
-import {SmRightIcon, WhiteCheckIcon} from '../Icon';
+import {SmRightIcon, ValidateIcon, WhiteCheckIcon} from '../Icon';
 import Modal from '../Modal';
 import {validateEmail, validateId} from '../../../utils/Validation';
 import {Link} from 'react-router-dom';
 import {postRegistration} from '../../../api/service/registration';
+import {termsContent} from '../../../data/terms';
 
 export default function SignUpContainer() {
   const [email, setEmail] = useState('');
@@ -19,6 +20,8 @@ export default function SignUpContainer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState('계정 등록 안내');
   const [modalMessage, setModalMessage] = useState('');
+
+  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
 
   const emailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -91,7 +94,10 @@ export default function SignUpContainer() {
                 className={`py-3 px-4 text-subtitle-regular w-full border rounded-md focus:outline-none 
                 ${emailError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
               />
-              <div className={`flex relative text-error text-xs mt-1 ${emailError ? '' : 'hidden'}`}>{emailError}</div>
+              <div className={`flex relative text-error text-xs mt-1 items-center gap-1 ${emailError ? '' : 'hidden'}`}>
+                <ValidateIcon />
+                {emailError}
+              </div>
             </div>
             <div className="id">
               <input
@@ -105,7 +111,10 @@ export default function SignUpContainer() {
                 className={`py-3 px-4 text-subtitle-regular w-full border rounded-md focus:outline-none 
                 ${idError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
               />
-              <div className={`flex relative text-error text-xs mt-1 ${idError ? '' : 'hidden'}`}>{idError}</div>
+              <div className={`flex relative text-error text-xs mt-1 items-center gap-1 ${idError ? '' : 'hidden'}`}>
+                <ValidateIcon />
+                {idError}
+              </div>
             </div>
             <div className="accountTerms">
               <div className="flex w-full py-2 items-center justify-between ">
@@ -120,10 +129,9 @@ export default function SignUpContainer() {
                   </label>
                 </div>
 
-                {/* todo 이용약관 자세히 보기 (모달/페이지) 추가 */}
                 <div
                   className="flex px-2 text-xs text-gray-6 gap-2 focus:outline-none hover:text-main cursor-pointer"
-                  onClick={() => console.log('이용 정보 자세히 보기')}
+                  onClick={() => setIsTermsModalOpen(true)}
                 >
                   이용 정보 자세히 보기
                   <SmRightIcon strokeColor="#727586" />
@@ -143,6 +151,9 @@ export default function SignUpContainer() {
         </div>
       </div>
       {isModalOpen && <Modal title={modalTitle} content={modalMessage} backBtn="확인" onBackBtnClick={closeModal} />}
+      {isTermsModalOpen && (
+        <Modal title="이용약관" content={termsContent} backBtn="닫기" onBackBtnClick={() => setIsTermsModalOpen(false)} />
+      )}
     </div>
   );
 }

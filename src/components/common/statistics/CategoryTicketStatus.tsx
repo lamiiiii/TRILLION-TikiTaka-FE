@@ -54,77 +54,92 @@ export default function CategoryTicketStatus() {
               1차 카테고리
             </div>
             <section className="ml-10">
-              {/* 1차 카테고리 Bar 차트 */}
-              <BarChart width={240} height={340} data={primaryData} margin={{left: 20, right: 10, top: 10, bottom: 0}}>
-                <XAxis
-                  dataKey="name"
-                  tick={{fontSize: 10, fontWeight: 700}}
-                  axisLine={false}
-                  tickLine={false}
-                  angle={-45}
-                  width={400}
-                  height={120}
-                  padding={{left: 25}}
-                  textAnchor="end"
-                  tickFormatter={(tick: string) => tick}
-                />
-                <Tooltip cursor={false} contentStyle={commonTooltipStyle} formatter={(value, name) => [`${value}건`, name]} />
-                <Bar
-                  dataKey="ticket"
-                  fill="#F6D47A"
-                  radius={100}
-                  onMouseEnter={(_, index) => setHoverIndex(index)}
-                  onMouseLeave={() => setHoverIndex(null)}
-                  onClick={(data) => setSelectedCategory(data.name)}
+              {primaryData && primaryData.length > 0 ? (
+                <BarChart
+                  width={240}
+                  height={340}
+                  data={primaryData}
+                  margin={{left: 10, right: 10, top: 10, bottom: 0}}
+                  barSize={30}
+                  barGap={0}
                 >
-                  {primaryData?.map((_, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={hoverIndex === index || selectedCategory === primaryData[index].name ? '#D4A946' : '#F6D47A'}
-                    />
-                  ))}
-                </Bar>
-              </BarChart>
+                  <XAxis
+                    dataKey="name"
+                    tick={{fontSize: 10, fontWeight: 700}}
+                    axisLine={false}
+                    tickLine={false}
+                    angle={-45}
+                    width={400}
+                    height={120}
+                    padding={{left: 25}}
+                    textAnchor="end"
+                    tickFormatter={(tick: string) => tick}
+                  />
+                  <Tooltip cursor={false} contentStyle={commonTooltipStyle} formatter={(value, name) => [`${value}건`, name]} />
+                  <Bar
+                    dataKey="ticket"
+                    fill="#F6D47A"
+                    radius={100}
+                    minPointSize={10}
+                    onMouseEnter={(_, index) => setHoverIndex(index)}
+                    onMouseLeave={() => setHoverIndex(null)}
+                    onClick={(data) => setSelectedCategory(data.name)}
+                  >
+                    {primaryData?.map((_, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={hoverIndex === index || selectedCategory === primaryData[index].name ? '#D4A946' : '#F6D47A'}
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              ) : (
+                <div className="text-gray-500 text-center py-4">1차 카테고리 정보가 없습니다.</div>
+              )}
             </section>
           </div>
 
           {/* 2차 카테고리 파이 차트 */}
-          {selectedCategory && secondaryData[selectedCategory] && (
+          {selectedCategory && (
             <div className="flex flex-col gap-8">
               <div className="flex items-center justify-center text-subtitle bg-main text-white rounded-full px-3 py-2 w-fit">
                 2차 카테고리
               </div>
-              <section className="ml-10 grid grid-cols-2 text-subtitle">
-                <div className="flex flex-col items-center gap-4">
-                  <PieChart width={200} height={200}>
-                    <Pie
-                      key={selectedCategory}
-                      data={secondaryData[selectedCategory]}
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={80}
-                      innerRadius={30}
-                      dataKey="value"
-                    >
-                      {secondaryData[selectedCategory]?.map((_, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip contentStyle={commonTooltipStyle} formatter={(value, name) => [`${value}건`, name]} />
-                  </PieChart>
-                  <div className="text-main2-3 text-center">{selectedCategory} 세부 분류</div>
-                </div>
+              {secondaryData[selectedCategory] && secondaryData[selectedCategory].some((item) => item.value > 0) ? (
+                <section className="ml-10 grid grid-cols-2 text-subtitle">
+                  <div className="flex flex-col items-center gap-4">
+                    <PieChart width={200} height={200}>
+                      <Pie
+                        key={selectedCategory}
+                        data={secondaryData[selectedCategory]}
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={80}
+                        innerRadius={30}
+                        dataKey="value"
+                      >
+                        {secondaryData[selectedCategory]?.map((_, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip contentStyle={commonTooltipStyle} formatter={(value, name) => [`${value}건`, name]} />
+                    </PieChart>
+                    <div className="text-main2-3 text-center">{selectedCategory} 세부 분류</div>
+                  </div>
 
-                <div className="flex flex-col justify-center gap-3 ml-10">
-                  {secondaryData[selectedCategory]?.map((item, index) => (
-                    <div key={item.name} className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full" style={{backgroundColor: COLORS[index % COLORS.length]}} />
-                      <span>{item.name}</span>
-                      <span className="ml-auto">{item.value}건</span>
-                    </div>
-                  ))}
-                </div>
-              </section>
+                  <div className="flex flex-col justify-center gap-3 ml-10">
+                    {secondaryData[selectedCategory]?.map((item, index) => (
+                      <div key={item.name} className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full" style={{backgroundColor: COLORS[index % COLORS.length]}} />
+                        <span>{item.name}</span>
+                        <span className="ml-auto">{item.value}건</span>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              ) : (
+                <div className="text-gray-500 text-center py-4">해당 1차 카테고리에 해당하는 2차 카테고리 정보가 없습니다.</div>
+              )}
             </div>
           )}
         </div>

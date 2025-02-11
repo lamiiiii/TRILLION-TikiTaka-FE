@@ -4,6 +4,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {deleteTicketComment, updateTicketComment} from '../../../api/service/tickets';
 import {useParams} from 'react-router-dom';
 import Modal from '../Modal';
+import DOMPurify from 'dompurify';
 
 interface CommentItemProps {
   commentId: number;
@@ -104,7 +105,7 @@ export default function CommentItem({commentId, name, content, files, createdAt}
           </div>
         </div>
         {isEditing ? (
-          <textarea className="comment-textarea" value={editedContent} onChange={(e) => setEditedContent(e.target.value)} />
+          <textarea className="comment-textarea" value={editedContent} onChange={(e) => setEditedContent(DOMPurify.sanitize(e.target.value))} />
         ) : (
           <p className="text-subtitle-regular">{content}</p>
         )}

@@ -4,12 +4,13 @@ import {PlusCircle, RightArrowIcon} from '../../common/Icon';
 import { createTicketForm } from '../../../api/service/tickets';
 import { toast } from 'react-toastify';
 import Modal from '../../common/Modal';
+import DOMPurify from 'dompurify';
 
 interface RegisterRequestFormProps {
   onClose: () => void;
   name: string;
-  firstCategoryId: number; // 1차 카테고리 ID
-  secondCategoryId: number; // 2차 카테고리 ID
+  firstCategoryId: number; 
+  secondCategoryId: number; 
   
 }
 
@@ -36,7 +37,7 @@ export default function RegisterRequestForm({onClose, name, firstCategoryId, sec
   };
 
   const handleSubmit = async () => {
-    setIsConfirmOpen(false); // 모달 닫기
+    setIsConfirmOpen(false); 
 
     try {
       
@@ -44,7 +45,7 @@ export default function RegisterRequestForm({onClose, name, firstCategoryId, sec
       toast.success('요청 양식이 성공적으로 생성되었습니다.');
       onClose();
       setTimeout(() => {
-        window.location.reload(); // 등록 후 새로고침
+        window.location.reload();
       }, 500);
     } catch (error) {
       toast.error('요청 양식 생성에 실패했습니다.');
@@ -53,7 +54,7 @@ export default function RegisterRequestForm({onClose, name, firstCategoryId, sec
 
   return (
     <AnimatePresence>
-      {!isClosing && ( // 닫힘 상태가 아닐 때만
+      {!isClosing && ( 
         <motion.div
           initial={{x: '100%'}}
           animate={{x: 0}}
@@ -91,7 +92,7 @@ export default function RegisterRequestForm({onClose, name, firstCategoryId, sec
                 placeholder="요청 내용을 입력해주세요"
                 style={{ resize: 'none', outline: 'none' }}
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={(e) => setDescription(DOMPurify.sanitize(e.target.value))}
               />
             </div>
             <div className="flex justify-center">
@@ -107,7 +108,6 @@ export default function RegisterRequestForm({onClose, name, firstCategoryId, sec
         </motion.div>
       )}
 
-      {/* 등록 전 확인 모달 */}
       {isConfirmOpen && (
         <Modal title="요청 양식 등록"
         content={`정말로 "${name}" 요청 양식을 등록하시겠습니까?`}
