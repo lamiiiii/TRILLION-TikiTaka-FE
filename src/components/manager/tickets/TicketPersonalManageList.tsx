@@ -32,6 +32,7 @@ export default function TicketPersonalManageList() {
   const {data: ticketListData} = useQuery({
     queryKey: ['ticketList'],
     queryFn: () => getTicketList({managerId: userId}),
+    enabled: !!userId,
   });
 
   // 티켓 상태 업데이트

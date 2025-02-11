@@ -9,6 +9,7 @@ export default function TicketAnalytics() {
   const {data: weeklyData} = useQuery({
     queryKey: ['weeklyTicketSummary', userId],
     queryFn: () => getWeeklyTicketSummary(userId),
+    enabled: !!userId,
   });
 
   const chartData = weeklyData
