@@ -6,14 +6,13 @@ import {useParams} from 'react-router-dom';
 import {useUserStore} from '../../../store/store';
 import DOMPurify from 'dompurify';
 
-
 export default function CommentInput() {
   const [content, setContent] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<File[]>([]);
   const [fileNames, setFileNames] = useState<string[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const {userName, role} = useUserStore();
+  const {userName, role, userId} = useUserStore();
 
   const {id} = useParams();
   const ticketId = Number(id);
@@ -109,7 +108,7 @@ export default function CommentInput() {
       </div>
       <div className="relative mt-3">
         <div className="flex gap-2 mb-2">
-          <Profile name={userName} size="sm" backgroundColor={role} />
+          <Profile userId={userId} name={userName} size="lg" backgroundColor={role} />
           <textarea
             ref={textareaRef}
             className="comment-textarea"

@@ -49,7 +49,12 @@ export default function DetailContainer() {
       <section className="flex bg-gray-18 p-6 pb-[38px] mt-3 mb-[100px]">
         <div className="flex gap-4 mr-10">
           <div className="mt-5">
-            <Profile name={ticket?.managerName ? ticket?.managerName : 'undefined'} backgroundColor="USER" size="lg" />
+            <Profile
+              userId={ticket?.managerId}
+              name={ticket?.managerName ? ticket?.managerName : 'undefined'}
+              backgroundColor="USER"
+              size="lg"
+            />
           </div>
           <section className="w-[577px] flex flex-col">
             {ticket && <TicketContent data={ticket} />}

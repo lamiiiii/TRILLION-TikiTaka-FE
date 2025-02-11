@@ -22,11 +22,11 @@ export default function TicketDetail({data}: TicketDetailProps) {
 
           <div className="flex flex-col gap-[7px]">
             <div className="flex items-center gap-2">
-              {data?.managerName && <Profile name={data?.managerName} backgroundColor="MANAGER" size="md" />}
+              {data?.managerName && <Profile userId={data?.managerId} name={data?.managerName} backgroundColor="MANAGER" size="md" />}
               <span>{data?.managerName ? data?.managerName : '담당자 미지정'}</span>
             </div>
             <div className="flex items-center gap-2">
-              <Profile name={data?.requesterName} backgroundColor="USER" size="md" />
+              <Profile userId={data?.requesterId} name={data?.requesterName} backgroundColor="USER" size="md" />
               <span>{data?.requesterName}</span>
             </div>
             <p>{data?.typeName ? data?.typeName : '-'}</p>
