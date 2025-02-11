@@ -12,16 +12,16 @@ import {
   updateTicketPriority,
   updateTicketType,
 } from '../../../api/service/tickets';
-import {getManagerList} from '../../../api/service/users';
 import {getCategoryList} from '../../../api/service/categories';
 import {useCreateMutation} from '../../../api/hooks/useCreateMutation';
+import ManagerSelector from '../selector/ManagerSelector';
 
 interface TicketSettingProps {
   data: TicketDetails;
 }
 
 export default function TicketSetting({data}: TicketSettingProps) {
-  const [selectedAssignee, setSelectedAssignee] = useState(data.managerName);
+  const [selectedAssignee] = useState(data.managerName);
   const [primaryCategory, setPrimaryCategory] = useState(data.firstCategoryName);
   const [secondaryCategory, setSecondaryCategory] = useState(data.secondCategoryName);
   const [ticketType, setTicketType] = useState(data.typeName);
@@ -77,13 +77,6 @@ export default function TicketSetting({data}: TicketSettingProps) {
     ticketId
   );
 
-  // 유저 정보 (담당자 리스트) 조회
-  const {data: userData} = useQuery({
-    queryKey: ['managers'],
-    queryFn: getManagerList,
-    select: (data) => data.users,
-  });
-
   // 티켓 타입 데이터 조회
   const {data: ticketData} = useQuery({
     queryKey: ['types'],
@@ -110,13 +103,10 @@ export default function TicketSetting({data}: TicketSettingProps) {
       mutation.mutate(selectedOption);
     }
   };
-  const handleAssigneeSelect = (selectedOption: string) => {
-    const selectedUser = userData?.find((user: any) => user.username === selectedOption);
-    if (selectedUser) {
-      updateManagerMutation.mutate(selectedUser?.userId);
-      setSelectedAssignee(selectedOption);
-    }
+  const handleManagerSelect = (managerId: number) => {
+    updateManagerMutation.mutate(managerId);
   };
+
   const handlePrioritySelect = handleSelect(setPriority, updatePriorityMutation);
   const handleDeadlineChange = () => {
     const newDeadline = `${deadlineDate} ${deadlineTime}`;
@@ -170,14 +160,7 @@ export default function TicketSetting({data}: TicketSettingProps) {
 
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
-              <DropDown
-                label="담당자"
-                value={selectedAssignee}
-                options={userData?.map((user: any) => user.username) || []}
-                defaultSelected={selectedAssignee}
-                onSelect={handleAssigneeSelect}
-                border={false}
-              />
+              <ManagerSelector selectedManagerName={selectedAssignee} onManagerSelect={handleManagerSelect} />
             </div>
             <div className="flex itmes-center ml-3">
               <input

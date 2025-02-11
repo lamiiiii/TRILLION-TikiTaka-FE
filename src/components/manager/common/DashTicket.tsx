@@ -3,8 +3,9 @@ import {Link} from 'react-router-dom';
 import {useUserStore} from '../../../store/store';
 import {AlertIcon} from '../../common/Icon';
 import TicketDropdown from './TicketDropdown';
-import {useQuery} from '@tanstack/react-query';
-import {getManagerList} from '../../../api/service/users';
+import ManagerSelector from '../../common/selector/ManagerSelector';
+import {useCreateMutation} from '../../../api/hooks/useCreateMutation';
+import {updateTicketManager} from '../../../api/service/tickets';
 
 interface DashTicketProps extends TicketListItem {
   detailLink: string; // 상세 조회 링크 추가
@@ -26,29 +27,22 @@ export default function DashTicket({
   urgent,
   deadline,
   detailLink,
-  onAssigneeChange,
   onApprove,
   onReject,
   onStatusChange,
 }: DashTicketProps) {
   const role = useUserStore((state) => state.role).toLowerCase();
-  const [selectedAssignee, setSelectedAssignee] = useState(managerName ?? 'all');
+  const [selectedAssignee] = useState(managerName ?? 'all');
 
-  const handleAssigneeSelect = (selectedOption: string) => {
-    setSelectedAssignee(selectedOption);
-    if (onAssigneeChange) {
-      onAssigneeChange(selectedOption);
-    }
+  const updateManagerMutation = useCreateMutation(
+    (managerId: number) => updateTicketManager(ticketId, managerId),
+    '티켓 담당자 변경에 실패했습니다. 다시 시도해 주세요.',
+    ticketId
+  );
+
+  const handleManagerSelect = (managerId: number) => {
+    updateManagerMutation.mutate(managerId);
   };
-
-  // 담당자 목록 불러오기 (React Query)
-  const {data: managerData} = useQuery({
-    queryKey: ['managers'],
-    queryFn: getManagerList,
-  });
-
-  // 불러온 데이터에서 담당자 이름만 추출
-  const managerList = managerData?.users.map((user) => user.username) || [];
 
   // 상태 변환 (영문 → 한글)
   const statusMapping: Record<string, string> = {
@@ -66,10 +60,10 @@ export default function DashTicket({
   };
 
   const typeNameMapping: Record<string, string> = {
-    CREATE: "생성",
-    DELETE: "삭제",
-    UPDATE: "수정",
-    ETC: "기타",
+    CREATE: '생성',
+    DELETE: '삭제',
+    UPDATE: '수정',
+    ETC: '기타',
   };
 
   // 긴급 티켓 스타일
@@ -93,7 +87,7 @@ export default function DashTicket({
         <div className="flex items-center gap-1">
           {urgent && <AlertIcon className="text-error w-4 h-4" />}
           <div className={`flex text-subtitle-regular ${urgent ? 'text-error' : 'text-gray-15'}`}>
-            [{typeNameMapping[typeName]|| "미정"}]<div className="ml-1">{title}</div>
+            [{typeNameMapping[typeName] || '미정'}]<div className="ml-1">{title}</div>
           </div>
         </div>
         <div className="text-gray-6 text-body-regular">{description.length > 40 ? `${description.slice(0, 40)}...` : description}</div>
@@ -106,15 +100,7 @@ export default function DashTicket({
 
       {/* 담당자 */}
       <div className="w-[10%]">
-        <TicketDropdown
-          label={selectedAssignee}
-          options={managerList ?? []} // 실제 담당자 리스트 필요
-          defaultSelected={selectedAssignee}
-          onSelect={handleAssigneeSelect}
-          paddingX="px-3"
-          border={true}
-          textColor="text-gray-15"
-        />
+        <ManagerSelector selectedManagerName={selectedAssignee} onManagerSelect={handleManagerSelect} />
       </div>
       <div className="w-[15%] flex gap-2">
         {status === 'PENDING' ? (
