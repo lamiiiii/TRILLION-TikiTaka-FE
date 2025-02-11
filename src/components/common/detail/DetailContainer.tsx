@@ -77,7 +77,7 @@ export default function DetailContainer() {
           {ticket && (
             <>
               <TicketDetail data={ticket} />
-              <TicketSetting data={ticket} />
+              {location.pathname.startsWith('/manager') && <TicketSetting data={ticket} />}
             </>
           )}
           {location.pathname.startsWith('/manager') && <TicketTask />}
