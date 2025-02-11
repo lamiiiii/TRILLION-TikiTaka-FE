@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect,  useState} from 'react';
 import {approveTicket, getTicketList, rejectTicket, updateTicketStatus, getTicketTypes} from '../../../api/service/tickets';
 import {useUserStore} from '../../../store/store'; // role 가져오기
 import Dropdown from '../../common/Dropdown';
@@ -8,6 +8,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {toast} from 'react-toastify';
 import {getManagerList} from '../../../api/service/users';
 import {getCategoryList} from '../../../api/service/categories';
+import {RefreshIcon} from '../../common/Icon';
 
 const mapFilterToStatus = (filter: string): string | undefined => {
   switch (filter) {
@@ -24,12 +25,7 @@ const mapFilterToStatus = (filter: string): string | undefined => {
   }
 };
 
-const typeMapping: Record<string, string> = {
-  CREATE: '생성',
-  DELETE: '삭제',
-  ETC: '기타',
-  UPDATE: '수정',
-};
+const typeMapping: Record<string, string> = {CREATE: '생성', DELETE: '삭제', ETC: '기타', UPDATE: '수정'};
 
 const pageSizeOptions = ['20개씩', '30개씩', '50개씩'];
 interface TicketListProps {
@@ -52,15 +48,54 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     setCurrentPage(1);
   }, [selectedFilter]);
 
+  const {data: userData} = useQuery({queryKey: ['managers'], queryFn: getManagerList, select: (data) => data.users});
+
+  const {data: typeData} = useQuery({queryKey: ['types'], queryFn: getTicketTypes});
+
+  const {data: categories = []} = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const primaryCategories = await getCategoryList();
+      const secondaryRequests = primaryCategories.map(async (primary) => {
+        const secondaries = await getCategoryList(primary.id);
+        return {primary, secondaries};
+      });
+
+      return Promise.all(secondaryRequests);
+    },
+  });
+
   const {data} = useQuery({
-    queryKey: ['tickets', selectedFilter ?? '', currentPage ?? 1, pageSize ?? 20, orderBy ?? '최신순'],
+    queryKey: [
+      'tickets',
+      selectedFilter ?? '',
+      currentPage ?? 1,
+      pageSize ?? 20,
+      orderBy ?? '최신순',
+      selectedFilters['담당자'],
+      selectedFilters['1차 카테고리'],
+      selectedFilters['2차 카테고리'],
+      selectedFilters['요청'],
+    ],
     queryFn: async () => {
       const statusParam = mapFilterToStatus(selectedFilter ?? '전체');
+
+      // ✅ 선택된 필터에서 ID 값 찾기 (API 요청에 사용)
+      const managerId = userData?.find((user: any) => user.username === selectedFilters['담당자'])?.userId;
+      const firstCategoryId = categories?.find((cat: any) => cat.primary.name === selectedFilters['1차 카테고리'])?.primary.id;
+      const secondCategoryId = categories
+        ?.find((cat: any) => cat.primary.name === selectedFilters['1차 카테고리'])
+        ?.secondaries.find((sub: any) => sub.name === selectedFilters['2차 카테고리'])?.id;
+      const ticketTypeId = typeData?.find((type: any) => type.typeName === selectedFilters['요청'])?.typeId;
 
       const ticketData = await getTicketList({
         page: (currentPage ?? 1) - 1,
         size: pageSize ?? 20,
         status: statusParam,
+        managerId,
+        firstCategoryId, 
+        secondCategoryId, 
+        ticketTypeId, 
       });
 
       let sortedTickets = [...ticketData.content];
@@ -83,39 +118,9 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     },
   });
 
-  const {data: userData} = useQuery({
-    queryKey: ['managers'],
-    queryFn: getManagerList,
-    select: (data) => data.users,
-  });
-
-  const {data: ticketData} = useQuery({
-    queryKey: ['types'],
-    queryFn: getTicketTypes,
-  });
-
-  const {data: categories = []} = useQuery({
-    queryKey: ['categories'],
-    queryFn: async () => {
-      const primaryCategories = await getCategoryList();
-      const secondaryRequests = primaryCategories.map(async (primary) => {
-        const secondaries = await getCategoryList(primary.id);
-        return {primary, secondaries};
-      });
-
-      return Promise.all(secondaryRequests);
-    },
-  });
-
   const dropdownData = [
-    {
-      label: '담당자',
-      options: userData?.map((user: any) => user.username),
-    },
-    {
-      label: '1차 카테고리',
-      options: categories.map((cat: any) => cat.primary.name),
-    },
+    {label: '담당자', options: userData?.map((user: any) => user.username)},
+    {label: '1차 카테고리', options: categories.map((cat: any) => cat.primary.name)},
     {
       label: '2차 카테고리',
       options: selectedFilters['1차 카테고리']
@@ -124,10 +129,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
             ?.secondaries.map((secondary: any) => secondary.name) ?? [])
         : [],
     },
-    {
-      label: '요청',
-      options: ticketData?.map((type: any) => typeMapping[type.typeName] || type.typeName),
-    },
+    {label: '요청', options: typeData?.map((type: any) => typeMapping[type.typeName] || type.typeName)},
   ];
 
   useEffect(() => {
@@ -152,7 +154,8 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     }
 
     setFilteredTickets(filtered);
-  }, [selectedFilters, data?.content]);
+    setTotalPages(Math.ceil(filtered.length / pageSize)); 
+  }, [selectedFilters, data?.content, pageSize]);
 
   useEffect(() => {
     if (data?.content) {
@@ -163,21 +166,23 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     }
   }, [data?.content, data?.totalPages]);
 
-  const selectedCount = ticketCounts
-    ? selectedFilter === '전체'
-      ? ticketCounts.total
-      : selectedFilter === '대기중'
-        ? ticketCounts.pending
-        : selectedFilter === '진행중'
-          ? ticketCounts.inProgress
-          : selectedFilter === '검토 요청'
-            ? ticketCounts.reviewing
-            : selectedFilter === '완료'
-              ? ticketCounts.completed
-              : selectedFilter === '긴급'
-                ? ticketCounts.urgent
-                : 0
-    : 0;
+  const selectedCount = Object.values(selectedFilters).some((filter) => filter)
+    ? data?.totalElements || 0 
+    : ticketCounts
+      ? selectedFilter === '전체'
+        ? ticketCounts.total
+        : selectedFilter === '대기중'
+          ? ticketCounts.pending
+          : selectedFilter === '진행중'
+            ? ticketCounts.inProgress
+            : selectedFilter === '검토 요청'
+              ? ticketCounts.reviewing
+              : selectedFilter === '완료'
+                ? ticketCounts.completed
+                : selectedFilter === '긴급'
+                  ? ticketCounts.urgent
+                  : 0
+      : 0;
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
@@ -188,21 +193,11 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
   const handleSelect = (label: string, value: string) => {
     if (label === '요청') {
       const originalValue = Object.keys(typeMapping).find((key) => typeMapping[key] === value) || value;
-      setSelectedFilters((prev) => ({
-        ...prev,
-        [label]: originalValue,
-      }));
+      setSelectedFilters((prev) => ({...prev, [label]: originalValue}));
     } else if (label === '1차 카테고리') {
-      setSelectedFilters((prev) => ({
-        ...prev,
-        ['1차 카테고리']: value,
-        ['2차 카테고리']: '',
-      }));
+      setSelectedFilters((prev) => ({...prev, ['1차 카테고리']: value, ['2차 카테고리']: ''}));
     } else {
-      setSelectedFilters((prev) => ({
-        ...prev,
-        [label]: value,
-      }));
+      setSelectedFilters((prev) => ({...prev, [label]: value}));
     }
   };
 
@@ -282,7 +277,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
       </div>
       <div className="bg-gray-18 h-full flex flex-col justify-start p-4">
         <div className="flex justify-between items-center  mt-4 px-2">
-          <div className="flex items-center gap-4 leading-none">
+          <div className="flex items-center gap-4 leading-none" >
             {dropdownData.map((data) => (
               <Dropdown
                 key={data.label}
@@ -297,6 +292,15 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
                 paddingX="px-3"
               />
             ))}
+            <button
+              className=" text-gray-800 rounded-md  transition"
+              onClick={() => {
+                setSelectedFilters({});
+                setCurrentPage(1);
+              }}
+            >
+              <RefreshIcon />
+            </button>
           </div>
           <div className="ml-auto text-gray-700 text-subtitle">
             조회 건수 <span className="text-black text-title-bold ml-1">{selectedCount}건</span>

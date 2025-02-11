@@ -19,7 +19,6 @@ export default function DropDown({ label, options, onSelect, value }: DropdownPr
 
   return (
     <div className="relative inline-block w-[100px] whitespace-nowrap">
-      {/* 드롭다운 버튼 */}
       <div
         className="text-gray-700 text-subtitle-regular flex items-center gap-x-2 cursor-pointer w-full py-1 rounded-md"
         onClick={() => setIsOpen(!isOpen)}
@@ -39,7 +38,6 @@ export default function DropDown({ label, options, onSelect, value }: DropdownPr
         </svg>
       </div>
 
-      {/* 드롭다운 메뉴 */}
       {isOpen && (
         <div className="absolute mt-1  bg-white border border-gray-3 rounded-md shadow-lg z-10 w-full">
           {options.map((option) => (

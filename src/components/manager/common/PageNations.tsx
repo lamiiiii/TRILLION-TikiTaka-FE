@@ -7,7 +7,6 @@ interface PagenationProps {
 export default function PageNations({currentPage, totalPages, onPageChange}: PagenationProps) {
   return (
     <div className="flex justify-center items-center gap-2 mt-8">
-      {/* 이전 페이지 버튼 */}
       <button
         type="button"
         onClick={() => onPageChange(currentPage - 1)}
@@ -16,8 +15,6 @@ export default function PageNations({currentPage, totalPages, onPageChange}: Pag
       >
         <img src="/icons/ic-arrow-left.svg" alt="왼쪽 화살표" />
       </button>
-
-      {/* 페이지 숫자 버튼 (최대 10개까지 표시) */}
       {totalPages &&
         [...Array(Math.min(10, totalPages))].map((_, index) => {
           const pageNumber = index + 1;
@@ -31,8 +28,6 @@ export default function PageNations({currentPage, totalPages, onPageChange}: Pag
             </button>
           );
         })}
-
-      {/* 다음 페이지 버튼 */}
       {totalPages && totalPages > 1 && (
         <button
           type="button"

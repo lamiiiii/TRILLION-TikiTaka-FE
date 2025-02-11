@@ -11,11 +11,10 @@ interface ReqCateModalProps {
 }
 
 export default function ReqCateModal({onClose}: ReqCateModalProps) {
-  const [categoryName, setCategoryName] = useState(''); // 입력값 상태
-  const [loading, setLoading] = useState(false); // 로딩 상태
+  const [categoryName, setCategoryName] = useState(''); 
+  const [loading, setLoading] = useState(false); 
   
 
-  // 카테고리 등록 함수
   const onSubmit = async () => {
     if (!categoryName.trim()) {
       toast.error('카테고리 이름을 입력해주세요.');
@@ -24,14 +23,14 @@ export default function ReqCateModal({onClose}: ReqCateModalProps) {
   
     try {
       setLoading(true);
-      await createCategory(null, { name: categoryName }); // parentId는 null
+      await createCategory(null, { name: categoryName }); 
       toast.success('카테고리가 성공적으로 등록되었습니다.');
   
       setTimeout(() => {
-        window.location.reload(); // 페이지 새로고침
-      }, 1000); // 1초 후 새로고침 (UX 고려)
+        window.location.reload(); 
+      }, 1000);
       
-      onClose(); // 모달 닫기
+      onClose(); 
     } catch (error) {
       toast.error('카테고리 등록에 실패했습니다.');
     } finally {
