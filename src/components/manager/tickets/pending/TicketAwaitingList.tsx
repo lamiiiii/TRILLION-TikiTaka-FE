@@ -34,7 +34,7 @@ export default function TicketAwaitingList() {
           <h1 className="text-title-bold">승인 대기</h1>
           {pendingApprovalCount && (
             <div className={`px-4 h-[16px] flex place-items-center rounded-full bg-gray-9 text-white mb-0.5`}>
-              <div className="mt-0.5 text-caption-bold">{pendingApprovalCount?.totalPendingTicket}</div>
+              <div className="mt-0.5 text-caption-bold">{pendingApprovalCount?.allPendingTicket}</div>
             </div>
           )}
           {pendingApprovalCount && (
