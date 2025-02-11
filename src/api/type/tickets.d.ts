@@ -150,3 +150,12 @@ declare interface UpdateTicketCategoryParams {
 declare interface UpdateTicketTypeParams {
   type: string;
 }
+
+declare interface UpdateTicketUrgentRequest {
+  urgent: boolean;
+}
+
+declare interface UpdateTicketUrgentResponse {
+  message: string;
+  data: null;
+}

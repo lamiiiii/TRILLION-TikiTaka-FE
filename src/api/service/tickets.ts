@@ -340,3 +340,14 @@ export async function rejectTicket(ticketId: number) {
     throw error;
   }
 }
+
+// INTF-81: 티켓 긴급 상태 수정
+export async function updateTicketUrgent(ticketId: number, urgent: boolean): Promise<UpdateTicketUrgentResponse> {
+  try {
+    const {data} = await instance.patch<UpdateTicketUrgentResponse>(`/tickets/${ticketId}/urgent`, {urgent});
+    return data;
+  } catch (error) {
+    console.error('티켓 긴급 상태 수정 실패:', error);
+    throw error;
+  }
+}

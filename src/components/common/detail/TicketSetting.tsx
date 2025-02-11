@@ -159,7 +159,7 @@ export default function TicketSetting({data}: TicketSettingProps) {
           </div>
 
           <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 px-4">
               <ManagerSelector selectedManagerName={selectedAssignee} onManagerSelect={handleManagerSelect} />
             </div>
             <div className="flex itmes-center ml-3">

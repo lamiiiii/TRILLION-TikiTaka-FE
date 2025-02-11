@@ -4,8 +4,7 @@ import {useTicketStore, useUserStore} from '../../../store/store';
 import {useEffect, useState} from 'react';
 import {WhiteCheckIcon} from '../Icon';
 import {useParams} from 'react-router-dom';
-import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {approveTicket, rejectTicket, updateTicket, updateTicketStatus} from '../../../api/service/tickets';
+import {approveTicket, rejectTicket, updateTicketStatus, updateTicketUrgent} from '../../../api/service/tickets';
 import useReverseMap from '../../../hooks/useReverseMap';
 import {useUpdateTicketPriority} from '../../../api/hooks/useUpdateTicketPriority';
 import {QUERY_KEY, useCreateMutation} from '../../../api/hooks/useCreateMutation';
@@ -30,33 +29,17 @@ export default function StatusBar({data, status}: StatusBarProps) {
   const {id} = useParams();
   const ticketId = Number(id);
 
-  const queryClient = useQueryClient();
-
   useEffect(() => {
     if (data?.priority) {
       setPriority(data.priority);
     }
   }, [data?.priority, setPriority]);
 
-  // 티켓 긴급 여부 수정
-  const updateUrgentMutation = useMutation({
-    mutationFn: (urgent: boolean) =>
-      updateTicket(ticketId, {
-        title: data?.title || '',
-        description: data?.description || '',
-        urgent: urgent,
-        typeId: data?.typeId,
-        firstCategoryId: data?.firstCategoryId,
-        secondaryCategoryId: data?.secondCategoryId,
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
-    },
-    onError: () => {
-      alert('티켓 긴급 여부 변경에 실패했습니다. 다시 시도해 주세요.');
-      setIsUrgent(!isUrgent); // 실패 시 상태를 원래대로 되돌림
-    },
-  });
+  const updateUrgentMutation = useCreateMutation(
+    () => updateTicketUrgent(ticketId, isUrgent),
+    '티켓 긴급 여부 변경에 실패했습니다. 다시 시도해 주세요.',
+    ticketId
+  );
 
   //티켓 상태 수정
   const updateStatusMutation = useCreateMutation<string>(
