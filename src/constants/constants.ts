@@ -100,3 +100,5 @@ export const UPDATE_TYPE_MAP = {
   TICKET_DELETE: '티켓 삭제',
   OTHER: '기타',
 };
+
+export const pageSizeOptions = ['20개씩', '30개씩', '50개씩'];
