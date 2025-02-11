@@ -1,6 +1,6 @@
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {useState} from 'react';
-import {Link, useParams} from 'react-router-dom';
+import {Link, useNavigate, useParams} from 'react-router-dom';
 import {deleteTicket} from '../../../api/service/tickets';
 import Modal from '../Modal';
 import MarkdownPreview from '../MarkdownPreview';
@@ -19,14 +19,22 @@ export default function TicketContent({data}: TicketContentProps) {
 
   const {userId} = useUserStore();
 
+  const navigate = useNavigate();
+  const {role} = useUserStore();
+
   const deleteMutation = useMutation({
     mutationFn: () => deleteTicket(ticketId),
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['tickets']});
       // 티켓 삭제 후 목록 페이지로 이동하는 로직 추가 필요
-    },
-    onError: () => {
-      alert('티켓 삭제에 실패했습니다. 다시 시도해 주세요.');
+
+      if (role === 'USER') {
+        navigate('/user');
+      } else if (role === 'MANAGER') {
+        navigate('/manager');
+      } else {
+        navigate('/'); // 또는 다른 기본 경로로 이동
+      }
     },
   });
 

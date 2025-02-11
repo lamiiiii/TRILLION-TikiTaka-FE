@@ -1,5 +1,3 @@
-// hooks/useUpdateTicketPriority.ts
-
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {updateTicketPriority} from '../service/tickets';
 

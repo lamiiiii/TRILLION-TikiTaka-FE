@@ -3,8 +3,9 @@ import {Link} from 'react-router-dom';
 import {useUserStore} from '../../../store/store';
 import {AlertIcon} from '../../common/Icon';
 import TicketDropdown from './TicketDropdown';
-import {useQuery} from '@tanstack/react-query';
-import {getManagerList} from '../../../api/service/users';
+import ManagerSelector from '../../common/selector/ManagerSelector';
+import {useCreateMutation} from '../../../api/hooks/useCreateMutation';
+import {updateTicketManager} from '../../../api/service/tickets';
 
 interface DashTicketProps extends TicketListItem {
   detailLink: string; 
@@ -26,27 +27,23 @@ export default function DashTicket({
   urgent,
   deadline,
   detailLink,
-  onAssigneeChange,
   onApprove,
   onReject,
   onStatusChange,
 }: DashTicketProps) {
   const role = useUserStore((state) => state.role).toLowerCase();
-  const [selectedAssignee, setSelectedAssignee] = useState(managerName ?? 'all');
+  const [selectedAssignee] = useState(managerName ?? 'all');
 
-  const handleAssigneeSelect = (selectedOption: string) => {
-    setSelectedAssignee(selectedOption);
-    if (onAssigneeChange) {
-      onAssigneeChange(selectedOption);
-    }
+  const updateManagerMutation = useCreateMutation(
+    (managerId: number) => updateTicketManager(ticketId, managerId),
+    '티켓 담당자 변경에 실패했습니다. 다시 시도해 주세요.',
+    ticketId
+  );
+
+  const handleManagerSelect = (managerId: number) => {
+    updateManagerMutation.mutate(managerId);
   };
 
-  const {data: managerData} = useQuery({
-    queryKey: ['managers'],
-    queryFn: getManagerList,
-  });
-
-  const managerList = managerData?.users.map((user) => user.username) || [];
 
   const statusMapping: Record<string, string> = {
     PENDING: '대기중',
@@ -63,10 +60,10 @@ export default function DashTicket({
   };
 
   const typeNameMapping: Record<string, string> = {
-    CREATE: "생성",
-    DELETE: "삭제",
-    UPDATE: "수정",
-    ETC: "기타",
+    CREATE: '생성',
+    DELETE: '삭제',
+    UPDATE: '수정',
+    ETC: '기타',
   };
 
   const ticketClass = urgent ? 'border-error bg-white hover:bg-red/5' : 'border-gray-2 bg-white hover:bg-gray-1';
@@ -85,7 +82,7 @@ export default function DashTicket({
         <div className="flex items-center gap-1">
           {urgent && <AlertIcon className="text-error w-4 h-4" />}
           <div className={`flex text-subtitle-regular ${urgent ? 'text-error' : 'text-gray-15'}`}>
-            [{typeNameMapping[typeName]|| "미정"}]<div className="ml-1">{title}</div>
+            [{typeNameMapping[typeName] || '미정'}]<div className="ml-1">{title}</div>
           </div>
         </div>
         <div className="text-gray-6 text-body-regular">{description.length > 40 ? `${description.slice(0, 40)}...` : description}</div>
@@ -94,15 +91,7 @@ export default function DashTicket({
         {deadline}
       </Link>
       <div className="w-[10%]">
-        <TicketDropdown
-          label={selectedAssignee}
-          options={managerList ?? []} 
-          defaultSelected={selectedAssignee}
-          onSelect={handleAssigneeSelect}
-          paddingX="px-3"
-          border={true}
-          textColor="text-gray-15"
-        />
+        <ManagerSelector selectedManagerName={selectedAssignee} onManagerSelect={handleManagerSelect} />
       </div>
       <div className="w-[15%] flex gap-2">
         {status === 'PENDING' ? (

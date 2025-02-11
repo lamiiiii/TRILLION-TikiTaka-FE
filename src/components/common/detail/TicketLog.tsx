@@ -9,8 +9,10 @@ export default function TicketLog() {
   const ticketId = Number(id);
 
   const {data: logData, isLoading} = useQuery({
-    queryKey: ['ticketHistory', Number(ticketId)],
-    queryFn: () => getChangeHistory(Number(ticketId)),
+    queryKey: ['ticketHistory', ticketId],
+    queryFn: () => getChangeHistory(ticketId),
+    refetchInterval: 10000, // 10초마다 자동으로 refetch
+    staleTime: Infinity, // 데이터를 항상 fresh 상태로 유지
   });
 
   const getKoreanUpdateType = (updateType: string) => {
