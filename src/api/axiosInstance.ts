@@ -12,7 +12,7 @@ const server = config.backend.baseURL;
 
 const instance: AxiosInstance = axios.create({
   baseURL: server,
-  withCredentials: false,
+  withCredentials: true,
 });
 
 let refreshTokenPromise: Promise<string | null> | null = null;
