@@ -101,7 +101,7 @@ export default function TicketOptions() {
                 <QuestionIcon />
                 {isHovered && (
                   <div className="absolute left-0 mt-1 bg-gray-1 border border-gray-2 rounded-md py-1 px-3 text-xs text-gray-15 shadow-md">
-                    2차 카테고리 선택 시 해당 카테고리 요청 양식이 적용됩니다.
+                    2차 카테고리 선택 시 해당 카테고리 이 적용됩니다.
                   </div>
                 )}
               </span>
@@ -114,7 +114,7 @@ export default function TicketOptions() {
                 const selectedCategory = secondaryCategoryOptions.find((cat) => cat.name === selectedName);
                 setSecondCategory(selectedCategory ?? null);
               }}
-              disabled={!firstCategory || secondaryCategoryOptions.length === 0} // ✅ 1차 카테고리 없거나 2차 없음 → 비활성화
+              disabled={!firstCategory || secondaryCategoryOptions.length === 0}
             />
           </div>
         </div>

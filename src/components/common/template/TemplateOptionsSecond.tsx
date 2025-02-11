@@ -1,30 +1,21 @@
 import {useQuery} from '@tanstack/react-query';
 import {useTemplateStore} from '../../../store/store';
 import DropDown from '../Dropdown';
-import {RequiredIcon} from '../Icon';
 import {getTicketTypes} from '../../../api/service/tickets';
 import {useEffect, useState} from 'react';
-import { getManagerList } from '../../../api/service/users';
+import {getManagerList} from '../../../api/service/users';
 
 export default function TemplateOptionsSecond() {
-  const {manager, ticketType, setManager, setTicketType} = useTemplateStore();
+  const {manager, ticketType, managerId, setManager, setTicketType} = useTemplateStore();
   const [ticketTypes, setTicketTypes] = useState<{typeId: number; typeName: string}[]>([]);
 
-  const {
-    data: userData,
-    isLoading: isUserLoading,
-    error: userError,
-  } = useQuery({
+  const {data: userData} = useQuery({
     queryKey: ['managers'],
     queryFn: getManagerList,
     select: (data) => data.users,
   });
 
-  const {
-    data: ticketData,
-    isLoading: isTicketLoading,
-    error: ticketError,
-  } = useQuery({
+  const {data: ticketData} = useQuery({
     queryKey: ['types'],
     queryFn: getTicketTypes,
   });
@@ -35,8 +26,14 @@ export default function TemplateOptionsSecond() {
     }
   }, [ticketData]);
 
-  if (isTicketLoading || isUserLoading) return null;
-  if (ticketError || userError) return null;
+  useEffect(() => {
+    if (userData && managerId) {
+      const selectedUser = userData.find((user) => user.userId === managerId);
+      if (selectedUser) {
+        setManager(selectedUser);
+      }
+    }
+  }, [managerId, userData]);
 
   return (
     <div className="flex flex-col gap-3">
@@ -52,11 +49,11 @@ export default function TemplateOptionsSecond() {
               setManager(selectedUser);
             }
           }}
-        />{' '}
+        />
       </div>
       <div className="selection-2">
-        <div className="flex items-center gap-1 w-12">
-          유형 <RequiredIcon />
+        <div className="w-12">
+          유형
         </div>
         <DropDown
           label="유형"

@@ -1,7 +1,8 @@
 import {useEffect, useState} from 'react';
-import {deleteTicketTemplate, getTicketTemplate, updateTicketTemplate} from '../../../api/service/ticketTemplates';
+import {deleteTicketTemplate, getTicketTemplate} from '../../../api/service/ticketTemplates';
 import {useNewTicketStore} from '../../../store/store';
 import Modal from '../Modal';
+import TemplateCreateView from './TemplateCreateView';
 
 interface TemplateDetailViewProps {
   templateId: number;
@@ -11,6 +12,7 @@ interface TemplateDetailViewProps {
 export default function TemplateDetailView({templateId, onDelete}: TemplateDetailViewProps) {
   const [templates, setTemplates] = useState<TemplateListItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const {setTitle, setContent, setIsUrgent, setTicketType, setFirstCategoryId, setSecondCategoryId, setManagerId, setTemplateId} =
     useNewTicketStore();
@@ -45,30 +47,13 @@ export default function TemplateDetailView({templateId, onDelete}: TemplateDetai
   };
 
   const onEditClick = async () => {
-    if (!templates) return;
-
-    const updatedTemplate = {
-      templateTitle: templates.templateTitle,
-      title: templates.title,
-      description: templates.description,
-      typeId: templates.typeId,
-      firstCategoryId: templates.firstCategoryId,
-      secondCategoryId: templates.secondCategoryId,
-      managerId: templates.managerId,
-    };
-
-    try {
-      await updateTicketTemplate(templateId, updatedTemplate);
-      alert('템플릿 수정이 완료되었습니다.');
-    } catch (error) {
-      alert('템플릿 수정에 실패했습니다.');
-    }
+    setIsEditing(true);
   };
 
   const onDeleteClick = async () => {
     if (!templates) return;
 
-    const confirmDelete = window.confirm('정말로 이 템플릿을 삭제하시겠습니까?');
+    const confirmDelete = window.confirm('이 템플릿을 삭제하시겠습니까?');
     if (confirmDelete) {
       try {
         await deleteTicketTemplate(templateId);
@@ -86,6 +71,11 @@ export default function TemplateDetailView({templateId, onDelete}: TemplateDetai
       <div className="max-h-80">{value}</div>
     </div>
   );
+
+  if (isEditing) {
+    return <TemplateCreateView templateId={templateId} onCancel={() => setIsEditing(false)} />;
+  }
+
 
   if (!templates) {
     return <div>로딩 중...</div>;

@@ -14,7 +14,6 @@ import {useNavigate} from 'react-router-dom';
 export default function NewTicketContainer() {
   const navigate = useNavigate();
   const {role} = useUserStore();
-  const {mustDescription} = useNewTicketFormStore();
   const {
     title,
     content,
@@ -35,6 +34,7 @@ export default function NewTicketContainer() {
     setDueTime,
     setManager,
   } = useNewTicketStore();
+  const {mustDescription, setDescription, setMustDescription} = useNewTicketFormStore();
 
   const [hasChanges, setHasChanges] = useState(false);
 
@@ -110,6 +110,8 @@ export default function NewTicketContainer() {
     setDueDate('');
     setDueTime('');
     setManager(null);
+    setDescription('');
+    setMustDescription('');
 
     if (ticketId) {
       navigate(`/${role.toLocaleLowerCase()}/detail/${ticketId}`, {replace: true});

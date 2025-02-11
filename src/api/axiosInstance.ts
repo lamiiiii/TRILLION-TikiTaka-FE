@@ -16,6 +16,7 @@ const instance: AxiosInstance = axios.create({
 });
 
 let refreshTokenPromise: Promise<string | null> | null = null;
+let isSessionExpired = false;
 
 instance.interceptors.request.use((config) => {
   const token = tokenStorage.get();
@@ -35,7 +36,10 @@ instance.interceptors.response.use(
     const originalRequest = error.config;
 
     if (!error.response) {
-      alert('서버와 연결할 수 없습니다. 네트워크 상태를 확인해주세요.');
+      if (!isSessionExpired) {
+        isSessionExpired = true;
+        alert('서버와 연결할 수 없습니다. 네트워크 상태를 확인해주세요.');
+      }
       return Promise.reject(error);
     }
 
@@ -65,8 +69,10 @@ instance.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return instance(originalRequest);
       } catch (reissueError) {
-        alert('세션이 만료되었습니다. 다시 로그인해주세요.');
-
+        if (!isSessionExpired) {
+          isSessionExpired = true;
+          alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+        }
         tokenStorage.remove();
         window.location.href = '/';
         return Promise.reject(reissueError);
