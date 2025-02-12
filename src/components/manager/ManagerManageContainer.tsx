@@ -12,7 +12,6 @@ export default function ManagerManageContainer() {
         <div className="mt-5 flex gap-6">
           <TicketAnalytics />
         </div>
-
         <TicketAwaitingList />
         <TicketPersonalManageList />
       </div>
