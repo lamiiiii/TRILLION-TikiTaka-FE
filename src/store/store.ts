@@ -17,7 +17,7 @@ import {
 export const useUserStore = create<UserStore>((set) => ({
   userName: '',
   userId: -1,
-  role: 'USER',
+  role: 'DEFAULT',
 
   setUserName: (userName) => set({userName}),
   setUserId: (userId) => set({userId}),

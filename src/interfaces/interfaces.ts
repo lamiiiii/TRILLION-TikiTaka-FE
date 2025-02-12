@@ -6,8 +6,8 @@ export interface UserStore {
   userName: string;
   setUserId: (id: number) => void;
   setUserName: (userName: string) => void;
-  role: 'MANAGER' | 'USER' | 'ADMIN';
-  setRole: (newRole: 'MANAGER' | 'USER' | 'ADMIN') => void; // 역할 값의 타입을 정확히 제한
+  role: 'MANAGER' | 'USER' | 'ADMIN' | 'DEFAULT';
+  setRole: (newRole: 'MANAGER' | 'USER' | 'ADMIN' | 'DEFAULT') => void; // 역할 값의 타입을 정확히 제한
 }
 
 export interface TokenStore {
@@ -114,7 +114,7 @@ export interface InquiryData {
 export interface UserInfo {
   name: string;
   email: string;
-  role: 'manager' | 'user' | 'admin';
+  role: 'MANAGER' | 'USER' | 'ADMIN' | 'DEFAULT';
   website: string;
 }
 

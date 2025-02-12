@@ -10,7 +10,7 @@ import ManagerPwdChange from './pages/manager/ManagerPwdChange';
 import UserNewTicket from './pages/user/UserNewTicket';
 import SignIn from './pages/common/signin/SignIn';
 import SignUp from './pages/common/signin/SignUp';
-import ResetPwd from './pages/common/signin/ResetPwd';
+// import ResetPwd from './pages/common/signin/ResetPwd';
 import ManagerTicketDetail from './pages/manager/ManagerTicketDetail';
 import AdminAccounts from './pages/admin/AdminAccounts';
 import AdminCategory from './pages/admin/AdminCategory';
@@ -63,9 +63,7 @@ function App() {
           {/* 레이아웃 없음 */}
           <Route path="/" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/resetpwd" element={<ResetPwd />} />
-          <Route path="/changepwd" element={<ChangePwd />} />
-
+          {/* <Route path="/resetpwd" element={<ResetPwd />} /> */}
           <Route path="*" element={<NotFound />} />
 
           {/* 레이아웃 있음 */}
@@ -88,6 +86,7 @@ function App() {
                 <Route key={path} path={path} element={element} />
               ))}
             </Route>
+            <Route path="/changepwd" element={<ChangePwd />} />
           </Route>
         </Routes>
       </Router>

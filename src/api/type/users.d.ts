@@ -6,7 +6,7 @@ declare interface LoginData {
 declare interface LoginResponse {
   id: number;
   passwordChangeNeeded: boolean;
-  role: 'MANAGER' | 'USER' | 'ADMIN';
+  role: 'MANAGER' | 'USER' | 'ADMIN' | 'DEFAULT';
 }
 
 declare interface PasswordChangeData {
@@ -35,7 +35,7 @@ declare interface UserDetailResponse {
   userId: number; // 'id'를 'userId'로 변경
   username: string;
   email: string;
-  role: 'MANAGER' | 'USER' | 'ADMIN';
+  role: 'MANAGER' | 'USER' | 'ADMIN' | 'DEFAULT';
   profileImageUrl: string;
   department?: string; // 선택적 필드로 변경 (응답에 없으므로)
 }

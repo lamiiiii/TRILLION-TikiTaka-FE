@@ -1,13 +1,16 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import InitialTopBar from './InitialTopBar';
 import {SmRightIcon, ValidateIcon, WhiteCheckIcon} from '../Icon';
 import Modal from '../Modal';
 import {validateEmail, validateId} from '../../../utils/Validation';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {postRegistration} from '../../../api/service/registration';
 import {termsContent} from '../../../data/terms';
+import {useTokenStore} from '../../../store/store';
 
 export default function SignUpContainer() {
+  const navigate = useNavigate();
+  const {isAuthenticated} = useTokenStore();
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
 
@@ -74,6 +77,13 @@ export default function SignUpContainer() {
     setTermsError('');
     setIsModalOpen(false);
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      alert('이미 계정에 로그인되어 있습니다. 다른 작업을 진행해주세요.');
+      navigate(-1);
+    }
+  }, []);
 
   return (
     <div className="flex h-screen">
