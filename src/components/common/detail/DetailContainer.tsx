@@ -25,16 +25,10 @@ export default function DetailContainer() {
   const ticketId = Number(id);
 
   // 티켓 상세 정보 조회
-  const {data: ticket} = useQuery<TicketDetails>({
-    queryKey: ['ticketDetails', ticketId],
-    queryFn: () => getTicketDetails(ticketId),
-  });
+  const {data: ticket} = useQuery<TicketDetails>({queryKey: ['ticketDetails', ticketId], queryFn: () => getTicketDetails(ticketId)});
 
   //댓글 조회
-  const {data: comments} = useQuery({
-    queryKey: ['ticketComments', ticketId],
-    queryFn: () => getTicketComments(ticketId),
-  });
+  const {data: comments} = useQuery({queryKey: ['ticketComments', ticketId], queryFn: () => getTicketComments(ticketId)});
 
   return (
     <div className="flex flex-col pt-[30px] px-[46px] ">
@@ -66,6 +60,7 @@ export default function DetailContainer() {
                   <CommentItem
                     key={comment.commentId}
                     commentId={comment.commentId}
+                    authorId={comment.authorId}
                     name={comment.authorName}
                     content={comment.content}
                     createdAt={comment.createdAt}

@@ -1,16 +1,16 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useRef, useState } from 'react';
-import { getCategoryList } from '../../../../api/service/categories';
-import { approveTicket, getTicketList, getTicketTypes, rejectTicket } from '../../../../api/service/tickets';
-import { getManagerList } from '../../../../api/service/users';
-import { useUserStore } from '../../../../store/store';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {useEffect, useRef, useState} from 'react';
+import {getCategoryList} from '../../../../api/service/categories';
+import {approveTicket, getTicketList, getTicketTypes, rejectTicket} from '../../../../api/service/tickets';
+import {getManagerList} from '../../../../api/service/users';
+import {useUserStore} from '../../../../store/store';
 import Dropdown from '../../../common/Dropdown';
-import { RefreshIcon } from '../../../common/Icon';
+import {RefreshIcon} from '../../../common/Icon';
 import PageNations from '../../../common/PageNations';
 import Ticket from '../../../common/ticket/Ticket';
 
 interface TicketListProps {
-  selectedFilter: '전체' | '나의 요청'; 
+  selectedFilter: '전체' | '나의 요청';
 }
 
 const typeMapping: Record<string, string> = {CREATE: '생성', DELETE: '삭제', ETC: '기타', UPDATE: '수정'};
@@ -23,8 +23,6 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
   const queryClient = useQueryClient();
 
   const {userId} = useUserStore();
-  const managerId = selectedFilter === '전체' ? undefined : userId; 
-  console.log(managerId);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -33,7 +31,7 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
   const {data: ticketListData} = useQuery({
     queryKey: ['ticketList', currentPage, selectedFilter, selectedFilters, userId],
     queryFn: () => {
-      const selectedManagerId  = userData?.find((user: any) => user.username === selectedFilters['담당자'])?.userId;
+      const selectedManagerId = userData?.find((user: any) => user.username === selectedFilters['담당자'])?.userId;
       const firstCategoryId = categories?.find((cat: any) => cat.primary.name === selectedFilters['1차 카테고리'])?.primary.id;
       const secondCategoryId = categories
         ?.find((cat: any) => cat.primary.name === selectedFilters['1차 카테고리'])
@@ -127,11 +125,7 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
 
   const handleSelect = (label: string, value: string) => {
     if (label === '1차 카테고리') {
-      setSelectedFilters((prev) => ({
-        ...prev,
-        ['1차 카테고리']: value,
-        ['2차 카테고리']: '', 
-      }));
+      setSelectedFilters((prev) => ({...prev, ['1차 카테고리']: value, ['2차 카테고리']: ''}));
     } else {
       setSelectedFilters((prev) => ({...prev, [label]: value}));
     }

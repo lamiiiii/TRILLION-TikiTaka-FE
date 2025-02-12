@@ -8,13 +8,14 @@ import DOMPurify from 'dompurify';
 
 interface CommentItemProps {
   commentId: number;
+  authorId: number;
   name: string;
   content: string;
   files?: File[];
   createdAt: string;
 }
 
-export default function CommentItem({commentId, name, content, files, createdAt}: CommentItemProps) {
+export default function CommentItem({commentId, authorId, name, content, files, createdAt}: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(content);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -70,7 +71,7 @@ export default function CommentItem({commentId, name, content, files, createdAt}
 
   return (
     <div className="flex gap-3 mt-10">
-      <Profile name={name} backgroundColor="USER" size="sm" />
+      <Profile userId={authorId} name={name} backgroundColor="USER" size="md" />
       <div className="w-full flex flex-col gap-2">
         {files?.map((file, index) => (
           <a key={index} href={URL.createObjectURL(file)} className="text-blue-500 hover:underline block">
@@ -105,7 +106,11 @@ export default function CommentItem({commentId, name, content, files, createdAt}
           </div>
         </div>
         {isEditing ? (
-          <textarea className="comment-textarea" value={editedContent} onChange={(e) => setEditedContent(DOMPurify.sanitize(e.target.value))} />
+          <textarea
+            className="comment-textarea"
+            value={editedContent}
+            onChange={(e) => setEditedContent(DOMPurify.sanitize(e.target.value))}
+          />
         ) : (
           <p className="text-subtitle-regular">{content}</p>
         )}

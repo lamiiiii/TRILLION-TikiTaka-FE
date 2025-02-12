@@ -97,7 +97,7 @@ export default function CommentInput() {
       </div>
       <div className="relative mt-3">
         <div className="flex gap-2 mb-2">
-          <Profile userId={userId} name={userName} size="lg" backgroundColor={role} />
+          <Profile userId={userId} name={userName} size="md" backgroundColor={role} />
           <textarea
             ref={textareaRef}
             className="comment-textarea"
