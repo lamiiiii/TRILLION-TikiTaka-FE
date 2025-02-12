@@ -2,7 +2,8 @@ import {useEffect, useState} from 'react';
 import {approveTicket, getTicketList, rejectTicket, updateTicketStatus, getTicketTypes} from '../../../api/service/tickets';
 import {useUserStore} from '../../../store/store'; // role 가져오기
 import Dropdown from '../../common/Dropdown';
-import PageNations from '../../manager/common/PageNations';
+import {RefreshIcon} from '../../common/Icon';
+import PageNations from '../../common/PageNations';
 import DashTicket from './DashTicket';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {toast} from 'react-toastify';
@@ -80,7 +81,8 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     queryFn: async () => {
       const statusParam = mapFilterToStatus(selectedFilter ?? '전체');
 
-      // ✅ 선택된 필터에서 ID 값 찾기 (API 요청에 사용)
+      const urgent = selectedFilter === '긴급' ? true : undefined;
+
       const managerId = userData?.find((user: any) => user.username === selectedFilters['담당자'])?.userId;
       const firstCategoryId = categories?.find((cat: any) => cat.primary.name === selectedFilters['1차 카테고리'])?.primary.id;
       const secondCategoryId = categories
@@ -96,13 +98,21 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
         firstCategoryId,
         secondCategoryId,
         ticketTypeId,
+        urgent,
       });
 
       let sortedTickets = [...ticketData.content];
 
       sortedTickets.sort((a, b) => {
+        const activeStatuses = ['PENDING', 'IN_PROGRESS', 'REVIEW'];
+        const isActiveA = activeStatuses.includes(a.status);
+        const isActiveB = activeStatuses.includes(b.status);
+
         if (a.urgent && !b.urgent) return -1;
         if (!a.urgent && b.urgent) return 1;
+
+        if (isActiveA && !isActiveB) return -1;
+        if (!isActiveA && isActiveB) return 1;
 
         if (orderBy === '최신순') {
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
@@ -260,7 +270,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
           label="20개씩"
           options={pageSizeOptions}
           value={`${pageSize}개씩`}
-          onSelect={(value) => setPageSize(parseInt(value))}
+          onSelect={(value) => setPageSize(parseInt(value.replace('개씩', ''), 10))}
           paddingX="px-3"
           border={false}
           textColor=""
@@ -290,6 +300,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
                 }
                 onSelect={(value) => handleSelect(data.label, value)}
                 paddingX="px-3"
+                disabled={data.label === '2차 카테고리' && !selectedFilters['1차 카테고리']}
               />
             ))}
             <button

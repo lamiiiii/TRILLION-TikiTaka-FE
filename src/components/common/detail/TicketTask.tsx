@@ -185,7 +185,7 @@ export default function TicketTask() {
           </AnimatePresence>
         </ul>
         <textarea
-          className="w-full h-[78px] text-subtitle-regular border border-gray-2 rounded-[4px] py-3 px-4 focus:border-main"
+          className="w-full h-[78px] text-subtitle-regular border border-gray-2 rounded-[4px] py-3 px-4 focus:border-main resize-none"
           placeholder="하위 태스크 추가"
           value={inputValue}
           onChange={(e) => setInputValue(DOMPurify.sanitize(e.target.value))}

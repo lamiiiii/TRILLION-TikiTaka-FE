@@ -1,63 +1,61 @@
-import {useEffect, useRef, useState} from 'react';
-
-import PageNations from '../../common/PageNations';
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {approveTicket, getTicketList, getTicketTypes, rejectTicket} from '../../../../api/service/tickets';
-import DropDown from '../../../common/Dropdown';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useRef, useState } from 'react';
+import { getCategoryList } from '../../../../api/service/categories';
+import { approveTicket, getTicketList, getTicketTypes, rejectTicket } from '../../../../api/service/tickets';
+import { getManagerList } from '../../../../api/service/users';
+import { useUserStore } from '../../../../store/store';
+import Dropdown from '../../../common/Dropdown';
+import { RefreshIcon } from '../../../common/Icon';
+import PageNations from '../../../common/PageNations';
 import Ticket from '../../../common/ticket/Ticket';
-import {useUserStore} from '../../../../store/store';
-import {getManagerList} from '../../../../api/service/users';
-import {getCategoryList} from '../../../../api/service/categories';
 
 interface TicketListProps {
-  selectedFilter: '전체' | '나의 요청'; // 필터 상태 추가
+  selectedFilter: '전체' | '나의 요청'; 
 }
+
+const typeMapping: Record<string, string> = {CREATE: '생성', DELETE: '삭제', ETC: '기타', UPDATE: '수정'};
 
 export default function PendingTicketList({selectedFilter}: TicketListProps) {
   const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
   const [currentPage, setCurrentPage] = useState(1);
   const listRef = useRef<HTMLDivElement>(null);
-
   const ticketsPerPage = 20;
-
   const queryClient = useQueryClient();
 
-  // 유저 아이디 조회
   const {userId} = useUserStore();
-  const managerId = selectedFilter === '전체' ? undefined : userId; // 조건부로 managerId 설정
+  const managerId = selectedFilter === '전체' ? undefined : userId; 
   console.log(managerId);
 
-  // selectedFilter가 변경될 때 currentPage를 1로 리셋
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedFilter]);
 
-  //티켓 리스트 조회
   const {data: ticketListData} = useQuery({
     queryKey: ['ticketList', currentPage, selectedFilter, selectedFilters, userId],
-    queryFn: () =>
-      getTicketList({
+    queryFn: () => {
+      const selectedManagerId  = userData?.find((user: any) => user.username === selectedFilters['담당자'])?.userId;
+      const firstCategoryId = categories?.find((cat: any) => cat.primary.name === selectedFilters['1차 카테고리'])?.primary.id;
+      const secondCategoryId = categories
+        ?.find((cat: any) => cat.primary.name === selectedFilters['1차 카테고리'])
+        ?.secondaries.find((sub: any) => sub.name === selectedFilters['2차 카테고리'])?.id;
+      const ticketTypeId = typeData?.find((type: any) => type.typeName === selectedFilters['요청'])?.typeId;
+
+      return getTicketList({
         page: currentPage - 1,
         size: ticketsPerPage,
-        status: 'PENDING', //승인 대기 티켓 조회
-        managerId: managerId,
-      }),
+        status: 'PENDING',
+        managerId: selectedFilter === '나의 요청' ? userId : selectedManagerId,
+        firstCategoryId,
+        secondCategoryId,
+        ticketTypeId,
+      });
+    },
   });
 
-  // 유저 정보 (담당자 리스트)
-  const {data: userData} = useQuery({
-    queryKey: ['managers'],
-    queryFn: getManagerList,
-    select: (data) => data.users,
-  });
+  const {data: userData} = useQuery({queryKey: ['managers'], queryFn: getManagerList, select: (data) => data.users});
 
-  // 티켓 타입 데이터
-  const {data: ticketData} = useQuery({
-    queryKey: ['types'],
-    queryFn: getTicketTypes,
-  });
+  const {data: typeData} = useQuery({queryKey: ['types'], queryFn: getTicketTypes});
 
-  // 카테고리 데이터
   const {data: categories = []} = useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
@@ -71,31 +69,20 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
     },
   });
 
-  // 드롭다운 데이터 설정
   const dropdownData = [
-    {
-      label: '담당자',
-      options: userData?.map((user: any) => user.username), // 담당자 목록
-    },
-    {
-      label: '1차 카테고리',
-      options: categories.map((cat: any) => cat.primary.name), // 1차 카테고리
-    },
+    {label: '담당자', options: userData?.map((user: any) => user.username)},
+    {label: '1차 카테고리', options: categories.map((cat: any) => cat.primary.name)},
     {
       label: '2차 카테고리',
       options: selectedFilters['1차 카테고리']
         ? (categories
             .find((cat: any) => cat.primary.name === selectedFilters['1차 카테고리'])
-            ?.secondaries.map((secondary: any) => secondary.name) ?? []) // 2차 카테고리, null 처리
-        : [], // 1차 카테고리가 선택되지 않으면 빈 배열 반환
+            ?.secondaries.map((secondary: any) => secondary.name) ?? [])
+        : [],
     },
-    {
-      label: '요청',
-      options: ticketData?.map((type: any) => type.typeName), // 요청 타입
-    },
+    {label: '요청', options: typeData?.map((type: any) => typeMapping[type.typeName] || type.typeName)},
   ];
 
-  //다음 페이지 preFetch
   useEffect(() => {
     if (ticketListData?.totalPages && currentPage < ticketListData.totalPages) {
       const nextPage = currentPage + 1;
@@ -106,14 +93,12 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
     }
   }, [currentPage, queryClient, ticketListData?.totalPages, selectedFilter, selectedFilters]);
 
-  // 페이지 변경 시 스크롤 위치 조정
   useEffect(() => {
     if (listRef.current) {
       listRef.current.scrollIntoView();
     }
   }, [currentPage]);
 
-  // 티켓 승인
   const approveMutation = useMutation({
     mutationFn: (ticketId: number) => approveTicket(ticketId),
     onSuccess: () => {
@@ -124,7 +109,6 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
     },
   });
 
-  // 티켓 반려
   const rejectMutation = useMutation({
     mutationFn: (ticketId: number) => rejectTicket(ticketId),
     onSuccess: () => {
@@ -142,18 +126,14 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
   };
 
   const handleSelect = (label: string, value: string) => {
-    // 1차 카테고리가 선택되면 2차 카테고리 초기화
     if (label === '1차 카테고리') {
       setSelectedFilters((prev) => ({
         ...prev,
         ['1차 카테고리']: value,
-        ['2차 카테고리']: '', // 2차 카테고리 초기화
+        ['2차 카테고리']: '', 
       }));
     } else {
-      setSelectedFilters((prev) => ({
-        ...prev,
-        [label]: value,
-      }));
+      setSelectedFilters((prev) => ({...prev, [label]: value}));
     }
   };
 
@@ -174,20 +154,33 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
       <div className="bg-gray-18 h-full flex flex-col justify-start p-4">
         <div className="flex items-center gap-4 leading-none mt-4 px-2">
           {dropdownData.map((data) => (
-            <DropDown
+            <Dropdown
               key={data.label}
               label={data.label}
               options={data.options}
-              value={selectedFilters[data.label]}
+              value={
+                data.label === '요청'
+                  ? typeMapping[selectedFilters[data.label]] || selectedFilters[data.label]
+                  : selectedFilters[data.label]
+              }
               onSelect={(value) => handleSelect(data.label, value)}
               paddingX="px-3"
+              disabled={data.label === '2차 카테고리' && !selectedFilters['1차 카테고리']}
             />
           ))}
+          <button
+            className=" text-gray-800 rounded-md  transition"
+            onClick={() => {
+              setSelectedFilters({});
+              setCurrentPage(1);
+            }}
+          >
+            <RefreshIcon />
+          </button>
           <div className="ml-auto text-gray-700 text-subtitle">
             조회 건수 <span className="text-black text-title-bold ml-1">{ticketListData?.totalElements}건</span>
           </div>
         </div>
-
         <div className="flex gap-4 py-2 text-gray-700 text-title-regular mt-5 mb-5 px-2">
           <div className="w-[6%]">티켓 ID</div>
           <div className="w-[14%]">카테고리</div>
@@ -196,7 +189,6 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
           <div className="w-[14%]">담당자</div>
           <div className="w-[15%]">승인 여부</div>
         </div>
-
         <div className="flex flex-col gap-4">
           {ticketListData?.content &&
             ticketListData?.content?.length > 0 &&
@@ -210,7 +202,6 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
               />
             ))}
         </div>
-
         <PageNations currentPage={currentPage} totalPages={ticketListData?.totalPages} onPageChange={handlePageChange} />
       </div>
     </div>
