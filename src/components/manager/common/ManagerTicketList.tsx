@@ -103,8 +103,15 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
       let sortedTickets = [...ticketData.content];
 
       sortedTickets.sort((a, b) => {
+        const activeStatuses = ['PENDING', 'IN_PROGRESS', 'REVIEW'];
+        const isActiveA = activeStatuses.includes(a.status);
+        const isActiveB = activeStatuses.includes(b.status);
+
         if (a.urgent && !b.urgent) return -1;
         if (!a.urgent && b.urgent) return 1;
+
+        if (isActiveA && !isActiveB) return -1;
+        if (!isActiveA && isActiveB) return 1;
 
         if (orderBy === '최신순') {
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
