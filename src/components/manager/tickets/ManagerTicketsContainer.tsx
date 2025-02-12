@@ -10,7 +10,7 @@ export default function ManagerTicketsContainer() {
 
   return (
     <div className="flex flex-col max-w-1200 mb-20">
-      <TopMenu boldGrayText="요청 티켓 관리" />
+      <TopMenu boldGrayText="내가 생성한 티켓" />
 
       <UserTicketFilter onFilterChange={setSelectedFilter} />
       <UserTicketList selectedFilter={selectedFilter} />
