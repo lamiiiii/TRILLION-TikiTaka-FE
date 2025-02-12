@@ -90,6 +90,7 @@ export default function TicketTask() {
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.nativeEvent.isComposing) return; // IME 입력 중이면 무시
     if (event.key === 'Enter' && inputValue.trim()) {
       const newTaskParams: CreateSubtaskParams = {
         ticketId,
