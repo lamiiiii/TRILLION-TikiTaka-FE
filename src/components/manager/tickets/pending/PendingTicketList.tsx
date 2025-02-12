@@ -165,6 +165,7 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
               }
               onSelect={(value) => handleSelect(data.label, value)}
               paddingX="px-3"
+              disabled={data.label === '2차 카테고리' && !selectedFilters['1차 카테고리']}
             />
           ))}
           <button
