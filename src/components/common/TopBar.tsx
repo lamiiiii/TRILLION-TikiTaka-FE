@@ -1,22 +1,17 @@
 import {useState} from 'react';
 import {useTokenStore, useUserStore} from '../../store/store';
-import {DownIcon, LogoIcon, SmProfileIcon} from './Icon';
+import {DownIcon, LogoIcon} from './Icon';
 import {Link, useNavigate} from 'react-router-dom';
 import {postLogout} from '../../api/service/auth';
-import {useOutsideClick} from '../../hooks/useOutsideClick';
+import Profile from './Profile';
 
 export default function TopBar() {
-  const {role, userName} = useUserStore();
+  const {role, userId} = useUserStore();
   const {logout} = useTokenStore();
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const roleLabel =
-    {
-      manager: 'MANAGER',
-      admin: 'ADMIN',
-      user: 'USER',
-    }[role?.toLowerCase()] || '';
+  const roleLabel = {manager: 'MANAGER', admin: 'ADMIN', user: 'USER'}[role?.toLowerCase()] || '';
 
   const onClickLogout = () => {
     try {
@@ -29,10 +24,8 @@ export default function TopBar() {
     }
   };
 
-  const dropdownRef = useOutsideClick(() => setIsDropdownOpen(false));
-
   return (
-    <div className="bg-main fixed w-full h-14 z-50">
+    <div className="bg-main fixed w-full h-14 z-[50]">
       <div className="relative w-full h-14 shrink-0 flex justify-between pl-12 pr-24 py-4">
         <Link to={`/${role.toLowerCase()}`} className="flex items-center gap-2">
           <LogoIcon />
@@ -45,14 +38,13 @@ export default function TopBar() {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 text-white cursor-pointer" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
             <div className="relative">
-              <SmProfileIcon />
-              <div className="absolute top-[13px] left-[13px] text-white font-bold text-xs" style={{transform: 'translate(-50%, -50%)'}}>
-                {userName?.[0]}
-              </div>
+              <Profile userId={userId} backgroundColor="USER" size="md" isTopBar />
             </div>
-            <DownIcon />
+            <div className={`transform transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`}>
+              <DownIcon />
+            </div>
             {isDropdownOpen && (
-              <div ref={dropdownRef} className="absolute top-10 mt-4 bg-white border border-gray-3 rounded-md shadow-lg z-10 ">
+              <div className="absolute top-12 right-24 mt-4 bg-white border border-gray-3 rounded-md shadow-lg z-[60] ">
                 <ul>
                   {role !== 'ADMIN' && (
                     <li
