@@ -49,8 +49,6 @@ export default function RequestFormDetail({
     },
   });
 
-  
-
   const deleteMutation = useMutation({
     mutationFn: () => deleteTicketForm(firstCategoryId, secondCategoryId),
     onSuccess: () => {
@@ -100,7 +98,7 @@ export default function RequestFormDetail({
               )}
               <button
                 className="px-6 py-1 bg-main text-white text-body-bold rounded"
-                onClick={() => deleteMutation.mutate()}
+                onClick={() => setShowDeleteModal(true)}
               >
                 요청양식 삭제
               </button>

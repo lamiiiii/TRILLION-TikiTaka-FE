@@ -48,7 +48,7 @@ export default function AccountList() {
             label={selectedStatus === "PENDING" ? "승인 대기" : "거절됨"}
             options={["승인 대기", "거절됨"]}
             onSelect={handleStatusSelect}
-            paddingX="px-4"
+            paddingX="px-2"
           />
           <div className="ml-auto text-gray-700 text-subtitle">
             조회 건수 <span className="text-black text-title-bold ml-1">{data?.data?.totalElements ?? 0}건</span>
