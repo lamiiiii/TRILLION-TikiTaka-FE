@@ -1,26 +1,12 @@
-export const STATUS_MAP = {
-  PENDING: '대기 중',
-  IN_PROGRESS: '진행 중',
-  REVIEW: '검토',
-  DONE: '진행 완료',
-  REJECTED: '반려',
-};
+export const STATUS_MAP = {PENDING: '대기 중', IN_PROGRESS: '진행 중', REVIEW: '검토', DONE: '진행 완료', REJECTED: '반려'};
 
 export const STATUS_OPTIONS = Object.values(STATUS_MAP);
 
-export const TICKET_STATUS = {
-  WAITING: '대기 중',
-  IN_PROGRESS: '진행 중',
-  COMPLETED: '진행 완료',
-} as const;
+export const TICKET_STATUS = {WAITING: '대기 중', IN_PROGRESS: '진행 중', COMPLETED: '진행 완료'} as const;
 export type TicketStatus = (typeof TICKET_STATUS)[keyof typeof TICKET_STATUS];
 
 export const PRIORITY = ['HIGH', 'MIDDLE', 'LOW'];
-export const PRIORITY_COLOR: {[key in (typeof PRIORITY)[number]]: string} = {
-  HIGH: '#F24949',
-  MIDDLE: '#F4B540',
-  LOW: '#93CF1A',
-};
+export const PRIORITY_COLOR: {[key in (typeof PRIORITY)[number]]: string} = {HIGH: '#F24949', MIDDLE: '#F4B540', LOW: '#93CF1A'};
 
 // 문의 임시 데이터
 export const INQUIRY_DATA = [
@@ -39,9 +25,7 @@ export const INQUIRY_DATA = [
       '현재 사용자로 로그인되어 있지만, 추가적인 관리 기능을 사용할 수 있는 권한이 부족합니다. 특정 프로젝트에 대한 관리 권한을 부여해 주실 수 있을까요? ',
     date: '2025-02-05',
     status: '답변 완료',
-    answer: {
-      content: '안녕하세요. 요청하신 관리 권한이 부여되었습니다. 추가 문의사항이 있으시면 언제든 연락 주시기 바랍니다.',
-    },
+    answer: {content: '안녕하세요. 요청하신 관리 권한이 부여되었습니다. 추가 문의사항이 있으시면 언제든 연락 주시기 바랍니다.'},
   },
 ];
 
@@ -102,3 +86,6 @@ export const UPDATE_TYPE_MAP = {
 };
 
 export const pageSizeOptions = ['20개씩', '30개씩', '50개씩'];
+
+export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+export const MAX_FILES = 5;

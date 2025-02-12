@@ -10,7 +10,7 @@ export default function ProfilePopup({userDetail}: ProfilePopupProps) {
       <img
         src={userDetail.profileImageUrl || '/assets/profile.png'}
         alt={userDetail.username}
-        className="w-16 h-16 rounded-full mx-auto mb-4"
+        className="w-10 h-10 rounded-full mx-auto mb-4"
       />
       <h3 className="text-subtitle font-semibold text-center">
         {userDetail.username}

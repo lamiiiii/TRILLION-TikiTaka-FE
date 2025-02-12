@@ -24,7 +24,6 @@ const colorClasses = {
 
 export default function Profile({userId, name, size = 'sm', backgroundColor}: ProfileInitialProps) {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const initial = name?.charAt(0).toUpperCase();
 
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
@@ -40,13 +39,13 @@ export default function Profile({userId, name, size = 'sm', backgroundColor}: Pr
     <div className="relative">
       {isPopupOpen && <div className="absolute right-full mr-3">{userDetail && <ProfilePopup userDetail={userDetail} />}</div>}
       <div
-        className={`${sizeClasses[size]} ${colorClasses[backgroundColor]} ${backgroundColor} text-white rounded-full flex items-center justify-center font-bold cursor-pointer overflow-hidden`}
+        className={`${sizeClasses[size]} ${colorClasses[backgroundColor]}  text-white rounded-full flex items-center justify-center  cursor-pointer overflow-hidden`}
         onClick={togglePopup}
       >
         {userDetail?.profileImageUrl ? (
           <img src={userDetail.profileImageUrl} alt={name} className="w-full h-full object-cover" />
         ) : (
-          <span className="text-body-bold p-4">{initial}</span>
+          <img src="/assets/profile.png" alt={name} className="w-full h-full object-cover" />
         )}
       </div>
     </div>

@@ -2,7 +2,6 @@ import {useEffect, useState} from 'react';
 import {approveTicket, getTicketList, rejectTicket, updateTicketStatus, getTicketTypes} from '../../../api/service/tickets';
 import {useUserStore} from '../../../store/store'; // role 가져오기
 import Dropdown from '../../common/Dropdown';
-import {RefreshIcon} from '../../common/Icon';
 import PageNations from '../../common/PageNations';
 import DashTicket from './DashTicket';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
