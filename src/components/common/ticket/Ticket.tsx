@@ -18,6 +18,17 @@ interface TicketProps extends TicketDataProps {
 // 담당자 목록 (managerName이 null이 아니면 포함)
 const assigneeOptions = ['all'];
 
+const getTicketClass = (urgent: boolean, status: string) => {
+  if (!urgent) return 'border-gray-2 bg-white hover:bg-gray-1';
+
+  const activeStatuses = ['PENDING', 'IN_PROGRESS', 'REVIEW'];
+  if (activeStatuses.includes(status)) {
+    return 'border-error bg-red/5 hover:bg-red/10';
+  }
+
+  return 'border-error bg-white hover:bg-red/5';
+};
+
 export default function Ticket({
   ticketId,
   title,
@@ -74,7 +85,7 @@ export default function Ticket({
   };
 
   // 긴급 티켓 스타일
-  const ticketClass = urgent ? 'border-error bg-white hover:bg-red/5' : 'border-gray-2 bg-white hover:bg-gray-1';
+  const ticketClass = getTicketClass(urgent, status);
 
   return (
     <Link className="group relative" to={role === 'USER' ? `/user/detail/${ticketId}` : `/manager/detail/${ticketId}`}>

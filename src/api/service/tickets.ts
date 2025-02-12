@@ -152,6 +152,7 @@ export async function getTicketList(params: TicketListParams = {}) {
         managerId: params.managerId,
         requesterId: params.requesterId,
         createdAt: params.createdAt,
+        urgent: params.urgent
       },
     });
     return data.data;
