@@ -95,9 +95,9 @@ export default function Ticket({
 
         {/* 카테고리 */}
         <div className="w-[14%] text-subtitle-regular">
-          <span>{firstCategoryName}</span>
+          <span>{firstCategoryName || '1차 카테고리 미지정'}</span>
           <br />
-          <span className="text-gray-6 text-body-regular">{secondCategoryName}</span>
+          <span className="text-gray-6 text-body-regular">{secondCategoryName || '2차 카테고리 미지정'}</span>
         </div>
 
         {/* 요청 내용 */}
