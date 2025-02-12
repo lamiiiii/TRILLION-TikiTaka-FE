@@ -1,13 +1,13 @@
-import {useEffect, useState} from 'react';
-import {ticketDummy} from '../../../data/ticketData';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { getCategoryList } from '../../../api/service/categories';
+import { getTicketTypes } from '../../../api/service/tickets';
+import { getManagerList } from '../../../api/service/users';
+import { ticketDummy } from '../../../data/ticketData';
+import { TicketDataProps, TicketStatusType, TicketViewType } from '../../../interfaces/ticket';
 import Dropdown from '../Dropdown';
+import PageNations from '../PageNations';
 import Ticket from './Ticket';
-import PageNations from '../../manager/common/PageNations';
-import {TicketDataProps, TicketStatusType, TicketViewType} from '../../../interfaces/ticket';
-import {useQuery} from '@tanstack/react-query';
-import {getTicketTypes} from '../../../api/service/tickets';
-import {getManagerList} from '../../../api/service/users';
-import {getCategoryList} from '../../../api/service/categories';
 
 interface TicketListProps {
   role: 'manager' | 'user' | 'admin';

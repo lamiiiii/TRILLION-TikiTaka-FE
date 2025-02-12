@@ -1,14 +1,14 @@
-import {useEffect, useMemo, useRef, useState} from 'react';
-import PageNations from '../../manager/common/PageNations';
-import {TicketViewType} from '../../../interfaces/ticket';
-import {useQuery, useQueryClient} from '@tanstack/react-query';
-import {getTicketList, getTicketTypes} from '../../../api/service/tickets';
-import UserTicket from './UserTicket';
-import {useUserStore} from '../../../store/store';
-import {getCategoryList} from '../../../api/service/categories';
-import {getManagerList} from '../../../api/service/users';
-import {RefreshIcon} from '../../common/Icon';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { getCategoryList } from '../../../api/service/categories';
+import { getTicketList, getTicketTypes } from '../../../api/service/tickets';
+import { getManagerList } from '../../../api/service/users';
+import { TicketViewType } from '../../../interfaces/ticket';
+import { useUserStore } from '../../../store/store';
 import Dropdown from '../../common/Dropdown';
+import { RefreshIcon } from '../../common/Icon';
+import PageNations from '../../common/PageNations';
+import UserTicket from './UserTicket';
 
 const typeMapping: Record<string, string> = {CREATE: '생성', DELETE: '삭제', ETC: '기타', UPDATE: '수정'};
 

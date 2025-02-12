@@ -1,14 +1,14 @@
-import {useEffect,  useState} from 'react';
-import {approveTicket, getTicketList, rejectTicket, updateTicketStatus, getTicketTypes} from '../../../api/service/tickets';
-import {useUserStore} from '../../../store/store'; // role 가져오기
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { getCategoryList } from '../../../api/service/categories';
+import { approveTicket, getTicketList, getTicketTypes, rejectTicket, updateTicketStatus } from '../../../api/service/tickets';
+import { getManagerList } from '../../../api/service/users';
+import { useUserStore } from '../../../store/store'; // role 가져오기
 import Dropdown from '../../common/Dropdown';
-import PageNations from '../../manager/common/PageNations';
+import { RefreshIcon } from '../../common/Icon';
+import PageNations from '../../common/PageNations';
 import DashTicket from './DashTicket';
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {toast} from 'react-toastify';
-import {getManagerList} from '../../../api/service/users';
-import {getCategoryList} from '../../../api/service/categories';
-import {RefreshIcon} from '../../common/Icon';
 
 const mapFilterToStatus = (filter: string): string | undefined => {
   switch (filter) {

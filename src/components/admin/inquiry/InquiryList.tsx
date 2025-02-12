@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { getInquiries, Inquiry } from "../../../api/service/inquiry";
+import PageNations from "../../common/PageNations";
 import InquiryCard from "./InquiryCard";
 import ReplyModal from "./ReplyModal";
-import PageNations from "../../manager/common/PageNations";
 
 export default function InquiryList() {
   const [currentPage, setCurrentPage] = useState<number>(1);
