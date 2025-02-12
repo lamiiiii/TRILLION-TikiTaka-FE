@@ -87,7 +87,7 @@ export default function AccountCard({ registrationId, username, email, status }:
               </button>
               <button
                 onClick={() => setShowRejectModal(true)}
-                className="px-4 py-1 text-subtitle-regular border rounded hover:bg-red/80 hover:text-white"
+                className="px-4 py-1 text-subtitle-regular border rounded hover:bg-error/80 hover:text-white"
               >
                 거절
               </button>

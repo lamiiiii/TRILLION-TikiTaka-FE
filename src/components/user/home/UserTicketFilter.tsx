@@ -7,13 +7,13 @@ function FilterItem({type, count, isSelected, onClick}: {type: TicketViewType; c
   const textColor =
     type === '긴급'
       ? isSelected
-        ? 'text-red text-title-bold'
-        : 'text-red/85 text-title-bold'
+        ? 'text-error text-title-bold'
+        : 'text-error/85 text-title-bold'
       : isSelected
         ? 'text-black text-title-bold'
         : 'text-gray-6 text-title-bold';
 
-  const bgColor = type === '긴급' ? (isSelected ? 'bg-red' : 'bg-red/85') : isSelected ? 'bg-gray-9' : 'bg-gray-6';
+  const bgColor = type === '긴급' ? (isSelected ? 'bg-error' : 'bg-error/85') : isSelected ? 'bg-gray-9' : 'bg-gray-6';
 
   return (
     <div className="flex gap-2 cursor-pointer" onClick={onClick}>

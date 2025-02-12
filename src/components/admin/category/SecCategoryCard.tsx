@@ -160,7 +160,7 @@ export default function SecCategoryCard({ id, parentId, name, onDelete }: SecCat
                 <button className="w-full px-4 py-2 text-body-bold text-center hover:bg-gray-100" onClick={openEditModal}>
                   수정
                 </button>
-                <button className="w-full px-4 py-2 text-body-bold text-center hover:bg-gray-100 text-red-500" onClick={openDeleteModal}>
+                <button className="w-full px-4 py-2 text-body-bold text-center hover:bg-gray-100 text-error" onClick={openDeleteModal}>
                   삭제
                 </button>
               </div>
