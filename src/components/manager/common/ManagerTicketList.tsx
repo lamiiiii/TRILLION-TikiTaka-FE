@@ -80,6 +80,8 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     queryFn: async () => {
       const statusParam = mapFilterToStatus(selectedFilter ?? '전체');
 
+      const urgent = selectedFilter === '긴급' ? true : undefined;
+
       const managerId = userData?.find((user: any) => user.username === selectedFilters['담당자'])?.userId;
       const firstCategoryId = categories?.find((cat: any) => cat.primary.name === selectedFilters['1차 카테고리'])?.primary.id;
       const secondCategoryId = categories
@@ -95,6 +97,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
         firstCategoryId, 
         secondCategoryId, 
         ticketTypeId, 
+        urgent
       });
 
       let sortedTickets = [...ticketData.content];

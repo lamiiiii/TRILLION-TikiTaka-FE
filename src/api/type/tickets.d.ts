@@ -131,6 +131,7 @@ declare interface TicketListParams {
   requesterId?: number;
   orderBy?: string;
   createdAt?: string;
+  urgent?: boolean
 }
 
 declare interface UpdateTicketParams {
