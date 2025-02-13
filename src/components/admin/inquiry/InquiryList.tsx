@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { getInquiries, Inquiry } from "../../../api/service/inquiry";
-import PageNations from "../../common/PageNations";
-import InquiryCard from "./InquiryCard";
-import ReplyModal from "./ReplyModal";
+import {useEffect, useState} from 'react';
+import {getInquiries, Inquiry} from '../../../api/service/inquiry';
+import PageNations from '../../common/PageNations';
+import InquiryCard from './InquiryCard';
+import ReplyModal from './ReplyModal';
 
 export default function InquiryList() {
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -21,10 +21,10 @@ export default function InquiryList() {
         setInquiries(response);
         setTotalPages(1);
       } else {
-        throw new Error("Invalid response format");
+        throw new Error('Invalid response format');
       }
     } catch (err) {
-      setError("문의사항을 불러오는 중 오류가 발생했습니다.");
+      setError('문의사항을 불러오는 중 오류가 발생했습니다.');
     }
   };
 
@@ -50,17 +50,14 @@ export default function InquiryList() {
         </div>
 
         {/* 오류 메시지 출력 */}
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p style={{color: 'red'}}>{error}</p>}
 
         {/* 문의사항 목록 */}
         <div className="flex flex-col gap-4">
-          {Array.isArray(inquiries) && inquiries.map((inquiry) => (
-            <InquiryCard
-              key={inquiry.inquiryId}
-              {...inquiry}
-              onReplyClick={() => setSelectedInquiry(inquiry)}
-            />
-          ))}
+          {Array.isArray(inquiries) &&
+            inquiries.map((inquiry) => (
+              <InquiryCard key={inquiry.inquiryId} {...inquiry} onReplyClick={() => setSelectedInquiry(inquiry)} />
+            ))}
         </div>
 
         {/* 페이지네이션 */}
@@ -69,9 +66,9 @@ export default function InquiryList() {
 
       {/* 답변 등록 모달 */}
       {selectedInquiry && (
-        <ReplyModal 
-          inquiryId={selectedInquiry.inquiryId} 
-          onClose={() => setSelectedInquiry(null)} 
+        <ReplyModal
+          inquiryId={selectedInquiry.inquiryId}
+          onClose={() => setSelectedInquiry(null)}
           onAnswerSubmit={fetchInquiries} // 🚀 답변 후 리스트 새로고침
         />
       )}

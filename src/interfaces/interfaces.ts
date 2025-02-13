@@ -104,14 +104,16 @@ export interface NewTicketFormStore {
 export type PriorityType = (typeof PRIORITY)[number];
 
 export interface InquiryData {
-  type: string;
+  inquiryId: number;
+  requesterId: number;
+  requesterName: string;
+  type: 'QUESTION' | 'REQUEST';
   title: string;
   content: string;
-  date: string;
-  status: string;
-  answer?: {
-    content: string;
-  };
+  answer: string | null;
+  status: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface UserInfo {

@@ -13,19 +13,21 @@ export default function Inquiry({data}: InquiryProps) {
     setIsAnswerVisible((prev) => !prev);
   };
 
+  const getStatusText = (status: boolean) => (status ? '답변 완료' : '답변 대기');
+
   return (
     <div className="flex flex-col gap-2">
-      <section className="flex w-full p-5 rounded bg-white border border-gray-2 text-subtitle-regular">
-        <p className="mr-[59px]">{data.type}</p>
+      <section className="flex w-full p-5 rounded bg-white border border-gray-2 text-subtitle-regular hover:bg-gray-1">
+        <p className="mr-[59px]">{data.type === 'QUESTION' ? '질문' : '요청'}</p>
         <div>
           <p>{data.title}</p>
           <p className="w-[450px] text-gray-6 text-body-regular mt-1 mr-[120px]">{data.content}</p>
         </div>
-        <p className="mr-[55px]">{data.date}</p>
+        <p className="text-body-regular mr-[70px]">{data.createdAt.split(' ')[0]}</p>
         <div className="relative flex gap-2">
-          <p>{data.status}</p>
+          <p>{getStatusText(data.status)}</p>
 
-          {data.status === '답변 완료' && (
+          {data.status && (
             <div
               className="absolute top-0 left-16"
               style={{
@@ -46,7 +48,7 @@ export default function Inquiry({data}: InquiryProps) {
           <p className="mr-[30px]">문의 답변</p>
           <div>
             <p> Re: {data.title}</p>
-            <p className="w-[600px] text-gray-6 text-body-regular mt-1 mr-[120px]">{data.answer?.content}</p>
+            <p className="w-[600px] text-gray-6 text-body-regular mt-1 mr-[120px]">{data.answer}</p>
           </div>
         </section>
       )}

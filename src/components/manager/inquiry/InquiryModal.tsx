@@ -23,7 +23,7 @@ export default function InquiryModal({onClose}: InquiryModalProps) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
-  const createInquiryMutation = useCreateMutation<CreateInquiryRequest>(createInquiry, '문의 등록에 실패했습니다.', 0);
+  const createInquiryMutation = useCreateMutation<CreateInquiryRequest>(createInquiry, '문의 등록에 실패했습니다.', 0, [['inquiries']]);
 
   const handleTypeSelect = (selectedOption: string) => {
     setType(selectedOption === '질문' ? 'QUESTION' : 'REQUEST');
