@@ -1,11 +1,10 @@
 import {Navigate, Route, BrowserRouter as Router, Routes} from 'react-router-dom';
 import ManagerHome from './pages/manager/ManagerHome';
-import './global.css'; // Tailwind CSS 적용
+import './global.css';
 import UserHome from './pages/user/UserHome';
 import ManagerTickets from './pages/manager/ManagerTickets';
 import ManagerStatistics from './pages/manager/ManagerStatistics';
 import NotFound from './pages/NotFound';
-// import ManagerInquiry from './pages/manager/ManagerInquiry';
 import ManagerPwdChange from './pages/manager/ManagerPwdChange';
 import UserNewTicket from './pages/user/UserNewTicket';
 import SignIn from './pages/common/signin/SignIn';
@@ -17,13 +16,14 @@ import AdminCategory from './pages/admin/AdminCategory';
 import AdminInquiry from './pages/admin/AdminInquiry';
 import ManagerHistories from './pages/manager/ManagerHistories';
 import ChangePwd from './pages/common/signin/ChangePwd';
-// import UserInquiry from './pages/user/UserInquiry';
 import UserPwdChange from './pages/user/UserPwdChange';
 import AdminStatistics from './pages/admin/AdminStatistics';
 import ManagerNewTicket from './pages/manager/ManagerNewTicket';
 import UserTicketDetail from './pages/user/UserTicketDetail';
 import Layout from './Layout';
 import ManagerManageTickets from './pages/manager/ManagerManageTickets';
+import UserInquiry from './pages/user/UserInquiry';
+import ManagerInquiry from './pages/manager/ManagerInquiry';
 
 function App() {
   const managerRoutes = [
@@ -36,7 +36,7 @@ function App() {
 
     {path: 'histories', element: <ManagerHistories />},
     {path: 'detail/:id', element: <ManagerTicketDetail />},
-    // {path: 'inquiry', element: <ManagerInquiry />},
+    {path: 'inquiry', element: <ManagerInquiry />},
     {path: 'pwdChange', element: <ManagerPwdChange />},
   ];
 
@@ -44,7 +44,7 @@ function App() {
     {path: '', element: <UserHome />},
     {path: 'newTicket', element: <UserNewTicket />},
     {path: 'detail/:id', element: <UserTicketDetail />},
-    // {path: 'inquiry', element: <UserInquiry />},
+    {path: 'inquiry', element: <UserInquiry />},
     {path: 'pwdChange', element: <UserPwdChange />},
   ];
 

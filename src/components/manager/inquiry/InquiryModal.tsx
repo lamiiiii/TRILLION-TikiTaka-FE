@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {createInquiry} from '../../../api/service/inquiry'; // API 호출 함수
+import {createInquiry} from '../../../api/service/inquiry';
 import DropDown from '../../common/Dropdown';
 import Input from '../../common/Input';
 import {XIcon} from '../../common/Icon';
@@ -9,10 +9,9 @@ import DOMPurify from 'dompurify';
 
 interface InquiryModalProps {
   onClose: () => void;
-  onInquirySubmit: () => void; // 🚀 문의 등록 후 목록 갱신을 위한 콜백
 }
 
-export default function InquiryModal({onClose, onInquirySubmit}: InquiryModalProps) {
+export default function InquiryModal({onClose}: InquiryModalProps) {
   const [type, setType] = useState<'QUESTION' | 'REQUEST'>('QUESTION');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -30,7 +29,6 @@ export default function InquiryModal({onClose, onInquirySubmit}: InquiryModalPro
     try {
       await createInquiry({title, content, type});
       alert('문의가 등록되었습니다!');
-      onInquirySubmit(); // 🚀 문의사항 목록 새로고침
       onClose(); // 모달 닫기
     } catch (error) {
       alert('문의 등록에 실패했습니다.');
