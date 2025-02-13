@@ -9,6 +9,7 @@ import Dropdown from '../../common/Dropdown';
 import {RefreshIcon} from '../../common/Icon';
 import PageNations from '../../common/PageNations';
 import UserTicket from './UserTicket';
+import {ERROR_MESSAGES} from '../../../constants/error';
 
 const typeMapping: Record<string, string> = {CREATE: '생성', DELETE: '삭제', ETC: '기타', UPDATE: '수정'};
 
@@ -207,7 +208,7 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
               <UserTicket key={ticket.ticketId} {...ticket} detailLink={getDetailLink(ticket.ticketId)} />
             ))
           ) : (
-            <div className="text-gray-500 text-center py-4">해당 상태의 티켓이 없습니다.</div>
+            <div className="text-gray-500 text-center py-4">{ERROR_MESSAGES.NO_TICKET}</div>
           )}
         </div>
 

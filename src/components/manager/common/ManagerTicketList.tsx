@@ -10,6 +10,7 @@ import {getManagerList} from '../../../api/service/users';
 import {getCategoryList} from '../../../api/service/categories';
 import {RefreshIcon} from '../../common/Icon';
 import {pageSizeOptions} from '../../../constants/constants';
+import {ERROR_MESSAGES} from '../../../constants/error';
 
 const mapFilterToStatus = (filter: string): string | undefined => {
   switch (filter) {
@@ -338,7 +339,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
               />
             ))
           ) : (
-            <div className="text-gray-500 text-center py-4">해당 상태의 티켓이 없습니다.</div>
+            <div className="text-gray-500 text-center py-4">{ERROR_MESSAGES.NO_TICKET}</div>
           )}
         </div>
 

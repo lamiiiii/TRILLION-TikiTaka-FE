@@ -3,6 +3,7 @@ import {Bar, BarChart, XAxis, PieChart, Pie, Cell, Tooltip} from 'recharts';
 import {useQuery} from '@tanstack/react-query';
 import {getMonthlyCategorySummary} from '../../../api/service/statistics';
 import {commonTooltipStyle} from '../../../constants/constants';
+import {ERROR_MESSAGES} from '../../../constants/error';
 const COLORS = ['#F6D47A', '#FFB74D', '#FFD700']; // 색상 팔레트
 
 interface CategoryData {
@@ -107,7 +108,7 @@ export default function MonthCategoryTicketStatus() {
                   </Bar>
                 </BarChart>
               ) : (
-                <div className="text-gray-500 text-center py-4">1차 카테고리 정보가 없습니다.</div>
+                <div className="text-gray-500 text-center py-4">{ERROR_MESSAGES.NO_PRIMARY_CATEGORY}</div>
               )}
             </section>
           </div>
@@ -150,7 +151,7 @@ export default function MonthCategoryTicketStatus() {
                   </div>
                 </section>
               ) : (
-                <div className="text-gray-500 text-center py-4">해당 1차 카테고리에 해당하는 2차 카테고리 정보가 없습니다.</div>
+                <div className="text-gray-500 text-center py-4">{ERROR_MESSAGES.NO_SECONDARY_CATEGORY}</div>
               )}
             </div>
           )}

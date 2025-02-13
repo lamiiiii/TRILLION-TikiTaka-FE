@@ -10,7 +10,7 @@ import PageNations from '../../../common/PageNations';
 import Ticket from '../../../common/ticket/Ticket';
 
 interface TicketListProps {
-  selectedFilter: '전체' | '나의 요청';
+  selectedFilter: '전체' | '나의 티켓';
 }
 
 const typeMapping: Record<string, string> = {CREATE: '생성', DELETE: '삭제', ETC: '기타', UPDATE: '수정'};
@@ -42,7 +42,7 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
         page: currentPage - 1,
         size: ticketsPerPage,
         status: 'PENDING',
-        managerId: selectedFilter === '나의 요청' ? userId : selectedManagerId,
+        managerId: selectedFilter === '나의 티켓' ? userId : selectedManagerId,
         firstCategoryId,
         secondCategoryId,
         ticketTypeId,

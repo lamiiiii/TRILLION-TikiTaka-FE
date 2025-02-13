@@ -4,6 +4,7 @@ import {getInquiries} from '../../api/service/inquiry';
 import PageNations from '../common/PageNations';
 import {useMemo, useState} from 'react';
 import {ITEMS_PER_PAGE} from '../../constants/constants';
+import {ERROR_MESSAGES} from '../../constants/error';
 
 export default function InquiryContainer() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -43,7 +44,7 @@ export default function InquiryContainer() {
         {paginatedInquiries.length > 0 ? (
           paginatedInquiries.map((inquiry, index) => <Inquiry key={index} data={inquiry} />)
         ) : (
-          <div className="text-gray-500 text-center py-4">문의 내역이 없습니다.</div>
+          <div className="text-gray-500 text-center py-4">{ERROR_MESSAGES.NO_INQUIRY}</div>
         )}
 
         <PageNations currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />

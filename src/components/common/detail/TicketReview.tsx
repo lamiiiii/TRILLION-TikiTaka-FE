@@ -5,6 +5,7 @@ import {useQuery} from '@tanstack/react-query';
 import {useUserStore} from '../../../store/store';
 import {useEffect, useState} from 'react';
 import {useCreateMutation} from '../../../api/hooks/useCreateMutation';
+import {ERROR_MESSAGES} from '../../../constants/error';
 
 export default function TicketReview({managerId}: {managerId: number}) {
   const {id} = useParams();
@@ -63,7 +64,6 @@ export default function TicketReview({managerId}: {managerId: number}) {
             reviewers.data.map((reviewer: any, index: number) => (
               <li key={index} className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
-                  {/*<Profile name={reviewer.reviewerName} backgroundColor="MANAGER" size="md" /> 프로필 컴포넌트 제거*/}
                   <div className="flex flex-col ml-2">
                     <span>{reviewer.reviewerName}</span>
                     {reviewer.reviewed && <span className="text-caption-regular">{reviewer.reviewDate} 검토 완료</span>}
@@ -72,7 +72,7 @@ export default function TicketReview({managerId}: {managerId: number}) {
               </li>
             ))
           ) : (
-            <div className="text-gray-500 text-center py-4">검토 내역이 없습니다.</div>
+            <div className="text-gray-500 text-center py-4">{ERROR_MESSAGES.NO_REVIEW}</div>
           )}
         </ul>
       </div>
