@@ -26,21 +26,16 @@ export default function SecCategoryCard({ id, parentId, name, onDelete }: SecCat
   const [requestForm, setRequestForm] = useState<{ mustDescription: string; description: string } | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    async function fetchRequestForm() {
-      try {
-        const formData = await getTicketForm(parentId, id);
-
-        if (!formData.description && !formData.mustDescription) {
-          setRequestForm(null);
-        } else {
-          setRequestForm(formData);
-        }
-      } catch (error) {
-        setRequestForm(null); 
-      }
+  const fetchRequestForm = async () => {
+    try {
+      const formData = await getTicketForm(parentId, id);
+      setRequestForm(formData?.description || formData?.mustDescription ? formData : null);
+    } catch (error) {
+      setRequestForm(null);
     }
+  };
 
+  useEffect(() => {
     fetchRequestForm();
   }, [id, parentId]);
 
@@ -146,6 +141,7 @@ export default function SecCategoryCard({ id, parentId, name, onDelete }: SecCat
                   description={requestForm.description}
                   onClose={closeReqForm}
                   name={name}
+                  refreshRequestForm={fetchRequestForm}
                 />
               ) : (
                 <RegisterRequestForm name={name} firstCategoryId={parentId} secondCategoryId={id} onClose={closeReqForm} />

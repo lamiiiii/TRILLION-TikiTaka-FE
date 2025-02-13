@@ -1,13 +1,13 @@
-import {useEffect, useRef, useState} from 'react';
-import PageNations from '../../common/PageNations';
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {approveTicket, getTicketList, getTicketTypes, rejectTicket} from '../../../../api/service/tickets';
-import Ticket from '../../../common/ticket/Ticket';
-import {useUserStore} from '../../../../store/store';
-import {getManagerList} from '../../../../api/service/users';
-import {getCategoryList} from '../../../../api/service/categories';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useRef, useState } from 'react';
+import { getCategoryList } from '../../../../api/service/categories';
+import { approveTicket, getTicketList, getTicketTypes, rejectTicket } from '../../../../api/service/tickets';
+import { getManagerList } from '../../../../api/service/users';
+import { useUserStore } from '../../../../store/store';
 import Dropdown from '../../../common/Dropdown';
-import {RefreshIcon} from '../../../common/Icon';
+import { RefreshIcon } from '../../../common/Icon';
+import PageNations from '../../../common/PageNations';
+import Ticket from '../../../common/ticket/Ticket';
 
 interface TicketListProps {
   selectedFilter: '전체' | '나의 요청'; 
@@ -165,6 +165,7 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
               }
               onSelect={(value) => handleSelect(data.label, value)}
               paddingX="px-3"
+              disabled={data.label === '2차 카테고리' && !selectedFilters['1차 카테고리']}
             />
           ))}
           <button

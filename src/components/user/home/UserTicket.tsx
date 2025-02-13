@@ -12,6 +12,17 @@ interface UserTicketProps extends TicketListItem {
   onStatusChange: (ticketId: number, newStatus: string) => void;
 }
 
+const getTicketClass = (urgent: boolean, status: string) => {
+  if (!urgent) return 'border-gray-2 bg-white hover:bg-gray-1';
+
+  const activeStatuses = ['PENDING', 'IN_PROGRESS', 'REVIEW'];
+  if (activeStatuses.includes(status)) {
+    return 'border-error bg-red/5 hover:bg-red/10';
+  }
+
+  return 'border-error bg-white hover:bg-red/5';
+};
+
 export default function UserTicket({
   ticketId,
   title,
@@ -32,7 +43,7 @@ export default function UserTicket({
     ETC: '기타',
   };
 
-  const ticketClass = urgent ? 'border-error bg-white hover:bg-error/5' : 'border-gray-2 bg-white hover:bg-gray-1';
+  const ticketClass = getTicketClass(urgent, status);
 
   return (
     <div className={`flex gap-4 py-3 px-2 border items-center rounded cursor-pointer transition-all duration-200 ${ticketClass}`}>

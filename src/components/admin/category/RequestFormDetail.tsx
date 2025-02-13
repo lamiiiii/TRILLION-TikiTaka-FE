@@ -14,6 +14,7 @@ interface RequestFormDetailProps {
   secondCategoryId: number; 
   onClose: () => void; 
   name:string;
+  refreshRequestForm: () => void
 }
 
 export default function RequestFormDetail({
@@ -23,6 +24,7 @@ export default function RequestFormDetail({
   description,
   onClose,
   name,
+  refreshRequestForm,
 }: RequestFormDetailProps) {
   const queryClient = useQueryClient();
   const [isClosing, setIsClosing] = useState(false);
@@ -38,8 +40,8 @@ export default function RequestFormDetail({
         description: newDescription,
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['ticketForms']});
       toast.success('티켓 양식이 수정되었습니다.');
+      refreshRequestForm(); 
       setIsEditing(false);
     },
     onError: () => {
@@ -96,7 +98,7 @@ export default function RequestFormDetail({
               )}
               <button
                 className="px-6 py-1 bg-main text-white text-body-bold rounded"
-                onClick={() => deleteMutation.mutate()}
+                onClick={() => setShowDeleteModal(true)}
               >
                 요청양식 삭제
               </button>
@@ -133,7 +135,7 @@ export default function RequestFormDetail({
                 <div className="text-gray-600 text-body-regular">{mustDescription}</div>
               </div>
               <div className="mt-6">
-                <div className="block text-gray-700 font-semibold mb-2">요청 양식</div>
+                <div className="block text-gray-700 font-semibold mb-2">요청 내용</div>
                 <div className="text-gray-600 text-body-regular whitespace-pre-wrap">{description}</div>
               </div>
             </div>

@@ -49,9 +49,13 @@ export default function TicketReview({managerId}: {managerId: number}) {
                 <Profile name={userName} backgroundColor="MANAGER" size="md" />
                 <p>{userName}</p>
               </div>
-              <button className="main-btn" onClick={handleReview} disabled={isReviewed}>
-                {isReviewed ? '완료' : '검토'}
-              </button>
+              {isReviewed ? (
+                <div className="px-2 text-body-bold">검토 완료</div>
+              ) : (
+                <button className="main-btn" onClick={handleReview}>
+                  검토
+                </button>
+              )}
             </li>
           )}
           <label className="text-body-bold">검토 내역</label>
