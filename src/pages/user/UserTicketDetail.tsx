@@ -1,11 +1,18 @@
+import AuthGuard from '../../components/common/AuthGuard';
 import DetailContainer from '../../components/common/detail/DetailContainer';
+import {useTokenStore, useUserStore} from '../../store/store';
 
 export default function UserTicketDetail() {
+  const {isAuthenticated} = useTokenStore();
+  const {role} = useUserStore();
+
   return (
-    <div className="top-container">
-      <div className="flex flex-col">
-        <DetailContainer />
+    <AuthGuard isAuthenticated={isAuthenticated} userRole={role}>
+      <div className="top-container">
+        <div className="flex flex-col">
+          <DetailContainer />
+        </div>
       </div>
-    </div>
+    </AuthGuard>
   );
 }

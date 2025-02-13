@@ -21,9 +21,9 @@ export default function TopBar() {
   const onClickLogout = () => {
     try {
       postLogout();
-      logout(); // 상태 저장
+      logout();
       navigate('/');
-      window.location.reload(); // 로그아웃 후 새로고침
+      window.location.reload();
     } catch (error) {
       console.error('로그아웃 실패:', error);
     }
@@ -46,7 +46,6 @@ export default function TopBar() {
 
         {/* 우측 메뉴 */}
         <div className="flex items-center gap-4">
-          {/* <PushIcon /> */}
           <div className="flex items-center gap-2 text-white cursor-pointer" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
             <div className="relative">
               <SmProfileIcon />

@@ -2,7 +2,7 @@ import {useState} from 'react';
 interface ProfileInitialProps {
   name: string;
   size?: 'sm' | 'md' | 'lg';
-  backgroundColor: 'MANAGER' | 'USER' | 'ADMIN';
+  backgroundColor: 'MANAGER' | 'USER' | 'ADMIN' | 'DEFAULT';
 }
 
 const sizeClasses = {
@@ -15,6 +15,7 @@ const colorClasses = {
   MANAGER: 'bg-gray-7',
   USER: 'bg-main2-1',
   ADMIN: 'bg-admin-2',
+  DEFAULT: '',
 };
 
 export default function Profile({name, size = 'sm', backgroundColor}: ProfileInitialProps) {

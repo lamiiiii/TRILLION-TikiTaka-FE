@@ -1,9 +1,8 @@
 import {useEffect, useRef} from 'react';
 import TopBar from './components/common/TopBar';
 import SideBar from './components/common/SideBar';
-import {Outlet, useLocation} from 'react-router-dom';
+import {Navigate, Outlet, useLocation} from 'react-router-dom';
 import {useTokenStore} from './store/store';
-import AuthGuard from './components/common/AuthGuard';
 
 export default function Layout() {
   const {isAuthenticated} = useTokenStore();
@@ -19,8 +18,12 @@ export default function Layout() {
     });
   }, [location.pathname]);
 
+  if (!isAuthenticated) {
+    return <Navigate to="/"/>;
+  }
+
   return (
-    <AuthGuard isAuthenticated={isAuthenticated}>
+    isAuthenticated && (
       <div className="flex h-screen">
         <TopBar />
         <SideBar />
@@ -28,6 +31,6 @@ export default function Layout() {
           <Outlet />
         </div>
       </div>
-    </AuthGuard>
+    )
   );
 }

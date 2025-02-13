@@ -85,7 +85,7 @@ export default function SignInContainer() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      alert('이미 로그인된 상태입니다.');
+      alert('이미 계정에 로그인되어 있습니다. 다른 작업을 진행해주세요.');
       navigate(-1);
     }
   }, []);
