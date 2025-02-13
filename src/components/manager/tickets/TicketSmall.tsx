@@ -77,7 +77,7 @@ const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(
           <div className="relative" ref={priorityRef}>
             <button
               onClick={() => setShowPriority(!showPriority)}
-              className={`flex items-center justify-center ${priority ? 'px-2 py-1 rounded border border-gray-2 text-caption-bold ' : ''}`}
+              className={`flex items-center justify-center ${priority ? 'px-1 py-1 rounded border border-gray-2 text-caption-bold ' : ''}`}
               style={{
                 color: priority ? PRIORITY_COLOR[priority as keyof typeof PRIORITY_COLOR] : 'transparent',
                 borderColor: priority ? PRIORITY_COLOR[priority as keyof typeof PRIORITY_COLOR] : 'transparent',
@@ -103,14 +103,14 @@ const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(
               </div>
             )}
           </div>
-          <div className="w-full flex justify-between items-center mt-1 overflow-x-hidden">
-            <div className="flex-shrink-0 mr-2">
+          <div className="w-full flex justify-between items-center mt-1">
+            <div className="flex-shrink-0">
               <DropDown
                 label="진행 중"
                 options={['대기 중', '진행 중', '진행 완료']}
                 defaultSelected={initialStatus}
                 onSelect={handleStatusChange as (value: string) => void}
-                paddingX="px-5"
+                paddingX="px-3"
                 border={false}
                 value={status}
                 textColor="text-gray-15"
@@ -118,7 +118,7 @@ const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(
             </div>
             <div className="flex-shrink-0 bg-gray-1 px-3 rounded-md border border-gray-2 flex items-center gap-2 max-w-[150px]">
               <label className="text-caption-bold whitespace-nowrap">담당자</label>
-              <div className="min-w-0 flex-1 ">
+              <div className="flex-0 min-w-0">
                 <ManagerSelector selectedManagerName={selectedAssignee} onManagerSelect={handleManagerSelect} />
               </div>
             </div>

@@ -124,7 +124,6 @@ export default function TicketSetting({data}: TicketSettingProps) {
       // 2차 카테고리 초기화
       setSecondaryCategory('');
       setSecondaryCategoryId(0); // 또는 적절한 초기값
-      alert('2차 카테고리를 변경해 주세요.');
     }
   };
 
@@ -141,9 +140,17 @@ export default function TicketSetting({data}: TicketSettingProps) {
   };
 
   const handleTicketTypeSelect = (selectedOption: string) => {
-    updateTypeMutation.mutate({type: selectedOption});
-    setTicketType(selectedOption);
+    const selectedType = (ticketData as TicketType[])?.find((type) => String(type.typeName) === String(selectedOption));
+    console.log('selectedType', selectedType); // Check what is being selected
+
+    if (selectedType) {
+      const typeId = Number(selectedType.typeId);
+      console.log(typeId);
+      updateTypeMutation.mutate({ticketTypeId: typeId});
+      setTicketType(selectedOption);
+    }
   };
+
   return (
     <div className="flex flex-col gap-1">
       <label className="text-body-bold">티켓 설정</label>

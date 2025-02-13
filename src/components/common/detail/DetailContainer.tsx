@@ -18,11 +18,7 @@ import UserTicketTask from '../../user/UserTicketTask';
 export default function DetailContainer() {
   const {id} = useParams<{id: string}>();
   const navigate = useNavigate();
-
-  // 뒤로 가기
   const handleGoBack = () => navigate(-1);
-
-  // URL 파라미터에서 추출한 ID
   const ticketId = Number(id);
 
   // 티켓 상세 정보 조회

@@ -79,6 +79,7 @@ declare interface PersonalTicketStatus {
 }
 
 declare interface TicketListItem {
+  priority: string;
   ticketId: number;
   title: string;
   description: string;
@@ -150,7 +151,7 @@ declare interface UpdateTicketCategoryParams {
 }
 
 declare interface UpdateTicketTypeParams {
-  type: string;
+  ticketTypeId: number;
 }
 
 declare interface UpdateTicketUrgentRequest {
@@ -160,4 +161,9 @@ declare interface UpdateTicketUrgentRequest {
 declare interface UpdateTicketUrgentResponse {
   message: string;
   data: null;
+}
+
+declare interface TicketType {
+  typeId: number;
+  typeName: string;
 }
