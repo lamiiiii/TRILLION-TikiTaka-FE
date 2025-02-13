@@ -129,14 +129,14 @@ export default function RequestFormDetail({
               </div>
             </div>
           ) : (
-            <div className="w-[780px] h-[550px] bg-gray-18 mt-4 px-4 mx-auto shadow-[0px_1px_3px_1px_rgba(0,0,0,0.15)]">
+            <div className="w-[780px] max-h-[550px] bg-gray-18 mt-4 px-4 mx-auto shadow-[0px_1px_3px_1px_rgba(0,0,0,0.15)] overflow-y-auto">
               <div className="mt-4">
                 <div className="block text-gray-700 font-semibold mb-2">필수 입력 사항</div>
                 <div className="text-gray-600 text-body-regular">{mustDescription}</div>
               </div>
-              <div className="mt-6">
+              <div className="mt-6 mb-6">
                 <div className="block text-gray-700 font-semibold mb-2">요청 내용</div>
-                <div className="text-gray-600 text-body-regular whitespace-pre-wrap">{description}</div>
+                <div className="text-gray-600 text-body-regular whitespace-pre-wrap ">{description}</div>
               </div>
             </div>
           )}
