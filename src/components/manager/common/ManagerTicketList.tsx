@@ -116,9 +116,6 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
         const isActiveA = activeStatuses.includes(a.status);
         const isActiveB = activeStatuses.includes(b.status);
 
-        if (a.urgent && !b.urgent) return -1;
-        if (!a.urgent && b.urgent) return 1;
-
         if (isActiveA && !isActiveB) return -1;
         if (!isActiveA && isActiveB) return 1;
 
@@ -353,11 +350,13 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
               />
             ))
           ) : (
-            <div className="text-gray-500 text-center py-4">해당 상태의 티켓이 없습니다.</div>
+            <div className="text-gray-500 text-center py-4 mt-5">해당 상태의 티켓이 없습니다.</div>
           )}
         </div>
 
-        <PageNations currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+        {filteredTickets.length > 0 && (
+          <PageNations currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+        )}
       </div>
     </div>
   );
