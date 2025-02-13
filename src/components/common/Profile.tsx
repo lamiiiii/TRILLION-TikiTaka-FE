@@ -22,7 +22,7 @@ export default function Profile({userId, name, size = 'sm', isTopBar}: ProfileIn
   const {data: userDetail} = useQuery({
     queryKey: ['userDetail', userId],
     queryFn: () => (userId ? getUserDetail(userId) : null),
-    enabled: !!userId, // userId가 존재할 때만 쿼리 실행
+    enabled: !!userId && userId !== -1, // userId가 존재할 때만 쿼리 실행
   });
 
   return (
