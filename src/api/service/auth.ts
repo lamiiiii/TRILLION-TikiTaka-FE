@@ -4,7 +4,7 @@ import instance from '../axiosInstance';
 
 const config = {
   backend: {
-    baseURL: process.env.REACT_APP_BASE_URL,
+    baseURL: process.env.REACT_APP_BASE_URL || '',
   },
 };
 
@@ -51,7 +51,9 @@ export async function postLogout() {
 // INTF-6: 토큰 재발급
 export async function postReissueToken() {
   try {
-    const response = await axios.post(`${config.backend.baseURL}/reissue`, null, {
+    console.log(config.backend.baseURL);
+    const baseURL = config.backend.baseURL.replace(/\/$/, ''); // 끝에 `/`가 있으면 제거
+    const response = await axios.post(`${baseURL}/reissue`, null, {
       withCredentials: true,
     });
     const {headers} = response;
