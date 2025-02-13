@@ -5,14 +5,13 @@ import {getUserDetail} from '../../api/service/users';
 
 interface ProfileInitialProps {
   userId?: number;
-  name?: string;
   size?: 'sm' | 'md' | 'lg';
   isTopBar?: boolean;
 }
 
 const sizeClasses = {sm: 'w-5 h-5 text-xs', md: 'w-6 h-6 text-sm', lg: 'w-8 h-8 text-base'};
 
-export default function Profile({userId, name, size = 'sm', isTopBar}: ProfileInitialProps) {
+export default function Profile({userId, size = 'sm', isTopBar}: ProfileInitialProps) {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const togglePopup = () => {
