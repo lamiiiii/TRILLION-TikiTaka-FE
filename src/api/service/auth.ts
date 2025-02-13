@@ -51,8 +51,7 @@ export async function postLogout() {
 // INTF-6: 토큰 재발급
 export async function postReissueToken() {
   try {
-    console.log(config.backend.baseURL);
-    const baseURL = config.backend.baseURL.replace(/\/$/, ''); // 끝에 `/`가 있으면 제거
+    const baseURL = config.backend.baseURL.replace(/\/$/, '');
     const response = await axios.post(`${baseURL}/reissue`, null, {
       withCredentials: true,
     });
