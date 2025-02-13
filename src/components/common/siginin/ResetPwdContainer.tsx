@@ -3,7 +3,7 @@ import InitialTopBar from './InitialTopBar';
 import Modal from '../Modal';
 import {validateEmail, validatePwd} from '../../../utils/Validation';
 import {Link, useNavigate} from 'react-router-dom';
-import {ValidateIcon} from '../Icon';
+import {EyeIcon, EyeOffIcon, ValidateIcon} from '../Icon';
 
 export default function ResetPwdContainer() {
   const navigate = useNavigate();
@@ -18,6 +18,8 @@ export default function ResetPwdContainer() {
   const [newPwdError, setNewPwdError] = useState('');
   const [newPwdCheck, setNewPwdCheck] = useState('');
   const [newPwdCheckError, setNewPwdCheckError] = useState('');
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isPasswordVisibleNew, setIsPasswordVisibleNew] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -163,17 +165,26 @@ export default function ResetPwdContainer() {
               <>
                 {/* 새 비밀번호 */}
                 <div className="newPwd">
-                  <input
-                    id="newPwd"
-                    autoComplete="newPwd"
-                    type="password"
-                    value={newPwd}
-                    onChange={newPwdChange}
-                    placeholder="새 비밀번호를 입력하세요"
-                    required
-                    className={`py-3 px-4 text-subtitle-regular w-full border rounded-md focus:outline-none 
+                  <div className="relative w-full">
+                    <input
+                      id="newPwd"
+                      autoComplete="newPwd"
+                      type={isPasswordVisible ? 'text' : 'password'}
+                      value={newPwd}
+                      onChange={newPwdChange}
+                      placeholder="새 비밀번호를 입력하세요"
+                      required
+                      className={`py-3 px-4 text-subtitle-regular w-full border rounded-md focus:outline-none 
                 ${newPwdError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
-                  />
+                    />
+                    <button
+                      type="button"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                      onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                    >
+                      {isPasswordVisible ? <EyeIcon /> : <EyeOffIcon />}
+                    </button>
+                  </div>
                   <div className={`flex relative text-error text-xs mt-1 items-center gap-1 ${newPwdError ? '' : 'hidden'}`}>
                     <ValidateIcon />
                     {newPwdError}
@@ -181,17 +192,26 @@ export default function ResetPwdContainer() {
                 </div>
                 {/* 새 비밀번호 확인*/}
                 <div className="newPwdCheck">
-                  <input
-                    id="newPwdCheck"
-                    autoComplete="newPwdCheck"
-                    type="password"
-                    value={newPwdCheck}
-                    onChange={newPwdCheckChange}
-                    placeholder="새 비밀번호를 다시 입력하세요"
-                    required
-                    className={`py-3 px-4 text-subtitle-regular w-full border rounded-md focus:outline-none 
+                  <div className="relative w-full">
+                    <input
+                      id="newPwdCheck"
+                      autoComplete="newPwdCheck"
+                      type={isPasswordVisibleNew ? 'text' : 'password'}
+                      value={newPwdCheck}
+                      onChange={newPwdCheckChange}
+                      placeholder="새 비밀번호를 다시 입력하세요"
+                      required
+                      className={`py-3 px-4 text-subtitle-regular w-full border rounded-md focus:outline-none 
                 ${newPwdCheckError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
-                  />
+                    />
+                    <button
+                      type="button"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                      onClick={() => setIsPasswordVisibleNew(!isPasswordVisibleNew)}
+                    >
+                      {isPasswordVisibleNew ? <EyeIcon /> : <EyeOffIcon />}
+                    </button>
+                  </div>
                   <div className={`flex relative text-error text-xs mt-1 items-center gap-1 ${newPwdCheckError ? '' : 'hidden'}`}>
                     <ValidateIcon />
                     {newPwdCheckError}
