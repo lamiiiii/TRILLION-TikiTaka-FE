@@ -6,15 +6,24 @@ import {XIcon} from '../../common/Icon';
 import Portal from '../../common/Portal';
 import {AnimatePresence, motion} from 'framer-motion';
 import DOMPurify from 'dompurify';
+import {useCreateMutation} from '../../../api/hooks/useCreateMutation';
 
 interface InquiryModalProps {
   onClose: () => void;
+}
+
+interface CreateInquiryRequest {
+  title: string;
+  content: string;
+  type: 'QUESTION' | 'REQUEST';
 }
 
 export default function InquiryModal({onClose}: InquiryModalProps) {
   const [type, setType] = useState<'QUESTION' | 'REQUEST'>('QUESTION');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+
+  const createInquiryMutation = useCreateMutation<CreateInquiryRequest>(createInquiry, '문의 등록에 실패했습니다.', 0);
 
   const handleTypeSelect = (selectedOption: string) => {
     setType(selectedOption === '질문' ? 'QUESTION' : 'REQUEST');
@@ -26,12 +35,18 @@ export default function InquiryModal({onClose}: InquiryModalProps) {
       return;
     }
 
+    const inquiryData: CreateInquiryRequest = {
+      title,
+      content,
+      type,
+    };
+
     try {
-      await createInquiry({title, content, type});
-      alert('문의가 등록되었습니다!');
-      onClose(); // 모달 닫기
+      await createInquiryMutation.mutateAsync(inquiryData);
+      alert('문의가 등록되었습니다.');
+      onClose();
     } catch (error) {
-      alert('문의 등록에 실패했습니다.');
+      console.error('문의 등록 실패:', error);
     }
   };
 
