@@ -23,15 +23,6 @@ export interface TicketStore {
   setPriority: (priority: string) => void;
 }
 
-export interface CategoryStore {
-  categories: Category[];
-  setCategories: (categories: Category[]) => void;
-
-  // addCategory: (category: Category) => void;
-  // updateCategory: (id: number, name: string) => void;
-  // removeCategory: (id: number) => void;
-}
-
 export interface NewTicketStore {
   isUrgent: boolean;
   firstCategory: Category | null;
@@ -114,13 +105,6 @@ export interface InquiryData {
   status: boolean;
   createdAt: string;
   updatedAt: string;
-}
-
-export interface UserInfo {
-  name: string;
-  email: string;
-  role: 'MANAGER' | 'USER' | 'ADMIN' | 'DEFAULT';
-  website: string;
 }
 
 // 댓글 응답 형식
