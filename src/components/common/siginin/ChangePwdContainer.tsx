@@ -3,7 +3,6 @@ import Modal from '../Modal';
 import {useUserStore} from '../../../store/store';
 import {Link, useNavigate} from 'react-router-dom';
 import {validatePwd} from '../../../utils/Validation';
-import TopBar from '../TopBar';
 import {patchUserPassword} from '../../../api/service/users';
 import {ValidateIcon} from '../Icon';
 
@@ -108,8 +107,6 @@ export default function ChangePwdContainer() {
 
   return (
     <div className="flex h-screen">
-      <TopBar />
-
       <div className="top-container items-center">
         <div className="flex flex-col items-center gap-10 w-[400px]">
           <div className="flex flex-col items-center gap-4">

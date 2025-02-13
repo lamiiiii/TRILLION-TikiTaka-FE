@@ -152,7 +152,7 @@ export default function Ticket({
             <div className="px-8 py-1.5 text-[12px] leading-none border text-blue border-gray-2 bg-gray-1 rounded-md">완료</div>
           )}
           {ticketStatus === 'REJECTED' && (
-            <div className="px-8 py-1.5 text-[12px] leading-none border text-error border-error/50 bg-red/10 rounded-md">반려</div>
+            <div className="px-8 py-1.5 text-[12px] leading-none border text-error border-error/50 bg-error/10 rounded-md">반려</div>
           )}
         </div>
       </div>

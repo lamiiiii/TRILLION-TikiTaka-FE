@@ -295,6 +295,15 @@ export function LinkIcon() {
   );
 }
 
+// 뒤로가기 아이콘
+export function BackIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 4L6 8L10 12" stroke="#1A1B1F" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 // 체크 박스 속 체크
 export function WhiteCheckIcon() {
   return (
