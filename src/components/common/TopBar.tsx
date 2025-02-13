@@ -29,7 +29,7 @@ export default function TopBar() {
       <div className="relative w-full h-14 shrink-0 flex justify-between pl-12 pr-24 py-4">
         <Link to={`/${role.toLowerCase()}`} className="flex items-center gap-2">
           <LogoIcon />
-          <div className="flex gap-3 items-center">
+          <div className="flex gap-3 items-base">
             <div className="flex items-center text-white font-bold text-lg ">TIKITAKA</div>
             <div className="h-full text-caption-regular px-2 py-0.5 border border-gray-2 rounded-md text-gray-2">{roleLabel}</div>
           </div>
