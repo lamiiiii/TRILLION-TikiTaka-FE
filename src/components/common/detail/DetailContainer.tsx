@@ -13,6 +13,7 @@ import {useQuery} from '@tanstack/react-query';
 import {getTicketComments, getTicketDetails} from '../../../api/service/tickets';
 import {Comment} from '../../../interfaces/interfaces';
 import TicketReview from './TicketReview';
+import UserTicketTask from '../../user/UserTicketTask';
 
 export default function DetailContainer() {
   const {id} = useParams<{id: string}>();
@@ -80,6 +81,8 @@ export default function DetailContainer() {
               {location.pathname.startsWith('/manager') && <TicketSetting data={ticket} />}
             </>
           )}
+
+          {location.pathname.startsWith('/user') && <UserTicketTask progress={ticket?.progress} />}
           {location.pathname.startsWith('/manager') && <TicketTask />}
           <TicketLog />
         </section>

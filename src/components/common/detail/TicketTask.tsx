@@ -101,7 +101,6 @@ export default function TicketTask() {
     }
   };
 
-  // 진행률 계산
   const progressPercentage = useMemo(() => {
     if (tasks.length === 0) return 0;
     const completedTasks = tasks.filter((task) => task.done).length;
@@ -113,7 +112,7 @@ export default function TicketTask() {
       <div className="flex items-center justify-between">
         <label className="text-body-bold">Task</label>
         <label className="text-body-bold">
-          Progress: <span className="text-main2-3">{progressPercentage}%</span>
+          Progress: <span className="text-main2-3">{progressPercentage ? progressPercentage : '-'}%</span>
         </label>
       </div>
 
