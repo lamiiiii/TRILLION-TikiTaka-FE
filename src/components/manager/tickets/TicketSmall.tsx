@@ -14,16 +14,16 @@ interface TicketSmallProps {
   deadline: string;
   initialStatus: string;
   assignee: string;
-  priority: string;
+  initialPriority: string;
   onStatusChange: (id: number, newStatus: TicketStatus) => void;
   [key: string]: any;
 }
 
 const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(
-  ({id, title, deadline, assignee, initialStatus, onStatusChange, ...props}, ref) => {
+  ({id, title, deadline, assignee, initialStatus, onStatusChange, initialPriority, ...props}, ref) => {
     const [status, setStatus] = useState(initialStatus);
     const [showPriority, setShowPriority] = useState(false);
-    const [priority, setPriority] = useState('');
+    const [priority, setPriority] = useState(initialPriority || '');
     const priorityRef = useRef<HTMLDivElement>(null);
     const [selectedAssignee] = useState(assignee ?? 'all');
 
@@ -83,7 +83,7 @@ const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(
                 borderColor: priority ? PRIORITY_COLOR[priority as keyof typeof PRIORITY_COLOR] : 'transparent',
               }}
             >
-              {priority || <StarIcon color="#727586" />}
+              {priority || <StarIcon color="#727586" />} {/* Show star icon only when priority is empty */}
               <span className="absolute inset-[-10px]" aria-hidden="true" />
             </button>
             {showPriority && (
