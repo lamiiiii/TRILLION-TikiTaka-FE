@@ -87,7 +87,7 @@ export default function TicketOpstionsSecond() {
       }
     }
   }, [templateId, templates]);
-  
+
   const onTemplateSelect = (value: string) => {
     const selected = templates.find((t) => t.templateTitle === value);
     if (selected) {
@@ -118,17 +118,21 @@ export default function TicketOpstionsSecond() {
     <div className="flex flex-col gap-3">
       <div className="selection">
         <p className="w-12">담당자</p>
-        <DropDown
-          label="담당자"
-          options={userData?.map((user) => user.username) || []}
-          value={manager?.username}
-          onSelect={(value) => {
-            const selectedUser = userData?.find((user) => user.username === value);
-            if (selectedUser) {
-              setManager(selectedUser);
-            }
-          }}
-        />
+        {managerId === -1 ? (
+          <div className="font-regular">담당자 수정 불가</div>
+        ) : (
+          <DropDown
+            label="담당자"
+            options={userData?.map((user) => user.username) || []}
+            value={manager?.username}
+            onSelect={(value) => {
+              const selectedUser = userData?.find((user) => user.username === value);
+              if (selectedUser) {
+                setManager(selectedUser);
+              }
+            }}
+          />
+        )}
       </div>
       <div className="selection">
         <div className="flex items-center gap-1 w-12">

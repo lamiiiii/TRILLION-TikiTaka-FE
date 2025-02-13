@@ -19,7 +19,7 @@ export default function Layout() {
   }, [location.pathname]);
 
   if (!isAuthenticated) {
-    return <Navigate to="/" replace state={{ alertMessage: "로그인 후 이용 가능합니다." }} />;
+    return <Navigate to="/"/>;
   }
 
   return (

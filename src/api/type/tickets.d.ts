@@ -139,7 +139,8 @@ declare interface UpdateTicketParams {
   urgent: boolean;
   typeId?: number;
   firstCategoryId?: number;
-  secondaryCategoryId?: number;
+  secondCategoryId?: number;
+  deadline: string;
 }
 
 declare interface UpdateTicketCategoryParams {

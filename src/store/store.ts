@@ -80,6 +80,9 @@ export const useNewTicketStore = create<NewTicketStore>((set) => ({
   setSecondCategoryId: (secondCategoryId) => set({secondCategoryId: secondCategoryId}),
   setManagerId: (managerId) => set({managerId: managerId}),
   setTemplateId: (templateId) => set({templateId: templateId}),
+
+  isEditing: false,
+  setIsEditing: (isEditing) => set({isEditing}),
 }));
 
 export const useTemplateStore = create<TemplateStore>((set) => ({

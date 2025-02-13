@@ -63,6 +63,9 @@ export interface NewTicketStore {
   setSecondCategoryId: (id: number) => void;
   setManagerId: (id: number) => void;
   setTemplateId: (id: number) => void;
+
+  isEditing: boolean;
+  setIsEditing: (isEditing: boolean) => void;
 }
 
 export interface TemplateStore {
