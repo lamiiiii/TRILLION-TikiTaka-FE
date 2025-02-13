@@ -2,6 +2,8 @@ import {useEffect, useRef, useState} from 'react';
 import {useUserStore} from '../../../../store/store';
 import {useQuery} from '@tanstack/react-query';
 import {getPendingApprovalCount} from '../../../../api/service/tickets';
+import DropDown from '../../common/TicketDropdown';
+import {pageSizeOptions} from '../../../../constants/constants';
 
 // 개별 필터 아이템 컴포넌트
 function FilterItem({type, count, isSelected, onClick}: {type: string; count: number; isSelected: boolean; onClick: () => void}) {
@@ -37,6 +39,8 @@ export default function PendingTicketFilter({selectedFilter, onFilterChange}: Pe
   const [selectedType, setSelectedType] = useState('전체');
   const [indicatorStyle, setIndicatorStyle] = useState({left: 0, width: 0});
   const containerRef = useRef<HTMLDivElement>(null);
+  const [pageSize, setPageSize] = useState(20);
+  const [orderBy, setOrderBy] = useState('최신순');
 
   const {userId} = useUserStore();
 
@@ -78,31 +82,53 @@ export default function PendingTicketFilter({selectedFilter, onFilterChange}: Pe
   }, [selectedType]);
 
   return (
-    <div className="w-full mt-10 relative">
-      {/* 필터 리스트 */}
-      <div className="flex w-full h-6 px-4 gap-6" ref={containerRef}>
-        {ticketData.map((item) => (
-          <div key={item.type} className="filter-item">
-            <FilterItem
-              type={item.type}
-              count={item.count}
-              isSelected={item.type === selectedFilter}
-              onClick={() => {
-                setSelectedType(item.type as '전체' | '나의 요청');
-                onFilterChange(item.type as '전체' | '나의 요청');
-              }}
-            />
-          </div>
-        ))}
+    <div className="w-full mt-10 relative flex items-center justify-between">
+      <div>
+        {/* 필터 리스트 */}
+        <div className="flex w-full h-6 px-4 gap-6" ref={containerRef}>
+          {ticketData.map((item) => (
+            <div key={item.type} className="filter-item">
+              <FilterItem
+                type={item.type}
+                count={item.count}
+                isSelected={item.type === selectedFilter}
+                onClick={() => {
+                  setSelectedType(item.type as '전체' | '나의 요청');
+                  onFilterChange(item.type as '전체' | '나의 요청');
+                }}
+              />
+            </div>
+          ))}
+        </div>
+        {/* 이동하는 하단 Border */}
+        <div
+          className="absolute bottom-0 h-0.5 bg-gray-7 transition-all duration-300"
+          style={{
+            left: `${indicatorStyle.left}px`,
+            width: `${indicatorStyle.width}px`,
+          }}
+        />
       </div>
-      {/* 이동하는 하단 Border */}
-      <div
-        className="absolute bottom-0 h-0.5 bg-gray-7 transition-all duration-300"
-        style={{
-          left: `${indicatorStyle.left}px`,
-          width: `${indicatorStyle.width}px`,
-        }}
-      />
+      <div className="flex justify-end gap-3">
+        <DropDown
+          label="20개씩"
+          options={pageSizeOptions}
+          value={`${pageSize}개씩`}
+          onSelect={(value) => setPageSize(parseInt(value))}
+          paddingX="px-3"
+          border={false}
+          textColor=""
+        />
+        <DropDown
+          label="정렬 기준"
+          options={['최신순', '마감기한순', '오래된순']}
+          value={orderBy || '정렬 기준'}
+          onSelect={(value) => setOrderBy(value)}
+          paddingX="px-4"
+          border={false}
+          textColor=""
+        />
+      </div>
     </div>
   );
 }

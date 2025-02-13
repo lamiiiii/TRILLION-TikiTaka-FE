@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from 'react';
-import { useOutsideClick } from '../../hooks/useOutsideClick';
+import {useOutsideClick} from '../../hooks/useOutsideClick';
 
 interface DropdownProps {
   label: string; // 드롭다운 버튼에 표시될 텍스트
@@ -58,7 +58,7 @@ export default function DropDown({
         onClick={() => setIsOpen(!isOpen)}
         disabled={disabled}
       >
-        <span className="flex items-center leading-none">{value || label}</span>
+        <span className="flex items-center leading-none truncate max-w-[100px]">{value || label}</span>
         <svg
           className={`w-4 h-4 transform transition-transform ml-auto ${isOpen ? 'rotate-180' : 'rotate-0'}`}
           xmlns="http://www.w3.org/2000/svg"

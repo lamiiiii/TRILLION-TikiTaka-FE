@@ -58,6 +58,7 @@ declare interface TicketDetails {
   createdAt: string; // yyyy-MM-dd HH:mm
   updatedAt: string; // yyyy-MM-dd HH:mm
   attachments: any[]; // 첨부 파일 정보를 위한 배열
+  progress: number;
 }
 
 declare interface PendingApprovalCount {
@@ -78,6 +79,7 @@ declare interface PersonalTicketStatus {
 }
 
 declare interface TicketListItem {
+  priority: string;
   ticketId: number;
   title: string;
   description: string;
@@ -131,7 +133,7 @@ declare interface TicketListParams {
   requesterId?: number;
   orderBy?: string;
   createdAt?: string;
-  urgent?: boolean
+  urgent?: boolean;
 }
 
 declare interface UpdateTicketParams {
@@ -146,11 +148,11 @@ declare interface UpdateTicketParams {
 
 declare interface UpdateTicketCategoryParams {
   firstCategoryId: number;
-  secondCategoryId: number;
+  secondCategoryId?: number | null;
 }
 
 declare interface UpdateTicketTypeParams {
-  type: string;
+  ticketTypeId: number;
 }
 
 declare interface UpdateTicketUrgentRequest {
@@ -160,4 +162,9 @@ declare interface UpdateTicketUrgentRequest {
 declare interface UpdateTicketUrgentResponse {
   message: string;
   data: null;
+}
+
+declare interface TicketType {
+  typeId: number;
+  typeName: string;
 }

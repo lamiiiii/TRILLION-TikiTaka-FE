@@ -22,6 +22,7 @@ export default function TicketAwaitingList() {
     queryKey: ['pendingTicketCount', userId],
     queryFn: () => getPendingApprovalCount(userId),
     refetchInterval: 3000,
+    enabled: !!userId,
   });
 
   return (

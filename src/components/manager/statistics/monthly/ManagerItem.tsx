@@ -8,7 +8,7 @@ interface ManagerItemProps {
 export default function ManagerItem({name, email, profile, totalTickets}: ManagerItemProps) {
   return (
     <div className="bg-main text-white flex flex-col items-center py-4 px-3 rounded">
-      <img src={profile ? profile : '/assets/profile.png'} className="w-[76px] h-[76px] rounded-full mb-2" />
+      <img src={profile ? profile : '/assets/profile.png'} className="w-[76px] h-[76px] rounded-full mb-2  object-cover" />
       <h1 className="text-subtitle mt-2">{name}</h1>
       <p className="text-caption-regular">{email}</p>
 

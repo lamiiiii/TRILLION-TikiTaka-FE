@@ -17,6 +17,7 @@ export interface TicketDataProps {
   assignee: string;
   isUrgent: boolean;
   status: TicketStatus;
+  priority: string;
 }
 
 export default function TicketPersonalManageList() {
@@ -32,6 +33,7 @@ export default function TicketPersonalManageList() {
   const {data: ticketListData} = useQuery({
     queryKey: ['ticketList'],
     queryFn: () => getTicketList({managerId: userId}),
+    enabled: !!userId,
   });
 
   // 티켓 상태 업데이트
@@ -81,6 +83,7 @@ export default function TicketPersonalManageList() {
           deadline: ticket.deadline,
           assignee: ticket.managerName,
           isUrgent: ticket.urgent,
+          priority: ticket.priority,
           status:
             ticket.status === 'PENDING'
               ? '대기 중'
@@ -151,6 +154,7 @@ export default function TicketPersonalManageList() {
                         id={ticket.id}
                         title={ticket.title}
                         deadline={ticket.deadline}
+                        initialPriority={ticket.priority}
                         initialStatus={ticket.status}
                         assignee={ticket.assignee}
                         onStatusChange={handleStatusChange}

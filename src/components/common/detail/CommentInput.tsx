@@ -5,7 +5,7 @@ import {createTicketComment} from '../../../api/service/tickets';
 import {useParams} from 'react-router-dom';
 import {useUserStore} from '../../../store/store';
 import DOMPurify from 'dompurify';
-
+import {MAX_FILE_SIZE, MAX_FILES} from '../../../constants/constants';
 
 export default function CommentInput() {
   const [content, setContent] = useState('');
@@ -13,7 +13,7 @@ export default function CommentInput() {
   const [files, setFiles] = useState<File[]>([]);
   const [fileNames, setFileNames] = useState<string[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const {userName, role} = useUserStore();
+  const {userName, userId} = useUserStore();
 
   const {id} = useParams();
   const ticketId = Number(id);
@@ -35,40 +35,28 @@ export default function CommentInput() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // JSON 데이터 준비
-    const jsonData = {
-      content: content,
-    };
-
-    // FormData 객체 생성
+    const jsonData = {content: content};
     const formData = new FormData();
 
     // JSON 데이터를 Blob으로 변환하여 추가
     const jsonBlob = new Blob([JSON.stringify(jsonData)], {type: 'application/json'});
     formData.append('request', jsonBlob);
 
-    // 파일 추가 (파일이 있는 경우)
     files.forEach((file) => {
       formData.append('files', file);
     });
 
-    // API 호출
     mutation.mutate(formData);
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
-    const MAX_FILES = 5;
-
     const selectedFiles = Array.from(event.target.files || []);
 
-    // 파일 개수 검증
     if (selectedFiles.length > MAX_FILES) {
       alert(`최대 ${MAX_FILES}개의 파일만 선택할 수 있습니다.`);
       return;
     }
 
-    // 파일 크기 검증
     const validFiles = selectedFiles.filter((file) => {
       if (file.size > MAX_FILE_SIZE) {
         alert(`${file.name} 파일 크기가 10MB를 초과했습니다.`);
@@ -109,7 +97,7 @@ export default function CommentInput() {
       </div>
       <div className="relative mt-3">
         <div className="flex gap-2 mb-2">
-          <Profile name={userName} size="sm" backgroundColor={role} />
+          <Profile userId={userId} name={userName} size="md" />
           <textarea
             ref={textareaRef}
             className="comment-textarea"
