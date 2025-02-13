@@ -111,27 +111,10 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
 
       let sortedTickets = [...ticketData.content];
 
-      sortedTickets.sort((a, b) => {
-        const activeStatuses = ['PENDING', 'IN_PROGRESS', 'REVIEW'];
-        const isActiveA = activeStatuses.includes(a.status);
-        const isActiveB = activeStatuses.includes(b.status);
-
-        if (isActiveA && !isActiveB) return -1;
-        if (!isActiveA && isActiveB) return 1;
-
-        if (orderBy === '최신순') {
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-        } else if (orderBy === '마감기한순') {
-          return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
-        } else if (orderBy === '오래된순') {
-          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-        }
-        return 0;
-      });
-
       return {...ticketData, content: sortedTickets};
     },
   });
+  console.log("정렬된 데이터", data)
 
   const dropdownData = [
     {label: '담당자', options: userData?.map((user: any) => user.username)},
