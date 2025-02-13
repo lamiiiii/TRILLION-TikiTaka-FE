@@ -71,7 +71,7 @@ export default function CommentItem({commentId, authorId, name, content, files, 
 
   return (
     <div className="flex gap-3 mt-10">
-      <Profile userId={authorId} name={name} backgroundColor="USER" size="md" />
+      <Profile userId={authorId} name={name} size="md" />
       <div className="w-full flex flex-col gap-2">
         {files?.map((file, index) => (
           <a key={index} href={URL.createObjectURL(file)} className="text-blue-500 hover:underline block">

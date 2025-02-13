@@ -38,7 +38,7 @@ export default function TopBar() {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 text-white cursor-pointer" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
             <div className="relative">
-              <Profile userId={userId} backgroundColor="USER" size="md" isTopBar />
+              <Profile userId={userId} size="md" isTopBar />
             </div>
             <div className={`transform transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`}>
               <DownIcon />

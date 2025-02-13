@@ -29,12 +29,12 @@ export default function TopMenu({
         {/* 메뉴 좌측 요소 */}
         <div className="flex gap-4 text-title-bold text-gray-12 items-center">
           {/* 볼드 폰트 요소 */}
-          {boldBlackText && <p className="text-black">{boldBlackText}</p>}
+          {boldBlackText && <p className=" text-black">{boldBlackText}</p>}
           {boldGrayText && <p>{boldGrayText}</p>}
           {boldSmText && <p>{boldSmText}</p>}
 
           {/* 레귤러 폰트 요소 */}
-          {regularText && <p className="text-subtitle-regular">{regularText}</p>}
+          {regularText && <p className="text-subtitle-regular w-[800px] overflow-hidden text-ellipsis">{regularText}</p>}
           {/* 버튼 */}
           {btnText && onBtnClick && (
             <button onClick={onBtnClick} className="h-full btn">

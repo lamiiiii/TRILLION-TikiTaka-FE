@@ -7,15 +7,12 @@ interface ProfileInitialProps {
   userId?: number;
   name?: string;
   size?: 'sm' | 'md' | 'lg';
-  backgroundColor: 'MANAGER' | 'USER' | 'ADMIN';
   isTopBar?: boolean;
 }
 
 const sizeClasses = {sm: 'w-5 h-5 text-xs', md: 'w-6 h-6 text-sm', lg: 'w-8 h-8 text-base'};
 
-const colorClasses = {MANAGER: 'bg-gray-7', USER: 'bg-main2-1', ADMIN: 'bg-admin-2'};
-
-export default function Profile({userId, name, size = 'sm', backgroundColor, isTopBar}: ProfileInitialProps) {
+export default function Profile({userId, name, size = 'sm', isTopBar}: ProfileInitialProps) {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const togglePopup = () => {
@@ -32,7 +29,7 @@ export default function Profile({userId, name, size = 'sm', backgroundColor, isT
     <div className="relative">
       {!isTopBar && isPopupOpen && <div className="absolute right-full mr-3">{userDetail && <ProfilePopup userDetail={userDetail} />}</div>}
       <div
-        className={`${sizeClasses[size]} ${colorClasses[backgroundColor]}  text-white rounded-full flex items-center justify-center  cursor-pointer overflow-hidden`}
+        className={`${sizeClasses[size]} text-white rounded-full flex items-center justify-center  cursor-pointer overflow-hidden`}
         onClick={togglePopup}
       >
         {userDetail?.profileImageUrl ? (

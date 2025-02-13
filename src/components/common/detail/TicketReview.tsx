@@ -46,7 +46,7 @@ export default function TicketReview({managerId}: {managerId: number}) {
           {isAllowReview && location.pathname.startsWith('/manager') && (
             <li className="flex justify-between items-center border-b border-b-gray-2 pb-3 mb-3">
               <div className="flex items-center gap-2">
-                <Profile userId={managerId} name={userName} backgroundColor="MANAGER" size="md" />
+                <Profile userId={managerId} name={userName} size="md" />
                 <p>{userName}</p>
               </div>
               {isReviewed ? (
