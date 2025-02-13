@@ -31,7 +31,7 @@ export default function TopBar() {
           <LogoIcon />
           <div className="flex gap-3 items-center">
             <div className="flex items-center text-white font-bold text-lg ">TIKITAKA</div>
-            <div className="text-caption-regular px-2 py-0.5 border border-gray-2 rounded-md text-gray-2 mb-0.5">{roleLabel}</div>
+            <div className="h-full text-caption-regular px-2 py-0.5 border border-gray-2 rounded-md text-gray-2">{roleLabel}</div>
           </div>
         </Link>
 
