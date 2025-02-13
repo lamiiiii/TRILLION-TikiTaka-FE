@@ -92,7 +92,7 @@ export default function DashTicket({
       <Link to={detailLink} className={role === 'manager' ? 'w-[36%]' : 'w-[51%]'} style={{textAlign: 'left'}}>
         <div className="flex items-center gap-1">
           {urgent && <AlertIcon className="text-error w-4 h-4" />}
-          <div className={`flex text-subtitle-regular ${urgent ? 'text-error' : 'text-gray-15'}`}>
+          <div className={`flex text-subtitle-regular truncate ${urgent ? 'text-error' : 'text-gray-15'}`}>
             [{typeNameMapping[typeName] || '미정'}]<div className="ml-1">{title}</div>
           </div>
         </div>

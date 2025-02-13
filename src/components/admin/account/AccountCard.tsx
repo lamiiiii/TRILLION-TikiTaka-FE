@@ -1,33 +1,47 @@
-import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateRegistrationStatus } from "../../../api/service/registration"; 
-import Modal from "../../common/Modal";
-import { toast } from "react-toastify";
+import {useState} from 'react';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {updateRegistrationStatus} from '../../../api/service/registration';
+import Modal from '../../common/Modal';
+import {toast} from 'react-toastify';
+import RoleDropdown from './RoleDropdown';
 
 interface AccountCardProps {
   registrationId: number;
   username: string;
   email: string;
-  status: "PENDING" | "APPROVED" | "REJECTED";
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
   createdAt: string;
-  role:"ADMIN" | "MANAGER" | "USER";
+  role: string;
 }
 
-export default function AccountCard({ registrationId, username, email, status }: AccountCardProps) {
+const roleApiToDisplay: Record<string, string> = {
+  ADMIN: '관리자',
+  MANAGER: '담당자',
+  USER: '사용자',
+};
+
+const roleDisplayToApi: Record<string, 'ADMIN' | 'MANAGER' | 'USER'> = {
+  관리자: 'ADMIN',
+  담당자: 'MANAGER',
+  사용자: 'USER',
+};
+
+export default function AccountCard({registrationId, username, email, status, role}: AccountCardProps) {
   const queryClient = useQueryClient();
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
- 
+  const [selectedRole, setSelectedRole] = useState(roleApiToDisplay[role] || '사용자');
+
   const approveMutation = useMutation({
     mutationFn: () =>
       updateRegistrationStatus({
         registrationId,
-        status: "APPROVED",
-        role: "USER", 
+        status: 'APPROVED',
+        role: roleDisplayToApi[selectedRole], 
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["registrationAccounts"] });
-      toast.success("계정이 승인되었습니다.");
+      queryClient.invalidateQueries({queryKey: ['registrationAccounts']});
+      toast.success(`계정이 승인되었습니다.`);
       setShowApproveModal(false);
     },
   });
@@ -36,34 +50,32 @@ export default function AccountCard({ registrationId, username, email, status }:
     mutationFn: () =>
       updateRegistrationStatus({
         registrationId,
-        status: "REJECTED",
-        role: "USER",
+        status: 'REJECTED',
+        role: roleDisplayToApi[selectedRole],
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["registrationAccounts"] });
-      toast.success("계정이 거절되었습니다.");
+      queryClient.invalidateQueries({queryKey: ['registrationAccounts']});
+      toast.success('계정이 거절되었습니다.');
       setShowRejectModal(false);
     },
     onError: () => {
-      toast.error("계정 거절에 실패했습니다.");
+      toast.error('계정 거절에 실패했습니다.');
     },
   });
 
   const handleApprove = async () => {
     try {
-      
-      await approveMutation.mutateAsync(); 
+      await approveMutation.mutateAsync();
     } catch (error) {
-      console.error("승인 과정에서 오류 발생:", error);
+      console.error('승인 과정에서 오류 발생:', error);
     }
   };
 
   const handleReject = async () => {
-    
     try {
       await rejectMutation.mutateAsync();
     } catch (error) {
-      toast.error("거절 과정에서 오류 발생:");
+      toast.error('거절 과정에서 오류 발생:');
     }
   };
 
@@ -74,10 +86,16 @@ export default function AccountCard({ registrationId, username, email, status }:
         <div className="w-[16%]">{username}</div>
         <div className="w-[44%]">{email}</div>
         <div className="w-[16%]">
-          사용자
+          <RoleDropdown
+            label={selectedRole}
+            options={['관리자', '담당자', '사용자']}
+            onSelect={(value) => {
+              setSelectedRole(value as '관리자' | '담당자' | '사용자');
+            }}
+          />
         </div>
         <div className="w-[20%] flex gap-2">
-          {status === "PENDING" ? (
+          {status === 'PENDING' ? (
             <>
               <button
                 onClick={() => setShowApproveModal(true)}
@@ -93,21 +111,19 @@ export default function AccountCard({ registrationId, username, email, status }:
               </button>
             </>
           ) : (
-            <div className="px-4 py-1 text-subtitle-regular rounded whitespace-nowrap">
-              {status === "REJECTED" ? "거절됨" : "승인됨"}
-            </div>
+            <div className="px-4 py-1 text-subtitle-regular rounded whitespace-nowrap">{status === 'REJECTED' ? '거절됨' : '승인됨'}</div>
           )}
         </div>
-      
       </div>
+
       {showApproveModal && (
         <Modal
           title="계정 승인"
-          content={`선택한 (${username}) 계정을 승인하시겠습니까?`}
+          content={`선택한 ${selectedRole}로 (${username}) 계정을 승인하시겠습니까?`}
           backBtn="취소"
           onBackBtnClick={() => setShowApproveModal(false)}
           checkBtn="승인"
-          onBtnClick={handleApprove} 
+          onBtnClick={handleApprove}
         />
       )}
 
@@ -118,7 +134,7 @@ export default function AccountCard({ registrationId, username, email, status }:
           backBtn="취소"
           onBackBtnClick={() => setShowRejectModal(false)}
           checkBtn="거절"
-          onBtnClick={handleReject} 
+          onBtnClick={handleReject}
         />
       )}
     </>
