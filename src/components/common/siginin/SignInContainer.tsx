@@ -6,7 +6,7 @@ import InitialLayout from './InitialLayout';
 import {postLogin} from '../../../api/service/auth';
 import Modal from '../Modal';
 import {useEnterKeyHandler} from '../../../hooks/useEnterKeyHandler';
-import {ValidateIcon} from '../Icon';
+import {EyeIcon, EyeOffIcon, ValidateIcon} from '../Icon';
 
 export default function SignInContainer() {
   const navigate = useNavigate();
@@ -21,11 +21,12 @@ export default function SignInContainer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState('로그인');
   const [modalMessage, setModalMessage] = useState('');
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const validateInput = (type: 'id' | 'pwd', value: string) => {
     if (!value) return type === 'id' ? '아이디를 입력해주세요.' : '비밀번호를 입력해주세요.';
     if (type === 'id' && !validateId(value)) return '아이디는 영어 소문자와 점(.)을 포함한 3~15자여야 합니다.';
-    if (type === 'pwd' && !validatePwd(value)) return '비밀번호는 영문, 숫자, 특수문자가 조합된 6~32자여야 합니다.';
+    if (type === 'pwd' && !validatePwd(value)) return '비밀번호는 영문, 숫자, 특수문자가 조합된 8~32자여야 합니다.';
     return '';
   };
 
@@ -116,17 +117,26 @@ export default function SignInContainer() {
             </div>
             {/* 비밀번호 */}
             <div className="password">
-              <input
-                id="password"
-                autoComplete="password"
-                type="password"
-                value={pwd}
-                onChange={handleChange(setPwd, setPwdError, 'pwd')}
-                placeholder="비밀번호를 입력하세요"
-                required
-                className={`py-3 px-4 text-subtitle-regular w-full border rounded-md focus:outline-none 
+              <div className="relative w-full">
+                <input
+                  id="password"
+                  autoComplete="password"
+                  type={isPasswordVisible ? 'text' : 'password'}
+                  value={pwd}
+                  onChange={handleChange(setPwd, setPwdError, 'pwd')}
+                  placeholder="비밀번호를 입력하세요"
+                  required
+                  className={`py-3 px-4 text-subtitle-regular w-full border rounded-md focus:outline-none 
                 ${pwdError ? 'border-error' : 'border-gray-2 focus:border-main'}`}
-              />
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                  onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                >
+                  {isPasswordVisible ? <EyeIcon /> : <EyeOffIcon />}
+                </button>
+              </div>
               <div className={`flex relative text-error text-xs mt-1 items-center gap-1 ${pwdError ? '' : 'hidden'}`}>
                 <ValidateIcon />
                 {pwdError}

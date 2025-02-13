@@ -29,7 +29,7 @@ export default function ChangePwdContainer() {
     if (value === '') {
       setPwdError('비밀번호를 입력해주세요.');
     } else if (!validatePwd(value)) {
-      setPwdError('비밀번호는 영문, 숫자, 특수문자가 조합된 6~32자여야 합니다.');
+      setPwdError('비밀번호는 영문, 숫자, 특수문자가 조합된 8~32자여야 합니다.');
     } else {
       setPwdError('');
     }
@@ -42,7 +42,7 @@ export default function ChangePwdContainer() {
     if (value === '') {
       setNewPwdError('비밀번호를 입력해주세요.');
     } else if (!validatePwd(value)) {
-      setNewPwdError('비밀번호는 영문, 숫자, 특수문자가 조합된 6~32자여야 합니다.');
+      setNewPwdError('비밀번호는 영문, 숫자, 특수문자가 조합된 8~32자여야 합니다.');
     } else {
       setNewPwdError('');
     }
@@ -55,7 +55,7 @@ export default function ChangePwdContainer() {
     if (value === '') {
       setNewPwdCheckError('비밀번호를 입력해주세요.');
     } else if (!validatePwd(value)) {
-      setNewPwdCheckError('비밀번호는 영문, 숫자, 특수문자가 조합된 6~32자여야 합니다.');
+      setNewPwdCheckError('비밀번호는 영문, 숫자, 특수문자가 조합된 8~32자여야 합니다.');
     } else if (value !== newPwd) {
       setNewPwdCheckError('비밀번호가 일치하지 않습니다.');
     } else {
@@ -68,7 +68,7 @@ export default function ChangePwdContainer() {
       setPwdError('비밀번호를 입력해주세요.');
       return;
     } else if (!validatePwd(pwd)) {
-      setPwdError('비밀번호는 영문, 숫자, 특수문자가 조합된 6~32자여야 합니다.');
+      setPwdError('비밀번호는 영문, 숫자, 특수문자가 조합된 8~32자여야 합니다.');
       return;
     }
 
@@ -76,7 +76,7 @@ export default function ChangePwdContainer() {
       setNewPwdError('새 비밀번호를 입력해주세요.');
       return;
     } else if (!validatePwd(newPwd)) {
-      setNewPwdError('새 비밀번호는 영문, 숫자, 특수문자가 조합된 6~32자여야 합니다.');
+      setNewPwdError('새 비밀번호는 영문, 숫자, 특수문자가 조합된 8~32자여야 합니다.');
       return;
     }
 
@@ -87,7 +87,7 @@ export default function ChangePwdContainer() {
       setNewPwdCheckError('비밀번호가 일치하지 않습니다.');
       return;
     } else if (!validatePwd(newPwdCheck)) {
-      setPwdError('비밀번호는 영문, 숫자, 특수문자가 조합된 6~32자여야 합니다.');
+      setPwdError('비밀번호는 영문, 숫자, 특수문자가 조합된 8~32자여야 합니다.');
       return;
     }
 
