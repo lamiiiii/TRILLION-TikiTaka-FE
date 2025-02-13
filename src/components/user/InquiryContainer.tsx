@@ -3,10 +3,10 @@ import Inquiry from '../manager/inquiry/Inquiry';
 import {getInquiries} from '../../api/service/inquiry';
 import PageNations from '../common/PageNations';
 import {useMemo, useState} from 'react';
+import {ITEMS_PER_PAGE} from '../../constants/constants';
 
 export default function InquiryContainer() {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
 
   const {data: inquiries} = useQuery({
     queryKey: ['inquiries'],
@@ -15,13 +15,13 @@ export default function InquiryContainer() {
 
   const paginatedInquiries = useMemo(() => {
     if (!inquiries) return [];
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    return inquiries.slice(startIndex, startIndex + itemsPerPage);
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return inquiries.slice(startIndex, startIndex + ITEMS_PER_PAGE);
   }, [inquiries, currentPage]);
 
   const totalPages = useMemo(() => {
     if (!inquiries) return 1;
-    return Math.ceil(inquiries.length / itemsPerPage);
+    return Math.ceil(inquiries.length / ITEMS_PER_PAGE);
   }, [inquiries]);
 
   const handlePageChange = (newPage: number) => {

@@ -8,61 +8,6 @@ export type TicketStatus = (typeof TICKET_STATUS)[keyof typeof TICKET_STATUS];
 export const PRIORITY = ['HIGH', 'MIDDLE', 'LOW'];
 export const PRIORITY_COLOR: {[key in (typeof PRIORITY)[number]]: string} = {HIGH: '#F24949', MIDDLE: '#F4B540', LOW: '#93CF1A'};
 
-// 문의 임시 데이터
-export const INQUIRY_DATA = [
-  {
-    type: '요청',
-    title: '계정 변환 변경 요청',
-    content:
-      '현재 사용자로 로그인되어 있지만, 추가적인 관리 기능을 사용할 수 있는 권한이 부족합니다. 특정 프로젝트에 대한 관리 권한을 부여해 주실 수 있을까요? ',
-    date: '2025-02-05',
-    status: '답변 대기',
-  },
-  {
-    type: '요청',
-    title: '계정 변환 변경 요청',
-    content:
-      '현재 사용자로 로그인되어 있지만, 추가적인 관리 기능을 사용할 수 있는 권한이 부족합니다. 특정 프로젝트에 대한 관리 권한을 부여해 주실 수 있을까요? ',
-    date: '2025-02-05',
-    status: '답변 완료',
-    answer: {content: '안녕하세요. 요청하신 관리 권한이 부여되었습니다. 추가 문의사항이 있으시면 언제든 연락 주시기 바랍니다.'},
-  },
-];
-
-export const ROLE = ['사용자', '담당자', '관리자'];
-
-export const PRIMARY_CATEGORIES = ['인프라', '시스템', '네트워크', '공통 플랫폼'];
-
-export const SECONDARY_CATEGORIES = {
-  인프라: ['Virtual machine', 'Bare metal server', 'Gpu', 'Object Storage', 'Media Convert', 'File Storage'],
-  시스템: [
-    'Kubernetes Engine',
-    'Container Registry',
-    'MySQL',
-    'PostgreSQL',
-    'MemStore',
-    'IAM',
-    'Monitoring',
-    'Alert Center',
-    'Cloud Trail',
-    'Monitoring Flow',
-    'Advanced Managed Premetheus',
-  ],
-  네트워크: ['VPC', 'Load balancing', 'CDN', 'DNS', 'Transit Gateway'],
-  '공통 플랫폼': [
-    'OSS Library',
-    'Hadoop Eco',
-    'Data Catalog',
-    'Data Query',
-    'Pub/Sub',
-    'Advanced Managed Kafka',
-    'Kubeflow',
-    'Hybrid Data Center',
-  ],
-};
-
-export const TICKET_TYPES = ['생성', '조회', '수정', '삭제', '오류', '기타'];
-
 export const commonTooltipStyle = {
   backgroundColor: '#fff',
   border: '1px solid #e5e7eb',
@@ -72,6 +17,7 @@ export const commonTooltipStyle = {
   fontSize: '14px',
 };
 
+// 로그 유형 변환
 export const UPDATE_TYPE_MAP = {
   TICKET_CREATED: '티켓 생성',
   TICKET_EDITED: '수정(사용자)',
@@ -89,3 +35,8 @@ export const pageSizeOptions = ['20개씩', '30개씩', '50개씩'];
 
 export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 export const MAX_FILES = 5;
+export const ITEMS_PER_PAGE = 20;
+
+export const ACCOUNT_MENU = ['ID', '이름', '소속', '역할', '승인 상태'];
+
+export const CATEGORY_MENU = ['1차 카테고리', '2차 카테고리', '요청양식', '카테고리 등록'];

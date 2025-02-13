@@ -1,25 +1,25 @@
-import { useState } from "react";
-import { submitAnswer } from "../../../api/service/inquiry";
-import AdminModal from "../common/AdminModal";
+import {useState} from 'react';
+import {submitAnswer} from '../../../api/service/inquiry';
+import AdminModal from '../common/AdminModal';
 import DOMPurify from 'dompurify';
 
 interface ReplyModalProps {
   inquiryId: number;
   onClose: () => void;
-  onAnswerSubmit: () => void; // 🚀 답변 제출 후 새로고침을 위해 추가
+  onAnswerSubmit: () => void;
 }
 
-export default function ReplyModal({ inquiryId, onClose, onAnswerSubmit }: ReplyModalProps) {
-  const [answer, setAnswer] = useState("");
+export default function ReplyModal({inquiryId, onClose, onAnswerSubmit}: ReplyModalProps) {
+  const [answer, setAnswer] = useState('');
 
   const handleSubmit = async () => {
     try {
       await submitAnswer(inquiryId, answer);
-      alert("답변이 등록되었습니다!");
-      onAnswerSubmit(); // 🚀 답변 제출 후 리스트 새로고침
-      onClose(); // 모달 닫기
+      alert('답변이 등록되었습니다.');
+      onAnswerSubmit();
+      onClose();
     } catch (error) {
-      alert("답변 등록에 실패했습니다.");
+      alert('답변 등록에 실패했습니다.');
     }
   };
 

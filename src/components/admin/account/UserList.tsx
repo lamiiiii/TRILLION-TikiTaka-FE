@@ -1,7 +1,7 @@
 import {useQuery} from '@tanstack/react-query';
 import {getUserList} from '../../../api/service/users';
-import {ACCOUNT_MENU} from '../../../constants/admin';
 import UserCard from './UserCard';
+import {ACCOUNT_MENU} from '../../../constants/constants';
 
 interface UserAccount {
   userId: number;

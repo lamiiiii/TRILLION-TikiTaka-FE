@@ -1,10 +1,10 @@
 import {useQuery} from '@tanstack/react-query';
 import {useState} from 'react';
 import {getRegistrationList} from '../../../api/service/registration';
-import {ACCOUNT_MENU} from '../../../constants/admin';
 import Dropdown from '../../common/Dropdown';
 import PageNations from '../../common/PageNations';
 import AccountCard from './AccountCard';
+import {ACCOUNT_MENU} from '../../../constants/constants';
 
 interface RegistrationAccount {
   registrationId: number;
