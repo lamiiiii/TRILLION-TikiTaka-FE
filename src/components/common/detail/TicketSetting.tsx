@@ -30,7 +30,7 @@ export default function TicketSetting({data}: TicketSettingProps) {
   const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
 
   const [primaryCategoryId, setPrimaryCategoryId] = useState(data.firstCategoryId);
-  const [_secondaryCategoryId, setSecondaryCategoryId] = useState(data.secondCategoryId);
+  const [_secondaryCategoryId, setSecondaryCategoryId] = useState<number | null>(data.secondCategoryId);
 
   const {id} = useParams();
   const ticketId = Number(id);
@@ -123,7 +123,9 @@ export default function TicketSetting({data}: TicketSettingProps) {
 
       // 2차 카테고리 초기화
       setSecondaryCategory('');
-      setSecondaryCategoryId(0); // 또는 적절한 초기값
+      setSecondaryCategoryId(null);
+
+      updateCategoryMutation.mutate({firstCategoryId: newPrimaryCategoryId, secondCategoryId: null});
     }
   };
 

@@ -147,7 +147,7 @@ declare interface UpdateTicketParams {
 
 declare interface UpdateTicketCategoryParams {
   firstCategoryId: number;
-  secondCategoryId: number;
+  secondCategoryId?: number | null;
 }
 
 declare interface UpdateTicketTypeParams {
