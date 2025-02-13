@@ -59,7 +59,9 @@ export default function SignUpContainer() {
       const response = await postRegistration({email, username: id});
       setModalTitle(response.status === 200 ? '계정 등록 신청' : '계정 등록 실패');
       setModalMessage(
-        response.status === 200 ? '등록 신청하신 이메일 주소로 결과를 안내드릴 예정입니다.' : '계정 등록 중 오류가 발생했습니다.'
+        response.status === 200
+          ? '등록 신청이 완료되었습니다. 결과는 카카오워크로 안내드릴 예정입니다.'
+          : '계정 등록 중 오류가 발생했습니다.'
       );
     } catch (error: any) {
       setModalTitle('계정 등록 실패');
