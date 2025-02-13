@@ -31,8 +31,8 @@ export default function ReqCateModal({onClose}: ReqCateModalProps) {
       }, 1000);
       
       onClose(); 
-    } catch (error) {
-      toast.error('카테고리 등록에 실패했습니다.');
+    } catch (error: any) {
+      toast.error(error.message);
     } finally {
       setLoading(false);
     }
