@@ -10,9 +10,13 @@ export default function AdminCategoryContainer() {
     };
   }, []);
   return (
-    <div className="flex  max-w-1200 gap-[120px] ">
-       <CategoryList/>
-       <AdminGuide />
+    <div className="flex max-w-[1200px] gap-[50px] justify-between">
+      <div className="flex-1">
+        <CategoryList />
+      </div>
+      <div className="w-[470px] flex-shrink-0 mt-[160px] mr-[30px]">
+        <AdminGuide />
+      </div>
     </div>
   );
 }
