@@ -118,8 +118,6 @@ export default function Ticket({
           <ManagerSelector selectedManagerName={selectedAssignee} onManagerSelect={handleManagerSelect} />
         </div>
 
-        {/* 승인 여부 */}
-
         <div className="w-[15%] flex gap-2" onClick={handleClick}>
           {role !== 'USER' && ticketStatus === 'PENDING' && (
             <>
@@ -127,7 +125,7 @@ export default function Ticket({
                 className="px-6 h-[30px] text-[12px] leading-none border border-gray-6 rounded-md hover:bg-gray-8 hover:text-white"
                 onClick={handleApprove}
               >
-                진행
+                승인
               </button>
               <button
                 className="px-6 h-[30px] text-[12px] leading-none border border-gray-6 rounded-md hover:bg-error/80 hover:text-white"

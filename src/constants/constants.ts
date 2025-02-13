@@ -28,6 +28,7 @@ export const UPDATE_TYPE_MAP = {
   CATEGORY_CHANGE: '카테고리 변경',
   DEADLINE_CHANGE: '마감기한 변경',
   TICKET_DELETE: '티켓 삭제',
+  URGENT_CHANGE: '긴급 여부 변경',
   OTHER: '기타',
 };
 
