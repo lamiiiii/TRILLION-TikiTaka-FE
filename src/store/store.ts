@@ -43,7 +43,7 @@ export const useNewTicketStore = create<NewTicketStore>((set) => ({
   ticketType: {typeId: 0, typeName: ''},
   template: null,
   dueDate: '',
-  dueTime: '',
+  dueTime: '00:00',
   setIsUrgent: (isUrgent) => set({isUrgent}),
   setFirstCategory: (category) => set({firstCategory: category}),
   setSecondCategory: (category) => set({secondCategory: category}),
