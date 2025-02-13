@@ -8,7 +8,7 @@ interface ManagerItemProps {
 export default function ManagerItem({name, email, processing, completed}: ManagerItemProps) {
   return (
     <div className="bg-main text-white flex flex-col items-center py-4 px-2 rounded">
-      <img src="/assets/manager.png" className="w-[76px] h-[76px]" />
+      <img src="/assets/manager.png" alt="담당자 이미지" className="w-[76px] h-[76px]" />
       <h1 className="text-subtitle mt-2">{name}</h1>
       <p className="text-caption-regular">{email}</p>
 

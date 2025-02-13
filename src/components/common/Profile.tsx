@@ -33,9 +33,9 @@ export default function Profile({userId, name, size = 'sm', isTopBar}: ProfileIn
         onClick={togglePopup}
       >
         {userDetail?.profileImageUrl ? (
-          <img src={userDetail.profileImageUrl} alt={name} className="w-full h-full object-cover" />
+          <img src={userDetail.profileImageUrl} alt="유저 프로필" className="w-full h-full object-cover" />
         ) : (
-          <img src="/assets/profile.png" alt={name} className="w-full h-full object-cover" />
+          <img src="/assets/profile.png" alt="프로필 기본 이미지" className="w-full h-full object-cover" />
         )}
       </div>
     </div>

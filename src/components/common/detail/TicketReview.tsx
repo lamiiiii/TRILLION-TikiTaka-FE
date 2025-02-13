@@ -1,27 +1,52 @@
 import {useParams} from 'react-router-dom';
 import Profile from '../Profile';
 import {getTicketReviews, reviewTicket} from '../../../api/service/tickets';
-import {useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {useUserStore} from '../../../store/store';
 import {useEffect, useState} from 'react';
-import {useCreateMutation} from '../../../api/hooks/useCreateMutation';
 import {ERROR_MESSAGES} from '../../../constants/error';
 
 export default function TicketReview({managerId}: {managerId: number}) {
   const {id} = useParams();
   const ticketId = Number(id);
   const [isReviewed, setIsReviewed] = useState(false);
+  const queryClient = useQueryClient();
 
   // 검토 내역 데이터 조회
   const {data: reviewers = []} = useQuery({
     queryKey: ['ticketReviews', ticketId],
     queryFn: () => getTicketReviews(ticketId),
-    refetchInterval: 5000, // 5초마다 자동으로 refetch
+    refetchInterval: 8000, // 8초마다 자동으로 refetch
     staleTime: Infinity, // 데이터를 항상 fresh 상태로 유지
   });
 
   // 티켓 검토
-  const reviewMutation = useCreateMutation(() => reviewTicket(ticketId), '티켓 검토에 실패했습니다.', ticketId);
+  const reviewMutation = useMutation({
+    mutationFn: () => reviewTicket(ticketId),
+    onMutate: async () => {
+      await queryClient.cancelQueries({queryKey: ['ticketReviews', ticketId]});
+      const previousReviews = queryClient.getQueryData(['ticketReviews', ticketId]);
+
+      queryClient.setQueryData(['ticketReviews', ticketId], (old: any) => {
+        const newReview = {
+          reviewerName: userName,
+          reviewed: true,
+          reviewDate: new Date().toISOString(),
+        };
+        return {...old, data: [...(old?.data || []), newReview]};
+      });
+
+      return {previousReviews};
+    },
+    onError: (context: any) => {
+      // 에러 발생 시 이전 데이터로 롤백
+      queryClient.setQueryData(['ticketReviews', ticketId], context?.previousReviews);
+    },
+    onSettled: () => {
+      // 무조건 리패치하여 서버 데이터와 동기화
+      queryClient.invalidateQueries({queryKey: ['ticketReviews', ticketId]});
+    },
+  });
 
   const {userId, userName} = useUserStore();
   const isAllowReview = Number(managerId) !== userId;
