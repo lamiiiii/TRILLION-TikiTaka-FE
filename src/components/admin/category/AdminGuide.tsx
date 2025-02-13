@@ -2,7 +2,7 @@ import { Info, Layers } from "lucide-react";
 
 export default function AdminGuide() {
   return (
-    <div className="w-[470px] p-6 absolute top-[250px] left-[950px] ">
+    <div className="w-[470px] flex-shrink-0 self-start ">
       <div className="flex justify-center mb-4">
         <Layers size={40} className="text-main" />
       </div>
