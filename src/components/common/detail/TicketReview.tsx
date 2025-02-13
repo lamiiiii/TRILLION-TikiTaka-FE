@@ -43,10 +43,10 @@ export default function TicketReview({managerId}: {managerId: number}) {
       <label className="text-body-bold">검토 현황</label>
       <div className="w-full p-5 border border-gray-2 rounded-[4px] bg-white text-subtitle-regular text-gray-15">
         <ul className="flex flex-col gap-[7px]">
-          {isAllowReview && (
+          {isAllowReview && location.pathname.startsWith('/manager') && (
             <li className="flex justify-between items-center border-b border-b-gray-2 pb-3 mb-3">
               <div className="flex items-center gap-2">
-                <Profile name={userName} backgroundColor="MANAGER" size="md" />
+                <Profile userId={managerId} name={userName} size="md" />
                 <p>{userName}</p>
               </div>
               {isReviewed ? (

@@ -18,6 +18,7 @@ import {useNewTicketStore, useUserStore} from '../../../store/store';
 import {useState} from 'react';
 import Modal from '../Modal';
 import TicketEdit from './TicketEdit';
+import UserTicketTask from '../../user/UserTicketTask';
 
 export default function DetailContainer() {
   const {id} = useParams<{id: string}>();
@@ -44,15 +45,10 @@ export default function DetailContainer() {
 
   // 뒤로 가기
   const handleGoBack = () => navigate(-1);
-
-  // URL 파라미터에서 추출한 ID
   const ticketId = Number(id);
 
   // 티켓 상세 정보 조회
-  const {data: ticket} = useQuery<TicketDetails>({
-    queryKey: ['ticketDetails', ticketId],
-    queryFn: () => getTicketDetails(ticketId),
-  });
+  const {data: ticket} = useQuery<TicketDetails>({queryKey: ['ticketDetails', ticketId], queryFn: () => getTicketDetails(ticketId)});
 
   //댓글 조회
   const {data: comments} = useQuery({
@@ -134,7 +130,7 @@ export default function DetailContainer() {
             {isEditing ? '수정 취소' : '수정'}
           </button>
           <button
-            className={`text-gray-5 ${ticket.status == 'PENDING' ? 'hover:text-gray-15' : 'cursor-not-allowed'}`}
+            className={`text-gray-5 ${ticket?.status == 'PENDING' ? 'hover:text-gray-15' : 'cursor-not-allowed'}`}
             onClick={handleDelete}
           >
             삭제
@@ -151,7 +147,7 @@ export default function DetailContainer() {
         <section className="flex bg-gray-18 p-6 pb-[38px] mt-3 mb-[100px]">
           <div className="flex gap-4 mr-10">
             <div className="mt-5">
-              <Profile name={ticket?.managerName ? ticket?.managerName : 'undefined'} backgroundColor="USER" size="lg" />
+              <Profile userId={ticket?.managerId} name={ticket?.managerName ? ticket?.managerName : 'undefined'} size="lg" />
             </div>
             <section className="w-[577px] flex flex-col">
               {ticket && <TicketContent data={ticket} />}
@@ -163,6 +159,7 @@ export default function DetailContainer() {
                     <CommentItem
                       key={comment.commentId}
                       commentId={comment.commentId}
+                      authorId={comment.authorId}
                       name={comment.authorName}
                       content={comment.content}
                       createdAt={comment.createdAt}
@@ -173,7 +170,6 @@ export default function DetailContainer() {
               )}
             </section>
           </div>
-
           <section className="flex flex-col gap-5 w-[400px]">
             {ticket && ticket.status === 'REVIEW' && <TicketReview managerId={ticket?.managerId} />}
             {ticket && (
@@ -182,6 +178,8 @@ export default function DetailContainer() {
                 {location.pathname.startsWith('/manager') && <TicketSetting data={ticket} />}
               </>
             )}
+
+            {location.pathname.startsWith('/user') && <UserTicketTask progress={ticket?.progress} />}
             {location.pathname.startsWith('/manager') && <TicketTask />}
             <TicketLog />
           </section>

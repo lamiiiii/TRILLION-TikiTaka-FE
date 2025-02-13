@@ -1,27 +1,27 @@
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { getRegistrationList } from "../../../api/service/registration";
-import { ACCOUNT_MENU } from "../../../constants/admin";
-import Dropdown from "../../common/Dropdown";
-import PageNations from "../../common/PageNations";
-import AccountCard from "./AccountCard";
+import {useQuery} from '@tanstack/react-query';
+import {useState} from 'react';
+import {getRegistrationList} from '../../../api/service/registration';
+import Dropdown from '../../common/Dropdown';
+import PageNations from '../../common/PageNations';
+import AccountCard from './AccountCard';
+import {ACCOUNT_MENU} from '../../../constants/constants';
 
 interface RegistrationAccount {
   registrationId: number;
   username: string;
   email: string;
-  status: "PENDING" | "REJECTED";
+  status: 'PENDING' | 'REJECTED';
   createdAt: string;
 }
 
 export default function AccountList() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
-  const [selectedStatus, setSelectedStatus] = useState<"PENDING" | "REJECTED">("PENDING");
+  const [selectedStatus, setSelectedStatus] = useState<'PENDING' | 'REJECTED'>('PENDING');
 
-  const { data } = useQuery({
-    queryKey: ["registrationAccounts", selectedStatus, currentPage],
-    queryFn: () => getRegistrationList({ page: currentPage - 1, size: itemsPerPage, status: selectedStatus }),
+  const {data} = useQuery({
+    queryKey: ['registrationAccounts', selectedStatus, currentPage],
+    queryFn: () => getRegistrationList({page: currentPage - 1, size: itemsPerPage, status: selectedStatus}),
   });
 
   const accounts: RegistrationAccount[] = data?.data?.content ?? [];
@@ -36,17 +36,17 @@ export default function AccountList() {
   };
 
   const handleStatusSelect = (value: string) => {
-    setSelectedStatus(value === "승인 대기" ? "PENDING" : "REJECTED");
+    setSelectedStatus(value === '승인 대기' ? 'PENDING' : 'REJECTED');
   };
 
   return (
     <div className="w-full mt-[20px] relative mb-[100px]">
-      <div className="bg-gray-18 h-full shadow-md flex flex-col justify-start p-4">
-        
+      <div className="bg-gray-18 h-full flex flex-col justify-start p-4">
+        {/* 필터 */}
         <div className="flex items-center justify-between px-2">
           <Dropdown
-            label={selectedStatus === "PENDING" ? "승인 대기" : "거절됨"}
-            options={["승인 대기", "거절됨"]}
+            label={selectedStatus === 'PENDING' ? '승인 대기' : '거절됨'}
+            options={['승인 대기', '거절됨']}
             onSelect={handleStatusSelect}
             paddingX="px-2"
           />

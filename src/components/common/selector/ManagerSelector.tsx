@@ -20,11 +20,7 @@ const ManagerSelector: React.FC<ManagerSelectorProps> = ({selectedManagerName, o
   const [selectedManager, setSelectedManager] = useState<Manager | undefined>(undefined);
 
   // 유저 정보 (담당자 리스트) 조회
-  const {data: managers} = useQuery({
-    queryKey: ['managers'],
-    queryFn: getManagerList,
-    select: (data) => data.users,
-  });
+  const {data: managers} = useQuery({queryKey: ['managers'], queryFn: getManagerList, select: (data) => data.users});
 
   useEffect(() => {
     if (managers && selectedManagerName) {

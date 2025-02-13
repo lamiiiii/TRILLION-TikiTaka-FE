@@ -1,14 +1,15 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-import { getCategoryList } from '../../../api/service/categories';
-import { approveTicket, getTicketList, getTicketTypes, rejectTicket, updateTicketStatus } from '../../../api/service/tickets';
-import { getManagerList } from '../../../api/service/users';
-import { useUserStore } from '../../../store/store'; // role 가져오기
+import {useEffect, useState} from 'react';
+import {approveTicket, getTicketList, rejectTicket, updateTicketStatus, getTicketTypes} from '../../../api/service/tickets';
+import {useUserStore} from '../../../store/store'; // role 가져오기
 import Dropdown from '../../common/Dropdown';
-import { RefreshIcon } from '../../common/Icon';
 import PageNations from '../../common/PageNations';
 import DashTicket from './DashTicket';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {toast} from 'react-toastify';
+import {getManagerList} from '../../../api/service/users';
+import {getCategoryList} from '../../../api/service/categories';
+import {RefreshIcon} from '../../common/Icon';
+import {pageSizeOptions} from '../../../constants/constants';
 
 const mapFilterToStatus = (filter: string): string | undefined => {
   switch (filter) {
@@ -27,7 +28,6 @@ const mapFilterToStatus = (filter: string): string | undefined => {
 
 const typeMapping: Record<string, string> = {CREATE: '생성', DELETE: '삭제', ETC: '기타', UPDATE: '수정'};
 
-const pageSizeOptions = ['20개씩', '50개씩', '100개씩'];
 interface TicketListProps {
   selectedFilter: string;
   ticketCounts: TicketStatusCount | null;
@@ -94,10 +94,10 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
         size: pageSize ?? 20,
         status: statusParam,
         managerId,
-        firstCategoryId, 
-        secondCategoryId, 
-        ticketTypeId, 
-        urgent
+        firstCategoryId,
+        secondCategoryId,
+        ticketTypeId,
+        urgent,
       });
 
       let sortedTickets = [...ticketData.content];
@@ -163,7 +163,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     }
 
     setFilteredTickets(filtered);
-    setTotalPages(Math.ceil(filtered.length / pageSize)); 
+    setTotalPages(Math.ceil(filtered.length / pageSize));
   }, [selectedFilters, data?.content, pageSize]);
 
   useEffect(() => {
@@ -176,7 +176,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
   }, [data?.content, data?.totalPages]);
 
   const selectedCount = Object.values(selectedFilters).some((filter) => filter)
-    ? data?.totalElements || 0 
+    ? data?.totalElements || 0
     : ticketCounts
       ? selectedFilter === '전체'
         ? ticketCounts.total
@@ -284,9 +284,9 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
           textColor=""
         />
       </div>
-      <div className="bg-gray-18 h-full shadow-[0px_1px_3px_1px_rgba(0,0,0,0.15)] flex flex-col justify-start p-4">
+      <div className="bg-gray-18 h-full flex flex-col justify-start p-4">
         <div className="flex justify-between items-center  mt-4 px-2">
-          <div className="flex items-center gap-4 leading-none" >
+          <div className="flex items-center gap-4 leading-none">
             {dropdownData.map((data) => (
               <Dropdown
                 key={data.label}

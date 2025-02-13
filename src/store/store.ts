@@ -1,18 +1,7 @@
-// store.js
-
-import {create} from 'zustand'; // create로 zustand를 불러옵니다.
+import {create} from 'zustand';
 import {tokenStorage} from '../utils/token';
-import {
-  CategoryStore,
-  NewTicketFormStore,
-  NewTicketStore,
-  TemplateStore,
-  TicketStore,
-  TokenStore,
-  UserStore,
-} from '../interfaces/interfaces';
+import {NewTicketFormStore, NewTicketStore, TemplateStore, TicketStore, TokenStore, UserStore} from '../interfaces/interfaces';
 
-// 역할 임시 전달 - user, manager, admin (추후 로그인시 전달 받아와서 저장)
 // 시스템 사용자 정보 저장 전역변수
 export const useUserStore = create<UserStore>((set) => ({
   userName: '',
@@ -42,12 +31,6 @@ export const useTokenStore = create<TokenStore>((set) => ({
 export const useTicketStore = create<TicketStore>((set) => ({
   priority: 'HIGH',
   setPriority: (priority: string) => set((state) => ({...state, priority})),
-}));
-
-// 카테고리
-export const useCategoryStore = create<CategoryStore>((set) => ({
-  categories: [],
-  setCategories: (categories) => set({categories}),
 }));
 
 export const useNewTicketStore = create<NewTicketStore>((set) => ({

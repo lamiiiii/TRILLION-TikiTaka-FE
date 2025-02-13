@@ -1,19 +1,19 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { getCategoryList } from '../../../api/service/categories';
-import { getTicketList, getTicketTypes } from '../../../api/service/tickets';
-import { getManagerList } from '../../../api/service/users';
-import { TicketViewType } from '../../../interfaces/ticket';
-import { useUserStore } from '../../../store/store';
+import {useQuery, useQueryClient} from '@tanstack/react-query';
+import {useEffect, useMemo, useRef, useState} from 'react';
+import {getCategoryList} from '../../../api/service/categories';
+import {getTicketList, getTicketTypes} from '../../../api/service/tickets';
+import {getManagerList} from '../../../api/service/users';
+import {TicketViewType} from '../../../interfaces/ticket';
+import {useUserStore} from '../../../store/store';
 import Dropdown from '../../common/Dropdown';
-import { RefreshIcon } from '../../common/Icon';
+import {RefreshIcon} from '../../common/Icon';
 import PageNations from '../../common/PageNations';
 import UserTicket from './UserTicket';
 
 const typeMapping: Record<string, string> = {CREATE: '생성', DELETE: '삭제', ETC: '기타', UPDATE: '수정'};
 
 interface TicketListProps {
-  selectedFilter: TicketViewType; 
+  selectedFilter: TicketViewType;
 }
 
 const STATUS_MAP = {PENDING: '대기중', IN_PROGRESS: '진행중', REVIEW: '검토', DONE: '완료', REJECTED: '반려'};
@@ -42,7 +42,7 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
 
   const apiStatus = useMemo(() => {
     if (selectedFilter === '전체') return undefined;
-    if (selectedFilter === '긴급') return undefined; 
+    if (selectedFilter === '긴급') return undefined;
     return REVERSE_STATUS_MAP[selectedFilter] || undefined;
   }, [selectedFilter]);
 
