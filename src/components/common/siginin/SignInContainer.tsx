@@ -63,7 +63,7 @@ export default function SignInContainer() {
         if (accessToken) {
           login(accessToken);
           if (data.passwordChangeNeeded) {
-            navigate('/changepwd', {replace: true});
+            navigate(`/${data.role.toLowerCase()}/pwdchange`, {replace: true});
           } else if (data.role && data.id) {
             setRole(data.role);
             setUserId(data.id);

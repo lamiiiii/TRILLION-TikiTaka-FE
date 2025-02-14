@@ -1,4 +1,4 @@
-import {useNavigate} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {useUserStore} from '../../store/store';
 import {useState} from 'react';
 import {validatePwd} from '../../utils/Validation';
@@ -20,9 +20,10 @@ export default function PwdChangeContainer() {
   const [isPasswordVisibleNew, setIsPasswordVisibleNew] = useState(false);
   const [isPasswordVisibleCheck, setIsPasswordVisibleCheck] = useState(false);
 
-  const [modalState, setModalState] = useState<{open: boolean; type: 'error' | 'success' | null}>({
+  const [modalState, setModalState] = useState<{open: boolean; type: 'error' | 'success' | null; message: string}>({
     open: false,
     type: null,
+    message: '',
   });
 
   const pwdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,15 +102,19 @@ export default function PwdChangeContainer() {
 
     try {
       await patchUserPassword(requestData, userId);
+      setModalState({open: true, type: 'success', message: '비밀번호가 성공적으로 변경되었습니다.'});
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || '비밀번호 변경 중 오류가 발생했습니다.';
 
-      setModalState({open: true, type: 'success'});
-    } catch (error) {
-      setModalState({open: true, type: 'error'});
+      setModalState({open: true, type: 'error', message: errorMessage});
     }
   };
 
   return (
-    <div className="m-10 items-center">
+    <div className="flex flex-col m-10 items-center gap-5">
+      <p className="text-error text-sm font-bold text-center">
+        임시 비밀번호 유출 방지를 위해 <br /> 최초 로그인 시 반드시 비밀번호를 변경해 주세요.
+      </p>
       <div className="flex flex-col items-center gap-10 w-[400px]">
         <div className="flex flex-col w-full gap-5">
           {/* 현재 비밀번호 */}
@@ -198,14 +203,19 @@ export default function PwdChangeContainer() {
         <button onClick={onClickChange} className="main-btn-lg w-full">
           변경 완료
         </button>
+        <div className="flex justify-end w-full">
+          <Link to={`/${role.toLowerCase()}`} className="text-sm text-gray-2 cursor-pointer hover:underline hover:text-gray-15">
+            다음에 변경하기
+          </Link>
+        </div>
       </div>
       {modalState.open && (
         <Modal
           title={modalState.type === 'error' ? '비밀번호 오류' : '변경 완료'}
-          content={modalState.type === 'error' ? '현재 비밀번호가 올바르지 않습니다.' : '비밀번호가 성공적으로 변경되었습니다.'}
+          content={modalState.message}
           backBtn="확인"
           onBackBtnClick={() => {
-            setModalState({open: false, type: null});
+            setModalState({open: false, type: null, message: ''});
             if (modalState.type === 'success') {
               navigate(role.toLowerCase() === 'admin' ? '/admin/accounts' : `/${role.toLowerCase()}`, {replace: true});
             }
