@@ -9,9 +9,10 @@ import {RefreshIcon} from '../../../common/Icon';
 import PageNations from '../../../common/PageNations';
 import Ticket from '../../../common/ticket/Ticket';
 import {pageSizeOptions} from '../../../../constants/constants';
+import {ERROR_MESSAGES} from '../../../../constants/error';
 
 interface TicketListProps {
-  selectedFilter: '전체' | '나의 요청';
+  selectedFilter: '전체' | '나의 티켓';
 }
 
 const typeMapping: Record<string, string> = {CREATE: '생성', DELETE: '삭제', ETC: '기타', UPDATE: '수정'};
@@ -31,7 +32,7 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
   }, [selectedFilter]);
 
   const {data: ticketListData} = useQuery({
-    queryKey: ['ticketList', currentPage, selectedFilter, selectedFilters, userId, orderBy ?? '최신순',],
+    queryKey: ['ticketList', currentPage, selectedFilter, selectedFilters, userId, orderBy ?? '최신순'],
     queryFn: () => {
       const selectedManagerId = userData?.find((user: any) => user.username === selectedFilters['담당자'])?.userId;
       const firstCategoryId = categories?.find((cat: any) => cat.primary.name === selectedFilters['1차 카테고리'])?.primary.id;
@@ -46,7 +47,7 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
         page: (currentPage ?? 1) - 1,
         size: pageSize ?? 20,
         status: 'PENDING',
-        managerId: selectedFilter === '나의 요청' ? userId : selectedManagerId,
+        managerId: selectedFilter === '나의 티켓' ? userId : selectedManagerId,
         firstCategoryId,
         secondCategoryId,
         ticketTypeId,
@@ -221,7 +222,11 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
               />
             ))}
         </div>
-        <PageNations currentPage={currentPage} totalPages={ticketListData?.totalPages} onPageChange={handlePageChange} />
+        {ticketListData?.content && ticketListData?.content?.length > 0 ? (
+          <PageNations currentPage={currentPage} totalPages={ticketListData?.totalPages} onPageChange={handlePageChange} />
+        ) : (
+          <div className="text-gray-500 text-center py-4">{ERROR_MESSAGES.NO_TICKET}</div>
+        )}
       </div>
     </div>
   );

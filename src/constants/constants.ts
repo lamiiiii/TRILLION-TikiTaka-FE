@@ -28,7 +28,29 @@ export const UPDATE_TYPE_MAP = {
   CATEGORY_CHANGE: '카테고리 변경',
   DEADLINE_CHANGE: '마감기한 변경',
   TICKET_DELETE: '티켓 삭제',
+  URGENT_CHANGE: '긴급 여부 변경',
   OTHER: '기타',
+};
+
+export const typeNameMapping: Record<string, string> = {
+  CREATE: '생성',
+  DELETE: '삭제',
+  UPDATE: '수정',
+  ETC: '기타',
+};
+
+export const statusMapping: Record<string, string> = {
+  PENDING: '대기중',
+  IN_PROGRESS: '진행중',
+  REVIEW: '검토 요청',
+  DONE: '완료',
+  REJECTED: '반려',
+};
+
+export const reverseStatusMapping: Record<string, string> = {
+  대기중: 'PENDING',
+  진행중: 'IN_PROGRESS',
+  완료: 'DONE',
 };
 
 export const pageSizeOptions = ['20개씩', '30개씩', '50개씩'];

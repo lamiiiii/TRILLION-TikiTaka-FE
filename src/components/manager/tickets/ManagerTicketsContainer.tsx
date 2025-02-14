@@ -9,11 +9,13 @@ export default function ManagerTicketsContainer() {
   const [selectedFilter, setSelectedFilter] = useState<TicketViewType>('전체');
 
   return (
-    <div className="flex flex-col max-w-1200 mb-20">
-      <TopMenu boldGrayText="내가 생성한 티켓" />
+    <div className="top-container">
+      <div className="flex flex-col max-w-1200 mb-20">
+        <TopMenu boldGrayText="내가 생성한 티켓" />
 
-      <UserTicketFilter onFilterChange={setSelectedFilter} />
-      <UserTicketList selectedFilter={selectedFilter} />
+        <UserTicketFilter onFilterChange={setSelectedFilter} />
+        <UserTicketList selectedFilter={selectedFilter} />
+      </div>
     </div>
   );
 }

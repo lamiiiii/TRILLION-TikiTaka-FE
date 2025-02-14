@@ -28,8 +28,8 @@ function FilterItem({type, count, isSelected, onClick}: {type: string; count: nu
 }
 
 interface PendingTicketFilterProps {
-  selectedFilter: '전체' | '나의 요청';
-  onFilterChange: (filter: '전체' | '나의 요청') => void;
+  selectedFilter: '전체' | '나의 티켓';
+  onFilterChange: (filter: '전체' | '나의 티켓') => void;
 }
 
 // 전체 필터 컴포넌트
@@ -50,7 +50,7 @@ export default function PendingTicketFilter({selectedFilter, onFilterChange}: Pe
   // 티켓 데이터 상태
   const [ticketData, setTicketData] = useState([
     {type: '전체', count: 0},
-    {type: '나의 요청', count: 0},
+    {type: '나의 티켓', count: 0},
   ]);
 
   // pendingTicketCount 데이터가 변경될 때마다 ticketData 업데이트
@@ -58,7 +58,7 @@ export default function PendingTicketFilter({selectedFilter, onFilterChange}: Pe
     if (pendingApprovalCount) {
       setTicketData([
         {type: '전체', count: pendingApprovalCount?.allPendingTicket},
-        {type: '나의 요청', count: pendingApprovalCount?.myPendingTicket},
+        {type: '나의 티켓', count: pendingApprovalCount?.myPendingTicket},
       ]);
     }
   }, [pendingApprovalCount]);
@@ -89,8 +89,8 @@ export default function PendingTicketFilter({selectedFilter, onFilterChange}: Pe
                 count={item.count}
                 isSelected={item.type === selectedFilter}
                 onClick={() => {
-                  setSelectedType(item.type as '전체' | '나의 요청');
-                  onFilterChange(item.type as '전체' | '나의 요청');
+                  setSelectedType(item.type as '전체' | '나의 티켓');
+                  onFilterChange(item.type as '전체' | '나의 티켓');
                 }}
               />
             </div>

@@ -1,3 +1,4 @@
+import {typeNameMapping} from '../../../constants/constants';
 import Profile from '../Profile';
 
 interface TicketDetailProps {
@@ -22,19 +23,19 @@ export default function TicketDetail({data}: TicketDetailProps) {
 
           <div className="flex flex-col gap-[7px]">
             <div className="flex items-center gap-2">
-              {data?.managerName && <Profile userId={data?.managerId} name={data?.managerName} size="md" />}
+              {data?.managerName && <Profile userId={data?.managerId} size="md" />}
               <span>{data?.managerName ? data?.managerName : '담당자 미지정'}</span>
             </div>
             <div className="flex items-center gap-2">
-              <Profile userId={data?.requesterId} name={data?.requesterName} size="md" />
+              <Profile userId={data?.requesterId} size="md" />
               <span>{data?.requesterName}</span>
             </div>
-            <p>{data?.typeName ? data?.typeName : '-'}</p>
-            <p>{data?.firstCategoryName ? data?.firstCategoryName : '-'}</p>
-            <p>{data?.secondCategoryName ? data?.secondCategoryName : '-'}</p>
-            <p>{data?.createdAt ? data?.createdAt : '-'}</p>
-            <p>{data?.updatedAt ? data?.updatedAt : '-'}</p>
-            <p>{data?.deadline ? data?.deadline : '-'}</p>
+            <p>{data?.typeName ? typeNameMapping[data?.typeName] : '미지정'}</p>
+            <p>{data?.firstCategoryName ? data?.firstCategoryName : '미지정'}</p>
+            <p>{data?.secondCategoryName ? data?.secondCategoryName : '미지정'}</p>
+            <p>{data?.createdAt ? data?.createdAt : '미지정'}</p>
+            <p>{data?.updatedAt ? data?.updatedAt : '미지정'}</p>
+            <p>{data?.deadline ? data?.deadline : '미지정'}</p>
           </div>
         </div>
       </div>

@@ -7,6 +7,7 @@ import {useUserStore} from '../../../store/store';
 import ManagerSelector from '../selector/ManagerSelector';
 import {useCreateMutation} from '../../../api/hooks/useCreateMutation';
 import {updateTicketManager} from '../../../api/service/tickets';
+import {typeNameMapping} from '../../../constants/constants';
 
 interface TicketProps extends TicketDataProps {
   role: 'manager' | 'user' | 'admin'; // role 추가
@@ -32,6 +33,7 @@ const getTicketClass = (urgent: boolean, status: string) => {
 export default function Ticket({
   ticketId,
   title,
+  typeName,
   description,
   firstCategoryName,
   secondCategoryName,
@@ -105,7 +107,9 @@ export default function Ticket({
           <div className="flex items-center gap-1">
             {urgent && <AlertIcon className="text-error w-4 h-4" />}
 
-            <div className={`text-subtitle-regular truncate ${urgent ? 'text-error' : 'text-gray-15'}`}>{title}</div>
+            <div className={`text-subtitle-regular truncate ${urgent ? 'text-error' : 'text-gray-15'}`}>
+              [{typeNameMapping[typeName ?? '']}] {title}
+            </div>
           </div>
           <div className="text-gray-6 text-body-regular">{description.length > 40 ? `${description.slice(0, 40)}...` : description}</div>
         </div>
@@ -118,8 +122,6 @@ export default function Ticket({
           <ManagerSelector selectedManagerName={selectedAssignee} onManagerSelect={handleManagerSelect} />
         </div>
 
-        {/* 승인 여부 */}
-
         <div className="w-[15%] flex gap-2" onClick={handleClick}>
           {role !== 'USER' && ticketStatus === 'PENDING' && (
             <>
@@ -127,7 +129,7 @@ export default function Ticket({
                 className="px-6 h-[30px] text-[12px] leading-none border border-gray-6 rounded-md hover:bg-gray-8 hover:text-white"
                 onClick={handleApprove}
               >
-                진행
+                승인
               </button>
               <button
                 className="px-6 h-[30px] text-[12px] leading-none border border-gray-6 rounded-md hover:bg-error/80 hover:text-white"

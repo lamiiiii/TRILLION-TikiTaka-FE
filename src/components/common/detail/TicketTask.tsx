@@ -6,7 +6,7 @@ import {useParams} from 'react-router-dom';
 import {WhiteCheckIcon} from '../Icon';
 import DOMPurify from 'dompurify';
 
-export default function TicketTask() {
+export default function TicketTask({progress = 0}: {progress?: number}) {
   const [inputValue, setInputValue] = useState('');
   const [editedContent, setEditedContent] = useState<string>(''); // 1. 타입 명시적 선언
   const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
@@ -113,7 +113,7 @@ export default function TicketTask() {
       <div className="flex items-center justify-between">
         <label className="text-body-bold">Task</label>
         <label className="text-body-bold">
-          Progress: <span className="text-main2-3">{progressPercentage ? progressPercentage : '-'}%</span>
+          Progress: <span className="text-main2-3">{progress ? progress : progressPercentage}%</span>
         </label>
       </div>
 

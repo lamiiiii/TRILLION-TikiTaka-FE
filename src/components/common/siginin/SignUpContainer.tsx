@@ -5,7 +5,7 @@ import Modal from '../Modal';
 import {validateEmail, validateId} from '../../../utils/Validation';
 import {Link, useNavigate} from 'react-router-dom';
 import {postRegistration} from '../../../api/service/registration';
-import {termsContent} from '../../../data/terms';
+import {termsContent} from '../../../constants/terms';
 import {useTokenStore} from '../../../store/store';
 
 export default function SignUpContainer() {

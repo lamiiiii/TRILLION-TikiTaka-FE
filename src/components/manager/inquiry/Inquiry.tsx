@@ -20,7 +20,7 @@ export default function Inquiry({data}: InquiryProps) {
       <section className="flex w-full p-5 rounded bg-white border border-gray-2 text-subtitle-regular hover:bg-gray-1">
         <p className="mr-[59px]">{data.type === 'QUESTION' ? '질문' : '요청'}</p>
         <div>
-          <p>{data.title}</p>
+          <p className="w-[450px]">{data.title}</p>
           <p className="w-[450px] text-gray-6 text-body-regular mt-1 mr-[120px]">{data.content}</p>
         </div>
         <p className="text-body-regular mr-[70px]">{data.createdAt.split(' ')[0]}</p>

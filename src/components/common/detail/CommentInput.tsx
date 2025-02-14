@@ -13,7 +13,7 @@ export default function CommentInput() {
   const [files, setFiles] = useState<File[]>([]);
   const [fileNames, setFileNames] = useState<string[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const {userName, userId} = useUserStore();
+  const {userId} = useUserStore();
 
   const {id} = useParams();
   const ticketId = Number(id);
@@ -26,7 +26,7 @@ export default function CommentInput() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['ticketComments', ticketId]});
-      if (textareaRef.current) textareaRef.current.value = '';
+      setContent(''); // 내용 초기화
       setFiles([]);
       setFileNames([]);
     },
@@ -97,7 +97,7 @@ export default function CommentInput() {
       </div>
       <div className="relative mt-3">
         <div className="flex gap-2 mb-2">
-          <Profile userId={userId} name={userName} size="md" />
+          <Profile userId={userId} size="md" />
           <textarea
             ref={textareaRef}
             className="comment-textarea"

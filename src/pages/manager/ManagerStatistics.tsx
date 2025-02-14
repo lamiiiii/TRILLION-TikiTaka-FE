@@ -8,9 +8,7 @@ export default function ManagerStatistics() {
 
   return (
     <AuthGuard isAuthenticated={isAuthenticated} userRole={role}>
-      <div className="top-container">
-        <ManagerStatisticsContainer />
-      </div>
+      <ManagerStatisticsContainer />
     </AuthGuard>
   );
 }

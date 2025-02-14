@@ -8,11 +8,7 @@ export default function UserTicketDetail() {
 
   return (
     <AuthGuard isAuthenticated={isAuthenticated} userRole={role}>
-      <div className="top-container">
-        <div className="flex flex-col">
-          <DetailContainer />
-        </div>
-      </div>
+      <DetailContainer />
     </AuthGuard>
   );
 }

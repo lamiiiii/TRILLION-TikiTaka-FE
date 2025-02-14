@@ -9,7 +9,7 @@ import {useUserStore} from '../../../../store/store';
 
 export default function TicketAwaitingList() {
   const [isListVisible, setIsListVisible] = useState(false);
-  const [selectedFilter, setSelectedFilter] = useState<'전체' | '나의 요청'>('전체');
+  const [selectedFilter, setSelectedFilter] = useState<'전체' | '나의 티켓'>('전체');
 
   const toggleListVisibility = () => {
     setIsListVisible((prev) => !prev);
