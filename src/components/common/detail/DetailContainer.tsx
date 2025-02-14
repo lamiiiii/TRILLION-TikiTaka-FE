@@ -133,7 +133,7 @@ export default function DetailContainer() {
           </div>
         </>
       ) : (
-        <section className="flex bg-gray-18 p-6 pb-[38px] mt-3">
+        <section className="flex bg-gray-18 p-6 pb-[38px] mt-3 w-full">
           <div className="flex gap-4 mr-10">
             <Profile userId={ticket?.managerId} size="lg" />
             <section className="w-[577px] flex flex-col">
