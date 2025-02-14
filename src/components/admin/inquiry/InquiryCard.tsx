@@ -3,16 +3,18 @@ interface InquiryCardProps {
   title: string;
   content: string;
   createdAt: string;
+  requesterName: string;
   status: boolean;
   onReplyClick: () => void;
 }
 
-export default function InquiryCard({type, title, content, createdAt, status, onReplyClick}: InquiryCardProps) {
+export default function InquiryCard({type, title, content, createdAt, requesterName, status, onReplyClick}: InquiryCardProps) {
   return (
     <div className="flex gap-4 py-4 px-4 border border-gray-2 bg-white items-center rounded cursor-pointer hover:bg-gray-1">
-      <div className="w-[15%] text-gray-700 text-subtitle-regular">{type === 'QUESTION' ? '질문' : '요청'}</div>
-      <div className="w-[50%] ">
-        <div className="text-gray-900 text-subtitle-regular">{title}</div>
+      <div className="w-[10%] text-gray-700 text-subtitle-regular">{type === 'QUESTION' ? '질문' : '요청'}</div>
+      <div className="w-[15%] text-gray-700 text-subtitle-regular truncate">{requesterName}</div>
+      <div className="w-[35%] ">
+        <div className="text-gray-900 text-subtitle-regular truncate">{title}</div>
         <div className="w-[422px] text-gray-6 text-caption-regular truncate">{content}</div>
       </div>
       <div className="w-[20%] text-gray-15 text-body-regular">{createdAt}</div>
