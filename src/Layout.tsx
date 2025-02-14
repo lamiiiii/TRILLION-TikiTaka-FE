@@ -1,22 +1,29 @@
 import {useEffect, useRef} from 'react';
 import TopBar from './components/common/TopBar';
 import SideBar from './components/common/SideBar';
-import {Navigate, Outlet, useLocation} from 'react-router-dom';
+import {Navigate, Outlet, useLocation, useNavigate} from 'react-router-dom';
 import {useTokenStore} from './store/store';
 
 export default function Layout() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const {isAuthenticated} = useTokenStore();
 
-  //브라우저 스크롤 상단 고정 처리
   const containerRef = useRef<HTMLDivElement>(null);
-  const location = useLocation();
 
   useEffect(() => {
-    // RAF(requestAnimationFrame)를 사용한 최적화
     requestAnimationFrame(() => {
       containerRef.current?.scrollTo({top: 0, behavior: 'auto'});
     });
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate(`/login?redirect=${encodeURIComponent(location.pathname)}`, { replace: true });
+    }
+  }, [isAuthenticated, location.pathname, navigate]);
+
 
   if (!isAuthenticated) {
     return <Navigate to="/"/>;

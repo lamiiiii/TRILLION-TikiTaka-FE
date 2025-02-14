@@ -23,6 +23,9 @@ export default function SignInContainer() {
   const [modalMessage, setModalMessage] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
+  const params = new URLSearchParams(location.search);
+  const redirectTo = params.get('redirect');
+
   const validateInput = (type: 'id' | 'pwd', value: string) => {
     if (!value) return type === 'id' ? '아이디를 입력해주세요.' : '비밀번호를 입력해주세요.';
     if (type === 'id' && !validateId(value)) return '아이디는 영어 소문자와 점(.)을 포함한 3~15자여야 합니다.';
@@ -60,12 +63,11 @@ export default function SignInContainer() {
           login(accessToken);
           if (data.passwordChangeNeeded) {
             navigate('/changepwd', {replace: true});
+          } else if (data.role && data.id) {
+            setRole(data.role);
+            setUserId(data.id);
+            navigate(redirectTo || `/${data.role.toLowerCase()}`, {replace: true});
           }
-        }
-        if (data.role && data.id) {
-          setRole(data.role);
-          setUserId(data.id);
-          navigate(`/${data.role.toLowerCase()}`, {replace: true});
         }
       }
     } catch (error: any) {
@@ -151,9 +153,6 @@ export default function SignInContainer() {
             <Link to="/signup" className="text-sm text-gray-2 cursor-pointer hover:underline hover:text-gray-15">
               계정 등록 신청
             </Link>
-            {/* <Link to="/resetpwd" className="cursor-pointer hover:underline hover:text-gray-15">
-              비밀번호 재설정
-            </Link> */}
           </div>
         </div>
       </div>
