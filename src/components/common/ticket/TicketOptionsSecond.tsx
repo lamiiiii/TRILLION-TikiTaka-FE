@@ -114,6 +114,13 @@ export default function TicketOpstionsSecond() {
     setIsModalOpen(false);
   };
 
+  const typeNameMapping: Record<string, string> = {
+    CREATE: '생성',
+    DELETE: '삭제',
+    UPDATE: '수정',
+    ETC: '기타',
+  };
+
   return (
     <div className="flex flex-col gap-3">
       <div className="selection">
@@ -140,10 +147,10 @@ export default function TicketOpstionsSecond() {
         </div>
         <DropDown
           label="유형"
-          options={ticketTypes.map((t) => t.typeName)}
-          value={ticketType.typeName}
-          onSelect={(value) => {
-            const selectedType = ticketTypes.find((t) => t.typeName === value);
+          options={ticketTypes.map((t) => typeNameMapping[t.typeName] || t.typeName)} // 한글로 변환하여 표시
+          value={typeNameMapping[ticketType.typeName] || ticketType.typeName} // 선택된 값도 한글로 변환
+          onSelect={(selectedLabel) => {
+            const selectedType = ticketTypes.find((t) => (typeNameMapping[t.typeName] || t.typeName) === selectedLabel);
             if (selectedType) {
               setTicketType(selectedType);
             }

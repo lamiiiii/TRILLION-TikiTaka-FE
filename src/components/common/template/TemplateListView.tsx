@@ -28,9 +28,13 @@ export default function TemplateListView({onSelect}: TemplateListViewProps) {
           <div className="w-48">생성일자</div>
         </div>
         <ul className="w-full max-h-[530px] overflow-y-auto">
-          {templates?.map((template) => (
-            <TemplateListItem key={template.templateId} template={template} onClick={() => onSelect(Number(template.templateId))} />
-          ))}
+          {templates && templates.length > 0 ? (
+            templates.map((template) => (
+              <TemplateListItem key={template.templateId} template={template} onClick={() => onSelect(Number(template.templateId))} />
+            ))
+          ) : (
+            <div className="flex justify-center items-center h-40 text-gray-5">등록된 템플릿이 없습니다.</div>
+          )}
         </ul>
       </div>
     </div>
