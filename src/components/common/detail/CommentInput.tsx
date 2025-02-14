@@ -26,7 +26,7 @@ export default function CommentInput() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['ticketComments', ticketId]});
-      if (textareaRef.current) textareaRef.current.value = '';
+      setContent(''); // 내용 초기화
       setFiles([]);
       setFileNames([]);
     },
