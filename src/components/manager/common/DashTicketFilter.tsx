@@ -63,7 +63,7 @@ export default function DashTicketFilter({ onFilterChange, onCountUpdate }: Tick
   };
 
   return (
-    <div className="w-full mt-10 relative">
+    <div className="w-[1152px] mt-10 relative">
       <div className="flex w-full h-8 gap-6 items-center" ref={containerRef}>
         {filteredTicketData.map((item) => (
           <div

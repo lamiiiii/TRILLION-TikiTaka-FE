@@ -8,6 +8,7 @@ import Dropdown from '../../../common/Dropdown';
 import {RefreshIcon} from '../../../common/Icon';
 import PageNations from '../../../common/PageNations';
 import Ticket from '../../../common/ticket/Ticket';
+import {pageSizeOptions} from '../../../../constants/constants';
 import {ERROR_MESSAGES} from '../../../../constants/error';
 
 interface TicketListProps {
@@ -20,7 +21,8 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
   const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
   const [currentPage, setCurrentPage] = useState(1);
   const listRef = useRef<HTMLDivElement>(null);
-  const ticketsPerPage = 20;
+  const [pageSize, setPageSize] = useState(20);
+  const [orderBy, setOrderBy] = useState('최신순');
   const queryClient = useQueryClient();
 
   const {userId} = useUserStore();
@@ -30,7 +32,7 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
   }, [selectedFilter]);
 
   const {data: ticketListData} = useQuery({
-    queryKey: ['ticketList', currentPage, selectedFilter, selectedFilters, userId],
+    queryKey: ['ticketList', currentPage, selectedFilter, selectedFilters, userId, orderBy ?? '최신순'],
     queryFn: () => {
       const selectedManagerId = userData?.find((user: any) => user.username === selectedFilters['담당자'])?.userId;
       const firstCategoryId = categories?.find((cat: any) => cat.primary.name === selectedFilters['1차 카테고리'])?.primary.id;
@@ -38,15 +40,18 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
         ?.find((cat: any) => cat.primary.name === selectedFilters['1차 카테고리'])
         ?.secondaries.find((sub: any) => sub.name === selectedFilters['2차 카테고리'])?.id;
       const ticketTypeId = typeData?.find((type: any) => type.typeName === selectedFilters['요청'])?.typeId;
+      const sortParam =
+        orderBy === '최신순' ? 'newest' : orderBy === '마감기한순' ? 'deadline' : orderBy === '오래된순' ? 'oldest' : 'newest';
 
       return getTicketList({
-        page: currentPage - 1,
-        size: ticketsPerPage,
+        page: (currentPage ?? 1) - 1,
+        size: pageSize ?? 20,
         status: 'PENDING',
         managerId: selectedFilter === '나의 티켓' ? userId : selectedManagerId,
         firstCategoryId,
         secondCategoryId,
         ticketTypeId,
+        sort: sortParam,
       });
     },
   });
@@ -145,7 +150,27 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
   };
 
   return (
-    <div ref={listRef} className="w-full mt-[20px] relative mb-[100px]">
+    <div ref={listRef} className="w-full relative mb-[100px]">
+      <div className="flex mb-2 justify-end gap-3 ">
+        <Dropdown
+          label="20개씩"
+          options={pageSizeOptions}
+          value={`${pageSize}개씩`}
+          onSelect={(value) => setPageSize(parseInt(value.replace('개씩', ''), 10))}
+          paddingX="px-3"
+          border={false}
+          textColor=""
+        />
+        <Dropdown
+          label="정렬 기준"
+          options={['최신순', '마감기한순', '오래된순']}
+          value={orderBy || '정렬 기준'}
+          onSelect={(value) => setOrderBy(value)}
+          paddingX="px-4"
+          border={false}
+          textColor=""
+        />
+      </div>
       <div className="bg-gray-18 h-full flex flex-col justify-start p-4">
         <div className="flex items-center gap-4 leading-none mt-4 px-2">
           {dropdownData.map((data) => (

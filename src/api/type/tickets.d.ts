@@ -134,6 +134,7 @@ declare interface TicketListParams {
   orderBy?: string;
   createdAt?: string;
   urgent?: boolean;
+  sort?: string;
 }
 
 declare interface UpdateTicketParams {

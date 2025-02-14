@@ -14,7 +14,6 @@ import AdminAccounts from './pages/admin/AdminAccounts';
 import AdminCategory from './pages/admin/AdminCategory';
 import AdminInquiry from './pages/admin/AdminInquiry';
 import ManagerHistories from './pages/manager/ManagerHistories';
-import ChangePwd from './pages/common/signin/ChangePwd';
 import UserPwdChange from './pages/user/UserPwdChange';
 import ManagerNewTicket from './pages/manager/ManagerNewTicket';
 import UserTicketDetail from './pages/user/UserTicketDetail';
@@ -22,6 +21,7 @@ import Layout from './Layout';
 import ManagerManageTickets from './pages/manager/ManagerManageTickets';
 import UserInquiry from './pages/user/UserInquiry';
 import ManagerInquiry from './pages/manager/ManagerInquiry';
+import AdminPwdChange from './pages/admin/AdminPwdChange';
 
 function App() {
   const managerRoutes = [
@@ -51,6 +51,7 @@ function App() {
     {path: 'accounts', element: <AdminAccounts />},
     {path: 'categories', element: <AdminCategory />},
     {path: 'inquiries', element: <AdminInquiry />},
+    {path: 'pwdChange', element: <AdminPwdChange />},
   ];
 
   return (
@@ -59,7 +60,6 @@ function App() {
         <Routes>
           <Route path="/" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
-          {/* <Route path="/resetpwd" element={<ResetPwd />} /> */}
           <Route path="*" element={<NotFound />} />
 
           {/* 레이아웃 있음 */}
@@ -82,7 +82,6 @@ function App() {
                 <Route key={path} path={path} element={element} />
               ))}
             </Route>
-            <Route path="/changepwd" element={<ChangePwd />} />
           </Route>
         </Routes>
       </Router>

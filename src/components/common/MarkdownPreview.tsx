@@ -7,10 +7,14 @@ export default function MarkdownPreview({content}: {content: string}) {
 
   useEffect(() => {
     async function convertMarkdown() {
+      marked.setOptions({
+        breaks: true,
+      });
       const html = await marked(content);
       const sanitized = DOMPurify.sanitize(html);
       setSanitizedHTML(sanitized);
     }
+
     convertMarkdown();
   }, [content]);
 
