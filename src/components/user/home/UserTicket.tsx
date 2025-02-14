@@ -1,12 +1,10 @@
-
 import {Link} from 'react-router-dom';
 // import {useUserStore} from '../../../store/store';
 import {AlertIcon} from '../../common/Icon';
 
-
 interface UserTicketProps extends TicketListItem {
-  detailLink: string; 
-  onAssigneeChange?: (newAssignee: string) => void; 
+  detailLink: string;
+  onAssigneeChange?: (newAssignee: string) => void;
   onApprove?: (ticketId: number) => void;
   onReject?: (ticketId: number) => void;
   onStatusChange: (ticketId: number, newStatus: string) => void;
@@ -35,7 +33,6 @@ export default function UserTicket({
   deadline,
   detailLink,
 }: UserTicketProps) {
-
   const typeNameMapping: Record<string, string> = {
     CREATE: '생성',
     DELETE: '삭제',
@@ -58,7 +55,7 @@ export default function UserTicket({
       <Link to={detailLink} className="w-[40%]" style={{textAlign: 'left'}}>
         <div className="flex items-center gap-1">
           {urgent && <AlertIcon className="text-error w-4 h-4" />}
-          <div className={`flex text-subtitle-regular ${urgent ? 'text-error' : 'text-gray-15'}`}>
+          <div className={`flex text-subtitle-regular truncate ${urgent ? 'text-error' : 'text-gray-15'}`}>
             [{typeNameMapping[typeName] || '미정'}]<div className="ml-1">{title}</div>
           </div>
         </div>
@@ -67,11 +64,7 @@ export default function UserTicket({
       <Link to={detailLink} className="w-[18%] text-body-regular text-gray-15">
         {deadline}
       </Link>
-      <div className="w-[18%] text-body-regular">
-        {managerName}
-      </div>
-      
-   
+      <div className="w-[18%] text-body-regular">{managerName}</div>
     </div>
   );
 }

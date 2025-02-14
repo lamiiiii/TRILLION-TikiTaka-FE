@@ -116,84 +116,88 @@ export default function DetailContainer() {
   };
 
   return (
-    <div className="flex flex-col pt-[30px] px-[46px] mb-[100px]">
-      <button onClick={handleGoBack} className="flex items-center gap-1 text-body-regular text-gray-16 text-left">
-        <BackIcon />
-        {'뒤로가기'}
-      </button>
-      <TopMenu boldBlackText={`#${ticket?.ticketId}`} regularText={`[${typeNameMapping[ticket?.typeName ?? '']}] ${ticket?.title}`} />
-      {ticket && (
-        <StatusBar data={ticket} status={ticket?.status as 'PENDING' | 'IN_PROGRESS' | 'DONE' | 'REVIEW' | 'REJECTED' | undefined} />
-      )}
+    <div className="top-container ">
+      <div className="flex flex-col">
+        <div className="flex flex-col pt-[30px] px-[46px] mb-[100px]">
+          <button onClick={handleGoBack} className="flex items-center gap-1 text-body-regular text-gray-16 text-left">
+            <BackIcon />
+            {'뒤로가기'}
+          </button>
+          <TopMenu boldBlackText={`#${ticket?.ticketId}`} regularText={`[${typeNameMapping[ticket?.typeName ?? '']}] ${ticket?.title}`} />
+          {ticket && (
+            <StatusBar data={ticket} status={ticket?.status as 'PENDING' | 'IN_PROGRESS' | 'DONE' | 'REVIEW' | 'REJECTED' | undefined} />
+          )}
 
-      {isEditing && ticket ? (
-        <>
-          <div className="flex w-full">
-            <TicketEdit ticketData={ticket} />
-          </div>
-        </>
-      ) : (
-        <section className="flex bg-gray-18 p-6 pb-[38px] mt-3 w-full">
-          <div className="flex gap-4 mr-10">
-            <Profile userId={ticket?.managerId} size="lg" />
-            <section className="w-[577px] flex flex-col">
-              {ticket && <TicketContent data={ticket} />}
-              <CommentInput />
-              {comments?.data && comments?.data.length > 0 ? (
-                [...comments.data]
-                  .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-                  .map((comment: Comment) => (
-                    <CommentItem
-                      key={comment.commentId}
-                      commentId={comment.commentId}
-                      authorId={comment.authorId}
-                      name={comment.authorName}
-                      content={comment.content}
-                      createdAt={comment.createdAt}
-                    />
-                  ))
-              ) : (
-                <></>
-              )}
+          {isEditing && ticket ? (
+            <>
+              <div className="flex w-full">
+                <TicketEdit ticketData={ticket} />
+              </div>
+            </>
+          ) : (
+            <section className="flex bg-gray-18 p-6 pb-[38px] mt-3 w-full">
+              <div className="flex gap-4 mr-10">
+                <Profile userId={ticket?.managerId} size="lg" />
+                <section className="w-[577px] flex flex-col">
+                  {ticket && <TicketContent data={ticket} />}
+                  <CommentInput />
+                  {comments?.data && comments?.data.length > 0 ? (
+                    [...comments.data]
+                      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                      .map((comment: Comment) => (
+                        <CommentItem
+                          key={comment.commentId}
+                          commentId={comment.commentId}
+                          authorId={comment.authorId}
+                          name={comment.authorName}
+                          content={comment.content}
+                          createdAt={comment.createdAt}
+                        />
+                      ))
+                  ) : (
+                    <></>
+                  )}
+                </section>
+              </div>
+              <section className="flex flex-col gap-5 w-[400px]">
+                {ticket && ticket.status === 'REVIEW' && <TicketReview managerId={ticket?.managerId} />}
+                {ticket && (
+                  <>
+                    <TicketDetail data={ticket} />
+                    {location.pathname.startsWith('/manager') && <TicketSetting data={ticket} />}
+                  </>
+                )}
+
+                {location.pathname.startsWith('/user') && <UserTicketTask progress={ticket?.progress} />}
+                {location.pathname.startsWith('/manager') && <TicketTask progress={ticket?.progress} />}
+                <TicketLog />
+              </section>
             </section>
-          </div>
-          <section className="flex flex-col gap-5 w-[400px]">
-            {ticket && ticket.status === 'REVIEW' && <TicketReview managerId={ticket?.managerId} />}
-            {ticket && (
-              <>
-                <TicketDetail data={ticket} />
-                {location.pathname.startsWith('/manager') && <TicketSetting data={ticket} />}
-              </>
-            )}
-
-            {location.pathname.startsWith('/user') && <UserTicketTask progress={ticket?.progress} />}
-            {location.pathname.startsWith('/manager') && <TicketTask progress={ticket?.progress} />}
-            <TicketLog />
-          </section>
-        </section>
-      )}
-      {showDeleteModal && (
-        <Modal
-          title="이 티켓을 삭제하시겠습니까?"
-          backBtn="취소"
-          onBackBtnClick={() => setShowDeleteModal(false)}
-          checkBtn="삭제"
-          onBtnClick={confirmDelete}
-        />
-      )}
-      {ticket?.requesterId === userId && (
-        <div className="flex justify-end gap-2 text-body-bold mt-3">
-          <button className="text-gray-5 hover:text-gray-15" onClick={handleEdit}>
-            {isEditing ? '수정 취소' : '수정'}
-          </button>
-          <button
-            className={`text-gray-5 ${ticket?.status == 'PENDING' ? 'hover:text-gray-15' : 'cursor-not-allowed'}`}
-            onClick={handleDelete}
-          >
-            삭제
-          </button>
+          )}
+          {showDeleteModal && (
+            <Modal
+              title="이 티켓을 삭제하시겠습니까?"
+              backBtn="취소"
+              onBackBtnClick={() => setShowDeleteModal(false)}
+              checkBtn="삭제"
+              onBtnClick={confirmDelete}
+            />
+          )}
+          {ticket?.requesterId === userId && (
+            <div className="flex justify-end gap-2 text-body-bold mt-3">
+              <button className="text-gray-5 hover:text-gray-15" onClick={handleEdit}>
+                {isEditing ? '수정 취소' : '수정'}
+              </button>
+              <button
+                className={`text-gray-5 ${ticket?.status == 'PENDING' ? 'hover:text-gray-15' : 'cursor-not-allowed'}`}
+                onClick={handleDelete}
+              >
+                삭제
+              </button>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
