@@ -116,7 +116,7 @@ export default function DetailContainer() {
   };
 
   return (
-    <div className="flex flex-col pt-[30px] px-[46px] ">
+    <div className="flex flex-col pt-[30px] px-[46px] mb-[100px]">
       <button onClick={handleGoBack} className="flex items-center gap-1 text-body-regular text-gray-16 text-left">
         <BackIcon />
         {'뒤로가기'}
@@ -125,19 +125,7 @@ export default function DetailContainer() {
       {ticket && (
         <StatusBar data={ticket} status={ticket?.status as 'PENDING' | 'IN_PROGRESS' | 'DONE' | 'REVIEW' | 'REJECTED' | undefined} />
       )}
-      {ticket?.requesterId === userId && (
-        <div className="flex justify-end gap-2 text-body-bold mt-3">
-          <button className="text-gray-5 hover:text-gray-15" onClick={handleEdit}>
-            {isEditing ? '수정 취소' : '수정'}
-          </button>
-          <button
-            className={`text-gray-5 ${ticket?.status == 'PENDING' ? 'hover:text-gray-15' : 'cursor-not-allowed'}`}
-            onClick={handleDelete}
-          >
-            삭제
-          </button>
-        </div>
-      )}
+
       {isEditing && ticket ? (
         <>
           <div className="flex w-full">
@@ -145,11 +133,9 @@ export default function DetailContainer() {
           </div>
         </>
       ) : (
-        <section className="flex bg-gray-18 p-6 pb-[38px] mt-3 mb-[100px]">
+        <section className="flex bg-gray-18 p-6 pb-[38px] mt-3">
           <div className="flex gap-4 mr-10">
-            <div className="mt-5">
-              <Profile userId={ticket?.managerId} size="lg" />
-            </div>
+            <Profile userId={ticket?.managerId} size="lg" />
             <section className="w-[577px] flex flex-col">
               {ticket && <TicketContent data={ticket} />}
               <CommentInput />
@@ -181,7 +167,7 @@ export default function DetailContainer() {
             )}
 
             {location.pathname.startsWith('/user') && <UserTicketTask progress={ticket?.progress} />}
-            {location.pathname.startsWith('/manager') && <TicketTask />}
+            {location.pathname.startsWith('/manager') && <TicketTask progress={ticket?.progress} />}
             <TicketLog />
           </section>
         </section>
@@ -194,6 +180,19 @@ export default function DetailContainer() {
           checkBtn="삭제"
           onBtnClick={confirmDelete}
         />
+      )}
+      {ticket?.requesterId === userId && (
+        <div className="flex justify-end gap-2 text-body-bold mt-3">
+          <button className="text-gray-5 hover:text-gray-15" onClick={handleEdit}>
+            {isEditing ? '수정 취소' : '수정'}
+          </button>
+          <button
+            className={`text-gray-5 ${ticket?.status == 'PENDING' ? 'hover:text-gray-15' : 'cursor-not-allowed'}`}
+            onClick={handleDelete}
+          >
+            삭제
+          </button>
+        </div>
       )}
     </div>
   );
