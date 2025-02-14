@@ -98,6 +98,11 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
         ?.secondaries.find((sub: any) => sub.name === selectedFilters['2차 카테고리'])?.id;
       const ticketTypeId = typeData?.find((type: any) => type.typeName === selectedFilters['요청'])?.typeId;
 
+      const sortParam = orderBy === '최신순' ? 'newest' 
+                  : orderBy === '마감기한순' ? 'deadline' 
+                  : orderBy === '오래된순' ? 'oldest' 
+                  : 'newest';
+
       const ticketData = await getTicketList({
         page: (currentPage ?? 1) - 1,
         size: pageSize ?? 20,
@@ -107,6 +112,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
         secondCategoryId,
         ticketTypeId,
         urgent,
+        sort: sortParam
       });
 
       let sortedTickets = [...ticketData.content];
@@ -114,7 +120,6 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
       return {...ticketData, content: sortedTickets};
     },
   });
-  console.log("정렬된 데이터", data)
 
   const dropdownData = [
     {label: '담당자', options: userData?.map((user: any) => user.username)},
@@ -252,8 +257,8 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
   };
 
   return (
-    <div className="w-full mt- relative mb-[100px] " ref={containerRef}>
-      <div className="flex mb-2 justify-end gap-3">
+    <div className="w-[1152px] relative mb-[100px] " ref={containerRef}>
+      <div className="flex mb-2 justify-end gap-3 ">
         <Dropdown
           label="20개씩"
           options={pageSizeOptions}
