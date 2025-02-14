@@ -5,7 +5,6 @@ import {validatePwd} from '../../utils/Validation';
 import Modal from './Modal';
 import {patchUserPassword} from '../../api/service/users';
 import {EyeIcon, EyeOffIcon, ValidateIcon} from './Icon';
-import TopMenu from './TopMenu';
 
 export default function PwdChangeContainer() {
   const {role, userId} = useUserStore();

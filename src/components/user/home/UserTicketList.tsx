@@ -30,7 +30,6 @@ const REVERSE_STATUS_MAP = Object.entries(STATUS_MAP).reduce(
 
 export default function UserTicketList({selectedFilter}: TicketListProps) {
   const role = useUserStore((state) => state.role).toLowerCase();
-  const userId = useUserStore((state) => state.userId)
   const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
   const [currentPage, setCurrentPage] = useState(1);
   const listRef = useRef<HTMLDivElement>(null);
@@ -80,14 +79,13 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
         size: ITEMS_PER_PAGE,
         status: apiStatus,
         managerId: selectedManagerId,
-        requesterId: userId,
         firstCategoryId,
         secondCategoryId,
         ticketTypeId,
-        requesterId : userId,
+        requesterId: userId,
       });
     },
-    enabled: !!userId && userId !== -1
+    enabled: !!userId && userId !== -1,
   });
 
   const filteredTickets = useMemo(() => {
