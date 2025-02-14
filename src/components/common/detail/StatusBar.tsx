@@ -159,6 +159,7 @@ export default function StatusBar({data, status}: StatusBarProps) {
           {visibleStatusOptions.map((option) => (
             <button
               key={option}
+              disabled={isUser}
               onClick={() => handleStatusClick(option)}
               className={`${
                 currentStatus === option ? 'bg-main text-white' : 'bg-white-100'
@@ -173,6 +174,7 @@ export default function StatusBar({data, status}: StatusBarProps) {
       <section className="flex items-center gap-2">
         <button
           onClick={handleApprove}
+          disabled={isUser}
           className={`
     ${isApproved ? 'bg-main text-white' : 'bg-white text-main border border-main'}
     ${!isUser && 'hover:bg-main hover:text-white'}
@@ -183,6 +185,7 @@ export default function StatusBar({data, status}: StatusBarProps) {
         </button>
         <button
           onClick={handleReject}
+          disabled={isUser}
           className={`
     ${isRejected ? 'bg-main text-white' : 'bg-white text-main border border-main'}
     ${!isUser && 'hover:bg-main hover:text-white'}
