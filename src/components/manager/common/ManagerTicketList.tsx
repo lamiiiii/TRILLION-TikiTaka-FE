@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {approveTicket, getTicketList, rejectTicket, updateTicketStatus, getTicketTypes} from '../../../api/service/tickets';
 import {useUserStore} from '../../../store/store'; // role 가져오기
 import Dropdown from '../../common/Dropdown';
@@ -33,6 +33,7 @@ interface TicketListProps {
   ticketCounts: TicketStatusCount | null;
 }
 
+
 export default function ManagerTicketList({selectedFilter, ticketCounts}: TicketListProps) {
   const role = useUserStore((state) => state.role).toLowerCase();
   const [filteredTickets, setFilteredTickets] = useState<TicketListItem[]>([]);
@@ -42,11 +43,19 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
   const [pageSize, setPageSize] = useState(20);
   const [orderBy, setOrderBy] = useState('최신순');
   const queryClient = useQueryClient();
+  const [isHovered, setIsHovered] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setSelectedFilters({});
     setCurrentPage(1);
   }, [selectedFilter]);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [currentPage]);
 
   const {data: userData} = useQuery({queryKey: ['managers'], queryFn: getManagerList, select: (data) => data.users});
 
@@ -102,30 +111,10 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
 
       let sortedTickets = [...ticketData.content];
 
-      sortedTickets.sort((a, b) => {
-        const activeStatuses = ['PENDING', 'IN_PROGRESS', 'REVIEW'];
-        const isActiveA = activeStatuses.includes(a.status);
-        const isActiveB = activeStatuses.includes(b.status);
-
-        if (a.urgent && !b.urgent) return -1;
-        if (!a.urgent && b.urgent) return 1;
-
-        if (isActiveA && !isActiveB) return -1;
-        if (!isActiveA && isActiveB) return 1;
-
-        if (orderBy === '최신순') {
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-        } else if (orderBy === '마감기한순') {
-          return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
-        } else if (orderBy === '오래된순') {
-          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-        }
-        return 0;
-      });
-
       return {...ticketData, content: sortedTickets};
     },
   });
+  console.log("정렬된 데이터", data)
 
   const dropdownData = [
     {label: '담당자', options: userData?.map((user: any) => user.username)},
@@ -263,7 +252,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
   };
 
   return (
-    <div className="w-full mt- relative mb-[100px]">
+    <div className="w-full mt- relative mb-[100px] " ref={containerRef}>
       <div className="flex mb-2 justify-end gap-3">
         <Dropdown
           label="20개씩"
@@ -303,13 +292,19 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
               />
             ))}
             <button
-              className=" text-gray-800 rounded-md  transition"
+              className=" text-gray-800 rounded-md  transition relative  whitespace-nowrap "
+              onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}
               onClick={() => {
                 setSelectedFilters({});
                 setCurrentPage(1);
               }}
             >
               <RefreshIcon />
+              {isHovered && (
+                  <div className="absolute left-0 mt-1 bg-gray-1 border border-gray-2 rounded-md py-1 px-3 text-xs text-gray-15 shadow-md">
+                    필터 초기화
+                  </div>
+                )}
             </button>
           </div>
           <div className="ml-auto text-gray-700 text-subtitle">
@@ -338,11 +333,13 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
               />
             ))
           ) : (
-            <div className="text-gray-500 text-center py-4">해당 상태의 티켓이 없습니다.</div>
+            <div className="text-gray-500 text-center py-4 mt-5">해당 상태의 티켓이 없습니다.</div>
           )}
         </div>
 
-        <PageNations currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+        {filteredTickets.length > 0 && (
+          <PageNations currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+        )}
       </div>
     </div>
   );

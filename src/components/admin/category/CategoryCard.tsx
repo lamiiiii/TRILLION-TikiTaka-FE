@@ -92,9 +92,8 @@ export default function CategoryCard({id, name, onDelete, onAddSubCategory}: Cat
 
         setSubCategoryName('');
         setIsEditing(false);
-      } catch (error) {
-        console.error('2차 카테고리 추가 실패:', error);
-        alert('2차 카테고리 추가에 실패했습니다.');
+      } catch (error: any) {
+        toast.error(error.message);
       }
     }
   };

@@ -26,6 +26,7 @@ export default function AccountList() {
 
   const accounts: RegistrationAccount[] = data?.data?.content ?? [];
   const totalPages = data?.totalPages ?? 1;
+  const totalElements = data?.data?.totalElements ?? 0;
 
   const sortedAccounts = accounts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
@@ -51,7 +52,7 @@ export default function AccountList() {
             paddingX="px-2"
           />
           <div className="ml-auto text-gray-700 text-subtitle">
-            조회 건수 <span className="text-black text-title-bold ml-1">{data?.data?.totalElements ?? 0}건</span>
+            조회 건수 <span className="text-black text-title-bold ml-1">{totalElements}건</span>
           </div>
         </div>
 
@@ -63,13 +64,19 @@ export default function AccountList() {
           <div className="w-[20%]">{ACCOUNT_MENU[4]}</div>
         </div>
 
-        <div className="flex flex-col gap-4">
-          {sortedAccounts.map((account) => (
-            <AccountCard key={account.registrationId} {...account} role="USER" />
-          ))}
-        </div>
+         {sortedAccounts.length === 0 ? (
+          <div className="text-gray-500 text-center py-10">등록된 계정 신청이 없습니다.</div>
+        ) : (
+          <div className="flex flex-col gap-4">
+            {sortedAccounts.map((account) => (
+              <AccountCard key={account.registrationId} {...account} role="USER" />
+            ))}
+          </div>
+        )}
 
-        <PageNations currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+        {sortedAccounts.length > 0 && (
+          <PageNations currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+        )}
       </div>
     </div>
   );

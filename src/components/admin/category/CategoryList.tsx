@@ -33,6 +33,7 @@ export default function CategoryList() {
       })
       .catch((error) => console.error('카테고리 데이터를 불러오는데 실패했습니다.', error));
   }, []);
+  
 
   return (
     <div className="w-[550px] mt-[20px] relative mb-[100px] bg-slate-300">
