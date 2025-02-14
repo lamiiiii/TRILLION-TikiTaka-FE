@@ -40,6 +40,7 @@ const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(
       setShowPriority(false);
       updatePriorityMutation.mutate(selectedOption);
     };
+
     const updateManagerMutation = useCreateMutation(
       (managerId: number) => updateTicketManager(id, managerId),
       '티켓 담당자 변경에 실패했습니다. 다시 시도해 주세요.',
@@ -68,7 +69,7 @@ const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(
         <div className="flex items-start">
           <div className="text-body-bold bg-gray-18 border border-gray-2 rounded px-2 mr-4">#{id}</div>
           <Link className="group relative" to={`/manager/detail/${id}`}>
-            <h1 className="w-[240px] h-[40px] text-subtitle-regular group-hover:text-main hover:underline  overflow-hidden text-ellipsis line-clamp-2">
+            <h1 className="w-[240px] h-[40px] text-subtitle-regular group-hover:text-main hover:underline overflow-hidden text-ellipsis line-clamp-2">
               {title}
             </h1>
           </Link>

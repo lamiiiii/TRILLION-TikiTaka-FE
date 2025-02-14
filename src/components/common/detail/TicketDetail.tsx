@@ -1,3 +1,4 @@
+import {typeNameMapping} from '../../../constants/constants';
 import Profile from '../Profile';
 
 interface TicketDetailProps {
@@ -29,7 +30,7 @@ export default function TicketDetail({data}: TicketDetailProps) {
               <Profile userId={data?.requesterId} size="md" />
               <span>{data?.requesterName}</span>
             </div>
-            <p>{data?.typeName ? data?.typeName : '-'}</p>
+            <p>{data?.typeName ? typeNameMapping[data?.typeName] : '-'}</p>
             <p>{data?.firstCategoryName ? data?.firstCategoryName : '-'}</p>
             <p>{data?.secondCategoryName ? data?.secondCategoryName : '-'}</p>
             <p>{data?.createdAt ? data?.createdAt : '-'}</p>

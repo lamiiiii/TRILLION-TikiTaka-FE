@@ -32,6 +32,13 @@ export const UPDATE_TYPE_MAP = {
   OTHER: '기타',
 };
 
+export const typeNameMapping: Record<string, string> = {
+  CREATE: '생성',
+  DELETE: '삭제',
+  UPDATE: '수정',
+  ETC: '기타',
+};
+
 export const pageSizeOptions = ['20개씩', '30개씩', '50개씩'];
 
 export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
