@@ -8,7 +8,7 @@ export default function ManagerTicketDetail() {
 
   return (
     <AuthGuard isAuthenticated={isAuthenticated} userRole={role}>
-      <div className="top-container">
+      <div className="top-container ">
         <div className="flex flex-col">
           <DetailContainer />
         </div>

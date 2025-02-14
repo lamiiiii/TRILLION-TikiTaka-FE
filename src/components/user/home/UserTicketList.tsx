@@ -10,6 +10,7 @@ import {RefreshIcon} from '../../common/Icon';
 import PageNations from '../../common/PageNations';
 import UserTicket from './UserTicket';
 import {ERROR_MESSAGES} from '../../../constants/error';
+import {ITEMS_PER_PAGE} from '../../../constants/constants';
 
 const typeMapping: Record<string, string> = {CREATE: '생성', DELETE: '삭제', ETC: '기타', UPDATE: '수정'};
 
@@ -27,14 +28,13 @@ const REVERSE_STATUS_MAP = Object.entries(STATUS_MAP).reduce(
   {} as Record<string, string>
 );
 
-const ticketsPerPage = 20;
-
 export default function UserTicketList({selectedFilter}: TicketListProps) {
   const role = useUserStore((state) => state.role).toLowerCase();
   const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
   const [currentPage, setCurrentPage] = useState(1);
   const listRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
+  const {userId} = useUserStore();
 
   useEffect(() => {
     setSelectedFilters({});
@@ -76,9 +76,10 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
 
       return getTicketList({
         page: currentPage - 1,
-        size: ticketsPerPage,
+        size: ITEMS_PER_PAGE,
         status: apiStatus,
         managerId: selectedManagerId,
+        requesterId: userId,
         firstCategoryId,
         secondCategoryId,
         ticketTypeId,
@@ -126,7 +127,7 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
       const nextPage = currentPage + 1;
       queryClient.prefetchQuery({
         queryKey: ['ticketList', apiStatus, selectedFilters, nextPage],
-        queryFn: () => getTicketList({page: nextPage - 1, size: ticketsPerPage, status: apiStatus}),
+        queryFn: () => getTicketList({page: nextPage - 1, size: ITEMS_PER_PAGE, status: apiStatus}),
       });
     }
   }, [currentPage, queryClient, ticketListResponse?.totalPages, apiStatus, selectedFilters]);
