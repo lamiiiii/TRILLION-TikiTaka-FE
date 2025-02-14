@@ -149,7 +149,7 @@ export default function SignUpContainer() {
                   <SmRightIcon strokeColor="#727586" />
                 </div>
               </div>
-              <div className={`flex relative left-[101px] text-error text-xs mt-1 ${termsError ? '' : 'hidden'}`}>{termsError}</div>
+              <div className={`flex relative text-error text-xs mt-1 ${termsError ? '' : 'hidden'}`}>{termsError}</div>
             </div>
           </div>
           <button onClick={onClickSubmit} className="main-btn-lg w-full">

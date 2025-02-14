@@ -60,12 +60,11 @@ export default function SignInContainer() {
           login(accessToken);
           if (data.passwordChangeNeeded) {
             navigate('/changepwd', {replace: true});
+          } else if (data.role && data.id) {
+            setRole(data.role);
+            setUserId(data.id);
+            navigate(`/${data.role.toLowerCase()}`, {replace: true});
           }
-        }
-        if (data.role && data.id) {
-          setRole(data.role);
-          setUserId(data.id);
-          navigate(`/${data.role.toLowerCase()}`, {replace: true});
         }
       }
     } catch (error: any) {
@@ -151,9 +150,6 @@ export default function SignInContainer() {
             <Link to="/signup" className="text-sm text-gray-2 cursor-pointer hover:underline hover:text-gray-15">
               계정 등록 신청
             </Link>
-            {/* <Link to="/resetpwd" className="cursor-pointer hover:underline hover:text-gray-15">
-              비밀번호 재설정
-            </Link> */}
           </div>
         </div>
       </div>
