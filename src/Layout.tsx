@@ -20,13 +20,13 @@ export default function Layout() {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate(`/login?redirect=${encodeURIComponent(location.pathname)}`, { replace: true });
+      console.log('pathname', encodeURIComponent(location.pathname));
+      navigate(`/login?redirect=${encodeURIComponent(location.pathname)}`, {replace: true});
     }
   }, [isAuthenticated, location.pathname, navigate]);
 
-
   if (!isAuthenticated) {
-    return <Navigate to="/"/>;
+    return <Navigate to="/" />;
   }
 
   return (

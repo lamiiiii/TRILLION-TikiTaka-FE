@@ -153,7 +153,6 @@ export default function TicketOpstionsSecond() {
             const selectedType = ticketTypes.find((t) => (typeNameMapping[t.typeName] || t.typeName) === selectedLabel);
             if (selectedType) {
               setTicketType(selectedType);
-              console.log(selectedType)
             }
           }}
         />
