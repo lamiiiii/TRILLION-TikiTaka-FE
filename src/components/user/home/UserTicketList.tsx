@@ -213,7 +213,9 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
           )}
         </div>
 
-        <PageNations currentPage={currentPage} totalPages={ticketListResponse?.totalPages} onPageChange={handlePageChange} />
+        {filteredTickets.length > 0 && (
+          <PageNations currentPage={currentPage} totalPages={ticketListResponse?.totalPages} onPageChange={handlePageChange} />
+        )}
       </div>
     </div>
   );
