@@ -41,7 +41,7 @@ export default function AccountList() {
   };
 
   return (
-    <div className="w-full mt-[20px] relative mb-[100px]">
+    <div className="w-[1152px] mt-[20px] relative mb-[100px]">
       <div className="bg-gray-18 h-full flex flex-col justify-start p-4">
         {/* 필터 */}
         <div className="flex items-center justify-between px-2">

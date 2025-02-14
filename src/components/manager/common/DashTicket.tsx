@@ -26,6 +26,11 @@ const getTicketClass = (urgent: boolean, status: string) => {
   return 'border-error bg-white hover:bg-red/5';
 };
 
+// const stripHtml = (html: string) => {
+//   const doc = new DOMParser().parseFromString(html, 'text/html');
+//   return doc.body.textContent || '';
+// };
+
 export default function DashTicket({
   ticketId,
   title,
@@ -79,6 +84,27 @@ export default function DashTicket({
 
   const ticketClass = getTicketClass(urgent, status);
 
+  const removeHtmlTags = (content: string) => {
+    return content.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim();
+  };
+  
+  const removeMarkdownTags = (content: string) => {
+    return content
+      .replace(/[#*_~`>+\-]/g, '') 
+      .replace(/\[.*?\]\(.*?\)/g, '') 
+      .replace(/!\[.*?\]\(.*?\)/g, '') 
+      .replace(/\n/g, ' ') 
+      .replace(/\s{2,}/g, ' ') 
+      .trim();
+  };
+  
+  const sanitizeContent = (content: string) => {
+    const withoutHtml = removeHtmlTags(content);
+    return removeMarkdownTags(withoutHtml);
+  };
+
+  const cleanedDescription = sanitizeContent(description);
+
   return (
     <div className={`flex gap-4 py-3 px-2 border items-center rounded cursor-pointer transition-all duration-200 ${ticketClass}`}>
       <Link to={detailLink} className="w-[6%] text-subtitle-regular text-gray-700 px-2">
@@ -91,12 +117,12 @@ export default function DashTicket({
       </Link>
       <Link to={detailLink} className={role === 'manager' ? 'w-[36%]' : 'w-[51%]'} style={{textAlign: 'left'}}>
         <div className="flex items-center gap-1">
-          {urgent && <AlertIcon className="text-error w-4 h-4" />}
+          {urgent && <AlertIcon className="text-error w-4 h-4 flex-shrink-0" />}
           <div className={`flex text-subtitle-regular truncate ${urgent ? 'text-error' : 'text-gray-15'}`}>
             [{typeNameMapping[typeName] || '미정'}]<div className="ml-1">{title}</div>
           </div>
         </div>
-        <div className="text-gray-6 text-body-regular">{description.length > 40 ? `${description.slice(0, 40)}...` : description}</div>
+        <div className="text-gray-6 text-body-regular">{cleanedDescription.length > 40 ? `${cleanedDescription.slice(0, 40)}...` : cleanedDescription}</div>
       </Link>
       <Link to={detailLink} className="w-[12%] text-body-regular text-gray-15">
         {deadline}
