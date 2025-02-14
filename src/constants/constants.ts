@@ -59,6 +59,6 @@ export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 export const MAX_FILES = 5;
 export const ITEMS_PER_PAGE = 20;
 
-export const ACCOUNT_MENU = ['ID', '이름', '소속', '역할', '승인 상태'];
+export const ACCOUNT_MENU = ['ID', '이름', '이메일', '역할', '승인 상태'];
 
 export const CATEGORY_MENU = ['1차 카테고리', '2차 카테고리', '요청양식', '카테고리 등록'];
