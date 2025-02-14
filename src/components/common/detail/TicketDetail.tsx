@@ -30,12 +30,12 @@ export default function TicketDetail({data}: TicketDetailProps) {
               <Profile userId={data?.requesterId} size="md" />
               <span>{data?.requesterName}</span>
             </div>
-            <p>{data?.typeName ? typeNameMapping[data?.typeName] : '-'}</p>
-            <p>{data?.firstCategoryName ? data?.firstCategoryName : '-'}</p>
-            <p>{data?.secondCategoryName ? data?.secondCategoryName : '-'}</p>
-            <p>{data?.createdAt ? data?.createdAt : '-'}</p>
-            <p>{data?.updatedAt ? data?.updatedAt : '-'}</p>
-            <p>{data?.deadline ? data?.deadline : '-'}</p>
+            <p>{data?.typeName ? typeNameMapping[data?.typeName] : '미지정'}</p>
+            <p>{data?.firstCategoryName ? data?.firstCategoryName : '미지정'}</p>
+            <p>{data?.secondCategoryName ? data?.secondCategoryName : '미지정'}</p>
+            <p>{data?.createdAt ? data?.createdAt : '미지정'}</p>
+            <p>{data?.updatedAt ? data?.updatedAt : '미지정'}</p>
+            <p>{data?.deadline ? data?.deadline : '미지정'}</p>
           </div>
         </div>
       </div>

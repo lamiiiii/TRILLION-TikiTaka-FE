@@ -18,6 +18,7 @@ export interface TicketDataProps {
   isUrgent: boolean;
   status: TicketStatus;
   priority: string;
+  typeName: string;
 }
 
 export default function TicketPersonalManageList() {
@@ -77,6 +78,7 @@ export default function TicketPersonalManageList() {
         const newTicket: TicketDataProps = {
           id: ticket.ticketId,
           title: ticket.title,
+          typeName: ticket.typeName,
           content: ticket.description,
           category: ticket.firstCategoryName,
           subCategory: ticket.secondCategoryName || '',
@@ -157,6 +159,7 @@ export default function TicketPersonalManageList() {
                         initialPriority={ticket.priority}
                         initialStatus={ticket.status}
                         assignee={ticket.assignee}
+                        typeName={ticket.typeName}
                         onStatusChange={handleStatusChange}
                       />
                     )}

@@ -2,7 +2,7 @@ import {forwardRef, useEffect, useRef, useState} from 'react';
 import DropDown from '../../common/Dropdown';
 import {StarIcon} from '../../common/Icon';
 import {Link} from 'react-router-dom';
-import {PRIORITY, PRIORITY_COLOR, TicketStatus} from '../../../constants/constants';
+import {PRIORITY, PRIORITY_COLOR, TicketStatus, typeNameMapping} from '../../../constants/constants';
 import ManagerSelector from '../../common/selector/ManagerSelector';
 import {useCreateMutation} from '../../../api/hooks/useCreateMutation';
 import {updateTicketManager} from '../../../api/service/tickets';
@@ -14,13 +14,14 @@ interface TicketSmallProps {
   deadline: string;
   initialStatus: string;
   assignee: string;
+  typeName: string;
   initialPriority: string;
   onStatusChange: (id: number, newStatus: TicketStatus) => void;
   [key: string]: any;
 }
 
 const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(
-  ({id, title, deadline, assignee, initialStatus, onStatusChange, initialPriority, ...props}, ref) => {
+  ({id, title, deadline, assignee, typeName, initialStatus, onStatusChange, initialPriority, ...props}, ref) => {
     const [status, setStatus] = useState(initialStatus);
     const [showPriority, setShowPriority] = useState(false);
     const [priority, setPriority] = useState(initialPriority || '');
@@ -70,7 +71,7 @@ const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(
           <div className="text-body-bold bg-gray-18 border border-gray-2 rounded px-2 mr-4">#{id}</div>
           <Link className="group relative" to={`/manager/detail/${id}`}>
             <h1 className="w-[240px] h-[40px] text-subtitle-regular group-hover:text-main hover:underline overflow-hidden text-ellipsis line-clamp-2">
-              {title}
+              [{typeNameMapping[typeName ?? '']}] {title}
             </h1>
           </Link>
         </div>

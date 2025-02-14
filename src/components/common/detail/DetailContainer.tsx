@@ -121,7 +121,7 @@ export default function DetailContainer() {
         <BackIcon />
         {'뒤로가기'}
       </button>
-      <TopMenu boldBlackText={`#${ticket?.ticketId}`} regularText={`[${typeNameMapping[ticket?.typeName ?? 'ETC']}] ${ticket?.title}`} />
+      <TopMenu boldBlackText={`#${ticket?.ticketId}`} regularText={`[${typeNameMapping[ticket?.typeName ?? '']}] ${ticket?.title}`} />
       {ticket && (
         <StatusBar data={ticket} status={ticket?.status as 'PENDING' | 'IN_PROGRESS' | 'DONE' | 'REVIEW' | 'REJECTED' | undefined} />
       )}

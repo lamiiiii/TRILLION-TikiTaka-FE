@@ -8,6 +8,7 @@ import Dropdown from '../../../common/Dropdown';
 import {RefreshIcon} from '../../../common/Icon';
 import PageNations from '../../../common/PageNations';
 import Ticket from '../../../common/ticket/Ticket';
+import {ERROR_MESSAGES} from '../../../../constants/error';
 
 interface TicketListProps {
   selectedFilter: '전체' | '나의 티켓';
@@ -196,7 +197,11 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
               />
             ))}
         </div>
-        <PageNations currentPage={currentPage} totalPages={ticketListData?.totalPages} onPageChange={handlePageChange} />
+        {ticketListData?.content && ticketListData?.content?.length > 0 ? (
+          <PageNations currentPage={currentPage} totalPages={ticketListData?.totalPages} onPageChange={handlePageChange} />
+        ) : (
+          <div className="text-gray-500 text-center py-4">{ERROR_MESSAGES.NO_TICKET}</div>
+        )}
       </div>
     </div>
   );
