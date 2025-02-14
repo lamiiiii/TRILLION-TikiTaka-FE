@@ -47,7 +47,7 @@ export default function InquiryContainer() {
           <div className="text-gray-500 text-center py-4">{ERROR_MESSAGES.NO_INQUIRY}</div>
         )}
 
-        <PageNations currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+        {paginatedInquiries.length > 0 && <PageNations currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />}
       </section>
     </>
   );

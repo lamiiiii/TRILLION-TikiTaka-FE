@@ -6,7 +6,7 @@ import TicketDropdown from './TicketDropdown';
 import ManagerSelector from '../../common/selector/ManagerSelector';
 import {useCreateMutation} from '../../../api/hooks/useCreateMutation';
 import {updateTicketManager} from '../../../api/service/tickets';
-import {typeNameMapping} from '../../../constants/constants';
+import {reverseStatusMapping, statusMapping, typeNameMapping} from '../../../constants/constants';
 
 interface DashTicketProps extends TicketListItem {
   detailLink: string;
@@ -23,7 +23,6 @@ const getTicketClass = (urgent: boolean, status: string) => {
   if (activeStatuses.includes(status)) {
     return 'border-error bg-red/5 hover:bg-red/10';
   }
-
   return 'border-error bg-white hover:bg-red/5';
 };
 
@@ -54,20 +53,6 @@ export default function DashTicket({
 
   const handleManagerSelect = (managerId: number) => {
     updateManagerMutation.mutate(managerId);
-  };
-
-  const statusMapping: Record<string, string> = {
-    PENDING: '대기중',
-    IN_PROGRESS: '진행중',
-    REVIEW: '검토 요청',
-    DONE: '완료',
-    REJECTED: '반려',
-  };
-
-  const reverseStatusMapping: Record<string, string> = {
-    대기중: 'PENDING',
-    진행중: 'IN_PROGRESS',
-    완료: 'DONE',
   };
 
   const ticketClass = getTicketClass(urgent, status);

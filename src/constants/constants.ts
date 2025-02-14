@@ -39,6 +39,20 @@ export const typeNameMapping: Record<string, string> = {
   ETC: '기타',
 };
 
+export const statusMapping: Record<string, string> = {
+  PENDING: '대기중',
+  IN_PROGRESS: '진행중',
+  REVIEW: '검토 요청',
+  DONE: '완료',
+  REJECTED: '반려',
+};
+
+export const reverseStatusMapping: Record<string, string> = {
+  대기중: 'PENDING',
+  진행중: 'IN_PROGRESS',
+  완료: 'DONE',
+};
+
 export const pageSizeOptions = ['20개씩', '30개씩', '50개씩'];
 
 export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB

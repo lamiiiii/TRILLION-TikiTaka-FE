@@ -41,7 +41,7 @@ export default function InquiryList() {
             ))}
         </div>
 
-        <PageNations currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+        {inquiries.length > 0 && <PageNations currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />}
       </div>
 
       {selectedInquiry && (
