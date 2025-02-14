@@ -30,6 +30,7 @@ const ticketsPerPage = 20;
 
 export default function UserTicketList({selectedFilter}: TicketListProps) {
   const role = useUserStore((state) => state.role).toLowerCase();
+  const userId = useUserStore((state) => state.userId)
   const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
   const [currentPage, setCurrentPage] = useState(1);
   const listRef = useRef<HTMLDivElement>(null);
@@ -81,8 +82,10 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
         firstCategoryId,
         secondCategoryId,
         ticketTypeId,
+        requesterId : userId,
       });
     },
+    enabled: !!userId && userId !== -1
   });
 
   const filteredTickets = useMemo(() => {
