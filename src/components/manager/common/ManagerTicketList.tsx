@@ -9,7 +9,9 @@ import {toast} from 'react-toastify';
 import {getManagerList} from '../../../api/service/users';
 import {getCategoryList} from '../../../api/service/categories';
 import {RefreshIcon} from '../../common/Icon';
-import {pageSizeOptions} from '../../../constants/constants';
+import {pageSizeOptions, typeNameMapping} from '../../../constants/constants';
+import {ERROR_MESSAGES} from '../../../constants/error';
+import {motion} from 'framer-motion';
 
 const mapFilterToStatus = (filter: string): string | undefined => {
   switch (filter) {
@@ -26,13 +28,10 @@ const mapFilterToStatus = (filter: string): string | undefined => {
   }
 };
 
-const typeMapping: Record<string, string> = {CREATE: '생성', DELETE: '삭제', ETC: '기타', UPDATE: '수정'};
-
 interface TicketListProps {
   selectedFilter: string;
   ticketCounts: TicketStatusCount | null;
 }
-
 
 export default function ManagerTicketList({selectedFilter, ticketCounts}: TicketListProps) {
   const role = useUserStore((state) => state.role).toLowerCase();
@@ -45,6 +44,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
   const queryClient = useQueryClient();
   const [isHovered, setIsHovered] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   useEffect(() => {
     setSelectedFilters({});
@@ -53,9 +53,22 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
 
   useEffect(() => {
     if (containerRef.current) {
-      containerRef.current.scrollIntoView({ behavior: 'smooth' });
+      containerRef.current.scrollIntoView({behavior: 'smooth'});
     }
   }, [currentPage]);
+
+  useEffect(() => {
+    if (selectedFilter === '긴급') {
+      setShowTooltip(true);
+      const timer = setTimeout(() => {
+        setShowTooltip(false);
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    } else {
+      setShowTooltip(false); // 필터가 '긴급'이 아닐 때 즉시 툴팁을 숨김
+    }
+  }, [selectedFilter]);
 
   const {data: userData} = useQuery({queryKey: ['managers'], queryFn: getManagerList, select: (data) => data.users});
 
@@ -132,7 +145,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
             ?.secondaries.map((secondary: any) => secondary.name) ?? [])
         : [],
     },
-    {label: '요청', options: typeData?.map((type: any) => typeMapping[type.typeName] || type.typeName)},
+    {label: '요청', options: typeData?.map((type: any) => typeNameMapping[type.typeName] || type.typeName)},
   ];
 
   useEffect(() => {
@@ -195,7 +208,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
 
   const handleSelect = (label: string, value: string) => {
     if (label === '요청') {
-      const originalValue = Object.keys(typeMapping).find((key) => typeMapping[key] === value) || value;
+      const originalValue = Object.keys(typeNameMapping).find((key) => typeNameMapping[key] === value) || value;
       setSelectedFilters((prev) => ({...prev, [label]: originalValue}));
     } else if (label === '1차 카테고리') {
       setSelectedFilters((prev) => ({...prev, ['1차 카테고리']: value, ['2차 카테고리']: ''}));
@@ -277,7 +290,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
           border={false}
           textColor=""
         />
-      </div>
+      </section>
       <div className="bg-gray-18 h-full flex flex-col justify-start p-4">
         <div className="flex justify-between items-center  mt-4 px-2">
           <div className="flex items-center gap-4 leading-none">
@@ -288,7 +301,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
                 options={data.options}
                 value={
                   data.label === '요청'
-                    ? typeMapping[selectedFilters[data.label]] || selectedFilters[data.label]
+                    ? typeNameMapping[selectedFilters[data.label]] || selectedFilters[data.label]
                     : selectedFilters[data.label]
                 }
                 onSelect={(value) => handleSelect(data.label, value)}
@@ -298,7 +311,8 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
             ))}
             <button
               className=" text-gray-800 rounded-md  transition relative  whitespace-nowrap "
-              onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
               onClick={() => {
                 setSelectedFilters({});
                 setCurrentPage(1);
@@ -306,16 +320,17 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
             >
               <RefreshIcon />
               {isHovered && (
-                  <div className="absolute left-0 mt-1 bg-gray-1 border border-gray-2 rounded-md py-1 px-3 text-xs text-gray-15 shadow-md">
-                    필터 초기화
-                  </div>
-                )}
+                <div className="absolute left-0 mt-1 bg-gray-1 border border-gray-2 rounded-md py-1 px-3 text-xs text-gray-15 shadow-md">
+                  필터 초기화
+                </div>
+              )}
             </button>
           </div>
           <div className="ml-auto text-gray-700 text-subtitle">
             조회 건수 <span className="text-black text-title-bold ml-1">{selectedCount}건</span>
           </div>
         </div>
+
         <div className="flex gap-4 py-2 text-gray-700 text-title-regular mt-5 mb-5 px-2">
           <div className="w-[6%]">티켓 ID</div>
           <div className="w-[12%]">카테고리</div>
@@ -324,6 +339,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
           <div className="w-[10%]">담당자</div>
           {role !== 'user' && <div className="w-[15%]">승인 여부</div>}
         </div>
+
         <div className="flex flex-col gap-4">
           {filteredTickets.length > 0 ? (
             filteredTickets.map((ticket) => (
@@ -338,14 +354,23 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
               />
             ))
           ) : (
-            <div className="text-gray-500 text-center py-4 mt-5">해당 상태의 티켓이 없습니다.</div>
+            <div className="text-gray-500 text-center py-4">{ERROR_MESSAGES.NO_TICKET}</div>
           )}
         </div>
 
-        {filteredTickets.length > 0 && (
-          <PageNations currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
-        )}
+        {filteredTickets.length > 0 && <PageNations currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />}
       </div>
+      {showTooltip && (
+        <motion.div
+          initial={{opacity: 0, y: 50}}
+          animate={{opacity: 1, y: 0}}
+          exit={{opacity: 0, y: 50}}
+          transition={{duration: 0.5}}
+          className="fixed bottom-5 right-[700px] transform -translate-x-1/2 text-subtitle-regular bg-main text-white px-20 py-4 rounded-lg shadow-lg z-50"
+        >
+          긴급 티켓 수는 완료, 반려 처리된 티켓을 제외한 티켓 수입니다.
+        </motion.div>
+      )}
     </div>
   );
 }

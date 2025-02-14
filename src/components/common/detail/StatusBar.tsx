@@ -21,6 +21,7 @@ export default function StatusBar({data, status}: StatusBarProps) {
   const {priority, setPriority} = useTicketStore();
   const [isUrgent, setIsUrgent] = useState(data?.urgent);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState<string>('');
 
   const {role, userId, userName} = useUserStore();
   const isUser = role === 'USER';
@@ -96,8 +97,10 @@ export default function StatusBar({data, status}: StatusBarProps) {
 
   const handleStatusClick = (option: string) => {
     if (isUser) return;
-    if (option === '진행 중' && data.managerId !== userId) {
+    if (['진행 중', '검토', '진행 완료'].includes(option) && data.managerId !== userId) {
       setIsModalOpen(true);
+      // 모달에서 사용할 상태 저장
+      setSelectedStatus(option);
     } else {
       updateStatusMutation.mutate(option, {
         onSuccess: () => {
@@ -124,9 +127,10 @@ export default function StatusBar({data, status}: StatusBarProps) {
   const handleSubmit = () => {
     updateManagerMutation
       .mutateAsync(userId)
-      .then(() => updateStatusMutation.mutateAsync('진행 중'))
+      .then(() => updateStatusMutation.mutateAsync(selectedStatus))
       .then(() => {
         setIsModalOpen(false);
+        setCurrentStatus(selectedStatus);
       });
   };
 
@@ -200,7 +204,7 @@ export default function StatusBar({data, status}: StatusBarProps) {
       {isModalOpen && (
         <Modal
           title="담당자 변경"
-          content={`진행중으로 상태 변경시 담당자가 ${userName} 본인으로 변경됩니다.`}
+          content={`${selectedStatus}(으)로 상태 변경시 담당자가 ${userName} 본인으로 변경됩니다.`}
           backBtn="취소"
           onBackBtnClick={() => setIsModalOpen(false)}
           checkBtn="확인"

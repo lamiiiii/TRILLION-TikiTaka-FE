@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import DropDown from '../Dropdown';
 import {useTicketStore} from '../../../store/store';
-import {PRIORITY} from '../../../constants/constants';
+import {PRIORITY, typeNameMapping} from '../../../constants/constants';
 import {useParams} from 'react-router-dom';
 import {useQuery} from '@tanstack/react-query';
 import {
@@ -143,11 +143,8 @@ export default function TicketSetting({data}: TicketSettingProps) {
 
   const handleTicketTypeSelect = (selectedOption: string) => {
     const selectedType = (ticketData as TicketType[])?.find((type) => String(type.typeName) === String(selectedOption));
-    console.log('selectedType', selectedType); // Check what is being selected
-
     if (selectedType) {
       const typeId = Number(selectedType.typeId);
-      console.log(typeId);
       updateTypeMutation.mutate({ticketTypeId: typeId});
       setTicketType(selectedOption);
     }
@@ -214,8 +211,8 @@ export default function TicketSetting({data}: TicketSettingProps) {
             />
             <DropDown
               label="타입"
-              options={ticketData?.map((type: any) => type.typeName)}
-              value={ticketType}
+              options={ticketData?.map((type: any) => typeNameMapping[type.typeName])}
+              value={typeNameMapping[ticketType]}
               onSelect={handleTicketTypeSelect}
               border={false}
             />

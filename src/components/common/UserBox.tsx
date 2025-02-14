@@ -56,7 +56,7 @@ export default function UserBox() {
       <div className="relative w-12 h-12 rounded-full my-2">
         <img
           src={localImageUrl || userInfo.profileImageUrl || '/assets/profile.png'}
-          alt="Profile"
+          alt="프로필 이미지"
           className="w-full h-full object-cover rounded-full"
         />
         <div className="absolute bottom-0 right-0 cursor-pointer" onClick={handleCameraClick}>

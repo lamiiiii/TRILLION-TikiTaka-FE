@@ -15,7 +15,6 @@ import AdminCategory from './pages/admin/AdminCategory';
 import AdminInquiry from './pages/admin/AdminInquiry';
 import ManagerHistories from './pages/manager/ManagerHistories';
 import UserPwdChange from './pages/user/UserPwdChange';
-import AdminStatistics from './pages/admin/AdminStatistics';
 import ManagerNewTicket from './pages/manager/ManagerNewTicket';
 import UserTicketDetail from './pages/user/UserTicketDetail';
 import Layout from './Layout';
@@ -51,7 +50,6 @@ function App() {
     {path: '', element: <Navigate to="accounts" replace />},
     {path: 'accounts', element: <AdminAccounts />},
     {path: 'categories', element: <AdminCategory />},
-    {path: 'statistics', element: <AdminStatistics />},
     {path: 'inquiries', element: <AdminInquiry />},
     {path: 'pwdChange', element: <AdminPwdChange />},
   ];

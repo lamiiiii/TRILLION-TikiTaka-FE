@@ -2,6 +2,7 @@ import {useQuery} from '@tanstack/react-query';
 import {getChangeHistory} from '../../../api/service/histories';
 import {useParams} from 'react-router-dom';
 import {UPDATE_TYPE_MAP} from '../../../constants/constants';
+import {ERROR_MESSAGES} from '../../../constants/error';
 
 type UpdateType = keyof typeof UPDATE_TYPE_MAP;
 export default function TicketLog() {
@@ -37,7 +38,7 @@ export default function TicketLog() {
             </div>
           ))
         ) : (
-          <div className="text-gray-500 text-center py-4">해당 티켓 변경 이력이 없습니다.</div>
+          <div className="text-gray-500 text-center py-4">{ERROR_MESSAGES.NO_LOG}</div>
         )}
       </div>
     </div>

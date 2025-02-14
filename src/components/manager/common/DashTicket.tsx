@@ -6,10 +6,11 @@ import TicketDropdown from './TicketDropdown';
 import ManagerSelector from '../../common/selector/ManagerSelector';
 import {useCreateMutation} from '../../../api/hooks/useCreateMutation';
 import {updateTicketManager} from '../../../api/service/tickets';
+import {reverseStatusMapping, statusMapping, typeNameMapping} from '../../../constants/constants';
 
 interface DashTicketProps extends TicketListItem {
-  detailLink: string; 
-  onAssigneeChange?: (newAssignee: string) => void; 
+  detailLink: string;
+  onAssigneeChange?: (newAssignee: string) => void;
   onApprove?: (ticketId: number) => void;
   onReject?: (ticketId: number) => void;
   onStatusChange: (ticketId: number, newStatus: string) => void;
@@ -22,7 +23,6 @@ const getTicketClass = (urgent: boolean, status: string) => {
   if (activeStatuses.includes(status)) {
     return 'border-error bg-red/5 hover:bg-red/10';
   }
-
   return 'border-error bg-white hover:bg-red/5';
 };
 
@@ -39,7 +39,7 @@ export default function DashTicket({
   firstCategoryName,
   secondCategoryName,
   managerName,
-  status, 
+  status,
   urgent,
   deadline,
   detailLink,
@@ -58,28 +58,6 @@ export default function DashTicket({
 
   const handleManagerSelect = (managerId: number) => {
     updateManagerMutation.mutate(managerId);
-  };
-
-
-  const statusMapping: Record<string, string> = {
-    PENDING: '대기중',
-    IN_PROGRESS: '진행중',
-    REVIEW: '검토 요청',
-    DONE: '완료',
-    REJECTED: '반려',
-  };
-
-  const reverseStatusMapping: Record<string, string> = {
-    대기중: 'PENDING',
-    진행중: 'IN_PROGRESS',
-    완료: 'DONE',
-  };
-
-  const typeNameMapping: Record<string, string> = {
-    CREATE: '생성',
-    DELETE: '삭제',
-    UPDATE: '수정',
-    ETC: '기타',
   };
 
   const ticketClass = getTicketClass(urgent, status);
@@ -135,21 +113,21 @@ export default function DashTicket({
           <>
             <button
               className="px-6 h-[30px] text-[12px] leading-none border border-gray-6 rounded-md hover:bg-gray-8 hover:text-white"
-              onClick={() => onApprove && onApprove(ticketId)} 
+              onClick={() => onApprove && onApprove(ticketId)}
             >
               승인
             </button>
             <button
               className="px-6 h-[30px] text-[12px] leading-none border border-gray-6 rounded-md hover:bg-error/80 hover:text-white"
-              onClick={() => onReject && onReject(ticketId)} 
+              onClick={() => onReject && onReject(ticketId)}
             >
               반려
             </button>
           </>
         ) : status === 'IN_PROGRESS' || status === 'REVIEW' ? (
           <TicketDropdown
-            label={statusMapping[status]} 
-            options={['대기중', '진행중', '완료']} 
+            label={statusMapping[status]}
+            options={['대기중', '진행중', '완료']}
             onSelect={(selectedStatus) => {
               const newStatus = reverseStatusMapping[selectedStatus];
               if (newStatus !== 'IN_PROGRESS') {

@@ -8,9 +8,7 @@ export default function ManagerTickets() {
 
   return (
     <AuthGuard isAuthenticated={isAuthenticated} userRole={role}>
-      <div className="top-container">
-        <ManagerTicketsContainer />
-      </div>
+      <ManagerTicketsContainer />
     </AuthGuard>
   );
 }
