@@ -290,7 +290,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
           border={false}
           textColor=""
         />
-      </section>
+      </div>
       <div className="bg-gray-18 h-full flex flex-col justify-start p-4">
         <div className="flex justify-between items-center  mt-4 px-2">
           <div className="flex items-center gap-4 leading-none">

@@ -8,11 +8,11 @@ export default function ManagerHomeContainer() {
   const [selectedFilter, setSelectedFilter] = useState<TicketViewType>('전체');
   const [ticketCounts, setTicketCounts] = useState<TicketStatusCount | null>(null);
   useEffect(() => {
-      document.body.style.overflow = "hidden";
-      return () => {
-        document.body.style.overflow = "auto";
-      };
-    }, []);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
   return (
     <div className="flex flex-col max-w-[1200px]">
       <DashTicketFilter
@@ -20,20 +20,21 @@ export default function ManagerHomeContainer() {
         onCountUpdate={(counts) => setTicketCounts(counts)}
       />
       <ManagerTicketList selectedFilter={selectedFilter} ticketCounts={ticketCounts} />
-    <div className="top-container">
-      <div className="flex flex-col max-w-1200">
-        <TopMenu
-          boldBlackText="Dashboard"
-          boldGrayText="티켓 관리 대시보드"
-          rightText="나의 티켓 관리 바로가기"
-          linkTo="/manager/tickets"
-        />
+      <div className="top-container">
         <div className="flex flex-col max-w-1200">
-          <DashTicketFilter
-            onFilterChange={(type) => setSelectedFilter(type as TicketViewType)}
-            onCountUpdate={(counts) => setTicketCounts(counts)}
+          <TopMenu
+            boldBlackText="Dashboard"
+            boldGrayText="티켓 관리 대시보드"
+            rightText="나의 티켓 관리 바로가기"
+            linkTo="/manager/tickets"
           />
-          <ManagerTicketList selectedFilter={selectedFilter} ticketCounts={ticketCounts} />
+          <div className="flex flex-col max-w-1200">
+            <DashTicketFilter
+              onFilterChange={(type) => setSelectedFilter(type as TicketViewType)}
+              onCountUpdate={(counts) => setTicketCounts(counts)}
+            />
+            <ManagerTicketList selectedFilter={selectedFilter} ticketCounts={ticketCounts} />
+          </div>
         </div>
       </div>
     </div>
