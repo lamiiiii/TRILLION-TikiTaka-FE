@@ -20,7 +20,7 @@ export default function UserList() {
   const accounts: UserAccount[] = data?.users ?? [];
 
   return (
-    <div className="w-[1152px] mt-[20px] relative mb-[100px]">
+    <div className="w-full mt-[20px] relative mb-[100px]">
       <div className="bg-gray-18 h-full flex flex-col justify-start p-4">
         {/* 조회 건수 */}
         <div className="flex items-center justify-between px-2">

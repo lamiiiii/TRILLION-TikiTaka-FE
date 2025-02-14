@@ -270,7 +270,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
   };
 
   return (
-    <div className="w-[1152px] relative mb-[100px] " ref={containerRef}>
+    <div className="w-full relative mb-[100px] " ref={containerRef}>
       <div className="flex mb-2 justify-end gap-3 ">
         <Dropdown
           label="20개씩"

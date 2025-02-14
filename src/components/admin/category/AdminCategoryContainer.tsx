@@ -14,7 +14,7 @@ export default function AdminCategoryContainer() {
     <div className="top-container">
       <div>
         <AdminTopMenu boldBlackText="카테고리 관리" boldSmText="카테고리 조회 · 등록 · 삭제 · 수정 " />
-        <div className="flex max-w-[1200px] gap-[50px] justify-between">
+        <div className="flex max-w-1200 gap-[50px] justify-between">
           <div className="flex-1">
             <CategoryList />
           </div>
