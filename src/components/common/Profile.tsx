@@ -25,8 +25,10 @@ export default function Profile({userId, size = 'sm', isTopBar}: ProfileInitialP
   });
 
   return (
-    <div className="relative">
-      {!isTopBar && isPopupOpen && <div className="absolute right-full mr-3">{userDetail && <ProfilePopup userDetail={userDetail} />}</div>}
+    <div className="relative h-fit">
+      {!isTopBar && isPopupOpen && (
+        <div className="absolute top-full mt-4 mr-3 z-[999]">{userDetail && <ProfilePopup userDetail={userDetail} />}</div>
+      )}
       <div
         className={`${sizeClasses[size]} text-white rounded-full flex items-center justify-center  cursor-pointer overflow-hidden`}
         onClick={togglePopup}
