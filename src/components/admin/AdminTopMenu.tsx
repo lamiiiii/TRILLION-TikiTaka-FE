@@ -6,17 +6,9 @@ export interface TopMenuProps {
   btnText?: string; // 좌측 요소
   onBtnClick?: () => void;
   rightText?: string;
-  
 }
 
-export default function TopMenu({
-  boldBlackText,
-  boldGrayText,
-  boldSmText,
-  regularText,
-  btnText,
-  onBtnClick,
-}: TopMenuProps) {
+export default function AdminTopMenu({boldBlackText, boldGrayText, boldSmText, regularText, btnText, onBtnClick}: TopMenuProps) {
   return (
     <div className="flex flex-col w-full gap-3 mt-6 whitespace-nowrap">
       <div className="flex justify-between w-full h-8 px-4 py-1 text-base">
