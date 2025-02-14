@@ -127,7 +127,6 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
       return {...ticketData, content: sortedTickets};
     },
   });
-  console.log('정렬된 데이터', data);
 
   const dropdownData = [
     {label: '담당자', options: userData?.map((user: any) => user.username)},

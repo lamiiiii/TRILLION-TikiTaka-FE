@@ -143,8 +143,6 @@ export default function TicketSetting({data}: TicketSettingProps) {
 
   const handleTicketTypeSelect = (selectedOption: string) => {
     const selectedType = (ticketData as TicketType[])?.find((type) => String(type.typeName) === String(selectedOption));
-    console.log('selectedType', selectedType); // Check what is being selected
-
     if (selectedType) {
       const typeId = Number(selectedType.typeId);
       updateTypeMutation.mutate({ticketTypeId: typeId});

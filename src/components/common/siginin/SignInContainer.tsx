@@ -25,7 +25,6 @@ export default function SignInContainer() {
 
   const params = new URLSearchParams(location.search);
   const redirectTo = params.get('redirect');
-  console.log('re', redirectTo);
 
   const validateInput = (type: 'id' | 'pwd', value: string) => {
     if (!value) return type === 'id' ? '아이디를 입력해주세요.' : '비밀번호를 입력해주세요.';
