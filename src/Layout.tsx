@@ -1,7 +1,7 @@
 import {useEffect, useRef} from 'react';
 import TopBar from './components/common/TopBar';
 import SideBar from './components/common/SideBar';
-import {Navigate, Outlet, useLocation, useNavigate} from 'react-router-dom';
+import {Outlet, useLocation, useNavigate} from 'react-router-dom';
 import {useTokenStore} from './store/store';
 
 export default function Layout() {
