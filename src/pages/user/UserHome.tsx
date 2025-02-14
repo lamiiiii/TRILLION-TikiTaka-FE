@@ -8,9 +8,7 @@ export default function UserHome() {
 
   return (
     <AuthGuard isAuthenticated={isAuthenticated} userRole={role}>
-      <div className="top-container">
-        <UserHomeContainer />
-      </div>
+      <UserHomeContainer />
     </AuthGuard>
   );
 }
