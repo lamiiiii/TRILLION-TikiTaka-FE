@@ -89,7 +89,7 @@ export default function NewTicketContent() {
       </div>
 
       {/* 마크다운 미리보기 */}
-      <div className="w-[800px] ml-[97px] mt-4 p-4 border border-gray-3 bg-gray-1">
+      <div className="flex w-[800px] ml-[97px] mt-4 p-4 border border-gray-3 bg-gray-1 overflow-x-auto">
         {content ? <MarkdownPreview content={content} /> : <div className="text-center text-gray-6">요청 내용 미리보기 화면</div>}{' '}
       </div>
 

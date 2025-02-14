@@ -40,6 +40,13 @@ export default function TicketPreview() {
 
   const formattedDate = dueDate ? `${formatTimeLeft(dueDate, dueTime)}` : '';
 
+  const typeNameMapping: Record<string, string> = {
+    CREATE: '생성',
+    DELETE: '삭제',
+    UPDATE: '수정',
+    ETC: '기타',
+  };
+
   return (
     <div className="preview">
       <div className="flex justify-between ">
@@ -67,7 +74,7 @@ export default function TicketPreview() {
             <div className="flex flex-col w-80">
               <div className="flex items-center gap-1">
                 <p>{isUrgent && <AlertIcon className="text-error w-4 h-4" />}</p>
-                <p className={`${ticketType.typeId !== 0 ? '' : 'text-blue'}`}>[{ticketType.typeName || '유형'}]</p>
+                <p className={`${ticketType.typeId !== 0 ? '' : 'text-blue'}`}>[{typeNameMapping[ticketType.typeName] || '유형'}]</p>
                 <p className={`${title ? '' : 'text-blue'} truncate`}>{title || '제목을 작성해주세요'}</p>
               </div>
               <p className={`text-body-regular ${content ? 'text-gray-6' : 'text-blue'} truncate`}>{content || '내용을 작성해주세요'}</p>
