@@ -17,8 +17,8 @@ export default function DashTicketFilter({ onFilterChange, onCountUpdate }: Tick
 
   const { data: ticketCounts } = useQuery({
     queryKey: ["ticketStatusCounts"],
-    queryFn: getTicketStatusCount,
-    staleTime: 1000 * 60, 
+    queryFn: () => getTicketStatusCount(), 
+    staleTime: 1000 * 60,
   });
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function DashTicketFilter({ onFilterChange, onCountUpdate }: Tick
   };
 
   return (
-    <div className="w-full mt-5 relative">
+    <div className="w-full mt-10 relative">
       <div className="flex w-full h-8 gap-6 items-center" ref={containerRef}>
         {filteredTicketData.map((item) => (
           <div

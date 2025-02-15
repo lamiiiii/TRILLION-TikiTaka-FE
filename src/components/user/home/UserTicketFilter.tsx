@@ -2,6 +2,7 @@ import {useEffect, useMemo, useRef, useState} from 'react';
 import {useQuery} from '@tanstack/react-query';
 import {TicketViewType} from '../../../interfaces/ticket';
 import {getTicketStatusCount} from '../../../api/service/tickets';
+import { useUserStore } from '../../../store/store';
 
 function FilterItem({type, count, isSelected, onClick}: {type: TicketViewType; count: number; isSelected: boolean; onClick: () => void}) {
   const textColor =
@@ -31,24 +32,27 @@ interface TicketFilterProps {
 
 export default function UserTicketFilter({onFilterChange}: TicketFilterProps) {
   const [selectedType, setSelectedType] = useState<TicketViewType>('전체');
+  const userId = useUserStore((state) => state.userId);
   const [indicatorStyle, setIndicatorStyle] = useState({left: 0, width: 0});
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const {data: ticketStatusCount} = useQuery({
-    queryKey: ['ticketStatusCount'],
-    queryFn: getTicketStatusCount,
+  const { data: ticketCounts } = useQuery({
+    queryKey: ["ticketStatusCounts", userId],
+    queryFn: () => getTicketStatusCount(userId), 
+    staleTime: 1000 * 60,
   });
 
   const filteredTicketData = useMemo(() => {
-    if (!ticketStatusCount) return [];
+    if (!ticketCounts) return [];
     return [
-      {type: '전체' as TicketViewType, count: ticketStatusCount.total || 0},
-      {type: '대기중' as TicketViewType, count: ticketStatusCount.pending || 0},
-      {type: '진행중' as TicketViewType, count: ticketStatusCount.inProgress || 0},
-      {type: '완료' as TicketViewType, count: ticketStatusCount.completed || 0},
-      {type: '긴급' as TicketViewType, count: ticketStatusCount.urgent || 0},
-    ].filter((item) => ['전체', '대기중', '진행중', '완료', '긴급'].includes(item.type));
-  }, [ticketStatusCount]);
+      {type: '전체' as TicketViewType, count: ticketCounts.total || 0},
+      {type: '대기중' as TicketViewType, count: ticketCounts.pending || 0},
+      {type: '진행중' as TicketViewType, count: ticketCounts.inProgress || 0},
+      {type: '검토중' as TicketViewType, count: ticketCounts.reviewing || 0},
+      {type: '완료' as TicketViewType, count: ticketCounts.completed || 0},
+      {type: '긴급' as TicketViewType, count: ticketCounts.urgent || 0},
+    ].filter((item) => ['전체', '대기중', '진행중','검토중', '완료', '긴급'].includes(item.type));
+  }, [ticketCounts]);
 
   useEffect(() => {
     if (containerRef.current) {

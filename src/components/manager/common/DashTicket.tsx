@@ -26,10 +26,6 @@ const getTicketClass = (urgent: boolean, status: string) => {
   return 'border-error bg-white hover:bg-red/5';
 };
 
-// const stripHtml = (html: string) => {
-//   const doc = new DOMParser().parseFromString(html, 'text/html');
-//   return doc.body.textContent || '';
-// };
 
 export default function DashTicket({
   ticketId,

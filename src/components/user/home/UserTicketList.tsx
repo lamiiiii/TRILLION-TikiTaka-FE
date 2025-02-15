@@ -10,7 +10,7 @@ import {RefreshIcon} from '../../common/Icon';
 import PageNations from '../../common/PageNations';
 import UserTicket from './UserTicket';
 import {ERROR_MESSAGES} from '../../../constants/error';
-import {ITEMS_PER_PAGE} from '../../../constants/constants';
+import {ITEMS_PER_PAGE, pageSizeOptions} from '../../../constants/constants';
 
 const typeMapping: Record<string, string> = {CREATE: '생성', DELETE: '삭제', ETC: '기타', UPDATE: '수정'};
 
@@ -28,10 +28,26 @@ const REVERSE_STATUS_MAP = Object.entries(STATUS_MAP).reduce(
   {} as Record<string, string>
 );
 
+const mapFilterToStatus = (filter: string): string | undefined => {
+  switch (filter) {
+    case '대기중':
+      return 'PENDING';
+    case '진행중':
+      return 'IN_PROGRESS';
+    case '검토중':
+      return 'REVIEW';
+    case '완료':
+      return 'DONE';
+    default:
+      return undefined;
+  }
+};
 export default function UserTicketList({selectedFilter}: TicketListProps) {
   const role = useUserStore((state) => state.role).toLowerCase();
   const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
+  const [orderBy, setOrderBy] = useState('최신순');
   const listRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
   const {userId} = useUserStore();
@@ -65,8 +81,18 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
   });
 
   const {data: ticketListResponse} = useQuery({
-    queryKey: ['ticketList', apiStatus, selectedFilters, currentPage],
+    queryKey: ['ticketList', selectedFilter ?? '',
+      currentPage ?? 1,
+      pageSize ?? 20,
+      orderBy ?? '최신순',
+      selectedFilters['담당자'],
+      selectedFilters['1차 카테고리'],
+      selectedFilters['2차 카테고리'],
+      selectedFilters['요청'],
+    ],
     queryFn: () => {
+      const statusParam = mapFilterToStatus(selectedFilter ?? '전체');
+      const urgent = selectedFilter === '긴급' ? true : undefined;
       const selectedManagerId = userData?.find((user: any) => user.username === selectedFilters['담당자'])?.userId;
       const firstCategoryId = categories?.find((cat: any) => cat.primary.name === selectedFilters['1차 카테고리'])?.primary.id;
       const secondCategoryId = categories
@@ -74,15 +100,22 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
         ?.secondaries.find((sub: any) => sub.name === selectedFilters['2차 카테고리'])?.id;
       const ticketTypeId = typeData?.find((type: any) => type.typeName === selectedFilters['요청'])?.typeId;
 
+      const sortParam = orderBy === '최신순' ? 'newest' 
+                  : orderBy === '마감기한순' ? 'deadline' 
+                  : orderBy === '오래된순' ? 'oldest' 
+                  : 'newest';
+
       return getTicketList({
         page: currentPage - 1,
         size: ITEMS_PER_PAGE,
-        status: apiStatus,
+        status: statusParam,
         managerId: selectedManagerId,
         firstCategoryId,
         secondCategoryId,
         ticketTypeId,
+        urgent,
         requesterId: userId,
+        sort: sortParam
       });
     },
     enabled: !!userId && userId !== -1,
@@ -97,11 +130,9 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
       filtered = filtered.filter((ticket) => ticket.urgent);
     }
 
-    filtered.sort((a, b) => {
-      if (a.urgent && !b.urgent) return -1;
-      if (!a.urgent && b.urgent) return 1;
-      return 0;
-    });
+    if (selectedFilter === '검토 요청') {
+      filtered = filtered.filter((ticket) => ticket.status === 'REVIEW');
+    }
 
     return filtered;
   }, [ticketListResponse, selectedFilter]);
@@ -165,6 +196,26 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
 
   return (
     <div ref={listRef} className="w-full mt-[20px] relative mb-[100px]">
+      <div className="flex mb-2 justify-end gap-3 ">
+              <Dropdown
+                label="20개씩"
+                options={pageSizeOptions}
+                value={`${pageSize}개씩`}
+                onSelect={(value) => setPageSize(parseInt(value.replace('개씩', ''), 10))}
+                paddingX="px-3"
+                border={false}
+                textColor=""
+              />
+              <Dropdown
+                label="정렬 기준"
+                options={['최신순', '마감기한순', '오래된순']}
+                value={orderBy || '정렬 기준'}
+                onSelect={(value) => setOrderBy(value)}
+                paddingX="px-4"
+                border={false}
+                textColor=""
+              />
+            </div>
       <div className="bg-gray-18 h-full flex flex-col justify-start p-4">
         <div className="flex items-center gap-4 leading-none mt-4 px-2">
           {dropdownData.map((data) => (

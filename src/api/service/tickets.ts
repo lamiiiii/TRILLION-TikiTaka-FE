@@ -93,12 +93,15 @@ export async function createTicket(formData: FormData) {
 }
 
 // INTF-30: 티켓 상태별 개수 조회
-export async function getTicketStatusCount() {
+export async function getTicketStatusCount(requesterId?: number) {
   try {
-    const {data} = await instance.get<{message: string; data: TicketStatusCount}>('/tickets/count');
+    const params = requesterId ? { requesterId } : undefined; 
+
+    const { data } = await instance.get<{ message: string; data: TicketStatusCount }>("/tickets/count", { params });
+
     return data.data;
   } catch (error) {
-    console.error('티켓 상태 조회 실패:', error);
+    console.error("티켓 상태 조회 실패:", error);
     throw error;
   }
 }

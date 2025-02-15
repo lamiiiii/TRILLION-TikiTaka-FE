@@ -2,25 +2,32 @@ import {Cell, Pie, PieChart, ResponsiveContainer, Tooltip} from 'recharts';
 import {getTicketStatusCount} from '../../../api/service/tickets';
 import {useQuery} from '@tanstack/react-query';
 import {useMemo} from 'react';
+import { useUserStore } from '../../../store/store';
 
 const COLORS = ['#F0C000', '#FFDF5F', '#FFD700', '#FFA500', '#F4C2C1'];
 
 export default function UserCountAnalytics() {
-  const {data: ticketStatusCount} = useQuery({
-    queryKey: ['ticketStatusCount'],
-    queryFn: getTicketStatusCount,
-  });
+  const userId = useUserStore((state) => state.userId);
+
+  const { data: ticketCounts } = useQuery({
+        queryKey: ["ticketStatusCounts", userId],
+        queryFn: ({ queryKey }) => {
+          const requesterId = Number(queryKey[1]) || undefined; // queryKey에서 userId 추출
+          return getTicketStatusCount(requesterId);
+        },
+        staleTime: 1000 * 60, 
+      });
 
   const chartData = useMemo(() => {
-    if (!ticketStatusCount) return [];
+    if (!ticketCounts) return [];
     return [
-      {name: '대기중', ticket: ticketStatusCount.pending || 0},
-      {name: '진행중', ticket: ticketStatusCount.inProgress || 0},
-      {name: '검토중', ticket: ticketStatusCount.reviewing || 0},
-      {name: '완료', ticket: ticketStatusCount.completed || 0},
-      {name: '긴급', ticket: ticketStatusCount.urgent || 0},
+      {name: '대기중', ticket: ticketCounts.pending || 0},
+      {name: '진행중', ticket: ticketCounts.inProgress || 0},
+      {name: '검토중', ticket: ticketCounts.reviewing || 0},
+      {name: '완료', ticket: ticketCounts.completed || 0},
+      {name: '긴급', ticket: ticketCounts.urgent || 0},
     ];
-  }, [ticketStatusCount]);
+  }, [ticketCounts]);
 
   return (
     <div className="flex flex-col w-full bg-gray-18 p-5">
@@ -56,7 +63,7 @@ export default function UserCountAnalytics() {
           </div>
 
           <div className="text-right text-main2-3 space-y-4">
-            <div>{ticketStatusCount?.total || 0}건</div>
+            <div>{ticketCounts?.total || 0}건</div>
             {chartData.map((item) => (
               <div key={item.name}>{item.ticket}건</div>
             ))}
