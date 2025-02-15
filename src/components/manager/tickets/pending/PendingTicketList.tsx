@@ -8,7 +8,7 @@ import Dropdown from '../../../common/Dropdown';
 import {RefreshIcon} from '../../../common/Icon';
 import PageNations from '../../../common/PageNations';
 import Ticket from '../../../common/ticket/Ticket';
-import {pageSizeOptions} from '../../../../constants/constants';
+import {pageSizeOptions, typeNameMapping} from '../../../../constants/constants';
 import {ERROR_MESSAGES} from '../../../../constants/error';
 
 interface TicketListProps {
@@ -28,6 +28,7 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
   const {userId} = useUserStore();
 
   useEffect(() => {
+    setSelectedFilters({});
     setCurrentPage(1);
   }, [selectedFilter]);
 
@@ -84,7 +85,7 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
             ?.secondaries.map((secondary: any) => secondary.name) ?? [])
         : [],
     },
-    {label: '요청', options: typeData?.map((type: any) => typeMapping[type.typeName] || type.typeName)},
+    {label: '요청', options: typeData?.map((type: any) => typeNameMapping[type.typeName] || type.typeName)},
   ];
 
   useEffect(() => {
@@ -130,12 +131,15 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
   };
 
   const handleSelect = (label: string, value: string) => {
-    if (label === '1차 카테고리') {
-      setSelectedFilters((prev) => ({...prev, ['1차 카테고리']: value, ['2차 카테고리']: ''}));
-    } else {
-      setSelectedFilters((prev) => ({...prev, [label]: value}));
-    }
-  };
+      if (label === '요청') {
+        const originalValue = Object.keys(typeNameMapping).find((key) => typeNameMapping[key] === value) || value;
+        setSelectedFilters((prev) => ({...prev, [label]: originalValue}));
+      } else if (label === '1차 카테고리') {
+        setSelectedFilters((prev) => ({...prev, ['1차 카테고리']: value, ['2차 카테고리']: ''}));
+      } else {
+        setSelectedFilters((prev) => ({...prev, [label]: value}));
+      }
+    };
 
   const handleAssigneeChange = (ticketId: number, newAssignee: string) => {
     console.log(`티켓 ${ticketId}의 담당자가 ${newAssignee}(으)로 변경되었습니다.`);
