@@ -86,9 +86,10 @@ export default function CategoryCard({id, name, onDelete, onAddSubCategory}: Cat
     if (e.key === 'Enter' && subCategoryName.trim()) {
       try {
         const response = await createCategory(id, {name: subCategoryName});
-        const newSubCategory = {id: response.data.id, name: subCategoryName};
+        const newSubCategory = {id: response.id, name: subCategoryName};
 
         onAddSubCategory(id, newSubCategory);
+        toast.success('2차 카테고리가 성공적으로 추가되었습니다.');
 
         setSubCategoryName('');
         setIsEditing(false);
@@ -149,7 +150,7 @@ export default function CategoryCard({id, name, onDelete, onAddSubCategory}: Cat
               <button className="w-full px-4 py-2 text-body-bold text-center hover:bg-gray-100" onClick={openEditModal}>
                 수정
               </button>
-              <button className="w-full px-4 py-2 text-body-bold text-center hover:bg-gray-100" onClick={openDeleteModal}>
+              <button className="w-full px-4 py-2 text-body-bold text-center hover:bg-gray-100 text-error" onClick={openDeleteModal}>
                 삭제
               </button>
             </div>
@@ -202,6 +203,7 @@ export default function CategoryCard({id, name, onDelete, onAddSubCategory}: Cat
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleDelete}
         categoryName={name}
+        isPrimary={true}
       />
     </div>
   );

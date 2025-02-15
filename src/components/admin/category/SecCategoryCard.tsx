@@ -190,7 +190,7 @@ export default function SecCategoryCard({ id, parentId, name, onDelete }: SecCat
         </motion.div>
       )}
 
-      <DeleteConfirmModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onConfirm={handleDelete} categoryName={name} />
+      <DeleteConfirmModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onConfirm={handleDelete} categoryName={name} isPrimary={false}/>
     </div>
   );
 }
