@@ -67,7 +67,7 @@ export default function DetailContainer() {
       queryClient.invalidateQueries({queryKey: ['tickets']});
       if (role === 'USER') navigate('/user');
       else if (role === 'MANAGER') navigate('/manager');
-      else navigate('/');
+      else navigate('/', {replace: true});
     },
   });
 
