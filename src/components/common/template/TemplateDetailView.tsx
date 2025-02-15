@@ -1,8 +1,9 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {deleteTicketTemplate, getTicketTemplate} from '../../../api/service/ticketTemplates';
 import {useNewTicketStore} from '../../../store/store';
 import Modal from '../Modal';
 import TemplateCreateView from './TemplateCreateView';
+import {useQuery} from '@tanstack/react-query';
 
 interface TemplateDetailViewProps {
   templateId: number;
@@ -10,20 +11,17 @@ interface TemplateDetailViewProps {
 }
 
 export default function TemplateDetailView({templateId, onDelete}: TemplateDetailViewProps) {
-  const [templates, setTemplates] = useState<TemplateListItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
   const {setTitle, setContent, setIsUrgent, setTicketType, setFirstCategoryId, setSecondCategoryId, setManagerId, setTemplateId} =
     useNewTicketStore();
 
-  useEffect(() => {
-    const fetchTemplate = async () => {
-      const fetchedTemplate = await getTicketTemplate(templateId);
-      setTemplates(fetchedTemplate);
-    };
-    fetchTemplate();
-  }, [templateId]);
+  const {data: templates} = useQuery<TemplateListItem>({
+    queryKey: ['ticketTemplate', templateId],
+    queryFn: () => getTicketTemplate(templateId),
+    enabled: !!templateId,
+  });
 
   const onApplyClick = () => {
     setIsModalOpen(true);
@@ -66,9 +64,9 @@ export default function TemplateDetailView({templateId, onDelete}: TemplateDetai
   };
 
   const renderTemplateDetail = (label: string, value: string | undefined) => (
-    <div className="flex items-center">
+    <div className="flex flex-col w-full">
       <div className="text-body-bold w-24">{label}</div>
-      <div className="max-h-80">{value}</div>
+      <div className="w-full break-words">{value || '미지정'}</div>
     </div>
   );
 
@@ -76,16 +74,15 @@ export default function TemplateDetailView({templateId, onDelete}: TemplateDetai
     return <TemplateCreateView templateId={templateId} onCancel={() => setIsEditing(false)} />;
   }
 
-
   if (!templates) {
-    return <div>로딩 중...</div>;
+    return <div className="flex items-center">로딩 중...</div>;
   }
 
   return (
     <div className="flex flex-col p-4 gap-6">
       <div className="flex text-title-bold text-black justify-between">
-        <p className="text-title-bold">{templates.templateTitle}</p>
-        <div className="flex gap-4 justify-center">
+        <p className="text-title-bold w-[350px] break-words truncate">{templates.templateTitle}</p>
+        <div className="flex gap-4 justify-center whitespace-nowrap">
           <button onClick={onEditClick} className="px-6 py-1 bg-main text-white text-body-bold rounded hover:bg-gray-8">
             템플릿 수정
           </button>
@@ -95,14 +92,12 @@ export default function TemplateDetailView({templateId, onDelete}: TemplateDetai
         </div>
       </div>
       {/* 내용 */}
-      <div className="flex flex-col w-full min-h-[500px] bg-gray-18 p-7 gap-6 text-body-regular">
+      <div className="flex flex-col w-full h-[600px] bg-gray-18 p-7 gap-6 text-body-regular overflow-y-auto">
         {renderTemplateDetail('템플릿 제목', templates.templateTitle)}
-        <div className="w-10" />
         {renderTemplateDetail('1차 카테고리', templates.firstCategoryName)}
         {renderTemplateDetail('2차 카테고리', templates.secondCategoryName)}
         {renderTemplateDetail('담당자', templates.managerName)}
         {renderTemplateDetail('유형', templates.typeName)}
-        <div className="w-10" />
         {renderTemplateDetail('요청 제목', templates.title)}
         {renderTemplateDetail('요청 내용', templates.description)}
       </div>

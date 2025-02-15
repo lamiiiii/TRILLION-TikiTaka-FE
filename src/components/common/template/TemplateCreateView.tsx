@@ -68,6 +68,7 @@ export default function TemplateCreateView({onCancel, templateId}: TemplateCreat
       fetchTemplate();
     }
   }, [templateId]);
+
   useEffect(() => {
     if (templates) {
       setTemplateTitle(templates.templateTitle);
@@ -108,9 +109,9 @@ export default function TemplateCreateView({onCancel, templateId}: TemplateCreat
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['templates']});
       queryClient.invalidateQueries({queryKey: ['ticketTemplates']});
+      queryClient.invalidateQueries({queryKey: ['ticketTemplate']});
 
       setModalMessage(`템플릿이 저장되었습니다!`);
-
       setIsModalOpen(true);
     },
   });
