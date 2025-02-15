@@ -1,17 +1,17 @@
-import { useEffect, useState, useMemo, useRef } from "react";
-import { getTicketStatusCount } from "../../../api/service/tickets";
-import { useUserStore } from "../../../store/store";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {useEffect, useState, useMemo, useRef} from 'react';
+import {getTicketStatusCount} from '../../../api/service/tickets';
+import {useUserStore} from '../../../store/store';
+import {useQuery, useQueryClient} from '@tanstack/react-query';
 
 interface TicketFilterProps {
   onFilterChange: (type: string) => void;
   onCountUpdate: (counts: TicketStatusCount) => void;
 }
 
-export default function DashTicketFilter({ onFilterChange, onCountUpdate }: TicketFilterProps) {
+export default function DashTicketFilter({onFilterChange, onCountUpdate}: TicketFilterProps) {
   const role = useUserStore((state) => state.role);
-  const [selectedType, setSelectedType] = useState<string>("전체");
-  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
+  const [selectedType, setSelectedType] = useState<string>('전체');
+  const [indicatorStyle, setIndicatorStyle] = useState({left: 0, width: 0});
   const containerRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
 
@@ -31,22 +31,20 @@ export default function DashTicketFilter({ onFilterChange, onCountUpdate }: Tick
     if (!ticketCounts) return [];
 
     const baseData = [
-      { type: "전체", count: ticketCounts.total },
-      { type: "대기중", count: ticketCounts.pending },
-      { type: "진행중", count: ticketCounts.inProgress },
-      { type: "검토 요청", count: ticketCounts.reviewing },
-      { type: "완료", count: ticketCounts.completed },
-      { type: "긴급", count: ticketCounts.urgent },
+      {type: '전체', count: ticketCounts.total},
+      {type: '대기중', count: ticketCounts.pending},
+      {type: '진행중', count: ticketCounts.inProgress},
+      {type: '검토 요청', count: ticketCounts.reviewing},
+      {type: '완료', count: ticketCounts.completed},
+      {type: '긴급', count: ticketCounts.urgent},
     ];
 
-    return role === "USER"
-      ? baseData.filter((item) => ["전체", "대기중", "진행중", "완료", "긴급"].includes(item.type))
-      : baseData;
+    return role === 'USER' ? baseData.filter((item) => ['전체', '대기중', '진행중', '완료', '긴급'].includes(item.type)) : baseData;
   }, [ticketCounts, role]);
 
   useEffect(() => {
     if (containerRef.current) {
-      const items = containerRef.current.querySelectorAll<HTMLDivElement>(".filter-item");
+      const items = containerRef.current.querySelectorAll<HTMLDivElement>('.filter-item');
       const selectedIndex = filteredTicketData.findIndex((item) => item.type === selectedType);
       if (items[selectedIndex]) {
         const selectedItem = items[selectedIndex];
@@ -59,7 +57,7 @@ export default function DashTicketFilter({ onFilterChange, onCountUpdate }: Tick
   }, [selectedType, filteredTicketData]);
 
   const refreshTicketCounts = () => {
-    queryClient.invalidateQueries({ queryKey: ["ticketStatusCounts"] });
+    queryClient.invalidateQueries({queryKey: ['ticketStatusCounts']});
   };
 
   return (
@@ -69,7 +67,7 @@ export default function DashTicketFilter({ onFilterChange, onCountUpdate }: Tick
           <div
             key={item.type}
             className={`filter-item cursor-pointer flex gap-2 items-center ${
-              selectedType === item.type ? "text-gray-900 font-bold" : "text-gray-500"
+              selectedType === item.type ? 'text-gray-900 font-bold' : 'text-gray-500'
             }`}
             onClick={() => {
               setSelectedType(item.type);
@@ -79,26 +77,26 @@ export default function DashTicketFilter({ onFilterChange, onCountUpdate }: Tick
           >
             <span
               className={`${
-                item.type === "긴급"
-                  ? selectedType === "긴급"
-                    ? "text-error text-title-bold "
-                    : "text-error/80 text-title-bold"
+                item.type === '긴급'
+                  ? selectedType === '긴급'
+                    ? 'text-error text-title-bold '
+                    : 'text-error/80 text-title-bold'
                   : selectedType === item.type
-                  ? "text-main text-title-bold"
-                  : "text-gray-7 text-title-bold"
+                    ? 'text-main text-title-bold'
+                    : 'text-gray-7 text-title-bold'
               }`}
             >
               {item.type}
             </span>
             <div
               className={`px-4 h-4 flex items-center rounded-full ${
-                item.type === "긴급"
-                  ? selectedType === "긴급"
-                    ? "bg-error"
-                    : "bg-error/80"
+                item.type === '긴급'
+                  ? selectedType === '긴급'
+                    ? 'bg-error'
+                    : 'bg-error/80'
                   : selectedType === item.type
-                  ? "bg-main text-title-bold"
-                  : "bg-gray-500 text-title-bold"
+                    ? 'bg-main text-title-bold'
+                    : 'bg-gray-500 text-title-bold'
               } text-white`}
             >
               <span className="text-caption-bold text-white">{item.count}</span>

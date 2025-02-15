@@ -111,10 +111,8 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
         ?.secondaries.find((sub: any) => sub.name === selectedFilters['2차 카테고리'])?.id;
       const ticketTypeId = typeData?.find((type: any) => type.typeName === selectedFilters['요청'])?.typeId;
 
-      const sortParam = orderBy === '최신순' ? 'newest' 
-                  : orderBy === '마감기한순' ? 'deadline' 
-                  : orderBy === '오래된순' ? 'oldest' 
-                  : 'newest';
+      const sortParam =
+        orderBy === '최신순' ? 'newest' : orderBy === '마감기한순' ? 'deadline' : orderBy === '오래된순' ? 'oldest' : 'newest';
 
       const ticketData = await getTicketList({
         page: (currentPage ?? 1) - 1,
@@ -125,7 +123,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
         secondCategoryId,
         ticketTypeId,
         urgent,
-        sort: sortParam
+        sort: sortParam,
       });
 
       let sortedTickets = [...ticketData.content];

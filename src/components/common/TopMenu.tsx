@@ -34,7 +34,7 @@ export default function TopMenu({
           {/* 볼드 폰트 요소 */}
           {boldBlackText && <p className=" text-black">{boldBlackText}</p>}
           {boldGrayText && <p>{boldGrayText}</p>}
-          {boldSmText && <p>{boldSmText}</p>}
+          {boldSmText && <p className="text-[12px] font-bold leading-7">{boldSmText}</p>}
 
           {/* 레귤러 폰트 요소 */}
           {regularText && <p className="text-subtitle-regular w-[1100px] overflow-hidden">{limitedText}</p>}
