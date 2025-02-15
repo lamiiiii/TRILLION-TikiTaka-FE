@@ -82,7 +82,7 @@ export default function DropDown({
               ref={(el) => {
                 if (el) optionsRef.current[index] = el; // null 체크 추가
               }}
-              className={`px-4 py-1.5 text-center cursor-pointer leading-none m-2 
+              className={`px-4 py-1.5 text-center cursor-pointer leading-none m-2 whitespace-nowrap
                 ${
                   selected === option
                     ? 'bg-gray-1 text-caption-bold rounded-md mx-2 border border-gray-2 text-gray-900'
