@@ -78,7 +78,18 @@ export default function TicketEdit({ticketData}: TicketEditProps) {
     setManagerId(-1);
   });
 
-  // 수정 요청 API 호출
+  const handleDueDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedDate = new Date(e.target.value);
+    const today = new Date();
+
+    if (selectedDate < today) {
+      alert('마감기한은 오늘 이후 날짜를 선택해주세요.');
+      setDueDate('');
+    } else {
+      setDueDate(e.target.value);
+    }
+  };
+
   const mutation = useMutation({
     mutationFn: async (updateData: UpdateTicketParams) => updateTicket(ticketData.ticketId, updateData),
     onSuccess: () => {
@@ -135,12 +146,7 @@ export default function TicketEdit({ticketData}: TicketEditProps) {
               마감 기한 <RequiredIcon />
             </div>
             <div className={`flex items-center gap-5 p-2 px-8 bg-white border border-gray-2`}>
-              <input
-                type="date"
-                value={dueDate}
-                onChange={(e) => setDueDate(e.target.value)}
-                className="w-28 text-gray-6 text-body-regular"
-              />
+              <input type="date" value={dueDate} onChange={handleDueDateChange} className="w-28 text-gray-6 text-body-regular" />
               <input
                 type="time"
                 value={dueTime}

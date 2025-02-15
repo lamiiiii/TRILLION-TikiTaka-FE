@@ -13,6 +13,19 @@ import {useNavigate} from 'react-router-dom';
 
 export default function NewTicketContainer() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const [hasChanges, setHasChanges] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [files, setFiles] = useState<File[]>([]);
+  const [fileNames, setFileNames] = useState<string[]>([]);
+
+  const [isTemplateOpen, setIsTemplateOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [ticketId, setTicketId] = useState(0);
+
   const {role} = useUserStore();
   const {
     title,
@@ -36,17 +49,6 @@ export default function NewTicketContainer() {
   } = useNewTicketStore();
   const {mustDescription, setDescription, setMustDescription} = useNewTicketFormStore();
 
-  const [hasChanges, setHasChanges] = useState(false);
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [files, setFiles] = useState<File[]>([]);
-  const [fileNames, setFileNames] = useState<string[]>([]);
-
-  const [isTemplateOpen, setIsTemplateOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
-  const [ticketId, setTicketId] = useState(0);
-
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       if (hasChanges) {
@@ -67,6 +69,18 @@ export default function NewTicketContainer() {
     }
   }, [title, content, isUrgent, firstCategory, secondCategory, ticketType, dueDate, dueTime, manager]);
 
+  const handleDueDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedDate = new Date(e.target.value);
+    const today = new Date();
+
+    if (selectedDate < today) {
+      alert('마감기한은 오늘 이후 날짜를 선택해주세요.');
+      setDueDate('');
+    } else {
+      setDueDate(e.target.value);
+    }
+  };
+
   const onClickBtn = () => {
     const missingFields = [];
     if (!ticketType.typeId) missingFields.push('유형');
@@ -84,8 +98,6 @@ export default function NewTicketContainer() {
     setIsModalOpen(true);
   };
 
-  const queryClient = useQueryClient();
-
   const mutation = useMutation({
     mutationFn: async (formData: FormData) => createTicket(formData),
     onSuccess: (data) => {
@@ -96,6 +108,11 @@ export default function NewTicketContainer() {
       setIsModalOpen(true);
       setFiles([]);
       setFileNames([]);
+    },
+    onError: (error: any) => {
+      const errorMessage = error.response?.data.message || '알 수 없는 에러가 발생했습니다.';
+      setModalMessage(`${errorMessage}`);
+      setIsModalOpen(true);
     },
   });
 
@@ -180,12 +197,7 @@ export default function NewTicketContainer() {
                 마감 기한 <RequiredIcon />
               </div>
               <div className={`flex items-center gap-5 p-2 px-8 bg-white border border-gray-2`}>
-                <input
-                  type="date"
-                  value={dueDate}
-                  onChange={(e) => setDueDate(e.target.value)}
-                  className="w-28 text-gray-6 text-body-regular"
-                />
+                <input type="date" value={dueDate} onChange={handleDueDateChange} className="w-28 text-gray-6 text-body-regular" />
                 <input
                   type="time"
                   value={dueTime}
@@ -236,15 +248,23 @@ export default function NewTicketContainer() {
               ? '필수 입력 항목 누락'
               : modalMessage.includes('이동')
                 ? `티켓 번호 - #${ticketId}`
-                : '티켓을 생성하시겠습니까?'
+                : modalMessage.includes('진행')
+                  ? '티켓을 생성하시겠습니까?'
+                  : '티켓 생성 불가'
           }
           content={modalMessage}
           backBtn="닫기"
           onBackBtnClick={() => {
             setIsModalOpen(false);
           }}
-          checkBtn={modalMessage.includes('입력해주세요') ? undefined : '확인'}
-          onBtnClick={modalMessage.includes('입력해주세요') ? undefined : confirmSubmit}
+          checkBtn={
+            modalMessage.includes('입력해주세요') || modalMessage.includes('마감기한') || modalMessage.includes('잘못') ? undefined : '확인'
+          }
+          onBtnClick={
+            modalMessage.includes('입력해주세요') || modalMessage.includes('마감기한') || modalMessage.includes('잘못')
+              ? undefined
+              : confirmSubmit
+          }
         />
       )}
     </div>
