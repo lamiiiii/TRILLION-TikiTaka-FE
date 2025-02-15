@@ -15,11 +15,15 @@ export default function InquiryCard({type, title, content, createdAt, requesterN
       <div className="w-[15%] text-gray-700 text-subtitle-regular truncate">{requesterName}</div>
       <div className="w-[35%] min-w-0 flex flex-col justify-center">
         <div className="text-gray-900 text-subtitle-regular truncate">{title}</div>
-        <div className="text-gray-6 text-caption-regular truncate">{content}</div> 
+        <div className="text-gray-6 text-caption-regular truncate">{content}</div>
       </div>
       <div className="w-[20%] text-gray-15 text-body-regular">{createdAt}</div>
       <div className="w-[20%]">
-        <button className={`px-4 py-1 rounded text-white text-body-bold ${status ? 'bg-gray-400' : 'bg-main'}`} onClick={onReplyClick}>
+        <button
+          className={`px-4 py-1 rounded text-white text-body-bold ${status ? 'bg-gray-400' : 'bg-main'} `}
+          onClick={!status ? onReplyClick : undefined}
+          disabled={status}
+        >
           {status ? '답변 완료' : '답변 대기'}
         </button>
       </div>
