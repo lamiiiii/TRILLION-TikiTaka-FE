@@ -111,10 +111,8 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
         ?.secondaries.find((sub: any) => sub.name === selectedFilters['2차 카테고리'])?.id;
       const ticketTypeId = typeData?.find((type: any) => type.typeName === selectedFilters['요청'])?.typeId;
 
-      const sortParam = orderBy === '최신순' ? 'newest' 
-                  : orderBy === '마감기한순' ? 'deadline' 
-                  : orderBy === '오래된순' ? 'oldest' 
-                  : 'newest';
+      const sortParam =
+        orderBy === '최신순' ? 'newest' : orderBy === '마감기한순' ? 'deadline' : orderBy === '오래된순' ? 'oldest' : 'newest';
 
       const ticketData = await getTicketList({
         page: (currentPage ?? 1) - 1,
@@ -125,7 +123,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
         secondCategoryId,
         ticketTypeId,
         urgent,
-        sort: sortParam
+        sort: sortParam,
       });
 
       let sortedTickets = [...ticketData.content];
@@ -270,7 +268,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
   };
 
   return (
-    <div className="w-[1152px] relative mb-[100px] " ref={containerRef}>
+    <div className="w-full relative mb-[100px] " ref={containerRef}>
       <div className="flex mb-2 justify-end gap-3 ">
         <Dropdown
           label="20개씩"
@@ -290,7 +288,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
           border={false}
           textColor=""
         />
-      </section>
+      </div>
       <div className="bg-gray-18 h-full flex flex-col justify-start p-4">
         <div className="flex justify-between items-center  mt-4 px-2">
           <div className="flex items-center gap-4 leading-none">
