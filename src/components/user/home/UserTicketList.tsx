@@ -10,7 +10,7 @@ import {RefreshIcon} from '../../common/Icon';
 import PageNations from '../../common/PageNations';
 import UserTicket from './UserTicket';
 import {ERROR_MESSAGES} from '../../../constants/error';
-import {ITEMS_PER_PAGE, pageSizeOptions} from '../../../constants/constants';
+import {ITEMS_PER_PAGE, pageSizeOptions, typeNameMapping} from '../../../constants/constants';
 
 const typeMapping: Record<string, string> = {CREATE: '생성', DELETE: '삭제', ETC: '기타', UPDATE: '수정'};
 
@@ -175,7 +175,7 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
             ?.secondaries.map((secondary: any) => secondary.name) ?? [])
         : [],
     },
-    {label: '요청', options: typeData?.map((type: any) => type.typeName)},
+    {label: '요청', options: typeData?.map((type: any) => typeNameMapping[type.typeName] || type.typeName)},
   ];
 
   const handlePageChange = (newPage: number) => {
@@ -185,7 +185,14 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
   };
 
   const handleSelect = (label: string, value: string) => {
-    setSelectedFilters((prev) => ({...prev, [label]: value}));
+    if (label === '요청') {
+      const originalValue = Object.keys(typeNameMapping).find((key) => typeNameMapping[key] === value) || value;
+      setSelectedFilters((prev) => ({...prev, [label]: originalValue}));
+    } else if (label === '1차 카테고리') {
+      setSelectedFilters((prev) => ({...prev, ['1차 카테고리']: value, ['2차 카테고리']: ''}));
+    } else {
+      setSelectedFilters((prev) => ({...prev, [label]: value}));
+    }
   };
 
   const getDetailLink = (ticketId: number): string => {
