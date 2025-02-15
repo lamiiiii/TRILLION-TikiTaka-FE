@@ -15,9 +15,9 @@ export default function DashTicketFilter({onFilterChange, onCountUpdate}: Ticket
   const containerRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
 
-  const {data: ticketCounts} = useQuery({
-    queryKey: ['ticketStatusCounts'],
-    queryFn: getTicketStatusCount,
+  const { data: ticketCounts } = useQuery({
+    queryKey: ["ticketStatusCounts"],
+    queryFn: () => getTicketStatusCount(), 
     staleTime: 1000 * 60,
   });
 

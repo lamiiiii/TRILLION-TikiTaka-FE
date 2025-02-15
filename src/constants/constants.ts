@@ -53,7 +53,7 @@ export const reverseStatusMapping: Record<string, string> = {
   완료: 'DONE',
 };
 
-export const pageSizeOptions = ['20개씩', '30개씩', '50개씩'];
+export const pageSizeOptions = ['20개씩', '50개씩', '100개씩'];
 
 export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 export const MAX_FILES = 5;

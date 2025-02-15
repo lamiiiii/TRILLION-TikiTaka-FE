@@ -27,7 +27,7 @@ export default function AccountFilter({ onFilterChange }: { onFilterChange: (typ
    }, [selectedFilter]);
 
   return (
-    <div className="relative w-[1152px] mt-6">
+    <div className="relative w-full mt-6">
       <div className="flex w-full h-6  gap-6 relative" ref={containerRef}>
         {statFilters.map((item) => (
           <div

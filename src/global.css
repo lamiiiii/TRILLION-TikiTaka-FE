@@ -81,7 +81,7 @@ textarea {
   /* 글로벌 클래스 */
   /* 최상위 컨테이너 */
   .top-container {
-    @apply w-full flex min-h-screen justify-center min-w-[600px];
+    @apply w-full flex min-h-screen justify-center min-w-[1000px];
   }
   /* max-width 1200px인 컨테이너 */
   .max-w-1200 {

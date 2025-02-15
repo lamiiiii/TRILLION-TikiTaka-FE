@@ -35,6 +35,7 @@ declare interface TicketStatusCount {
   reviewing: number;
   completed: number;
   urgent: number;
+  requesterId?: number ;
 }
 
 declare interface TicketDetails {
@@ -169,3 +170,4 @@ declare interface TicketType {
   typeId: number;
   typeName: string;
 }
+
