@@ -1,5 +1,3 @@
-// 티켓 상태 변경
-
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {STATUS_MAP, TicketStatus} from '../../constants/constants';
 import useReverseMap from '../../hooks/useReverseMap';

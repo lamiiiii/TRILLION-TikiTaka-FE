@@ -24,10 +24,6 @@ export default function Layout() {
     }
   }, [isAuthenticated, location.pathname, navigate]);
 
-  // if (!isAuthenticated) {
-  //   return <Navigate to="/" />;
-  // }
-
   return (
     isAuthenticated && (
       <div className="flex h-screen">

@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
+import DOMPurify from 'dompurify';
 import {useTokenStore, useUserStore} from '../../../store/store';
 import {validateId, validatePwd} from '../../../utils/Validation';
 import InitialLayout from './InitialLayout';
@@ -50,8 +51,11 @@ export default function SignInContainer() {
 
     if (idValidation || pwdValidation) return;
 
+    const sanitizedId = DOMPurify.sanitize(id);
+    const sanitizedPwd = DOMPurify.sanitize(pwd);
+
     try {
-      const response = await postLogin({username: id, password: pwd});
+      const response = await postLogin({username: sanitizedId, password: sanitizedPwd});
       if (!response) {
         setModalMessage('');
         setModalTitle('');

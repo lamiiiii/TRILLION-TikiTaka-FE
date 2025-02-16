@@ -24,7 +24,8 @@ export default function TicketSetting({data}: TicketSettingProps) {
   const [selectedAssignee] = useState(data.managerName);
   const [primaryCategory, setPrimaryCategory] = useState(data.firstCategoryName);
   const [secondaryCategory, setSecondaryCategory] = useState(data.secondCategoryName);
-  const [ticketType, setTicketType] = useState(data.typeName);
+  // const [ticketTypeId, setTicketTypeId] = useState(data.typeId);
+  const [ticketTypeName, setTicketTypeName] = useState(data.typeName);
   const [deadlineDate, setDeadlineDate] = useState('');
   const [deadlineTime, setDeadlineTime] = useState('');
   const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
@@ -82,7 +83,6 @@ export default function TicketSetting({data}: TicketSettingProps) {
     queryKey: ['types'],
     queryFn: getTicketTypes,
   });
-
   // 카테고리 데이터 조회
   const {data: categories = []} = useQuery({
     queryKey: ['categories'],
@@ -148,11 +148,11 @@ export default function TicketSetting({data}: TicketSettingProps) {
   };
 
   const handleTicketTypeSelect = (selectedOption: string) => {
-    const selectedType = (ticketData as TicketType[])?.find((type) => String(type.typeName) === String(selectedOption));
+    const selectedType = ticketData.find((t: TicketType) => (typeNameMapping[t.typeName] || t.typeName) === selectedOption);
     if (selectedType) {
-      const typeId = Number(selectedType.typeId);
+      const {typeId, typeName} = selectedType;
+      setTicketTypeName(typeName);
       updateTypeMutation.mutate({ticketTypeId: typeId});
-      setTicketType(selectedOption);
     }
   };
 
@@ -223,12 +223,13 @@ export default function TicketSetting({data}: TicketSettingProps) {
               value={secondaryCategory}
               onSelect={handleSecondaryCategorySelect}
               border={false}
+              disabled={!selectedFilters['1차 카테고리']}
             />
             <DropDown
               width="w-full"
               label="타입"
               options={ticketData?.map((type: any) => typeNameMapping[type.typeName])}
-              value={typeNameMapping[ticketType]}
+              value={typeNameMapping[ticketTypeName]}
               onSelect={handleTicketTypeSelect}
               border={false}
             />

@@ -6,15 +6,16 @@ import {deleteTicketForm, updateTicketForm} from '../../../api/service/tickets';
 import {toast} from 'react-toastify';
 import Modal from '../../common/Modal';
 import DOMPurify from 'dompurify';
+import {useLimitedInput} from '../../../hooks/useInputLimit';
 
 interface RequestFormDetailProps {
   mustDescription: string;
   description: string;
-  firstCategoryId: number; 
-  secondCategoryId: number; 
-  onClose: () => void; 
-  name:string;
-  refreshRequestForm: () => void
+  firstCategoryId: number;
+  secondCategoryId: number;
+  onClose: () => void;
+  name: string;
+  refreshRequestForm: () => void;
 }
 
 export default function RequestFormDetail({
@@ -33,6 +34,20 @@ export default function RequestFormDetail({
   const [newMustDescription, setNewMustDescription] = useState(mustDescription);
   const [newDescription, setNewDescription] = useState(description);
 
+  const mustInput = useLimitedInput({
+    maxLength: 150,
+    initialValue: mustDescription,
+    onLimitExceed: () => alert('필수 입력 사항은 최대 150자까지 입력할 수 있습니다.'),
+    onChange: (value) => setNewMustDescription(value),
+  });
+
+  const descriptionInput = useLimitedInput({
+    maxLength: 1000,
+    initialValue: description,
+    onLimitExceed: () => alert('내용은 최대 1000자까지 입력할 수 있습니다.'),
+    onChange: (value) => setNewDescription(value),
+  });
+
   const editMutation = useMutation({
     mutationFn: () =>
       updateTicketForm(firstCategoryId, secondCategoryId, {
@@ -41,7 +56,7 @@ export default function RequestFormDetail({
       }),
     onSuccess: () => {
       toast.success('티켓 양식이 수정되었습니다.');
-      refreshRequestForm(); 
+      refreshRequestForm();
       setIsEditing(false);
     },
     onError: () => {
@@ -56,7 +71,7 @@ export default function RequestFormDetail({
       toast.success('티켓 양식이 삭제되었습니다.');
       setShowDeleteModal(false);
       setTimeout(() => {
-        window.location.reload(); 
+        window.location.reload();
       }, 500);
     },
     onError: () => {
@@ -96,10 +111,7 @@ export default function RequestFormDetail({
                   취소
                 </button>
               )}
-              <button
-                className="px-6 py-1 bg-main text-white text-body-bold rounded"
-                onClick={() => setShowDeleteModal(true)}
-              >
+              <button className="px-6 py-1 bg-main text-white text-body-bold rounded" onClick={() => setShowDeleteModal(true)}>
                 요청양식 삭제
               </button>
             </div>
@@ -108,18 +120,31 @@ export default function RequestFormDetail({
             <div className="w-[780px] h-[550px] bg-gray-18 mt-4 px-4 mx-auto shadow-[0px_1px_3px_1px_rgba(0,0,0,0.15)]">
               <div className="mt-4">
                 <label className="block text-gray-700 font-semibold mb-2">필수 입력 사항</label>
-                <textarea
-                  className="w-full px-3 py-2 border border-gray-300 rounded mt-1 text-body-regular resize-none"
-                  value={newMustDescription}
-                  onChange={(e) => setNewMustDescription(DOMPurify.sanitize(e.target.value))}
+                <input
+                  type="text"
+                  className="w-full px-3 py-2 border border-gray-300 rounded mt-1 text-body-regular"
+                  placeholder="필수 입력 사항을 입력해주세요"
+                  value={mustInput.value}
+                  onChange={(e) => {
+                    const sanitizedValue = DOMPurify.sanitize(e.target.value);
+                    mustInput.setValue(sanitizedValue);
+                    setNewMustDescription(sanitizedValue);
+                  }}
                 />
               </div>
               <div className="mt-6">
                 <label className="block text-gray-700 font-semibold mb-2">요청 내용</label>
                 <textarea
+                  rows={5}
+                  placeholder="요청 내용을 입력해주세요"
+                  style={{resize: 'none', outline: 'none'}}
                   className="w-full h-[280px] px-3 py-2 border border-gray-300 rounded mt-1 text-body-regular resize-none"
-                  value={newDescription}
-                  onChange={(e) => setNewDescription(DOMPurify.sanitize(e.target.value))}
+                  value={descriptionInput.value}
+                  onChange={(e) => {
+                    const sanitizedValue = DOMPurify.sanitize(e.target.value);
+                    descriptionInput.setValue(sanitizedValue);
+                    setNewDescription(sanitizedValue);
+                  }}
                 />
               </div>
               <div className="mt-6 flex justify-center">
