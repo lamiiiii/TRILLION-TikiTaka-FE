@@ -1,4 +1,4 @@
-import {useNavigate, useParams} from 'react-router-dom';
+import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import TopMenu from '../TopMenu';
 import StatusBar from './StatusBar';
 import TicketContent from './TicketContent';
@@ -15,7 +15,7 @@ import {Comment} from '../../../interfaces/interfaces';
 import TicketReview from './TicketReview';
 import {BackIcon} from '../Icon';
 import {useNewTicketStore, useUserStore} from '../../../store/store';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import Modal from '../Modal';
 import TicketEdit from './TicketEdit';
 import UserTicketTask from '../../user/UserTicketTask';
@@ -26,6 +26,7 @@ import {deleteAttachment} from '../../../api/service/attatchments';
 export default function DetailContainer() {
   const {id} = useParams<{id: string}>();
   const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
   const {userId, role} = useUserStore();
 
@@ -126,6 +127,10 @@ export default function DetailContainer() {
     deleteMutation.mutate();
     setShowDeleteModal(false);
   };
+
+  useEffect(() => {
+    setIsEditing(false);
+  }, [location.pathname]);
 
   return (
     <div className="top-container">

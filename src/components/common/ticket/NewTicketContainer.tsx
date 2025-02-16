@@ -70,6 +70,23 @@ export default function NewTicketContainer() {
     }
   }, [title, content, isUrgent, firstCategory, secondCategory, ticketType, dueDate, dueTime, manager]);
 
+  useEffect(() => {
+    setTitle('');
+    setContent('');
+    setIsUrgent(false);
+    setFirstCategory(null);
+    setSecondCategory(null);
+    setTicketType({typeId: 0, typeName: ''});
+    setDueDate('');
+    setDueTime('');
+    setManager(null);
+    setDescription('');
+    setMustDescription('');
+    setFiles([]);
+    setFileNames([]);
+    setHasChanges(false);
+  }, [location.pathname]);
+
   const handleDueDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedDate = new Date(e.target.value);
     const today = new Date();
