@@ -20,6 +20,8 @@ import Modal from '../Modal';
 import TicketEdit from './TicketEdit';
 import UserTicketTask from '../../user/UserTicketTask';
 import {typeNameMapping} from '../../../constants/constants';
+import AttachmentList from './AttachmentList';
+import {deleteAttachment} from '../../../api/service/attatchments';
 
 export default function DetailContainer() {
   const {id} = useParams<{id: string}>();
@@ -50,6 +52,16 @@ export default function DetailContainer() {
 
   // 티켓 상세 정보 조회
   const {data: ticket} = useQuery<TicketDetails>({queryKey: ['ticketDetails', ticketId], queryFn: () => getTicketDetails(ticketId)});
+
+  // 파일 삭제 함수
+  const handleDeleteAttachment = async (fileId: number) => {
+    try {
+      await deleteAttachment(fileId);
+      queryClient.invalidateQueries({queryKey: ['ticketDetails', fileId]});
+    } catch (error) {
+      console.error('첨부파일 삭제 실패:', error);
+    }
+  };
 
   //댓글 조회
   const {data: comments} = useQuery({
@@ -116,7 +128,7 @@ export default function DetailContainer() {
   };
 
   return (
-    <div className="top-container ">
+    <div className="top-container">
       <div className="flex flex-col">
         <div className="flex flex-col pt-[30px] px-[46px] mb-[100px]">
           <button onClick={handleGoBack} className="flex items-center gap-1 text-body-regular text-gray-16 text-left">
@@ -140,6 +152,18 @@ export default function DetailContainer() {
                 <Profile userId={ticket?.managerId} size="lg" />
                 <section className="w-[577px] flex flex-col">
                   {ticket && <TicketContent data={ticket} />}
+                  {ticket?.attachments && ticket?.attachments.length > 0 && (
+                    <div className="flex flex-col gap-1">
+                      <div className="w-64 mt-1 bg-gray-1 border border-gray-2 rounded-md py-1 px-3 text-xs text-gray-15 shadow-md">
+                        첨부된 이미지를 클릭하여 다운로드 가능합니다.
+                      </div>
+                      <AttachmentList
+                        attachments={ticket?.attachments}
+                        onDeleteAttachment={handleDeleteAttachment}
+                        isOwn={userId === ticket.requesterId}
+                      />
+                    </div>
+                  )}
                   <CommentInput />
                   {comments?.data && comments?.data.length > 0 ? (
                     [...comments.data]
