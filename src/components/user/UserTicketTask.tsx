@@ -11,7 +11,7 @@ export default function UserTicketTask({progress = 0}: {progress?: number}) {
       <div className="flex items-center justify-between">
         <label className="text-body-bold">Task</label>
         <label className="text-body-bold">
-          Progress: <span className="text-main2-3">{progress}%</span>
+          Progress: <span className="text-main2-3">{Math.round(progress)}%</span>
         </label>
       </div>
 
