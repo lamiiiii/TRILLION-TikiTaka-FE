@@ -25,7 +25,7 @@ export default function AccountList() {
   });
 
   const accounts: RegistrationAccount[] = data?.data?.content ?? [];
-  const totalPages = data?.totalPages ?? 1;
+  const totalPages = data?.data?.totalPages ?? 1;
   const totalElements = data?.data?.totalElements ?? 0;
 
   const sortedAccounts = accounts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
