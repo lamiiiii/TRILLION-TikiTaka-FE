@@ -329,7 +329,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
           <div className="w-[6%]">티켓 ID</div>
           <div className="w-[12%]">카테고리</div>
           <div className={role === 'user' ? 'w-[51%]' : 'w-[36%]'}>요청 내용</div>
-          <div className="w-[12%]">기한</div>
+          <div className="w-[12%]">생성 / 마감 기한</div>
           <div className="w-[10%]">담당자</div>
           {role !== 'user' && <div className="w-[15%]">승인 여부</div>}
         </div>

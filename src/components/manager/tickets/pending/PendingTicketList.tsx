@@ -131,15 +131,15 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
   };
 
   const handleSelect = (label: string, value: string) => {
-      if (label === '요청') {
-        const originalValue = Object.keys(typeNameMapping).find((key) => typeNameMapping[key] === value) || value;
-        setSelectedFilters((prev) => ({...prev, [label]: originalValue}));
-      } else if (label === '1차 카테고리') {
-        setSelectedFilters((prev) => ({...prev, ['1차 카테고리']: value, ['2차 카테고리']: ''}));
-      } else {
-        setSelectedFilters((prev) => ({...prev, [label]: value}));
-      }
-    };
+    if (label === '요청') {
+      const originalValue = Object.keys(typeNameMapping).find((key) => typeNameMapping[key] === value) || value;
+      setSelectedFilters((prev) => ({...prev, [label]: originalValue}));
+    } else if (label === '1차 카테고리') {
+      setSelectedFilters((prev) => ({...prev, ['1차 카테고리']: value, ['2차 카테고리']: ''}));
+    } else {
+      setSelectedFilters((prev) => ({...prev, [label]: value}));
+    }
+  };
 
   const handleApprove = (ticketId: number) => {
     approveMutation.mutate(ticketId);
@@ -205,7 +205,7 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
           <div className="w-[6%]">티켓 ID</div>
           <div className="w-[14%]">카테고리</div>
           <div className="w-[30%]">요청 내용</div>
-          <div className="w-[12%]">기한</div>
+          <div className="w-[12%]">생성 / 마감 기한</div>
           <div className="w-[14%]">담당자</div>
           <div className="w-[15%]">승인 여부</div>
         </div>
