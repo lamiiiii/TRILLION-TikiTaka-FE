@@ -16,7 +16,6 @@ export default function MonthCategoryTicketStatus() {
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  // 현재 날짜로 year와 month 초기화
   const currentDate = new Date();
   const [year, _setYear] = useState(currentDate.getFullYear());
   const [month, _setMonth] = useState(currentDate.getMonth() + 1);

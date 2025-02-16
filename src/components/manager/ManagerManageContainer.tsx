@@ -3,7 +3,6 @@ import TicketAwaitingList from './tickets/pending/TicketAwaitingList';
 import TicketAnalytics from './tickets/TicketAnalytics';
 import TicketPersonalManageList from './tickets/TicketPersonalManageList';
 
-// 담당자 티켓 관리
 export default function ManagerManageContainer() {
   return (
     <div className="top-container">

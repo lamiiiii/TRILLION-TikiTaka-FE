@@ -1,13 +1,12 @@
 import {PRIORITY} from '../constants/constants';
 
-// 사용자 정보
 export interface UserStore {
-  userId: number; // 사용자 아이디
+  userId: number;
   userName: string;
   setUserId: (id: number) => void;
   setUserName: (userName: string) => void;
   role: 'MANAGER' | 'USER' | 'ADMIN' | 'DEFAULT';
-  setRole: (newRole: 'MANAGER' | 'USER' | 'ADMIN' | 'DEFAULT') => void; // 역할 값의 타입을 정확히 제한
+  setRole: (newRole: 'MANAGER' | 'USER' | 'ADMIN' | 'DEFAULT') => void;
 }
 
 export interface TokenStore {
@@ -90,8 +89,6 @@ export interface NewTicketFormStore {
   setDescription: (description: string) => void;
 }
 
-// 기타 interface
-
 export type PriorityType = (typeof PRIORITY)[number];
 
 export interface InquiryData {
@@ -107,7 +104,6 @@ export interface InquiryData {
   updatedAt: string;
 }
 
-// 댓글 응답 형식
 export interface Comment {
   commentId: number;
   authorId: number;

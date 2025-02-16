@@ -6,17 +6,16 @@ export interface TicketDataProps {
   ticketId: number;
   title: string;
   description: string;
-  typeName: string; // 요청 유형
+  typeName: string;
   firstCategoryName: string;
   secondCategoryName: string;
   managerName: string;
   status: TicketStatusType;
   urgent: boolean;
-  deadline: string; // yyyy-MM-dd HH:mm
+  deadline: string;
   createdAt: string;
 }
 
-// API 응답 데이터 구조
 export interface TicketListResponse {
   message: string;
   data: {

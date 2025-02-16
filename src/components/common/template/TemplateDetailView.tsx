@@ -7,7 +7,7 @@ import {useQuery} from '@tanstack/react-query';
 
 interface TemplateDetailViewProps {
   templateId: number;
-  onDelete: () => void; // onDelete 속성 추가
+  onDelete: () => void;
 }
 
 export default function TemplateDetailView({templateId, onDelete}: TemplateDetailViewProps) {

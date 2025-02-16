@@ -30,7 +30,6 @@ export default function TemplateOptions() {
 
   useEffect(() => {
     if (!isLoading && categories.length > 0) {
-      // 1차 카테고리 설정
       if (firstCategoryId) {
         const selectedFirstCategory = categories.find((cat) => cat.primary.id === firstCategoryId)?.primary;
         if (selectedFirstCategory) {
@@ -38,7 +37,6 @@ export default function TemplateOptions() {
         }
       }
 
-      // 2차 카테고리 설정 (1차 카테고리가 설정된 후에만)
       if (firstCategoryId && secondCategoryId) {
         const secondaryOptions = categories.find((cat) => cat.primary.id === firstCategoryId)?.secondaries ?? [];
         const selectedSecondCategory = secondaryOptions.find((cat) => cat.id === secondCategoryId);
@@ -90,7 +88,7 @@ export default function TemplateOptions() {
               const selectedCategory = secondaryCategoryOptions.find((cat) => cat.name === selectedName);
               setSecondCategory(selectedCategory ?? null);
             }}
-            disabled={!firstCategory || secondaryCategoryOptions.length === 0} // ✅ 1차 카테고리 없거나 2차 없음 → 비활성화
+            disabled={!firstCategory || secondaryCategoryOptions.length === 0}
           />
         </div>
       </div>

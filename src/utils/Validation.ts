@@ -9,6 +9,6 @@ export const validatePwd = (password: string): boolean => {
 };
 
 export const validateId = (id: string) => {
-  const idRegex = /^[a-z]{3,10}\.[a-z]{1,5}$/; // 아이디 유효성 검사 정규식
+  const idRegex = /^[a-z]{3,10}\.[a-z]{1,5}$/;
   return idRegex.test(id);
 };
