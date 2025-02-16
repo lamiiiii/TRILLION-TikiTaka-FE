@@ -1,7 +1,7 @@
 import DropDown from '../Dropdown';
 import {PRIORITY, STATUS_MAP, STATUS_OPTIONS} from '../../../constants/constants';
 import {useTicketStore, useUserStore} from '../../../store/store';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {WhiteCheckIcon} from '../Icon';
 import {useParams} from 'react-router-dom';
 import {approveTicket, rejectTicket, updateTicketManager, updateTicketStatus, updateTicketUrgent} from '../../../api/service/tickets';
@@ -9,7 +9,8 @@ import useReverseMap from '../../../hooks/useReverseMap';
 import {useUpdateTicketPriority} from '../../../api/hooks/useUpdateTicketPriority';
 import {QUERY_KEY, useCreateMutation} from '../../../api/hooks/useCreateMutation';
 import Modal from '../Modal';
-
+import debounce from 'lodash/debounce';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
 interface StatusBarProps {
   data: TicketDetails;
   status?: keyof typeof STATUS_MAP;
@@ -22,6 +23,7 @@ export default function StatusBar({data, status}: StatusBarProps) {
   const [isUrgent, setIsUrgent] = useState(data?.urgent);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<string>('');
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const {role, userId, userName} = useUserStore();
   const isUser = role === 'USER';
@@ -38,11 +40,22 @@ export default function StatusBar({data, status}: StatusBarProps) {
     }
   }, [data?.priority, setPriority]);
 
-  const updateUrgentMutation = useCreateMutation(
-    () => updateTicketUrgent(ticketId, isUrgent),
-    '티켓 긴급 여부 변경에 실패했습니다. 다시 시도해 주세요.',
-    ticketId
-  );
+  const queryClient = useQueryClient();
+  const updateUrgentMutation = useMutation({
+    mutationFn: (newUrgentState: boolean) => updateTicketUrgent(ticketId, newUrgentState),
+    onMutate: () => {
+      setIsUpdating(true);
+    },
+    onSettled: () => {
+      setIsUpdating(false);
+    },
+    onError: () => {
+      alert('티켓 긴급 여부 변경에 실패했습니다. 다시 시도해 주세요.');
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: [QUERY_KEY.TICKET_DETAILS, String(ticketId)]});
+    },
+  });
 
   const updateManagerMutation = useCreateMutation(
     (managerId: number) => updateTicketManager(ticketId, managerId),
@@ -84,10 +97,17 @@ export default function StatusBar({data, status}: StatusBarProps) {
     }
   }, [status]);
 
+  const debouncedUpdateUrgent = useCallback(
+    debounce((newUrgentState: boolean) => {
+      updateUrgentMutation.mutate(newUrgentState);
+    }, 300),
+    [updateUrgentMutation]
+  );
+
   const checkboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newUrgentState = e.target.checked;
-    setIsUrgent(newUrgentState);
-    updateUrgentMutation.mutate(newUrgentState);
+    setIsUrgent(newUrgentState); // 낙관적 업데이트
+    debouncedUpdateUrgent(newUrgentState);
   };
 
   const handlePrioritySelect = (selectedOption: string) => {
@@ -149,7 +169,8 @@ export default function StatusBar({data, status}: StatusBarProps) {
         <section className="flex gap-3 items-center mr-4">
           <label
             className={`flex items-center justify-center w-4 h-4 border rounded-md cursor-pointer 
-                            ${isUrgent ? 'bg-error border-error' : 'border-gray-2 hover:border-error'}`}
+                          ${isUrgent ? 'bg-error border-error' : 'border-gray-2 hover:border-error'}
+                            ${isUpdating ? 'opacity-50' : ''}`}
           >
             <input type="checkbox" checked={isUrgent} onChange={checkboxChange} className="hidden" />
             {isUrgent && <WhiteCheckIcon />}

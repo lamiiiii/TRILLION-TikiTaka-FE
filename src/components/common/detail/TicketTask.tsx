@@ -1,4 +1,4 @@
-import {useMemo, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {motion, AnimatePresence} from 'framer-motion';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {createSubtask, deleteSubtask, getSubtasks, updateSubtaskDescription, updateSubtaskStatus} from '../../../api/service/subtasks';
@@ -20,25 +20,33 @@ export default function TicketTask({progress = 0}: {progress?: number}) {
     queryKey: ['subtasks', ticketId],
     queryFn: () => getSubtasks(ticketId),
   });
+  const [localTasks, setLocalTasks] = useState(tasks);
+
+  useEffect(() => {
+    setLocalTasks(tasks);
+  }, [tasks]);
 
   // 하위 태스크 작성
   const createSubtaskMutation = useMutation({
     mutationFn: createSubtask,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['subtasks', ticketId],
-      });
+    onSuccess: (newTask) => {
+      queryClient.invalidateQueries({queryKey: ['subtasks', ticketId]});
+      setLocalTasks((prev) => [...prev, newTask]);
     },
     onError: () => {
       alert('하위 태스크 추가에 실패했습니다. 다시 시도해 주세요.');
     },
   });
-
   //하위 태스크 상태 변경
   const updateSubtaskStatusMutation = useMutation({
     mutationFn: ({taskId, checked}: {taskId: number; checked: boolean}) => updateSubtaskStatus(ticketId, taskId, checked),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({queryKey: ['subtasks', ticketId]});
+      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
+      // 로컬 상태 즉시 업데이트
+      setLocalTasks((prevTasks) =>
+        prevTasks.map((task) => (task.subtaskId === variables.taskId ? {...task, done: variables.checked} : task))
+      );
     },
     onError: () => {
       alert('하위 태스크 상태 업데이트에 실패했습니다.');
@@ -58,14 +66,20 @@ export default function TicketTask({progress = 0}: {progress?: number}) {
   // 하위 태스크 삭제
   const deleteSubtaskMutation = useMutation({
     mutationFn: (taskId: number) => deleteSubtask(ticketId, taskId),
-    onSuccess: () => {
+    onSuccess: (_, deletedTaskId) => {
       queryClient.invalidateQueries({queryKey: ['subtasks', ticketId]});
+      setLocalTasks((prev) => prev.filter((task) => task.subtaskId !== deletedTaskId));
     },
   });
 
-  const handleStatusChange = (subtaskId: number, checked: boolean) => {
-    updateSubtaskStatusMutation.mutate({taskId: subtaskId, checked});
-  };
+  const handleStatusChange = useCallback(
+    (subtaskId: number, checked: boolean) => {
+      updateSubtaskStatusMutation.mutate({taskId: subtaskId, checked});
+      // 즉시 로컬 상태 업데이트
+      setLocalTasks((prevTasks) => prevTasks.map((task) => (task.subtaskId === subtaskId ? {...task, done: checked} : task)));
+    },
+    [updateSubtaskStatusMutation]
+  );
 
   const handleEdit = (taskId: number, currentContent: string) => {
     setEditingTaskId(taskId);
@@ -103,24 +117,24 @@ export default function TicketTask({progress = 0}: {progress?: number}) {
   };
 
   const progressPercentage = useMemo(() => {
-    if (tasks.length === 0) return 0;
-    const completedTasks = tasks.filter((task) => task.done).length;
-    return Math.round((completedTasks / tasks.length) * 100);
-  }, [tasks]); // tasks가 변경될 때마다 재계산
+    if (localTasks.length === 0) return 0;
+    const completedTasks = localTasks.filter((task) => task.done).length;
+    return Math.round((completedTasks / localTasks.length) * 100);
+  }, [localTasks]);
 
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
         <label className="text-body-bold">Task</label>
         <label className="text-body-bold">
-          Progress: <span className="text-main2-3">{progress ? progress : progressPercentage}%</span>
+          Progress: <span className="text-main2-3">{Math.round(progress) || progressPercentage}%</span>
         </label>
       </div>
 
       <div className="relative w-full  p-5 border border-gray-2 rounded-[4px] bg-white text-subtitle-regular text-gray-15">
         <ul className="mt-2">
           <AnimatePresence>
-            {tasks.map((task, index) => (
+            {localTasks.map((task, index) => (
               <motion.li
                 key={index}
                 initial={{opacity: 0, y: 5}}

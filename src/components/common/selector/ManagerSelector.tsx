@@ -12,11 +12,12 @@ interface Manager {
 }
 
 interface ManagerSelectorProps {
+  width?: string; // width 값 (Tailwind 클래스)
   selectedManagerName: string;
   onManagerSelect: (managerId: number) => void;
 }
 
-const ManagerSelector: React.FC<ManagerSelectorProps> = ({selectedManagerName, onManagerSelect}) => {
+const ManagerSelector: React.FC<ManagerSelectorProps> = ({width, selectedManagerName, onManagerSelect}) => {
   const [selectedManager, setSelectedManager] = useState<Manager | undefined>(undefined);
 
   // 유저 정보 (담당자 리스트) 조회
@@ -40,6 +41,7 @@ const ManagerSelector: React.FC<ManagerSelectorProps> = ({selectedManagerName, o
   return (
     <div>
       <DropDown
+        width={width}
         label="담당자"
         value={selectedManager?.username || 'all'}
         options={managers?.map((user: any) => user.username) || []}

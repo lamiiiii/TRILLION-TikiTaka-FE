@@ -7,6 +7,7 @@ import TodayTicketStatus from './daily/TodayTicketStatus';
 import ManagerTicketPeriodStatus from './monthly/ManagerTicketPeriodStatus';
 import MonthlyTicketStatus from './monthly/MonthlyTicketStatus';
 import MonthCategoryTicketStatus from '../../common/statistics/MonthCategoryTicketStatus';
+import UserTypeAnalytics from '../../user/home/UserTypeAnalytics';
 
 export default function ManagerStatisticsContainer() {
   const [selectedFilter, setSelectedFilter] = useState('일별');
@@ -22,8 +23,10 @@ export default function ManagerStatisticsContainer() {
             <div className="flex flex-col mb-[100px]">
               <div className="w-full grid grid-cols-2">
                 <TodayTicketStatus />
-                <ManagerTicketStatus />
+                <UserTypeAnalytics />
               </div>
+
+              <ManagerTicketStatus />
               <CategoryTicketStatus />
             </div>
           </section>

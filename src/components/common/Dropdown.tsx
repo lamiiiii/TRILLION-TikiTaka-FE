@@ -2,6 +2,7 @@ import {useEffect, useRef, useState} from 'react';
 import {useOutsideClick} from '../../hooks/useOutsideClick';
 
 interface DropdownProps {
+  width?: string; // width 값 (Tailwind 클래스)
   label: string; // 드롭다운 버튼에 표시될 텍스트
   options: string[]; // 드롭다운 메뉴 항목
   onSelect: (value: string) => void; // 선택 시 호출되는 함수
@@ -15,6 +16,7 @@ interface DropdownProps {
 }
 
 export default function DropDown({
+  width,
   label,
   options,
   onSelect,
@@ -51,6 +53,7 @@ export default function DropDown({
       {/* 드롭다운 버튼 */}
       <button
         className={`${border ? 'border border-gray-6' : 'border-none'} 
+        ${width ? width : ''}
         ${value ? textColor : 'text-gray-6'} 
         ${backgroundColor}
         rounded-md py-1 ${paddingX} text-body-regular flex items-center gap-3 
@@ -58,7 +61,7 @@ export default function DropDown({
         onClick={() => setIsOpen(!isOpen)}
         disabled={disabled}
       >
-        <span className="flex items-center leading-none truncate max-w-[100px]">{value || label}</span>
+        <span className={`flex items-center leading-none truncate   ${width ? '' : 'max-w-[100px]'}`}>{value || label}</span>
         <svg
           className={`w-4 h-4 transform transition-transform ml-auto ${isOpen ? 'rotate-180' : 'rotate-0'}`}
           xmlns="http://www.w3.org/2000/svg"
