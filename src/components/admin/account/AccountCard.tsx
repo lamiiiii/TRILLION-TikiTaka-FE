@@ -31,6 +31,7 @@ export default function AccountCard({registrationId, username, email, status, ro
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [selectedRole, setSelectedRole] = useState(roleApiToDisplay[role] || '사용자');
+  const [rejectReason, setRejectReason] = useState('');
 
   const approveMutation = useMutation({
     mutationFn: () =>
@@ -52,10 +53,11 @@ export default function AccountCard({registrationId, username, email, status, ro
         registrationId,
         status: 'REJECTED',
         role: roleDisplayToApi[selectedRole],
+        reason: rejectReason,
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['registrationAccounts']});
-      toast.success('계정이 거절되었습니다.');
+      toast.success('계정이 등록 신청이 거절되었습니다.');
       setShowRejectModal(false);
     },
     onError: () => {
@@ -129,13 +131,26 @@ export default function AccountCard({registrationId, username, email, status, ro
 
       {showRejectModal && (
         <Modal
-          title="계정 거절"
-          content={`정말로 (${username}) 계정 등록을 거절하시겠습니까?`}
-          backBtn="취소"
-          onBackBtnClick={() => setShowRejectModal(false)}
-          checkBtn="거절"
-          onBtnClick={handleReject}
-        />
+        title="계정 등록 신청 거절"
+        children={
+          <>
+            <p className="text-gray-800 flex justify-center mt-[-10px]">정말로 ({username}) 계정 등록을 거절하시겠습니까?</p>
+            <textarea
+              className="w-full mt-3 p-2 border border-gray-300 text-subtitle-regular rounded resize-none"
+              placeholder="거절 사유를 입력해주세요."
+              value={rejectReason}
+              onChange={(e) => setRejectReason(e.target.value)}
+            />
+          </>
+        }
+        backBtn="취소"
+        onBackBtnClick={() => {
+          setShowRejectModal(false);
+          setRejectReason(''); 
+        }}
+        checkBtn="거절"
+        onBtnClick={handleReject}
+      />
       )}
     </>
   );
