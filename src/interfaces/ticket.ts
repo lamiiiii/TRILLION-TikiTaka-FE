@@ -13,6 +13,7 @@ export interface TicketDataProps {
   status: TicketStatusType;
   urgent: boolean;
   deadline: string; // yyyy-MM-dd HH:mm
+  createdAt: string;
 }
 
 // API 응답 데이터 구조

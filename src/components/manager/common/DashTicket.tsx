@@ -25,7 +25,6 @@ const getTicketClass = (urgent: boolean, status: string) => {
   return 'border-error bg-white hover:bg-red/5';
 };
 
-
 export default function DashTicket({
   ticketId,
   title,
@@ -37,6 +36,7 @@ export default function DashTicket({
   status,
   urgent,
   deadline,
+  createdAt,
   detailLink,
   onApprove,
   onReject,
@@ -58,19 +58,22 @@ export default function DashTicket({
   const ticketClass = getTicketClass(urgent, status);
 
   const removeHtmlTags = (content: string) => {
-    return content.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim();
-  };
-  
-  const removeMarkdownTags = (content: string) => {
     return content
-      .replace(/[#*_~`>+\-]/g, '') 
-      .replace(/\[.*?\]\(.*?\)/g, '') 
-      .replace(/!\[.*?\]\(.*?\)/g, '') 
-      .replace(/\n/g, ' ') 
-      .replace(/\s{2,}/g, ' ') 
+      .replace(/<[^>]+>/g, '')
+      .replace(/&nbsp;/g, ' ')
       .trim();
   };
-  
+
+  const removeMarkdownTags = (content: string) => {
+    return content
+      .replace(/[#*_~`>+\-]/g, '')
+      .replace(/\[.*?\]\(.*?\)/g, '')
+      .replace(/!\[.*?\]\(.*?\)/g, '')
+      .replace(/\n/g, ' ')
+      .replace(/\s{2,}/g, ' ')
+      .trim();
+  };
+
   const sanitizeContent = (content: string) => {
     const withoutHtml = removeHtmlTags(content);
     return removeMarkdownTags(withoutHtml);
@@ -95,9 +98,13 @@ export default function DashTicket({
             [{typeNameMapping[typeName] || '미정'}]<div className="ml-1">{title}</div>
           </div>
         </div>
-        <div className="text-gray-6 text-body-regular">{cleanedDescription.length > 40 ? `${cleanedDescription.slice(0, 40)}...` : cleanedDescription}</div>
+        <div className="text-gray-6 text-body-regular">
+          {cleanedDescription.length > 40 ? `${cleanedDescription.slice(0, 40)}...` : cleanedDescription}
+        </div>
       </Link>
       <Link to={detailLink} className="w-[12%] text-body-regular text-gray-15">
+        <span className="text-gray-5">{createdAt}</span>
+        <br />
         {deadline}
       </Link>
       <div className="w-[10%]">

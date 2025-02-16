@@ -81,7 +81,9 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
   });
 
   const {data: ticketListResponse} = useQuery({
-    queryKey: ['ticketList', selectedFilter ?? '',
+    queryKey: [
+      'ticketList',
+      selectedFilter ?? '',
       currentPage ?? 1,
       pageSize ?? 20,
       orderBy ?? '최신순',
@@ -100,10 +102,8 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
         ?.secondaries.find((sub: any) => sub.name === selectedFilters['2차 카테고리'])?.id;
       const ticketTypeId = typeData?.find((type: any) => type.typeName === selectedFilters['요청'])?.typeId;
 
-      const sortParam = orderBy === '최신순' ? 'newest' 
-                  : orderBy === '마감기한순' ? 'deadline' 
-                  : orderBy === '오래된순' ? 'oldest' 
-                  : 'newest';
+      const sortParam =
+        orderBy === '최신순' ? 'newest' : orderBy === '마감기한순' ? 'deadline' : orderBy === '오래된순' ? 'oldest' : 'newest';
 
       return getTicketList({
         page: currentPage - 1,
@@ -115,7 +115,7 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
         ticketTypeId,
         urgent,
         requesterId: userId,
-        sort: sortParam
+        sort: sortParam,
       });
     },
     enabled: !!userId && userId !== -1,
@@ -204,25 +204,25 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
   return (
     <div ref={listRef} className="w-full mt-[20px] relative mb-[100px]">
       <div className="flex mb-2 justify-end gap-3 ">
-              <Dropdown
-                label="20개씩"
-                options={pageSizeOptions}
-                value={`${pageSize}개씩`}
-                onSelect={(value) => setPageSize(parseInt(value.replace('개씩', ''), 10))}
-                paddingX="px-3"
-                border={false}
-                textColor=""
-              />
-              <Dropdown
-                label="정렬 기준"
-                options={['최신순', '마감기한순', '오래된순']}
-                value={orderBy || '정렬 기준'}
-                onSelect={(value) => setOrderBy(value)}
-                paddingX="px-4"
-                border={false}
-                textColor=""
-              />
-            </div>
+        <Dropdown
+          label="20개씩"
+          options={pageSizeOptions}
+          value={`${pageSize}개씩`}
+          onSelect={(value) => setPageSize(parseInt(value.replace('개씩', ''), 10))}
+          paddingX="px-3"
+          border={false}
+          textColor=""
+        />
+        <Dropdown
+          label="정렬 기준"
+          options={['최신순', '마감기한순', '오래된순']}
+          value={orderBy || '정렬 기준'}
+          onSelect={(value) => setOrderBy(value)}
+          paddingX="px-4"
+          border={false}
+          textColor=""
+        />
+      </div>
       <div className="bg-gray-18 h-full flex flex-col justify-start p-4">
         <div className="flex items-center gap-4 leading-none mt-4 px-2">
           {dropdownData.map((data) => (
@@ -258,7 +258,7 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
           <div className="w-[6%]">티켓 ID</div>
           <div className="w-[18%]">카테고리</div>
           <div className="w-[40%]">요청 내용</div>
-          <div className="w-[18%]">마감 기한</div>
+          <div className="w-[18%]">생성 / 마감 기한</div>
           <div className="w-[18%]">담당자</div>
         </div>
 
