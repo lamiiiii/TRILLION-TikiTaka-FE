@@ -28,12 +28,11 @@ export default function TicketLog() {
           <div className="text-gray-500 text-center py-4">Loading...</div>
         ) : logData?.content && logData.content.length > 0 ? (
           logData.content.map((log) => (
-            <div key={log.id} className="bg-main text-white rounded-md p-4 my-2 flex flex-col">
+            <div key={log.id} className="bg-main text-white rounded-md p-4 my-2 flex justify-between">
               <div className="flex gap-4">
                 <p className="text-body-bold">{log.updatedByUsername}님 </p>
                 <p className="text-body-regular">{getKoreanUpdateType(log.updateType)}</p>
               </div>
-              <p className="text-body-bold">{log.ticketTitle}</p>
               <p className="text-caption-regular text-right mt-1">{new Date(log.updatedAt).toLocaleDateString()}</p>
             </div>
           ))
