@@ -110,6 +110,7 @@ export default function TicketSetting({data}: TicketSettingProps) {
   const handlePrioritySelect = handleSelect(setPriority, updatePriorityMutation);
   const handleDeadlineChange = () => {
     const today = new Date().toISOString().split('T')[0];
+
     if (deadlineDate < today) {
       alert('마감기한은 오늘 이후 날짜를 선택해주세요.');
       return;

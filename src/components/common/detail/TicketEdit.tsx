@@ -81,6 +81,7 @@ export default function TicketEdit({ticketData}: TicketEditProps) {
   const handleDueDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedDate = new Date(e.target.value);
     const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
     if (selectedDate < today) {
       alert('마감기한은 오늘 이후 날짜를 선택해주세요.');
