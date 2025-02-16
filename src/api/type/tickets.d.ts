@@ -149,7 +149,7 @@ declare interface UpdateTicketParams {
   title: string;
   description: string;
   urgent: boolean;
-  typeId?: number;
+  ticketTypeId?: number;
   firstCategoryId?: number;
   secondCategoryId?: number;
   deadline: string;

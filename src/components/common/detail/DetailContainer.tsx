@@ -1,4 +1,4 @@
-import {useNavigate, useParams} from 'react-router-dom';
+import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import TopMenu from '../TopMenu';
 import StatusBar from './StatusBar';
 import TicketContent from './TicketContent';
@@ -15,7 +15,7 @@ import {Comment} from '../../../interfaces/interfaces';
 import TicketReview from './TicketReview';
 import {BackIcon} from '../Icon';
 import {useNewTicketStore, useUserStore} from '../../../store/store';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import Modal from '../Modal';
 import TicketEdit from './TicketEdit';
 import UserTicketTask from '../../user/UserTicketTask';
@@ -26,6 +26,7 @@ import {deleteAttachment} from '../../../api/service/attatchments';
 export default function DetailContainer() {
   const {id} = useParams<{id: string}>();
   const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
   const {userId, role} = useUserStore();
 
@@ -57,7 +58,7 @@ export default function DetailContainer() {
   const handleDeleteAttachment = async (fileId: number) => {
     try {
       await deleteAttachment(fileId);
-      queryClient.invalidateQueries({queryKey: ['ticketDetails', fileId]});
+      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
     } catch (error) {
       console.error('첨부파일 삭제 실패:', error);
     }
@@ -127,6 +128,10 @@ export default function DetailContainer() {
     setShowDeleteModal(false);
   };
 
+  useEffect(() => {
+    setIsEditing(false);
+  }, [location.pathname]);
+
   return (
     <div className="top-container">
       <div className="flex flex-col">
@@ -139,7 +144,19 @@ export default function DetailContainer() {
           {ticket && (
             <StatusBar data={ticket} status={ticket?.status as 'PENDING' | 'IN_PROGRESS' | 'DONE' | 'REVIEW' | 'REJECTED' | undefined} />
           )}
-
+          {ticket?.requesterId === userId && (
+            <div className={`flex justify-end gap-2 text-body-bold mt-3 ${isEditing && 'px-10'}`}>
+              <button className="text-gray-5 hover:text-gray-15" onClick={handleEdit}>
+                {isEditing ? '수정 취소' : '수정'}
+              </button>
+              <button
+                className={`text-gray-5 ${ticket?.status == 'PENDING' ? 'hover:text-gray-15' : 'cursor-not-allowed'}`}
+                onClick={handleDelete}
+              >
+                삭제
+              </button>
+            </div>
+          )}
           {isEditing && ticket ? (
             <>
               <div className="flex w-full">
@@ -207,19 +224,6 @@ export default function DetailContainer() {
               checkBtn="삭제"
               onBtnClick={confirmDelete}
             />
-          )}
-          {ticket?.requesterId === userId && (
-            <div className="flex justify-end gap-2 text-body-bold mt-3">
-              <button className="text-gray-5 hover:text-gray-15" onClick={handleEdit}>
-                {isEditing ? '수정 취소' : '수정'}
-              </button>
-              <button
-                className={`text-gray-5 ${ticket?.status == 'PENDING' ? 'hover:text-gray-15' : 'cursor-not-allowed'}`}
-                onClick={handleDelete}
-              >
-                삭제
-              </button>
-            </div>
           )}
         </div>
       </div>

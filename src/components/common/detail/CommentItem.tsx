@@ -21,6 +21,7 @@ export default function CommentItem({commentId, authorId, name, content, files, 
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(content);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [hoveredFileIndex, setHoveredFileIndex] = useState<number | null>(null); // 각 파일에 대한 hover 상태 관리
 
   const {id} = useParams();
   const ticketId = Number(id);
@@ -119,15 +120,26 @@ export default function CommentItem({commentId, authorId, name, content, files, 
         {files && files?.length > 0 && (
           <div className="flex gap-3 flex-wrap">
             {files.map((file, index) => (
-              <div key={index} className="relative">
-                {/* 이미지 파일인 경우 미리보기 */}
+              <div
+                key={index}
+                className="relative"
+                onMouseEnter={() => setHoveredFileIndex(index)}
+                onMouseLeave={() => setHoveredFileIndex(null)}
+              >
                 {file.filePath.match(/\.(jpeg|jpg|gif|png)$/i) ? (
-                  <img
-                    src={file.filePath}
-                    alt={file.fileName}
-                    className="w-24 h-24 object-cover rounded-md cursor-pointer"
-                    onClick={() => window.open(file.filePath, '_blank')}
-                  />
+                  <>
+                    <img
+                      src={file.filePath}
+                      alt={file.fileName}
+                      className="w-24 h-24 object-cover rounded cursor-pointer"
+                      onClick={() => window.open(file.filePath, '_blank')}
+                    />
+                    {hoveredFileIndex === index && (
+                      <div className="absolute left-0 top-full mt-2 bg-gray-1 border border-gray-2 rounded-md py-1 px-3 text-xs text-gray-15 shadow-md w-64">
+                        첨부된 이미지를 클릭하여 다운로드 가능합니다.
+                      </div>
+                    )}
+                  </>
                 ) : (
                   <a href={file.filePath} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
                     {file.fileName}

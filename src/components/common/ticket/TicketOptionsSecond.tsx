@@ -91,8 +91,8 @@ export default function TicketOpstionsSecond() {
   const onTemplateSelect = (value: string) => {
     const selected = templates.find((t) => t.templateTitle === value);
     if (selected) {
-      setSelectedTemplateId(Number(selected.templateId)); // 선택한 템플릿 ID 저장
-      setIsModalOpen(true); // 모달 열기
+      setSelectedTemplateId(Number(selected.templateId));
+      setIsModalOpen(true);
     }
   };
 
@@ -147,8 +147,8 @@ export default function TicketOpstionsSecond() {
         </div>
         <DropDown
           label="유형"
-          options={ticketTypes.map((t) => typeNameMapping[t.typeName] || t.typeName)} // 한글로 변환하여 표시
-          value={typeNameMapping[ticketType.typeName] || ticketType.typeName} // 선택된 값도 한글로 변환
+          options={ticketTypes.map((t) => typeNameMapping[t.typeName] || t.typeName)}
+          value={typeNameMapping[ticketType.typeName] || ticketType.typeName}
           onSelect={(selectedLabel) => {
             const selectedType = ticketTypes.find((t) => (typeNameMapping[t.typeName] || t.typeName) === selectedLabel);
             if (selectedType) {
@@ -157,14 +157,14 @@ export default function TicketOpstionsSecond() {
           }}
         />
       </div>
-      <div className="selection">
+      <div className="flex items-center gap-8 w-[340px];">
         <div className="flex items-center gap-1 whitespace-nowrap relative">
           템플릿
           <span className="relative cursor-help" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
             <QuestionIcon />
             {isHovered && (
               <div className="absolute left-0 mt-1 bg-gray-1 border border-gray-2 rounded-md py-1 px-3 text-xs text-gray-15 shadow-md">
-                템플릿을 선택하면 사용자가 작성한 템플릿 내용이 자동으로 적용됩니다.{' '}
+                템플릿을 선택하면 사용자가 작성한 템플릿 내용이 자동으로 적용됩니다.
               </div>
             )}
           </span>
