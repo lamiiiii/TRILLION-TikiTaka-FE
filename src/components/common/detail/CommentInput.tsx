@@ -117,12 +117,12 @@ export default function CommentInput() {
               댓글 첨부파일 첨부
             </button>
             {files.length > 4 && (
-              <div className=" bg-gray-1 border border-gray-2 rounded-md py-1 px-3 text-[10px] text-error shadow-md">
+              <div className="bg-gray-1 border border-gray-2 rounded-md py-1 px-3 text-[10px] text-error shadow-md">
                 최대 5개의 파일만 선택할 수 있습니다.
               </div>
             )}
           </div>
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1 ml-8">
             {fileNames.map((name, index) => (
               <div key={index} className="flex items-center gap-2">
                 <span className="border border-gray-2 text-caption-regular bg-white px-2 py-1 rounded w-[400px] truncate">{name}</span>
