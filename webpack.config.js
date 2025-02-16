@@ -5,6 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   mode: process.env.MODE,
@@ -14,8 +15,6 @@ module.exports = {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
   module: {
-    // loader 설정 - 등록한 로더의 뒤의 요소부터 번들링에 반영
-    // node_modules 제외
     rules: [
       {
         test: /\.(ts|tsx)?$/,
@@ -52,12 +51,13 @@ module.exports = {
     // 환경 정보를 제공
     new webpack.EnvironmentPlugin(['MODE', 'PORT']),
     new webpack.DefinePlugin({
-      'process.env': JSON.stringify(process.env),
+      'process.env': JSON.stringify({
+        MODE: process.env.MODE,
+        API_URL: process.env.API_URL,
+      }),
     }),
     new CopyPlugin({
-      patterns: [
-        { from: 'public', to: '', globOptions: { ignore: ['**/index.html'] } },
-      ],
+      patterns: [{from: 'public', to: '', globOptions: {ignore: ['**/index.html']}}],
     }),
   ],
   devServer: {
@@ -65,9 +65,21 @@ module.exports = {
     port: process.env.PORT,
     open: true,
     historyApiFallback: true,
-    hot: true, // hot : 모듈의 변화된 부분만 서버에 자동으로 반영
+    hot: true,
   },
-  devtool: 'eval-cheap-source-map',
+  devtool: process.env.MODE === 'production' ? false : 'eval-cheap-source-map',
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          compress: {
+            drop_console: true,
+          },
+        },
+      }),
+    ],
+  },
   performance: {
     hints: false,
     maxEntrypointSize: 512000,
