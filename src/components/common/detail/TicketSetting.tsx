@@ -172,7 +172,7 @@ export default function TicketSetting({data}: TicketSettingProps) {
 
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2 px-4">
-              <ManagerSelector selectedManagerName={selectedAssignee} onManagerSelect={handleManagerSelect} />
+              <ManagerSelector width="w-full" selectedManagerName={selectedAssignee} onManagerSelect={handleManagerSelect} />
             </div>
             <div className="flex itmes-center ml-3">
               <input
@@ -193,9 +193,17 @@ export default function TicketSetting({data}: TicketSettingProps) {
               />
             </div>
             {location.pathname.startsWith('/manager') && (
-              <DropDown label="우선 순위" options={PRIORITY} value={priority} onSelect={handlePrioritySelect} border={false} />
+              <DropDown
+                width="w-full"
+                label="우선 순위"
+                options={PRIORITY}
+                value={priority}
+                onSelect={handlePrioritySelect}
+                border={false}
+              />
             )}
             <DropDown
+              width="w-full"
               label="1차 카테고리"
               options={categories?.map((cat: any) => cat.primary.name)}
               value={primaryCategory}
@@ -203,6 +211,7 @@ export default function TicketSetting({data}: TicketSettingProps) {
               border={false}
             />
             <DropDown
+              width="w-full"
               label="2차 카테고리"
               options={
                 selectedFilters['1차 카테고리']
@@ -216,6 +225,7 @@ export default function TicketSetting({data}: TicketSettingProps) {
               border={false}
             />
             <DropDown
+              width="w-full"
               label="타입"
               options={ticketData?.map((type: any) => typeNameMapping[type.typeName])}
               value={typeNameMapping[ticketType]}
