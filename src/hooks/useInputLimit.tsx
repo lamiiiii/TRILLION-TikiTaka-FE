@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import {useState, useEffect} from 'react';
 
 interface UseLimitedInputProps {
   maxLength: number;
@@ -7,23 +7,24 @@ interface UseLimitedInputProps {
   onChange?: (value: string) => void;
 }
 
-export function useLimitedInput({ maxLength, initialValue = '', onLimitExceed, onChange }: UseLimitedInputProps) {
+export function useLimitedInput({maxLength, initialValue = '', onLimitExceed, onChange}: UseLimitedInputProps) {
   const [value, setValue] = useState(initialValue);
 
   useEffect(() => {
     setValue(initialValue);
-  }, [initialValue]); // 🔥 초기값이 변경되면 반영
+  }, [initialValue]);
 
   const handleChange = (newValue: string) => {
     if (newValue.length > maxLength) {
       onLimitExceed?.();
-      setValue(newValue.slice(0, maxLength));
-      onChange?.(newValue.slice(0, maxLength));
+      const trimmedValue = newValue.slice(0, maxLength);
+      setValue(trimmedValue);
+      onChange?.(trimmedValue);
     } else {
       setValue(newValue);
       onChange?.(newValue);
     }
   };
 
-  return { value, setValue: handleChange };
+  return {value, setValue: handleChange};
 }

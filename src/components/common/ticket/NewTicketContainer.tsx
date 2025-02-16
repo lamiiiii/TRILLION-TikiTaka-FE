@@ -73,6 +73,8 @@ export default function NewTicketContainer() {
     const selectedDate = new Date(e.target.value);
     const today = new Date();
 
+    today.setHours(0, 0, 0, 0);
+
     if (selectedDate < today) {
       alert('마감기한은 오늘 이후 날짜를 선택해주세요.');
       setDueDate('');
@@ -135,9 +137,10 @@ export default function NewTicketContainer() {
     }
 
     const formattedDueDate = `${dueDate} ${dueTime}`;
+    
     const requestData = {
-      title,
-      description: content,
+      title: title.slice(0, 150),
+      description: content.slice(0, 5000),
       urgent: isUrgent,
       typeId: ticketType.typeId,
       deadline: formattedDueDate,

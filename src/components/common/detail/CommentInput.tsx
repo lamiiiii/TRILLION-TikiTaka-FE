@@ -6,6 +6,7 @@ import {useParams} from 'react-router-dom';
 import {useUserStore} from '../../../store/store';
 import DOMPurify from 'dompurify';
 import {MAX_FILE_SIZE, MAX_FILES} from '../../../constants/constants';
+import {useLimitedInput} from '../../../hooks/useInputLimit';
 
 export default function CommentInput() {
   const [content, setContent] = useState('');
@@ -35,7 +36,8 @@ export default function CommentInput() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const jsonData = {content: content};
+    const jsonData = {content: content.slice(0, 1000)};
+    console.log(jsonData);
     const formData = new FormData();
 
     // JSON 데이터를 Blob으로 변환하여 추가
@@ -68,6 +70,13 @@ export default function CommentInput() {
     setFiles(validFiles);
     setFileNames(validFiles.map((file) => file.name));
   };
+
+  const contentInput = useLimitedInput({
+    maxLength: 1000,
+    initialValue: content,
+    onLimitExceed: () => alert('내용은 최대 1000자까지 입력할 수 있습니다.'),
+    onChange: (value) => setContent(value),
+  });
 
   return (
     <form onSubmit={handleSubmit} className="mt-5">
@@ -102,9 +111,13 @@ export default function CommentInput() {
             ref={textareaRef}
             className="comment-textarea"
             placeholder="댓글 추가"
-            value={content}
-            onChange={(e) => setContent(DOMPurify.sanitize(e.target.value))}
-            style={{resize: 'none'}} // 크기 조절 비활성화
+            value={contentInput.value}
+            onChange={(e) => {
+              const sanitizedValue = DOMPurify.sanitize(e.target.value);
+              contentInput.setValue(sanitizedValue);
+              setContent(sanitizedValue);
+            }}
+            style={{resize: 'none'}}
           />
         </div>
         <button type="submit" className="absolute right-0 main-btn" disabled={mutation.isPending}>

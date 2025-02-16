@@ -127,9 +127,9 @@ export default function TemplateCreateView({onCancel, templateId}: TemplateCreat
   const confirmSubmit = async () => {
     try {
       const templateParams: CreateTemplateParams = {
-        templateTitle,
-        title,
-        description: content,
+        templateTitle: templateTitle.slice(0, 100),
+        title: title.slice(0, 150),
+        description: content.slice(0, 5000),
         typeId: ticketType.typeId,
         firstCategoryId: firstCategory?.id,
         secondCategoryId: secondCategory?.id,

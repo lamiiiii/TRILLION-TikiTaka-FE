@@ -11,7 +11,7 @@ export default function TemplateContent() {
   const titleInput = useLimitedInput({
     maxLength: 150,
     initialValue: title,
-    onLimitExceed: () => alert('제목은 최대 100자까지 입력할 수 있습니다.'),
+    onLimitExceed: () => alert('제목은 최대 150자까지 입력할 수 있습니다.'),
     onChange: (value) => setTitle(value),
   });
 
