@@ -8,7 +8,7 @@ interface ManagerItemProps {
 
 export default function ManagerItem({name, email, processing, completed, profile}: ManagerItemProps) {
   return (
-    <div className="h-full bg-main text-white flex flex-col items-center py-4 px-3">
+    <div className="h-full bg-main text-white flex flex-col items-center py-4 px-3 rounded-md">
       <img
         src={profile ? profile : '/assets/profile.png'}
         alt="프로필 이미지"
