@@ -21,7 +21,7 @@ declare interface CreateTicketData {
   description: string;
   urgent: boolean;
   typeId: number;
-  deadline: string; // yyyy-MM-dd HH:mm
+  deadline: string;
   primaryCategoryId?: number;
   secondaryCategoryId?: number;
   managerId?: number;
@@ -62,9 +62,9 @@ declare interface TicketDetails {
   requesterId: number;
   requesterName: string;
   urgent: boolean;
-  deadline: string; // yyyy-MM-dd HH:mm
-  createdAt: string; // yyyy-MM-dd HH:mm
-  updatedAt: string; // yyyy-MM-dd HH:mm
+  deadline: string;
+  createdAt: string;
+  updatedAt: string;
   attachments: Attachment[];
   progress: number;
 }

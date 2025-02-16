@@ -1,6 +1,5 @@
 import instance from '../axiosInstance';
 
-// INTF-7: 비밀번호 변경
 export async function patchUserPassword(passwordData: PasswordChangeData, userId: number) {
   try {
     const response = await instance.patch(`/users/${userId}/password`, passwordData, {});
@@ -12,7 +11,6 @@ export async function patchUserPassword(passwordData: PasswordChangeData, userId
   }
 }
 
-// INTF-12: 계정 삭제
 export async function patchDeleteUser(userId: number) {
   try {
     const {data} = await instance.delete(`/users/${userId}`);
@@ -23,7 +21,6 @@ export async function patchDeleteUser(userId: number) {
   }
 }
 
-// INTF-13: 등록 대기 및 등록된 사용자 수 조회
 export async function getUserCount(token: string) {
   try {
     const {data} = await instance.get<{message: string; data: UserCountResponse}>('/users/count', {
@@ -36,7 +33,6 @@ export async function getUserCount(token: string) {
   }
 }
 
-// 담당자 목록 조회
 export async function getManagerList() {
   try {
     const {data} = await instance.get<{message: string; data: UserListResponse}>('/users?role=MANAGER', {});
@@ -47,7 +43,6 @@ export async function getManagerList() {
   }
 }
 
-// INTF-14: 시스템 사용자 목록 조회
 export async function getUserList() {
   try {
     const {data} = await instance.get<{message: string; data: UserListResponse}>('/users', {});
@@ -58,10 +53,8 @@ export async function getUserList() {
   }
 }
 
-// INTF-15: 시스템 사용자 기본 정보 조회
 export async function getUserDetail(userId: number) {
   try {
-    // 토큰을 따로 전달할 필요 없이, 인스턴스가 인터셉터를 통해 자동으로 헤더에 토큰을 추가
     const {data} = await instance.get<{message: string; data: UserDetailResponse}>(`/users/${userId}`);
     return data.data;
   } catch (error) {
@@ -70,10 +63,8 @@ export async function getUserDetail(userId: number) {
   }
 }
 
-// 사용자 본인 정보 조회
 export async function getUserInfo() {
   try {
-    // 토큰을 따로 전달할 필요 없이, 인스턴스가 인터셉터를 통해 자동으로 헤더에 토큰을 추가
     const {data} = await instance.get<{message: string; data: UserDetailResponse}>(`/users/me`);
     return data.data;
   } catch (error) {
@@ -82,7 +73,6 @@ export async function getUserInfo() {
   }
 }
 
-// INTF-16: 시스템 사용자 역할 변경
 export async function patchUserRole(userId: number, roleData: RoleChangeData) {
   try {
     const {data} = await instance.patch(`/users/${userId}/role`, roleData);

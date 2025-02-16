@@ -9,8 +9,8 @@ export interface Inquiry {
   content: string;
   answer: string;
   status: boolean;
-  createdAt: string; // yyyy-MM-dd hh:mm:ss
-  updatedAt: string; // yyyy-MM-dd hh:mm:ss
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface InquiriesResponse {

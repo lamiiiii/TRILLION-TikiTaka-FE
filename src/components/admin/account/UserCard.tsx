@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {patchDeleteUser, patchUserRole} from '../../../api/service/users'; // 역할 변경 API
+import {patchDeleteUser, patchUserRole} from '../../../api/service/users';
 import Modal from '../../common/Modal';
 import RoleDropdown from './RoleDropdown';
 import {DotIcon} from '../../common/Icon';
@@ -44,7 +44,6 @@ export default function AccountCard({ userId, username, email, role }: UserCardP
     },
   });
 
-  // 역할 변경 API
   const updateRoleMutation = useMutation({
     mutationFn: () =>
       patchUserRole(userId, {

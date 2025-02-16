@@ -32,12 +32,12 @@ declare interface UserListResponse {
 }
 
 declare interface UserDetailResponse {
-  userId: number; // 'id'를 'userId'로 변경
+  userId: number;
   username: string;
   email: string;
   role: 'MANAGER' | 'USER' | 'ADMIN' | 'DEFAULT';
   profileImageUrl: string;
-  department?: string; // 선택적 필드로 변경 (응답에 없으므로)
+  department?: string;
 }
 
 declare interface RoleChangeData {

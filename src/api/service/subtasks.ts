@@ -1,6 +1,5 @@
 import instance from '../axiosInstance';
 
-// INTF-51: 하위태스크 생성
 export async function createSubtask(params: CreateSubtaskParams) {
   try {
     const {data} = await instance.post('/subtasks', params);
@@ -11,7 +10,6 @@ export async function createSubtask(params: CreateSubtaskParams) {
   }
 }
 
-// INTF-52: 하위태스크 조회
 export async function getSubtasks(ticketId: number) {
   try {
     const {data} = await instance.get<{message: string; data: SubtaskItem[]}>(`/subtasks/${ticketId}`);
@@ -22,7 +20,6 @@ export async function getSubtasks(ticketId: number) {
   }
 }
 
-// INTF-53: 하위태스크 수정
 export async function updateSubtaskDescription(taskId: number, params: UpdateSubtaskParams) {
   try {
     const {data} = await instance.patch(`/subtasks/${taskId}`, params);
@@ -33,7 +30,6 @@ export async function updateSubtaskDescription(taskId: number, params: UpdateSub
   }
 }
 
-// INTF-54: 하위태스크 삭제
 export async function deleteSubtask(ticketId: number, taskId: number) {
   try {
     const {data} = await instance.delete(`/subtasks/${ticketId}/${taskId}`);
@@ -44,7 +40,6 @@ export async function deleteSubtask(ticketId: number, taskId: number) {
   }
 }
 
-// INTF-55: 하위태스크 상태 변경
 export async function updateSubtaskStatus(ticketId: number, taskId: number, checked: boolean) {
   try {
     const {data} = await instance.patch(`/subtasks/${ticketId}/${taskId}/${checked}`);
@@ -55,7 +50,6 @@ export async function updateSubtaskStatus(ticketId: number, taskId: number, chec
   }
 }
 
-// INTF-56: 진행률 조회
 export async function getTicketProgress(ticketId: number) {
   try {
     const {data} = await instance.get<{message: string; data: ProgressResponse}>(`/tickets/${ticketId}/progress`);

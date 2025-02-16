@@ -1,12 +1,10 @@
 import instance from '../axiosInstance';
 
-// INTF-1: POST: 계정 등록 신청
 export async function postRegistration(postData: {email: string; username: string}) {
   const data = await instance.post('/registrations', postData);
   return data;
 }
 
-// INTF-2: GET: 계정 등록 신청 조회
 export async function getRegistrationList(params: RegistrationListParams) {
   try {
     const {data} = await instance.get('/registrations/list', {
@@ -26,10 +24,10 @@ export async function getRegistrationList(params: RegistrationListParams) {
 export async function updateRegistrationStatus(params: RegistrationUpdateParams) {
   try {
     const {data} = await instance.post(
-      `/registrations/${params.registrationId}?status=${params.status}`, // ✅ status만 query로 보내기
+      `/registrations/${params.registrationId}?status=${params.status}`,
       {
         role: params.role,
-        reason: params.reason // ✅ role을 Body로 이동
+        reason: params.reason
       }
     );
     return data;

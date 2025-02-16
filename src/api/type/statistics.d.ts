@@ -47,20 +47,17 @@ declare interface WeeklyTicketSummaryResponse {
   weekTickets: number;
 }
 
-// 응답 데이터 타입을 위한 interface
 declare interface DailyTicketSummary {
   createdTickets: number;
   inProgressTickets: number;
   doneTickets: number;
 }
 
-// API 응답 전체 구조를 위한 interface
 declare interface DailyTicketSummaryResponse {
   message: string;
   data: DailyTicketSummary;
 }
 
-// 담당자별 티켓 처리 현황 타입
 declare interface ManagerTicketSummary {
   userName: string;
   userId: number;
@@ -70,7 +67,6 @@ declare interface ManagerTicketSummary {
   inProgressTickets: number;
 }
 
-// API 응답 타입
 declare interface DailyManagerTicketSummaryResponse {
   message: string;
   data: ManagerTicketSummary[];

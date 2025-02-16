@@ -1,4 +1,5 @@
 import {Link, useNavigate} from 'react-router-dom';
+import DOMPurify from 'dompurify';
 import {useUserStore} from '../../store/store';
 import {useState} from 'react';
 import {validatePwd} from '../../utils/Validation';
@@ -96,9 +97,12 @@ export default function PwdChangeContainer() {
       return;
     }
 
+    const sanitizedPwd = DOMPurify.sanitize(pwd);
+    const sanitizedNewPwd = DOMPurify.sanitize(newPwd);
+
     const requestData = {
-      currentPassword: pwd,
-      newPassword: newPwd,
+      currentPassword: sanitizedPwd,
+      newPassword: sanitizedNewPwd,
     };
 
     try {

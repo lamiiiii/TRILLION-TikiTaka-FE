@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { VerticalDotIcon } from "../../common/Icon";
 import RegisterRequestForm from "./RegisterRequestForm";
-import RequestFormDetail from "./RequestFormDetail"; // 요청 양식 상세 조회 컴포넌트 추가
+import RequestFormDetail from "./RequestFormDetail";
 import { deleteCategory, updateCategory } from "../../../api/service/categories";
 import DeleteConfirmModal from "../common/DeleteConfirmModal";
 import { getTicketForm } from "../../../api/service/tickets";

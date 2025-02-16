@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react';
+import DOMPurify from 'dompurify';
 import InitialTopBar from './InitialTopBar';
 import {SmRightIcon, ValidateIcon, WhiteCheckIcon} from '../Icon';
 import Modal from '../Modal';
@@ -55,8 +56,11 @@ export default function SignUpContainer() {
     }
     setTermsError('');
 
+    const sanitizedEmail = DOMPurify.sanitize(email);
+    const sanitizedId = DOMPurify.sanitize(id);
+  
     try {
-      const response = await postRegistration({email, username: id});
+      const response = await postRegistration({email: sanitizedEmail, username: sanitizedId});
       setModalTitle(response.status === 200 ? '계정 등록 신청' : '계정 등록 실패');
       setModalMessage(
         response.status === 200
@@ -93,6 +97,10 @@ export default function SignUpContainer() {
       <div className="top-container items-center">
         <div className="flex flex-col items-center gap-10 w-[400px]">
           <p className="text-black text-2xl font-bold">계정 등록 신청</p>
+          <p className="text-gray-5 text-sm font-bold text-center">
+            카카오워크로 계정 등록 알림을 보내드립니다. <br />
+            카카오워크에 가입한 이메일 주소를 입력해 주세요.
+          </p>
           <div className="flex w-full flex-col gap-5">
             <div className="email">
               <input
