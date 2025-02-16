@@ -132,7 +132,7 @@ export default function DetailContainer() {
     setIsEditing(false);
   }, [location.pathname]);
 
-  if (ticket?.requesterId !== userId) {
+  if (role === 'USER' && ticket?.requesterId !== userId) {
     return (
       <div className="flex flex-col items-center justify-center h-screen text-lg font-bold gap-4">
         <p>권한이 없습니다.</p>
