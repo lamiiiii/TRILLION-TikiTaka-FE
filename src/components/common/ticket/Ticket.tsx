@@ -40,6 +40,7 @@ export default function Ticket({
   status,
   urgent,
   deadline,
+  createdAt,
   onApprove,
   onReject,
 }: TicketProps) {
@@ -114,7 +115,11 @@ export default function Ticket({
         </div>
 
         {/* 기한 */}
-        <div className="w-[12%] text-body-regular text-gray-15">{deadline}</div>
+        <div className="w-[12%] text-body-regular text-gray-15">
+          <span className="text-gray-5">{createdAt}</span>
+          <br />
+          {deadline}
+        </div>
 
         {/* 담당자 */}
         <div className="w-[14%]" onClick={handleClick}>

@@ -215,7 +215,7 @@ export default function NewTicketContainer() {
             <div className="flex items-center text-body-regular gap-3">
               <ReferredIcon />
               필수 입력 사항:
-              <div className="text-error ">{mustDescription}</div>
+              <div className="text-error " dangerouslySetInnerHTML={{__html: mustDescription}} />
             </div>
           )}
           <div className="flex flex-col gap-3 text-body-bold whitespace-nowrap">
