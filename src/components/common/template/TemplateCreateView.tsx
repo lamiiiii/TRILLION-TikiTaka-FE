@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react';
+import DOMPurify from 'dompurify';
 import {useTemplateStore} from '../../../store/store';
 import {PlusCircle, RequiredIcon, SmRightIcon} from '../Icon';
 import TemplateContent from './TemplateContent';
@@ -6,6 +7,7 @@ import TemplateOptions from './TemplateOptions';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import Modal from '../Modal';
 import {createTicketTemplate, getTicketTemplate, updateTicketTemplate} from '../../../api/service/ticketTemplates';
+import {useLimitedInput} from '../../../hooks/useInputLimit';
 
 interface TemplateCreateViewProps {
   onCancel: () => void;
@@ -39,6 +41,13 @@ export default function TemplateCreateView({onCancel, templateId}: TemplateCreat
 
   const [hasChanges, setHasChanges] = useState(false);
 
+  const templateTitleInput = useLimitedInput({
+    maxLength: 100,
+    initialValue: templateTitle,
+    onLimitExceed: () => alert('제목은 최대 100자까지 입력할 수 있습니다.'),
+    onChange: (value) => setTemplateTitle(value),
+  });
+
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       if (hasChanges) {
@@ -68,6 +77,7 @@ export default function TemplateCreateView({onCancel, templateId}: TemplateCreat
       fetchTemplate();
     }
   }, [templateId]);
+
   useEffect(() => {
     if (templates) {
       setTemplateTitle(templates.templateTitle);
@@ -108,18 +118,18 @@ export default function TemplateCreateView({onCancel, templateId}: TemplateCreat
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['templates']});
       queryClient.invalidateQueries({queryKey: ['ticketTemplates']});
+      queryClient.invalidateQueries({queryKey: ['ticketTemplate']});
 
       setModalMessage(`템플릿이 저장되었습니다!`);
-
       setIsModalOpen(true);
     },
   });
   const confirmSubmit = async () => {
     try {
       const templateParams: CreateTemplateParams = {
-        templateTitle,
-        title,
-        description: content,
+        templateTitle: templateTitle.slice(0, 100),
+        title: title.slice(0, 150),
+        description: content.slice(0, 5000),
         typeId: ticketType.typeId,
         firstCategoryId: firstCategory?.id,
         secondCategoryId: secondCategory?.id,
@@ -163,8 +173,12 @@ export default function TemplateCreateView({onCancel, templateId}: TemplateCreat
           </div>
           <input
             type="text"
-            value={templateTitle}
-            onChange={(e) => setTemplateTitle(e.target.value)}
+            value={templateTitleInput.value}
+            onChange={(e) => {
+              const sanitizedValue = DOMPurify.sanitize(e.target.value);
+              templateTitleInput.setValue(sanitizedValue);
+              setTemplateTitle(sanitizedValue);
+            }}
             className={`w-[400px] text-subtitle-regular border bg-white py-2 px-4 border-gray-2`}
             placeholder="템플릿 제목을 입력해주세요."
           />

@@ -5,17 +5,19 @@ import {deleteTicketComment, updateTicketComment} from '../../../api/service/tic
 import {useParams} from 'react-router-dom';
 import Modal from '../Modal';
 import DOMPurify from 'dompurify';
+import {useUserStore} from '../../../store/store';
 
 interface CommentItemProps {
   commentId: number;
   authorId: number;
   name: string;
   content: string;
-  files?: File[];
+  files?: Attachment[];
   createdAt: string;
 }
 
 export default function CommentItem({commentId, authorId, name, content, files, createdAt}: CommentItemProps) {
+  const {userId} = useUserStore();
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(content);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -33,7 +35,7 @@ export default function CommentItem({commentId, authorId, name, content, files, 
     },
     onError: () => {
       alert('댓글 수정에 실패했습니다. 다시 시도해 주세요.');
-      setIsEditing(false); // 편집 모드 취소
+      setIsEditing(false);
     },
   });
 
@@ -73,32 +75,31 @@ export default function CommentItem({commentId, authorId, name, content, files, 
     <div className="flex gap-3 mt-10">
       <Profile userId={authorId} size="md" />
       <div className="w-full flex flex-col gap-2">
-        {files?.map((file, index) => (
-          <a key={index} href={URL.createObjectURL(file)} className="text-blue-500 hover:underline block">
-            {file.name}
-          </a>
-        ))}
         <div className="flex items-center gap-3">
           <p className="text-gray-16 text-body-bold">{name}</p>
           <div className="w-full flex justify-between text-body-regular">
-            <div className="flex gap-1 text-gray-8 ">
-              {isEditing ? (
+            <div className="flex gap-2 text-gray-8 ">
+              {authorId === userId && (
                 <>
-                  <button className="hover:text-gray-15" onClick={handleSave}>
-                    저장
-                  </button>
-                  <button className="hover:text-gray-15" onClick={handleCancel}>
-                    취소
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button className="hover:text-gray-15" onClick={handleEdit}>
-                    편집
-                  </button>
-                  <button className="hover:text-gray-15" onClick={handleDelete}>
-                    삭제
-                  </button>
+                  {isEditing ? (
+                    <>
+                      <button className="hover:text-gray-15" onClick={handleSave}>
+                        저장
+                      </button>
+                      <button className="hover:text-gray-15" onClick={handleCancel}>
+                        취소
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button className="hover:text-gray-15" onClick={handleEdit}>
+                        수정
+                      </button>
+                      <button className="hover:text-gray-15" onClick={handleDelete}>
+                        삭제
+                      </button>
+                    </>
+                  )}
                 </>
               )}
             </div>
@@ -113,6 +114,28 @@ export default function CommentItem({commentId, authorId, name, content, files, 
           />
         ) : (
           <p className="text-subtitle-regular">{content}</p>
+        )}
+        {/* 첨부 파일 */}
+        {files && files?.length > 0 && (
+          <div className="flex gap-3 flex-wrap">
+            {files.map((file, index) => (
+              <div key={index} className="relative">
+                {/* 이미지 파일인 경우 미리보기 */}
+                {file.filePath.match(/\.(jpeg|jpg|gif|png)$/i) ? (
+                  <img
+                    src={file.filePath}
+                    alt={file.fileName}
+                    className="w-24 h-24 object-cover rounded-md cursor-pointer"
+                    onClick={() => window.open(file.filePath, '_blank')}
+                  />
+                ) : (
+                  <a href={file.filePath} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                    {file.fileName}
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
         )}
       </div>
       {showDeleteModal && (

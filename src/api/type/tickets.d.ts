@@ -35,7 +35,14 @@ declare interface TicketStatusCount {
   reviewing: number;
   completed: number;
   urgent: number;
-  requesterId?: number ;
+  requesterId?: number;
+}
+
+declare interface Attachment {
+  attachmentId: number;
+  fileName: string;
+  filePath: string;
+  fileSize: number;
 }
 
 declare interface TicketDetails {
@@ -58,7 +65,7 @@ declare interface TicketDetails {
   deadline: string; // yyyy-MM-dd HH:mm
   createdAt: string; // yyyy-MM-dd HH:mm
   updatedAt: string; // yyyy-MM-dd HH:mm
-  attachments: any[]; // 첨부 파일 정보를 위한 배열
+  attachments: Attachment[];
   progress: number;
 }
 
@@ -170,4 +177,3 @@ declare interface TicketType {
   typeId: number;
   typeName: string;
 }
-

@@ -6,6 +6,7 @@ import {useParams} from 'react-router-dom';
 import {useUserStore} from '../../../store/store';
 import DOMPurify from 'dompurify';
 import {MAX_FILE_SIZE, MAX_FILES} from '../../../constants/constants';
+import {useLimitedInput} from '../../../hooks/useInputLimit';
 
 export default function CommentInput() {
   const [content, setContent] = useState('');
@@ -35,7 +36,7 @@ export default function CommentInput() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const jsonData = {content: content};
+    const jsonData = {content: content.slice(0, 1000)};
     const formData = new FormData();
 
     // JSON 데이터를 Blob으로 변환하여 추가
@@ -52,7 +53,8 @@ export default function CommentInput() {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(event.target.files || []);
 
-    if (selectedFiles.length > MAX_FILES) {
+    const totalFiles = files.length + selectedFiles.length;
+    if (totalFiles > MAX_FILES) {
       alert(`최대 ${MAX_FILES}개의 파일만 선택할 수 있습니다.`);
       return;
     }
@@ -65,36 +67,27 @@ export default function CommentInput() {
       return true;
     });
 
-    setFiles(validFiles);
-    setFileNames(validFiles.map((file) => file.name));
+    setFiles((prevFiles) => [...prevFiles, ...validFiles]);
+    setFileNames((prevFileNames) => [
+      ...prevFileNames,
+      ...validFiles.map((file) => `${file.name} (${(file.size / (1024 * 1024)).toFixed(2)} MB)`),
+    ]);
   };
+
+  const handleFileRemove = (index: number) => {
+    setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    setFileNames((prevFileNames) => prevFileNames.filter((_, i) => i !== index));
+  };
+
+  const contentInput = useLimitedInput({
+    maxLength: 1000,
+    initialValue: content,
+    onLimitExceed: () => alert('내용은 최대 1000자까지 입력할 수 있습니다.'),
+    onChange: (value) => setContent(value),
+  });
 
   return (
     <form onSubmit={handleSubmit} className="mt-5">
-      <div className="flex gap-3 items-center">
-        <button
-          type="button"
-          className="rounded-md py-1 px-6 text-caption-regular border border-main hover:bg-main hover:text-white"
-          onClick={() => fileInputRef.current?.click()}
-        >
-          첨부파일 첨부
-        </button>
-        <div className="flex gap-2">
-          {fileNames.map((name, index) => (
-            <span key={index} className="text-caption-regular bg-gray-100 px-2 py-1 rounded">
-              {name}
-            </span>
-          ))}
-        </div>
-        <input
-          type="file"
-          accept="image/png, image/jpeg, image/jpg"
-          multiple
-          ref={fileInputRef}
-          style={{display: 'none'}}
-          onChange={handleFileChange}
-        />
-      </div>
       <div className="relative mt-3">
         <div className="flex gap-2 mb-2">
           <Profile userId={userId} size="md" />
@@ -102,14 +95,56 @@ export default function CommentInput() {
             ref={textareaRef}
             className="comment-textarea"
             placeholder="댓글 추가"
-            value={content}
-            onChange={(e) => setContent(DOMPurify.sanitize(e.target.value))}
-            style={{resize: 'none'}} // 크기 조절 비활성화
+            value={contentInput.value}
+            onChange={(e) => {
+              const sanitizedValue = DOMPurify.sanitize(e.target.value);
+              contentInput.setValue(sanitizedValue);
+              setContent(sanitizedValue);
+            }}
+            style={{resize: 'none'}}
           />
         </div>
         <button type="submit" className="absolute right-0 main-btn" disabled={mutation.isPending}>
           {mutation.isPending ? '저장 중...' : '저장'}
         </button>
+        <div className="flex flex-col w-full gap-3 items-start">
+          <div className="flex gap-4 items-center ml-8">
+            <button
+              type="button"
+              className="rounded-md py-1 px-6 text-caption-regular border border-main hover:bg-main hover:text-white"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              댓글 첨부파일 첨부
+            </button>
+            {files.length > 4 && (
+              <div className=" bg-gray-1 border border-gray-2 rounded-md py-1 px-3 text-[10px] text-error shadow-md">
+                최대 5개의 파일만 선택할 수 있습니다.
+              </div>
+            )}
+          </div>
+          <div className="flex flex-col gap-1">
+            {fileNames.map((name, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <span className="border border-gray-2 text-caption-regular bg-white px-2 py-1 rounded w-[400px] truncate">{name}</span>
+                <button
+                  type="button"
+                  className="text-error text-[10px] font-regular hover:font-bold"
+                  onClick={() => handleFileRemove(index)}
+                >
+                  삭제
+                </button>
+              </div>
+            ))}
+          </div>
+          <input
+            type="file"
+            accept="image/png, image/jpeg, image/jpg"
+            multiple
+            ref={fileInputRef}
+            style={{display: 'none'}}
+            onChange={handleFileChange}
+          />
+        </div>
       </div>
     </form>
   );

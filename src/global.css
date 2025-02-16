@@ -169,7 +169,7 @@ textarea {
 
   /* 댓글 작성, 수정 input 스타일 */
   .comment-textarea {
-    @apply w-full h-[78px] text-subtitle-regular border border-gray-2 rounded-[4px] py-3 px-4 focus:border-main;
+    @apply w-full h-[78px] text-subtitle-regular border border-gray-2 rounded-[4px] py-3 px-4 resize-none focus:border-main;
   }
 
   /* 내용 길면 ...  */

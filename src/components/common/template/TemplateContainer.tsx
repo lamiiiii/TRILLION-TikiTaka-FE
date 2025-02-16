@@ -58,7 +58,7 @@ export default function TemplateContainer({isOpen, onClose}: TemplateContainerPr
       transition={{duration: 0.3, ease: 'easeInOut'}}
       style={{width: widthRef.current}}
     >
-      <div className="top-container">
+      <div className="w-full flex min-h-screen justify-center">
         <div className="flex flex-col max-w-1200 py-4 gap-4">
           {/* 상단 버튼 */}
           <div className="flex w-full gap-3">

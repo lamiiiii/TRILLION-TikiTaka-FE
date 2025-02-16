@@ -23,12 +23,12 @@ export default function TemplateListItem({template, onClick}: TemplateListItemPr
       onClick={onClick}
     >
       <div className="flex flex-col items-center w-48">
-        <p className="font-bold text-xs"> {template.firstCategoryName || '-'}</p>
-        <p className="font-regular text-[11px]">{template.secondCategoryName || '-'}</p>
+        <p className="font-bold text-xs"> {template.firstCategoryName || '미지정'}</p>
+        <p className="font-regular text-[11px]">{template.secondCategoryName || '미지정'}</p>
       </div>
       <div className="flex flex-col items-start w-72">
-        <p className="font-bold text-[13px]"> {template.templateTitle || '-'}</p>
-        <p className="font-regular text-[11px]">{`[${template.typeName || ' - '}] ${template.title || '-'}`}</p>
+        <p className="font-bold text-[13px] w-64 truncate"> {template.templateTitle || '미지정'}</p>
+        <p className="font-regular text-[11px] w-64 truncate">{`[${template.typeName || '미지정'}] ${template.title || '미지정'}`}</p>
       </div>
       <div className="text-body-regular w-48">{template.createdAt || '-'}</div>
     </li>
