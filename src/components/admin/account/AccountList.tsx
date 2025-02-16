@@ -1,5 +1,5 @@
 import {useQuery} from '@tanstack/react-query';
-import {useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {getRegistrationList} from '../../../api/service/registration';
 import Dropdown from '../../common/Dropdown';
 import PageNations from '../../common/PageNations';
@@ -18,6 +18,13 @@ export default function AccountList() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
   const [selectedStatus, setSelectedStatus] = useState<'PENDING' | 'REJECTED'>('PENDING');
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollIntoView({behavior: 'smooth'});
+    }
+  }, [currentPage]);
 
   const {data} = useQuery({
     queryKey: ['registrationAccounts', selectedStatus, currentPage],
@@ -25,7 +32,7 @@ export default function AccountList() {
   });
 
   const accounts: RegistrationAccount[] = data?.data?.content ?? [];
-  const totalPages = data?.totalPages ?? 1;
+  const totalPages = data?.data?.totalPages ?? 1;
   const totalElements = data?.data?.totalElements ?? 0;
 
   const sortedAccounts = accounts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
@@ -41,7 +48,7 @@ export default function AccountList() {
   };
 
   return (
-    <div className="w-full mt-[20px] relative mb-[100px]">
+    <div className="w-full mt-[20px] relative mb-[100px]" ref={containerRef}>
       <div className="bg-gray-18 h-full flex flex-col justify-start p-4">
         {/* 필터 */}
         <div className="flex items-center justify-between px-2">
