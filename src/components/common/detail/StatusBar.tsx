@@ -92,6 +92,7 @@ export default function StatusBar({data, status}: StatusBarProps) {
 
   const handlePrioritySelect = (selectedOption: string) => {
     if (isUser) return;
+    if (selectedOption === priority) return;
     updatePriorityMutation.mutate(selectedOption);
   };
 
