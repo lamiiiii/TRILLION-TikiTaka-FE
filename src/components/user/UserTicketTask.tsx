@@ -1,7 +1,7 @@
 import {BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer} from 'recharts';
 
 export default function UserTicketTask({progress = 0}: {progress?: number}) {
-  const completed = progress || 0;
+  const completed = Math.round(progress) || 0;
   const remaining = 100 - completed;
 
   const data = [{completed: completed, remaining: remaining}];

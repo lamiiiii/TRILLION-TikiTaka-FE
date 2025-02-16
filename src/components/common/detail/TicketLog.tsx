@@ -30,6 +30,7 @@ export default function TicketLog() {
           logData.content.map((log) => (
             <div key={log.id} className="bg-main text-white rounded-md p-4 my-2 flex justify-between">
               <div className="flex gap-4">
+                <p className="text-body-bold">#{log.ticketId} </p>
                 <p className="text-body-bold">{log.updatedByUsername}님 </p>
                 <p className="text-body-regular">{getKoreanUpdateType(log.updateType)}</p>
               </div>
