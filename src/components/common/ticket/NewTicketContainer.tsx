@@ -96,8 +96,10 @@ export default function NewTicketContainer() {
     if (selectedDate < today) {
       alert('마감기한은 오늘 이후 날짜를 선택해주세요.');
       setDueDate('');
+      setDueTime('');
     } else {
       setDueDate(e.target.value);
+      setDueTime('18:00');
     }
   };
 
