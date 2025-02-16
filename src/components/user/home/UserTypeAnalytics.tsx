@@ -42,9 +42,9 @@ export default function UserTypeAnalytics() {
   }, [ticketData]);
 
   return (
-    <div className="flex flex-col w-full bg-gray-18 p-5">
-      <h1 className="text-subtitle">일간 유형별 티켓 생성 현황</h1>
-      <div className="flex items-center gap-20 ">
+    <div className="flex flex-col w-full h-[430px] bg-gray-18 p-5">
+      <h1 className="text-title-bold">금일 티켓 처리 유형 </h1>
+      <div className="flex items-center gap-10 h-full bg-white rounded border border-gray-2 p-10 mt-4">
         <section className="w-[200px] h-[200px]">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
