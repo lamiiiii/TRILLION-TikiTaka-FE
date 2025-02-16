@@ -139,7 +139,19 @@ export default function DetailContainer() {
           {ticket && (
             <StatusBar data={ticket} status={ticket?.status as 'PENDING' | 'IN_PROGRESS' | 'DONE' | 'REVIEW' | 'REJECTED' | undefined} />
           )}
-
+          {ticket?.requesterId === userId && (
+            <div className={`flex justify-end gap-2 text-body-bold mt-3 ${isEditing && 'px-10'}`}>
+              <button className="text-gray-5 hover:text-gray-15" onClick={handleEdit}>
+                {isEditing ? '수정 취소' : '수정'}
+              </button>
+              <button
+                className={`text-gray-5 ${ticket?.status == 'PENDING' ? 'hover:text-gray-15' : 'cursor-not-allowed'}`}
+                onClick={handleDelete}
+              >
+                삭제
+              </button>
+            </div>
+          )}
           {isEditing && ticket ? (
             <>
               <div className="flex w-full">
@@ -207,19 +219,6 @@ export default function DetailContainer() {
               checkBtn="삭제"
               onBtnClick={confirmDelete}
             />
-          )}
-          {ticket?.requesterId === userId && (
-            <div className="flex justify-end gap-2 text-body-bold mt-3">
-              <button className="text-gray-5 hover:text-gray-15" onClick={handleEdit}>
-                {isEditing ? '수정 취소' : '수정'}
-              </button>
-              <button
-                className={`text-gray-5 ${ticket?.status == 'PENDING' ? 'hover:text-gray-15' : 'cursor-not-allowed'}`}
-                onClick={handleDelete}
-              >
-                삭제
-              </button>
-            </div>
           )}
         </div>
       </div>

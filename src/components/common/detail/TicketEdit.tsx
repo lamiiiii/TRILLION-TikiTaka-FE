@@ -121,7 +121,7 @@ export default function TicketEdit({ticketData}: TicketEditProps) {
       title,
       description: content,
       urgent: isUrgent,
-      typeId: ticketType?.typeId,
+      ticketTypeId: ticketType?.typeId,
       firstCategoryId: firstCategory?.id,
       secondCategoryId: secondCategory?.id,
       deadline: `${dueDate} ${dueTime}`,
@@ -131,7 +131,7 @@ export default function TicketEdit({ticketData}: TicketEditProps) {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 w-full px-10">
       <div className="flex flex-col bg-bg-1 p-20 pt-10 gap-8 min-w-[600px]">
         <TicketOptions />
         {firstCategory && secondCategory && mustDescription && (
