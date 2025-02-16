@@ -141,10 +141,6 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
       }
     };
 
-  const handleAssigneeChange = (ticketId: number, newAssignee: string) => {
-    console.log(`티켓 ${ticketId}의 담당자가 ${newAssignee}(으)로 변경되었습니다.`);
-  };
-
   const handleApprove = (ticketId: number) => {
     approveMutation.mutate(ticketId);
   };
@@ -220,7 +216,6 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
               <Ticket
                 key={ticket.ticketId}
                 {...ticket}
-                onAssigneeChange={(newAssignee) => handleAssigneeChange(ticket.ticketId, newAssignee)}
                 onApprove={() => handleApprove(ticket.ticketId)}
                 onReject={() => handleReject(ticket.ticketId)}
               />
