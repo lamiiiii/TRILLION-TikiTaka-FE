@@ -12,7 +12,7 @@ interface CommentItemProps {
   authorId: number;
   name: string;
   content: string;
-  files?: File[];
+  files?: Attachment[];
   createdAt: string;
 }
 
@@ -75,11 +75,6 @@ export default function CommentItem({commentId, authorId, name, content, files, 
     <div className="flex gap-3 mt-10">
       <Profile userId={authorId} size="md" />
       <div className="w-full flex flex-col gap-2">
-        {files?.map((file, index) => (
-          <a key={index} href={URL.createObjectURL(file)} className="text-blue-500 hover:underline block">
-            {file.name}
-          </a>
-        ))}
         <div className="flex items-center gap-3">
           <p className="text-gray-16 text-body-bold">{name}</p>
           <div className="w-full flex justify-between text-body-regular">
@@ -119,6 +114,28 @@ export default function CommentItem({commentId, authorId, name, content, files, 
           />
         ) : (
           <p className="text-subtitle-regular">{content}</p>
+        )}
+        {/* 첨부 파일 */}
+        {files && files?.length > 0 && (
+          <div className="flex gap-3 flex-wrap">
+            {files.map((file, index) => (
+              <div key={index} className="relative">
+                {/* 이미지 파일인 경우 미리보기 */}
+                {file.filePath.match(/\.(jpeg|jpg|gif|png)$/i) ? (
+                  <img
+                    src={file.filePath}
+                    alt={file.fileName}
+                    className="w-24 h-24 object-cover rounded-md cursor-pointer"
+                    onClick={() => window.open(file.filePath, '_blank')}
+                  />
+                ) : (
+                  <a href={file.filePath} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                    {file.fileName}
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
         )}
       </div>
       {showDeleteModal && (

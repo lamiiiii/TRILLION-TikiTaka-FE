@@ -115,4 +115,5 @@ export interface Comment {
   content: string;
   createdAt: string;
   updatedAt: string;
+  attachments: Attachment[];
 }

@@ -10,6 +10,7 @@ import Modal from '../Modal';
 import {createTicket} from '../../../api/service/tickets';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {useNavigate} from 'react-router-dom';
+import {MAX_FILE_SIZE, MAX_FILES} from '../../../constants/constants';
 
 export default function NewTicketContainer() {
   const navigate = useNavigate();
@@ -158,9 +159,6 @@ export default function NewTicketContainer() {
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
-    const MAX_FILES = 5;
-
     const selectedFiles = Array.from(event.target.files || []);
 
     const totalFiles = files.length + selectedFiles.length;
@@ -220,7 +218,6 @@ export default function NewTicketContainer() {
             </div>
             <NewTicketContent />
           </div>
-          {/* 파일 업로드 */}
           <div className="flex flex-col w-full gap-3 items-start">
             <div className="flex gap-4 items-center">
               <button

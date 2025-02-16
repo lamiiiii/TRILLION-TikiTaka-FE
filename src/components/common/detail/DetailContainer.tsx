@@ -176,6 +176,7 @@ export default function DetailContainer() {
                           name={comment.authorName}
                           content={comment.content}
                           createdAt={comment.createdAt}
+                          files={comment.attachments}
                         />
                       ))
                   ) : (
