@@ -10,7 +10,6 @@ import {reverseStatusMapping, statusMapping, typeNameMapping} from '../../../con
 
 interface DashTicketProps extends TicketListItem {
   detailLink: string;
-  onAssigneeChange?: (newAssignee: string) => void;
   onApprove?: (ticketId: number) => void;
   onReject?: (ticketId: number) => void;
   onStatusChange: (ticketId: number, newStatus: string) => void;

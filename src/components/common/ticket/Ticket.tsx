@@ -11,7 +11,6 @@ import {typeNameMapping} from '../../../constants/constants';
 
 interface TicketProps extends TicketDataProps {
   role: 'manager' | 'user' | 'admin'; // role 추가
-  onAssigneeChange: (newAssignee: string) => void;
   onApprove?: () => void;
   onReject?: () => void;
 }

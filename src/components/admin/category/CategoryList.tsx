@@ -62,7 +62,7 @@ export default function CategoryList() {
                     category.primary.id === primaryId
                       ? {
                           ...category,
-                          secondaries: [...category.secondaries, { id: newSubCategory.id, name: newSubCategory.name, parentId: primaryId }], // parentId 포함하여 업데이트
+                          secondaries: [...category.secondaries, { id: newSubCategory.id, name: newSubCategory.name, parentId: primaryId }],
                         }
                       : category
                   )

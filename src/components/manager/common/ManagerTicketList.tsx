@@ -221,10 +221,6 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     return `/detail/${ticketId}`;
   };
 
-  const handleAssigneeChange = (ticketId: number, newAssignee: string) => {
-    console.log(`티켓 ${ticketId}의 담당자가 ${newAssignee}(으)로 변경되었습니다.`);
-  };
-
   const approveMutation = useMutation({
     mutationFn: (ticketId: number) => approveTicket(ticketId),
     onSuccess: () => {
@@ -345,7 +341,6 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
                 key={ticket.ticketId}
                 {...ticket}
                 detailLink={getDetailLink(ticket.ticketId)}
-                onAssigneeChange={(newAssignee) => handleAssigneeChange(ticket.ticketId, newAssignee)}
                 onApprove={() => approveMutation.mutate(ticket.ticketId)}
                 onReject={() => rejectMutation.mutate(ticket.ticketId)}
                 onStatusChange={handleStatusChange}

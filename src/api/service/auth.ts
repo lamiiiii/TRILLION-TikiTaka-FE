@@ -8,7 +8,6 @@ const config = {
   },
 };
 
-// INTF-4: 로그인
 export async function postLogin(loginData: LoginData) {
   try {
     const existingToken = tokenStorage.get();
@@ -30,7 +29,6 @@ export async function postLogin(loginData: LoginData) {
   }
 }
 
-// INTF-5: 로그아웃
 export async function postLogout() {
   try {
     const token = tokenStorage.get();
@@ -48,7 +46,6 @@ export async function postLogout() {
   }
 }
 
-// INTF-6: 토큰 재발급
 export async function postReissueToken() {
   try {
     const baseURL = config.backend.baseURL.replace(/\/$/, '');

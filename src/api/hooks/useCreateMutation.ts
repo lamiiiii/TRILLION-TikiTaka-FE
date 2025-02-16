@@ -19,10 +19,8 @@ export const useCreateMutation = <T>(
   return useMutation({
     mutationFn,
     onSuccess: () => {
-      // TICKET_DETAILS 쿼리 키는 항상 무효화
       queryClient.invalidateQueries({queryKey: [QUERY_KEY.TICKET_DETAILS, ticketId]});
 
-      // 추가적으로 무효화할 쿼리 키가 있다면 각각 무효화
       if (invalidateQueryKeys) {
         invalidateQueryKeys.forEach((queryKey) => {
           queryClient.invalidateQueries({queryKey});

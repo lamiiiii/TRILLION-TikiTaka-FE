@@ -7,6 +7,7 @@ import {useEffect, useState} from 'react';
 import {getManagerList} from '../../../api/service/users';
 import {getTicketTemplate, getTicketTemplatesList} from '../../../api/service/ticketTemplates';
 import Modal from '../Modal';
+import { typeNameMapping } from '../../../constants/constants';
 
 export default function TicketOpstionsSecond() {
   const {
@@ -112,13 +113,6 @@ export default function TicketOpstionsSecond() {
 
   const onCancel = () => {
     setIsModalOpen(false);
-  };
-
-  const typeNameMapping: Record<string, string> = {
-    CREATE: '생성',
-    DELETE: '삭제',
-    UPDATE: '수정',
-    ETC: '기타',
   };
 
   return (
