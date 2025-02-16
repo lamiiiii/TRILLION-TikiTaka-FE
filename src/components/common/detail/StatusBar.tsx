@@ -112,7 +112,12 @@ export default function StatusBar({data, status}: StatusBarProps) {
   };
 
   const handleApprove = () => {
-    if (isUser) return;
+    if (isUser || isApproved) {
+      if (isApproved) {
+        alert('이미 승인된 티켓입니다.');
+      }
+      return;
+    }
     approveMutation.mutate(undefined, {
       onSuccess: () => setCurrentStatus('승인'),
     });
