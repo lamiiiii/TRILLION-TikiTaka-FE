@@ -40,7 +40,7 @@ export async function getAttachments(token: string, type: string, typeId: number
 // INTF-50: 첨부파일 삭제
 export async function deleteAttachment(fileId: number) {
   try {
-    const {data} = await instance.delete(`/attachments/${fileId}`);
+    const {data} = await instance.delete(`/file/${fileId}`);
     return data;
   } catch (error) {
     console.error('첨부파일 삭제 실패:', error);

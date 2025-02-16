@@ -1,5 +1,6 @@
 // AttachmentItem.tsx
-import React from 'react';
+import React, {useState} from 'react';
+import Modal from '../Modal';
 
 interface Attachment {
   attachmentId: number;
@@ -14,11 +15,14 @@ interface AttachmentItemProps {
 }
 
 const AttachmentItem: React.FC<AttachmentItemProps> = ({attachment, onDelete, isOwn}) => {
-  const handleDelete = () => {
-    onDelete(attachment.attachmentId);
-  };
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const isImage = attachment.filePath.match(/\.(jpeg|jpg|gif|png)$/i);
+
+  const handleDelete = () => {
+    onDelete(attachment.attachmentId);
+    setShowDeleteModal(false);
+  };
 
   return (
     <div className="relative m-2">
@@ -31,7 +35,7 @@ const AttachmentItem: React.FC<AttachmentItemProps> = ({attachment, onDelete, is
             onClick={() => window.open(attachment.filePath, '_blank')}
           />
           {isOwn && (
-            <button onClick={handleDelete} className="items-end text-red text-[10px] font-regular hover:font-bold">
+            <button onClick={() => setShowDeleteModal(true)} className="items-end text-red text-[10px] font-regular hover:font-bold">
               삭제
             </button>
           )}
@@ -43,6 +47,16 @@ const AttachmentItem: React.FC<AttachmentItemProps> = ({attachment, onDelete, is
             다운로드
           </a>
         </p>
+      )}
+
+      {showDeleteModal && (
+        <Modal
+          title="이 첨부파일을 삭제하시겠습니까?"
+          backBtn="취소"
+          onBackBtnClick={() => setShowDeleteModal(false)}
+          checkBtn="삭제"
+          onBtnClick={handleDelete}
+        />
       )}
     </div>
   );

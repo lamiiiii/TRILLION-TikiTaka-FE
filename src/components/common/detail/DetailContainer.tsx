@@ -57,7 +57,7 @@ export default function DetailContainer() {
   const handleDeleteAttachment = async (fileId: number) => {
     try {
       await deleteAttachment(fileId);
-      queryClient.invalidateQueries({queryKey: ['ticketDetails', fileId]});
+      queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketId]});
     } catch (error) {
       console.error('첨부파일 삭제 실패:', error);
     }

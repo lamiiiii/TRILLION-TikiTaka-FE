@@ -157,7 +157,7 @@ export default function TicketOpstionsSecond() {
           }}
         />
       </div>
-      <div className="selection">
+      <div className="flex items-center gap-8 w-[340px];">
         <div className="flex items-center gap-1 whitespace-nowrap relative">
           템플릿
           <span className="relative cursor-help" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
