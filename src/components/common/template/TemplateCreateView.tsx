@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react';
+import DOMPurify from 'dompurify';
 import {useTemplateStore} from '../../../store/store';
 import {PlusCircle, RequiredIcon, SmRightIcon} from '../Icon';
 import TemplateContent from './TemplateContent';
@@ -6,6 +7,7 @@ import TemplateOptions from './TemplateOptions';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import Modal from '../Modal';
 import {createTicketTemplate, getTicketTemplate, updateTicketTemplate} from '../../../api/service/ticketTemplates';
+import {useLimitedInput} from '../../../hooks/useInputLimit';
 
 interface TemplateCreateViewProps {
   onCancel: () => void;
@@ -38,6 +40,13 @@ export default function TemplateCreateView({onCancel, templateId}: TemplateCreat
   const [modalMessage, setModalMessage] = useState('');
 
   const [hasChanges, setHasChanges] = useState(false);
+
+  const templateTitleInput = useLimitedInput({
+    maxLength: 100,
+    initialValue: templateTitle,
+    onLimitExceed: () => alert('제목은 최대 100자까지 입력할 수 있습니다.'),
+    onChange: (value) => setTemplateTitle(value),
+  });
 
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
@@ -164,8 +173,12 @@ export default function TemplateCreateView({onCancel, templateId}: TemplateCreat
           </div>
           <input
             type="text"
-            value={templateTitle}
-            onChange={(e) => setTemplateTitle(e.target.value)}
+            value={templateTitleInput.value}
+            onChange={(e) => {
+              const sanitizedValue = DOMPurify.sanitize(e.target.value);
+              templateTitleInput.setValue(sanitizedValue);
+              setTemplateTitle(sanitizedValue);
+            }}
             className={`w-[400px] text-subtitle-regular border bg-white py-2 px-4 border-gray-2`}
             placeholder="템플릿 제목을 입력해주세요."
           />
