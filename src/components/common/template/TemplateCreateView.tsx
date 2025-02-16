@@ -138,7 +138,6 @@ export default function TemplateCreateView({onCancel, templateId}: TemplateCreat
 
       mutation.mutate(templateParams);
 
-      // 템플릿 저장 후 초기화
       setTemplateTitle('');
       setTitle('');
       setContent('');

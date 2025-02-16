@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
 import {approveTicket, getTicketList, rejectTicket, updateTicketStatus, getTicketTypes} from '../../../api/service/tickets';
-import {useUserStore} from '../../../store/store'; // role 가져오기
+import {useUserStore} from '../../../store/store';
 import Dropdown from '../../common/Dropdown';
 import PageNations from '../../common/PageNations';
 import DashTicket from './DashTicket';
@@ -66,7 +66,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
 
       return () => clearTimeout(timer);
     } else {
-      setShowTooltip(false); // 필터가 '긴급'이 아닐 때 즉시 툴팁을 숨김
+      setShowTooltip(false);
     }
   }, [selectedFilter]);
 

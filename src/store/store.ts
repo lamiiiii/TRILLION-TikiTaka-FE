@@ -2,7 +2,6 @@ import {create} from 'zustand';
 import {tokenStorage} from '../utils/token';
 import {NewTicketFormStore, NewTicketStore, TemplateStore, TicketStore, TokenStore, UserStore} from '../interfaces/interfaces';
 
-// 시스템 사용자 정보 저장 전역변수
 export const useUserStore = create<UserStore>((set) => ({
   userName: '',
   userId: -1,
@@ -13,7 +12,6 @@ export const useUserStore = create<UserStore>((set) => ({
   setRole: (role) => set({role}),
 }));
 
-// 토큰 저장 전역변수
 export const useTokenStore = create<TokenStore>((set) => ({
   isAuthenticated: !!tokenStorage.get(),
   accessToken: '',

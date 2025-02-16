@@ -3,12 +3,10 @@ import {useNewTicketStore} from '../../../store/store';
 import {AlertIcon, DownIcon} from '../Icon';
 import {motion} from 'framer-motion';
 
-// 미리보기 컴포넌트
 export default function TicketPreview() {
   const {isUrgent, firstCategory, secondCategory, title, content, manager, ticketType, dueDate, dueTime} = useNewTicketStore();
   const [isOpen, setIsOpen] = useState(true);
 
-  // 날짜 포맷팅 함수
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -17,25 +15,23 @@ export default function TicketPreview() {
     return `${year}.${month}.${day}`;
   };
 
-  // 시간 포맷팅 함수 (24시간 이내 남은 시간 계산)
   const formatTimeLeft = (dueDateString: string, dueTimeString: string) => {
     const dueDateTime = new Date(`${dueDateString}T${dueTimeString}`);
     const now = new Date();
-    const timeDiff = dueDateTime.getTime() - now.getTime(); // 밀리초 단위 차이
-    // const hoursLeft = Math.floor(timeDiff / (1000 * 3600)); // 남은 시간 계산
+    const timeDiff = dueDateTime.getTime() - now.getTime();
 
     if (isNaN(dueDateTime.getTime())) {
-      return ''; // dueTime이 없는 경우 공백을 반환
+      return '';
     }
 
     const hours = String(dueDateTime.getHours()).padStart(2, '0');
     const minutes = String(dueDateTime.getMinutes()).padStart(2, '0');
 
     if (timeDiff <= 24 * 60 * 60 * 1000 && timeDiff > 0) {
-      return `${formatDate(dueDateString)} ${hours}:${minutes}`; // 24시간 이내라면 날짜와 시간 표시
+      return `${formatDate(dueDateString)} ${hours}:${minutes}`;
     }
 
-    return `${formatDate(dueDateString)} ${hours}:${minutes}`; // 24시간 이상일 경우 날짜와 시간 표시
+    return `${formatDate(dueDateString)} ${hours}:${minutes}`;
   };
 
   const formattedDate = dueDate ? `${formatTimeLeft(dueDate, dueTime)}` : '';

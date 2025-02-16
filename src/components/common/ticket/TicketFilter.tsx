@@ -79,7 +79,7 @@ export default function TicketFilter({ role, onFilterChange }: TicketFilterProps
               isSelected={item.type === selectedType}
               onClick={() => {
                 setSelectedType(item.type);
-                onFilterChange(item.type); // 부모 컴포넌트에 전달
+                onFilterChange(item.type);
               }}
             />
           </div>

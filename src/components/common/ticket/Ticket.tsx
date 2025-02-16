@@ -10,7 +10,6 @@ import {updateTicketManager} from '../../../api/service/tickets';
 import {typeNameMapping} from '../../../constants/constants';
 
 interface TicketProps extends TicketDataProps {
-  role: 'manager' | 'user' | 'admin'; // role 추가
   onApprove?: () => void;
   onReject?: () => void;
 }
@@ -86,7 +85,6 @@ export default function Ticket({
     updateManagerMutation.mutate(managerId);
   };
 
-  // 긴급 티켓 스타일
   const ticketClass = getTicketClass(urgent, status);
 
   return (
