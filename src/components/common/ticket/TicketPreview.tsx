@@ -2,37 +2,11 @@ import {useState} from 'react';
 import {useNewTicketStore} from '../../../store/store';
 import {AlertIcon, DownIcon} from '../Icon';
 import {motion} from 'framer-motion';
+import {formatTimeLeft} from '../../../utils/format';
 
 export default function TicketPreview() {
   const {isUrgent, firstCategory, secondCategory, title, content, manager, ticketType, dueDate, dueTime} = useNewTicketStore();
   const [isOpen, setIsOpen] = useState(true);
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}.${month}.${day}`;
-  };
-
-  const formatTimeLeft = (dueDateString: string, dueTimeString: string) => {
-    const dueDateTime = new Date(`${dueDateString}T${dueTimeString}`);
-    const now = new Date();
-    const timeDiff = dueDateTime.getTime() - now.getTime();
-
-    if (isNaN(dueDateTime.getTime())) {
-      return '';
-    }
-
-    const hours = String(dueDateTime.getHours()).padStart(2, '0');
-    const minutes = String(dueDateTime.getMinutes()).padStart(2, '0');
-
-    if (timeDiff <= 24 * 60 * 60 * 1000 && timeDiff > 0) {
-      return `${formatDate(dueDateString)} ${hours}:${minutes}`;
-    }
-
-    return `${formatDate(dueDateString)} ${hours}:${minutes}`;
-  };
 
   const formattedDate = dueDate ? `${formatTimeLeft(dueDate, dueTime)}` : '';
 

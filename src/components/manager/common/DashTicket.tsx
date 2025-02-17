@@ -7,6 +7,7 @@ import ManagerSelector from '../../common/selector/ManagerSelector';
 import {useCreateMutation} from '../../../api/hooks/useCreateMutation';
 import {updateTicketManager} from '../../../api/service/tickets';
 import {reverseStatusMapping, statusMapping, typeNameMapping} from '../../../constants/constants';
+import {formatCreatedAt, removeHtmlTags, removeMarkdownTags} from '../../../utils/format';
 
 interface DashTicketProps extends TicketListItem {
   detailLink: string;
@@ -57,23 +58,6 @@ export default function DashTicket({
 
   const ticketClass = getTicketClass(urgent, status);
 
-  const removeHtmlTags = (content: string) => {
-    return content
-      .replace(/<[^>]+>/g, '')
-      .replace(/&nbsp;/g, ' ')
-      .trim();
-  };
-
-  const removeMarkdownTags = (content: string) => {
-    return content
-      .replace(/[#*_~`>+\-]/g, '')
-      .replace(/\[.*?\]\(.*?\)/g, '')
-      .replace(/!\[.*?\]\(.*?\)/g, '')
-      .replace(/\n/g, ' ')
-      .replace(/\s{2,}/g, ' ')
-      .trim();
-  };
-
   const sanitizeContent = (content: string) => {
     const withoutHtml = removeHtmlTags(content);
     return removeMarkdownTags(withoutHtml);
@@ -103,7 +87,7 @@ export default function DashTicket({
         </div>
       </Link>
       <Link to={detailLink} className="w-[12%] text-body-regular text-gray-15">
-        <span className="text-gray-5">{createdAt}</span>
+        <span className="text-gray-5">{formatCreatedAt(createdAt)}</span>
         <br />
         {deadline}
       </Link>

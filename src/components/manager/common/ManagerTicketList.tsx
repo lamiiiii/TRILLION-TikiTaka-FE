@@ -9,24 +9,9 @@ import {toast} from 'react-toastify';
 import {getManagerList} from '../../../api/service/users';
 import {getCategoryList} from '../../../api/service/categories';
 import {RefreshIcon} from '../../common/Icon';
-import {pageSizeOptions, typeNameMapping} from '../../../constants/constants';
+import {mapFilterToStatus, pageSizeOptions, typeNameMapping} from '../../../constants/constants';
 import {ERROR_MESSAGES} from '../../../constants/error';
 import {motion} from 'framer-motion';
-
-const mapFilterToStatus = (filter: string): string | undefined => {
-  switch (filter) {
-    case '대기중':
-      return 'PENDING';
-    case '진행중':
-      return 'IN_PROGRESS';
-    case '검토 요청':
-      return 'REVIEW';
-    case '완료':
-      return 'DONE';
-    default:
-      return undefined;
-  }
-};
 
 interface TicketListProps {
   selectedFilter: string;
