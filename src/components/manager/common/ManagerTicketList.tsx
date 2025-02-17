@@ -155,7 +155,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     }
 
     setFilteredTickets(filtered);
-    setTotalPages(Math.ceil(filtered.length / pageSize));
+    setTotalPages(Math.ceil(filtered.length / pageSize)); // 이 부분을 추가/수정
   }, [selectedFilters, data?.content, pageSize]);
 
   useEffect(() => {
