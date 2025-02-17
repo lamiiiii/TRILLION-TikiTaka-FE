@@ -1,6 +1,7 @@
 import {Navigate, Route, BrowserRouter as Router, Routes} from 'react-router-dom';
 import {Suspense, lazy} from 'react';
 import './global.css';
+import LoadingStatus from './components/common/LoadingStatus';
 
 const ManagerHome = lazy(() => import('./pages/manager/ManagerHome'));
 const UserHome = lazy(() => import('./pages/user/UserHome'));
@@ -67,7 +68,13 @@ function App() {
           {/* 레이아웃 있음 */}
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense
+                fallback={
+                  <div>
+                    <LoadingStatus />
+                  </div>
+                }
+              >
                 <Layout />
               </Suspense>
             }
