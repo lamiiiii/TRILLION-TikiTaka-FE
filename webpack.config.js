@@ -67,6 +67,7 @@ module.exports = {
     historyApiFallback: true,
     hot: true,
   },
+  
   devtool: 'eval-cheap-source-map',
   performance: {
     hints: false,
