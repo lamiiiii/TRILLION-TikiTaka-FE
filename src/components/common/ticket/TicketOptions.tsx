@@ -5,6 +5,7 @@ import {useNewTicketStore} from '../../../store/store';
 import {getCategoryList} from '../../../api/service/categories';
 import {useQuery} from '@tanstack/react-query';
 import TicketOpstionsSecond from './TicketOptionsSecond';
+import LoadingStatus from '../LoadingStatus';
 
 export default function TicketOptions() {
   const {isUrgent, firstCategory, secondCategory, firstCategoryId, secondCategoryId, setIsUrgent, setFirstCategory, setSecondCategory} =
@@ -53,7 +54,7 @@ export default function TicketOptions() {
     }
   }, [categories, firstCategoryId, secondCategoryId, isLoading, setFirstCategory, setSecondCategory]);
 
-  if (isLoading) return null;
+  if (isLoading) return <LoadingStatus />;
   if (error) return null;
 
   const secondaryCategoryOptions = firstCategory ? (categories.find((cat) => cat.primary.id === firstCategory.id)?.secondaries ?? []) : [];
