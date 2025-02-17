@@ -8,7 +8,7 @@ import Dropdown from '../../../common/Dropdown';
 import {RefreshIcon} from '../../../common/Icon';
 import PageNations from '../../../common/PageNations';
 import Ticket from '../../../common/ticket/Ticket';
-import {pageSizeOptions, typeNameMapping} from '../../../../constants/constants';
+import {ITEMS_PER_PAGE, pageSizeOptions, typeNameMapping} from '../../../../constants/constants';
 import {ERROR_MESSAGES} from '../../../../constants/error';
 import {toast} from 'react-toastify';
 
@@ -47,7 +47,7 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
 
       return getTicketList({
         page: (currentPage ?? 1) - 1,
-        size: pageSize ?? 20,
+        size: pageSize ?? ITEMS_PER_PAGE,
         status: 'PENDING',
         managerId: selectedFilter === '나의 티켓' ? userId : selectedManagerId,
         firstCategoryId,

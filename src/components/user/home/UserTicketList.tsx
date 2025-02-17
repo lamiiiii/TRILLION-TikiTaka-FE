@@ -71,7 +71,7 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
       'ticketList',
       selectedFilter ?? '',
       currentPage ?? 1,
-      pageSize ?? 20,
+      pageSize ?? ITEMS_PER_PAGE,
       orderBy ?? '최신순',
       selectedFilters['담당자'],
       selectedFilters['1차 카테고리'],

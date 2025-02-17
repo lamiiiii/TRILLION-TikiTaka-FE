@@ -1,3 +1,4 @@
+import {ITEMS_PER_PAGE} from '../../constants/constants';
 import instance from '../axiosInstance';
 
 export async function postRegistration(postData: {email: string; username: string}) {
@@ -10,7 +11,7 @@ export async function getRegistrationList(params: RegistrationListParams) {
     const {data} = await instance.get('/registrations/list', {
       params: {
         page: params.page || 0,
-        size: params.size || 20,
+        size: params.size || ITEMS_PER_PAGE,
         status: params.status,
       },
     });
@@ -23,13 +24,10 @@ export async function getRegistrationList(params: RegistrationListParams) {
 
 export async function updateRegistrationStatus(params: RegistrationUpdateParams) {
   try {
-    const {data} = await instance.post(
-      `/registrations/${params.registrationId}?status=${params.status}`,
-      {
-        role: params.role,
-        reason: params.reason
-      }
-    );
+    const {data} = await instance.post(`/registrations/${params.registrationId}?status=${params.status}`, {
+      role: params.role,
+      reason: params.reason,
+    });
     return data;
   } catch (error) {
     console.error('상태 업데이트 실패:', error);

@@ -1,10 +1,11 @@
 import {AxiosResponse} from 'axios';
 import instance from '../axiosInstance';
+import {ITEMS_PER_PAGE} from '../../constants/constants';
 
 export async function getChangeHistory(
   ticketId: number,
   page: number = 0,
-  size: number = 20,
+  size: number = ITEMS_PER_PAGE,
   updatedById?: number,
   updatedType?: string
 ): Promise<ChangeHistoryResponse> {

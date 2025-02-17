@@ -9,7 +9,7 @@ import {toast} from 'react-toastify';
 import {getManagerList} from '../../../api/service/users';
 import {getCategoryList} from '../../../api/service/categories';
 import {RefreshIcon} from '../../common/Icon';
-import {mapFilterToStatus, pageSizeOptions, typeNameMapping} from '../../../constants/constants';
+import {ITEMS_PER_PAGE, mapFilterToStatus, pageSizeOptions, typeNameMapping} from '../../../constants/constants';
 import {ERROR_MESSAGES} from '../../../constants/error';
 import {motion} from 'framer-motion';
 
@@ -24,7 +24,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
-  const [pageSize, setPageSize] = useState(20);
+  const [pageSize, setPageSize] = useState(ITEMS_PER_PAGE);
   const [orderBy, setOrderBy] = useState('최신순');
   const queryClient = useQueryClient();
   const [isHovered, setIsHovered] = useState(false);
@@ -79,7 +79,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
       'tickets',
       selectedFilter ?? '',
       currentPage ?? 1,
-      pageSize ?? 20,
+      pageSize ?? ITEMS_PER_PAGE,
       orderBy ?? '최신순',
       selectedFilters['담당자'],
       selectedFilters['1차 카테고리'],
@@ -103,7 +103,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
 
       const ticketData = await getTicketList({
         page: (currentPage ?? 1) - 1,
-        size: pageSize ?? 20,
+        size: pageSize ?? ITEMS_PER_PAGE,
         status: statusParam,
         managerId,
         firstCategoryId,
