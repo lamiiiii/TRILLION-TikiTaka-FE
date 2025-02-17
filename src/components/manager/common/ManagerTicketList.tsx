@@ -45,6 +45,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
   const [isHovered, setIsHovered] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [isPageChanged, setIsPageChanged] = useState(false);
 
   useEffect(() => {
     setSelectedFilters({});
@@ -52,10 +53,11 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
   }, [selectedFilter]);
 
   useEffect(() => {
-    if (containerRef.current) {
+    if (isPageChanged && containerRef.current) {
       containerRef.current.scrollIntoView({behavior: 'smooth'});
+      setIsPageChanged(false);
     }
-  }, [currentPage]);
+  }, [isPageChanged]);
 
   useEffect(() => {
     if (selectedFilter === '긴급') {
@@ -201,6 +203,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
+      setIsPageChanged(true);
     }
   };
 
