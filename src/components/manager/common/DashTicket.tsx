@@ -44,7 +44,7 @@ export default function DashTicket({
   onStatusChange,
 }: DashTicketProps) {
   const role = useUserStore((state) => state.role).toLowerCase();
-  const [selectedAssignee] = useState(managerName ?? 'all');
+  const [selectedAssignee] = useState(managerName);
 
   const updateManagerMutation = useCreateMutation(
     (managerId: number) => updateTicketManager(ticketId, managerId),

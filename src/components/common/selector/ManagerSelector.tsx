@@ -43,7 +43,7 @@ const ManagerSelector: React.FC<ManagerSelectorProps> = ({width, selectedManager
       <DropDown
         width={width}
         label="담당자"
-        value={selectedManager?.username || 'all'}
+        value={selectedManager?.username || selectedManagerName || 'all'}
         options={managers?.map((user: any) => user.username) || []}
         onSelect={handleSelect}
         border={false}
