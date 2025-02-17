@@ -10,6 +10,7 @@ import PageNations from '../../../common/PageNations';
 import Ticket from '../../../common/ticket/Ticket';
 import {pageSizeOptions, typeNameMapping} from '../../../../constants/constants';
 import {ERROR_MESSAGES} from '../../../../constants/error';
+import {toast} from 'react-toastify';
 
 interface TicketListProps {
   selectedFilter: '전체' | '나의 티켓';
@@ -108,6 +109,7 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
     mutationFn: (ticketId: number) => approveTicket(ticketId),
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['ticketList']});
+      toast.success('티켓이 승인되었습니다.');
     },
     onError: () => {
       alert('티켓 승인에 실패했습니다. 다시 시도해 주세요.');
@@ -118,6 +120,7 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
     mutationFn: (ticketId: number) => rejectTicket(ticketId),
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['ticketList']});
+      toast.success('티켓이 반려되었습니다.');
     },
     onError: () => {
       alert('티켓 반려에 실패했습니다. 다시 시도해 주세요.');
