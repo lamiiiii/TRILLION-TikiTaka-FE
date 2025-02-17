@@ -40,7 +40,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
   useEffect(() => {
     if (isPageChanged && containerRef.current) {
       containerRef.current.scrollIntoView({behavior: 'smooth'});
-      setIsPageChanged(false);
+      setIsPageChanged(false); // 페이지 변경시에만 작동하도록 수정
     }
   }, [isPageChanged]);
 
@@ -213,7 +213,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     mutationFn: (ticketId: number) => approveTicket(ticketId),
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['tickets']});
-      toast.success(' 티켓이 승인되었습니다.');
+      toast.success('티켓이 승인되었습니다.');
     },
   });
 
@@ -221,7 +221,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     mutationFn: (ticketId: number) => rejectTicket(ticketId),
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['tickets']});
-      alert(' 티켓이 반려되었습니다.');
+      toast.success('티켓이 반려되었습니다.');
     },
   });
 
