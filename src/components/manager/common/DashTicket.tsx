@@ -70,12 +70,12 @@ export default function DashTicket({
       <Link to={detailLink} className="w-[6%] text-subtitle-regular text-gray-700 px-2">
         #{ticketId}
       </Link>
-      <Link to={detailLink} className="w-[12%] text-subtitle-regular">
+      <Link to={detailLink} className="w-[14%] text-subtitle-regular">
         <span>{firstCategoryName || '1차 카테고리 미지정'}</span>
         <br />
         <span className="text-gray-6 text-body-regular">{secondCategoryName || '2차 카테고리 미지정'}</span>
       </Link>
-      <Link to={detailLink} className={role === 'manager' ? 'w-[36%]' : 'w-[51%]'} style={{textAlign: 'left'}}>
+      <Link to={detailLink} className={role === 'manager' ? 'w-[32%]' : 'w-[51%]'} style={{textAlign: 'left'}}>
         <div className="flex items-center gap-1">
           {urgent && <AlertIcon className="text-error w-4 h-4 flex-shrink-0" />}
           <div className={`flex text-subtitle-regular truncate ${urgent ? 'text-error' : 'text-gray-15'}`}>
@@ -91,7 +91,7 @@ export default function DashTicket({
         <br />
         {deadline}
       </Link>
-      <div className="w-[10%]">
+      <div className="w-[12%]">
         <ManagerSelector selectedManagerName={selectedAssignee} onManagerSelect={handleManagerSelect} />
       </div>
       <div className="w-[15%] flex gap-2">
