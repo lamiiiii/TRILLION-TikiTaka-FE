@@ -4,6 +4,7 @@ import {useNewTicketStore} from '../../../store/store';
 import Modal from '../Modal';
 import TemplateCreateView from './TemplateCreateView';
 import {useQuery} from '@tanstack/react-query';
+import LoadingStatus from '../LoadingStatus';
 
 interface TemplateDetailViewProps {
   templateId: number;
@@ -75,7 +76,7 @@ export default function TemplateDetailView({templateId, onDelete}: TemplateDetai
   }
 
   if (!templates) {
-    return <div className="flex items-center">로딩 중...</div>;
+    return <LoadingStatus/>;
   }
 
   return (

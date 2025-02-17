@@ -4,6 +4,7 @@ import {useQuery} from '@tanstack/react-query';
 import {getDailyCategorySummary} from '../../../api/service/statistics';
 import {commonTooltipStyle} from '../../../constants/constants';
 import {ERROR_MESSAGES} from '../../../constants/error';
+import LoadingStatus from '../LoadingStatus';
 const COLORS = ['#F6D47A', '#FFB74D', '#FFD700']; // 색상 팔레트
 
 export default function CategoryTicketStatus() {
@@ -19,7 +20,7 @@ export default function CategoryTicketStatus() {
     queryFn: getDailyCategorySummary,
   });
 
-  if (isLoading) return <div>로딩 중...</div>;
+  if (isLoading) return <LoadingStatus/>
   if (isError) return <div>에러가 발생했습니다.</div>;
 
   const primaryData =

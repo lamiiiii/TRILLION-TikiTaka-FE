@@ -1,8 +1,8 @@
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import DOMPurify from 'dompurify';
-import {marked} from 'marked';
+import { marked } from 'marked';
 
-export default function MarkdownPreview({content}: {content: string}) {
+export default function MarkdownPreview({ content }: { content: string }) {
   const [sanitizedHTML, setSanitizedHTML] = useState('');
 
   useEffect(() => {
@@ -10,6 +10,7 @@ export default function MarkdownPreview({content}: {content: string}) {
       marked.setOptions({
         breaks: true,
       });
+
       const html = await marked(content);
       const sanitized = DOMPurify.sanitize(html);
       setSanitizedHTML(sanitized);
@@ -18,5 +19,5 @@ export default function MarkdownPreview({content}: {content: string}) {
     convertMarkdown();
   }, [content]);
 
-  return <div className="prose" dangerouslySetInnerHTML={{__html: sanitizedHTML}} />;
+  return <div className="prose" dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />;
 }

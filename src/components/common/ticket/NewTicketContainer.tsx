@@ -56,9 +56,7 @@ export default function NewTicketContainer() {
         event.returnValue = '변경 사항이 저장되지 않았습니다. 계속 진행하시겠습니까?';
       }
     };
-
     window.addEventListener('beforeunload', handleBeforeUnload);
-
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
