@@ -135,9 +135,7 @@ export default function CommentItem({commentId, authorId, name, content, files, 
                       onClick={() => window.open(file.filePath, '_blank')}
                     />
                     {hoveredFileIndex === index && (
-                      <div className="absolute left-0 top-full mt-2 bg-gray-1 border border-gray-2 rounded-md py-1 px-3 text-xs text-gray-15 shadow-md w-64">
-                        첨부된 이미지를 클릭하여 다운로드 가능합니다.
-                      </div>
+                      <div className="absolute left-0 top-full mt-2 tooltip w-max">첨부된 이미지를 클릭하여 다운로드 가능합니다.</div>
                     )}
                   </>
                 ) : (
