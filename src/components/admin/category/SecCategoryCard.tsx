@@ -1,29 +1,29 @@
-import { useState, useRef, useEffect } from "react";
-import { VerticalDotIcon } from "../../common/Icon";
-import RegisterRequestForm from "./RegisterRequestForm";
-import RequestFormDetail from "./RequestFormDetail";
-import { deleteCategory, updateCategory } from "../../../api/service/categories";
-import DeleteConfirmModal from "../common/DeleteConfirmModal";
-import { getTicketForm } from "../../../api/service/tickets";
-import { toast } from "react-toastify";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { motion } from "framer-motion";
+import {useState, useRef, useEffect} from 'react';
+import {VerticalDotIcon} from '../../common/Icon';
+import RegisterRequestForm from './RegisterRequestForm';
+import RequestFormDetail from './RequestFormDetail';
+import {deleteCategory, updateCategory} from '../../../api/service/categories';
+import DeleteConfirmModal from '../common/DeleteConfirmModal';
+import {getTicketForm} from '../../../api/service/tickets';
+import {toast} from 'react-toastify';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {motion} from 'framer-motion';
 
 interface SecCategoryCardProps {
-  id: number; 
-  parentId: number; 
+  id: number;
+  parentId: number;
   name: string;
-  onDelete: (categoryId: number) => void; 
+  onDelete: (categoryId: number) => void;
 }
 
-export default function SecCategoryCard({ id, parentId, name, onDelete }: SecCategoryCardProps) {
+export default function SecCategoryCard({id, parentId, name, onDelete}: SecCategoryCardProps) {
   const queryClient = useQueryClient();
   const [isReqFormOpen, setIsReqFormOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false); 
-  const [newCategoryName, setNewCategoryName] = useState(name); 
-  const [requestForm, setRequestForm] = useState<{ mustDescription: string; description: string } | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState(name);
+  const [requestForm, setRequestForm] = useState<{mustDescription: string; description: string} | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   const fetchRequestForm = async () => {
@@ -40,27 +40,27 @@ export default function SecCategoryCard({ id, parentId, name, onDelete }: SecCat
   }, [id, parentId]);
 
   const updateCategoryMutation = useMutation({
-    mutationFn: () => updateCategory(id, { name: newCategoryName }), 
+    mutationFn: () => updateCategory(id, {name: newCategoryName}),
     onSuccess: () => {
-      toast.success("카테고리가 성공적으로 수정되었습니다.");
-      queryClient.invalidateQueries({ queryKey: ["categories"] }); 
-      setIsEditModalOpen(false); 
+      toast.success('카테고리가 성공적으로 수정되었습니다.');
+      queryClient.invalidateQueries({queryKey: ['categories']});
+      setIsEditModalOpen(false);
     },
     onError: () => {
-      toast.error("카테고리 수정에 실패했습니다.");
+      toast.error('카테고리 수정에 실패했습니다.');
     },
   });
 
   const deleteCategoryMutation = useMutation({
     mutationFn: () => deleteCategory(id),
     onSuccess: () => {
-      toast.success("카테고리가 성공적으로 삭제되었습니다.");
-      queryClient.invalidateQueries({ queryKey: ["categories"] }); 
+      toast.success('카테고리가 성공적으로 삭제되었습니다.');
+      queryClient.invalidateQueries({queryKey: ['categories']});
       onDelete(id);
       setIsDeleteModalOpen(false);
     },
     onError: () => {
-      toast.error("카테고리 삭제에 실패했습니다.");
+      toast.error('카테고리 삭제에 실패했습니다.');
     },
   });
 
@@ -72,7 +72,6 @@ export default function SecCategoryCard({ id, parentId, name, onDelete }: SecCat
     setIsReqFormOpen(false);
   };
 
-  
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
   };
@@ -83,33 +82,33 @@ export default function SecCategoryCard({ id, parentId, name, onDelete }: SecCat
   };
 
   const openEditModal = () => {
-    setNewCategoryName(name); 
+    setNewCategoryName(name);
     setIsEditModalOpen(true);
     setIsMenuOpen(false);
   };
 
   const handleUpdate = () => {
     if (!newCategoryName.trim()) {
-      toast.error("카테고리 이름을 입력하세요.");
+      toast.error('카테고리 이름을 입력하세요.');
       return;
     }
-    updateCategoryMutation.mutate(); 
+    updateCategoryMutation.mutate();
     setTimeout(() => {
-      window.location.reload(); 
+      window.location.reload();
     }, 500);
   };
 
   const handleDelete = () => {
-    deleteCategoryMutation.mutate(); 
+    deleteCategoryMutation.mutate();
   };
 
   useEffect(() => {
-    document.addEventListener("mousedown", (e) => {
+    document.addEventListener('mousedown', (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setIsMenuOpen(false);
       }
     });
-    return () => document.removeEventListener("mousedown", () => {});
+    return () => document.removeEventListener('mousedown', () => {});
   }, []);
 
   return (
@@ -125,11 +124,11 @@ export default function SecCategoryCard({ id, parentId, name, onDelete }: SecCat
           <div className="flex gap-2 items-center relative">
             <button
               className={`px-4 py-1 text-body-regular rounded flex justify-center items-center leading-5 cursor-pointer 
-    ${requestForm ? "border border-gray-3 text-gray-800 bg-white hover:bg-gray-100 " : "bg-main text-white"}
+    ${requestForm ? 'border border-gray-3 text-gray-800 bg-white hover:bg-gray-100 ' : 'bg-main text-white'}
   `}
               onClick={openReqForm}
             >
-              {requestForm ? "상세" : "요청 양식"}
+              {isReqFormOpen ? (requestForm ? '조회 중...' : '작성 중...') : requestForm ? '상세' : '요청 양식'}
             </button>
 
             {isReqFormOpen &&
@@ -152,7 +151,10 @@ export default function SecCategoryCard({ id, parentId, name, onDelete }: SecCat
             </button>
 
             {isMenuOpen && (
-              <div ref={menuRef} className="absolute top-[24px] right-0 mt-2 w-24 bg-white border border-gray-300 shadow-md rounded-md z-10">
+              <div
+                ref={menuRef}
+                className="absolute top-[24px] right-0 mt-2 w-24 bg-white border border-gray-300 shadow-md rounded-md z-10"
+              >
                 <button className="w-full px-4 py-2 text-body-bold text-center hover:bg-gray-100" onClick={openEditModal}>
                   수정
                 </button>
@@ -167,30 +169,36 @@ export default function SecCategoryCard({ id, parentId, name, onDelete }: SecCat
 
       {isEditModalOpen && (
         <motion.div className="overlay" initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}}>
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded shadow-lg w-[400px]">
-            <h2 className="text-xl font-semibold mb-4">카테고리 수정</h2>
-            <input
-              type="text"
-              className="border border-gray-3 rounded px-2 py-1 w-full text-body-regular"
-              placeholder={name}
-              value={newCategoryName}
-              onChange={(e) => setNewCategoryName(e.target.value)}
-            />
-            <div className="flex justify-end mt-4 gap-2">
-              <button className="px-4 py-2 bg-gray-200 rounded" onClick={() => setIsEditModalOpen(false)}>
-                취소
-              </button>
-              <button className="px-4 py-2 bg-main text-white rounded" onClick={handleUpdate}>
-                확인
-              </button>
+          <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded shadow-lg w-[400px]">
+              <h2 className="text-xl font-semibold mb-4">카테고리 수정</h2>
+              <input
+                type="text"
+                className="border border-gray-3 rounded px-2 py-1 w-full text-body-regular"
+                placeholder={name}
+                value={newCategoryName}
+                onChange={(e) => setNewCategoryName(e.target.value)}
+              />
+              <div className="flex justify-end mt-4 gap-2">
+                <button className="px-4 py-2 bg-gray-200 rounded" onClick={() => setIsEditModalOpen(false)}>
+                  취소
+                </button>
+                <button className="px-4 py-2 bg-main text-white rounded" onClick={handleUpdate}>
+                  확인
+                </button>
+              </div>
             </div>
           </div>
-        </div>
         </motion.div>
       )}
 
-      <DeleteConfirmModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onConfirm={handleDelete} categoryName={name} isPrimary={false}/>
+      <DeleteConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDelete}
+        categoryName={name}
+        isPrimary={false}
+      />
     </div>
   );
 }
