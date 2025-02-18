@@ -119,7 +119,7 @@ export default function PwdChangeContainer() {
     <div className="top-container">
       <div className="flex flex-col max-w-1200">
         <TopMenu boldBlackText="비밀번호 변경" />
-        <div className="flex flex-col m-10 items-center gap-5">
+        <div className="flex flex-col mt-32 items-center gap-5">
           <p className="text-error text-sm font-bold text-center">
             임시 비밀번호 유출 방지를 위해 <br /> 최초 로그인 시 반드시 비밀번호를 변경해 주세요.
           </p>

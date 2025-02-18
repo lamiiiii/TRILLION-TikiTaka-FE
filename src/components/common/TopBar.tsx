@@ -53,7 +53,7 @@ export default function TopBar() {
                 <ul>
                   <li
                     className="px-2 py-1.5 text-center cursor-pointer leading-none m-2 text-black text-caption-regular hover:bg-gray-1 hover:font-bold rounded-md whitespace-nowrap"
-                    onClick={() => navigate(`/${role?.toLowerCase()}/pwdChange`)}
+                    onClick={() => navigate(`/${role?.toLowerCase()}/pwdchange`)}
                   >
                     비밀번호 변경
                   </li>
