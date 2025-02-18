@@ -69,17 +69,23 @@ export default function TemplateCreateView({onCancel, templateId}: TemplateCreat
   }, [templateTitle, title, content, firstCategory, secondCategory, ticketType, manager]);
 
   useEffect(() => {
-    if (templateId) {
-      const fetchTemplate = async () => {
-        const template = await getTicketTemplate(templateId);
-        setTemplates(template);
-      };
-      fetchTemplate();
-    }
+    if (!templateId) return;
+    (async () => {
+      const template = await getTicketTemplate(templateId);
+      setTemplates(template);
+    })();
   }, [templateId]);
 
   useEffect(() => {
-    if (templates) {
+    if (!templates) {
+      setTemplateTitle('');
+      setTitle('');
+      setContent('');
+      setFirstCategoryId(0);
+      setSecondCategoryId(0);
+      setTicketType({typeId: 0, typeName: ''});
+      setManagerId(0);
+    } else {
       setTemplateTitle(templates.templateTitle);
       setTitle(templates.title);
       setContent(templates.description);
@@ -178,7 +184,7 @@ export default function TemplateCreateView({onCancel, templateId}: TemplateCreat
               templateTitleInput.setValue(sanitizedValue);
               setTemplateTitle(sanitizedValue);
             }}
-            className={`w-[400px] text-subtitle-regular border bg-white py-2 px-4 border-gray-2`}
+            className={`w-[400px] text-subtitle-regular border bg-white py-2 px-4 border-gray-2 focus:border-main`}
             placeholder="템플릿 제목을 입력해주세요."
           />
         </div>

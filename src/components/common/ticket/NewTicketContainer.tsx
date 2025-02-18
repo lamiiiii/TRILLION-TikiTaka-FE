@@ -223,20 +223,20 @@ export default function NewTicketContainer() {
               <div className="flex items-center gap-1">
                 마감 기한 <RequiredIcon />
               </div>
-              <div className={`flex items-center gap-5 p-2 px-8 bg-white border border-gray-2`}>
+              <div className={`flex items-center gap-5 p-2 px-8 bg-white border border-gray-2 focus:border-main`}>
                 <input
                   type="date"
                   value={dueDate}
                   onChange={handleDueDateChange}
                   min={new Date().toISOString().split('T')[0]}
-                  className="w-28 text-gray-6 text-body-regular"
+                  className="w-28 text-main text-body-regular focus:border-main"
                 />
                 <input
                   type="time"
                   value={dueTime}
                   onChange={(e) => setDueTime(e.target.value)}
                   min={new Date().toISOString().split('T')[0]}
-                  className="w-24 text-gray-6 text-body-regular"
+                  className="w-24 text-main text-body-regular"
                 />
               </div>
             </div>
