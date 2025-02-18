@@ -4,6 +4,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+
 const path = require('path');
 
 module.exports = {
@@ -55,9 +57,7 @@ module.exports = {
       'process.env': JSON.stringify(process.env),
     }),
     new CopyPlugin({
-      patterns: [
-        { from: 'public', to: '', globOptions: { ignore: ['**/index.html'] } },
-      ],
+      patterns: [{from: 'public', to: '', globOptions: {ignore: ['**/index.html']}}],
     }),
   ],
   devServer: {
@@ -67,8 +67,25 @@ module.exports = {
     historyApiFallback: true,
     hot: true,
   },
-  
-  devtool: 'eval-cheap-source-map',
+
+  mode: 'production',
+  devtool: false,
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          compress: {
+            drop_console: true,
+          },
+          format: {
+            comments: false,
+          },
+        },
+        extractComments: false,
+      }),
+    ],
+  },
   performance: {
     hints: false,
     maxEntrypointSize: 512000,
