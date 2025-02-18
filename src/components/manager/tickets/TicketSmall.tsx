@@ -70,7 +70,7 @@ const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(
         <div className="flex items-start">
           <div className="text-body-bold bg-gray-18 border border-gray-2 rounded px-2 mr-4">#{id}</div>
           <Link className="group relative" to={`/manager/detail/${id}`}>
-            <h1 className="w-[240px] h-[40px] text-subtitle-regular group-hover:text-main hover:underline overflow-hidden text-ellipsis line-clamp-2">
+            <h1 className="w-[240px] h-[45px] text-subtitle-regular group-hover:text-main hover:underline overflow-hidden text-ellipsis line-clamp-2">
               [{typeNameMapping[typeName ?? '']}] {title}
             </h1>
           </Link>
@@ -85,7 +85,7 @@ const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(
                 borderColor: priority ? PRIORITY_COLOR[priority as keyof typeof PRIORITY_COLOR] : 'transparent',
               }}
             >
-              {priority || <StarIcon color="#727586" />} {/* Show star icon only when priority is empty */}
+              {priority || <StarIcon color="#727586" />}
               <span className="absolute inset-[-10px]" aria-hidden="true" />
             </button>
             {showPriority && (
