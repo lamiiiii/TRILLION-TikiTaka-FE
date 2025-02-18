@@ -58,19 +58,19 @@ export default function CategoryTicketStatus() {
                   width={240}
                   height={340}
                   data={primaryData}
-                  margin={{left: 10, right: 10, top: 10, bottom: 0}}
+                  margin={{left: 10, right: 10, top: 10, bottom: 10}}
                   barSize={30}
                   barGap={0}
                 >
                   <XAxis
                     dataKey="name"
-                    tick={{fontSize: 10, fontWeight: 700}}
+                    tick={{fontSize: 9, fontWeight: 700}}
                     axisLine={false}
                     tickLine={false}
                     angle={-45}
                     width={400}
                     height={120}
-                    padding={{left: 25}}
+                    padding={{left: 45}}
                     textAnchor="end"
                     tickFormatter={(tick: string) => tick}
                   />

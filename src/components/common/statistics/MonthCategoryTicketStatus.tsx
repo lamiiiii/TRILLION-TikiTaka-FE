@@ -76,10 +76,10 @@ export default function MonthCategoryTicketStatus() {
             </div>
             <section className="ml-10">
               {primaryData && primaryData.length > 0 ? (
-                <BarChart width={240} height={340} data={primaryData} margin={{left: 20, right: 10, top: 10, bottom: 0}}>
+                <BarChart width={240} height={340} data={primaryData} margin={{left: 10, right: 10, top: 10, bottom: 0}}>
                   <XAxis
                     dataKey="name"
-                    tick={{fontSize: 10, fontWeight: 700}}
+                    tick={{fontSize: 8, fontWeight: 700}}
                     axisLine={false}
                     tickLine={false}
                     angle={-45}
