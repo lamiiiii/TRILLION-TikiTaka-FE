@@ -75,11 +75,7 @@ export default function StatusBar({data, status}: StatusBarProps) {
   );
 
   //티켓 우선순위 수정
-  const updatePriorityMutation = useUpdateTicketPriority(ticketId, {
-    onSuccess: (data) => {
-      setPriority(data.priority);
-    },
-  });
+  const updatePriorityMutation = useUpdateTicketPriority(ticketId);
 
   // 티켓 승인
   const approveMutation = useCreateMutation(() => approveTicket(ticketId), '티켓 승인에 실패했습니다. 다시 시도해 주세요.', ticketId, [
@@ -160,6 +156,10 @@ export default function StatusBar({data, status}: StatusBarProps) {
       });
   };
 
+  useEffect(() => {
+    setPriority(data?.priority || 'HIGH');
+  }, [data?.priority, setPriority]);
+
   // 반려 상태가 아닐 때만 '반려'를 제외한 상태 옵션 표시
   const visibleStatusOptions = isRejected ? ['반려'] : STATUS_OPTIONS.filter((option) => option !== '반려');
 
@@ -181,7 +181,14 @@ export default function StatusBar({data, status}: StatusBarProps) {
         {location.pathname.startsWith('/manager') && (
           <div className="flex items-center gap-2 mr-2">
             <label className="text-body-bold">Priority</label>
-            <DropDown label="Priority" options={PRIORITY} value={priority} onSelect={handlePrioritySelect} />
+            <DropDown
+              label="Priority"
+              options={PRIORITY}
+              value={priority || 'HIGH'}
+              defaultSelected={'HIGH'}
+              onSelect={handlePrioritySelect}
+            />
+            {/* 기본값 HIGH */}
           </div>
         )}
 
