@@ -13,12 +13,9 @@ module.exports = {
   mode: process.env.MODE,
   entry: './src/index.tsx',
   resolve: {
-    // 번들링을 할 파일 설정
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
   module: {
-    // loader 설정 - 등록한 로더의 뒤의 요소부터 번들링에 반영
-    // node_modules 제외
     rules: [
       {
         test: /\.(ts|tsx)?$/,
