@@ -78,7 +78,7 @@ export default function TicketPreview() {
           </div>
           <div className="flex gap-8 items-center">
             <p className={`${formattedDate ? '' : 'text-blue'}`}>{formattedDate || '-'}</p>
-            <div className="bg-white border border-gray-2 py-1 px-4 my-2 rounded items-center">{manager?.username || '전체 담당자'}</div>
+            <div className="bg-white border border-gray-2 py-1 px-4 my-2 rounded items-center">{manager?.username || 'all'}</div>
           </div>
         </motion.div>
       )}
