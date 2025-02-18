@@ -56,12 +56,12 @@ export default function DropDown({
         ${width ? width : ''}
         ${value ? textColor : 'text-gray-6'} 
         ${backgroundColor}
-        rounded-md py-1 ${paddingX} text-body-regular flex items-center gap-3 
+        rounded-md py-0.5 ${paddingX} text-body-regular flex items-center gap-3 
         ${disabled ? 'bg-gray-1 text-gray-3 cursor-not-allowed' : ''}`}
         onClick={() => setIsOpen(!isOpen)}
         disabled={disabled}
       >
-        <span className={`flex items-center leading-none truncate   ${width ? '' : 'max-w-[100px]'}`}>{value || label}</span>
+        <span className={`flex items-center truncate`}>{value || label}</span>
         <svg
           className={`w-4 h-4 transform transition-transform ml-auto ${isOpen ? 'rotate-180' : 'rotate-0'}`}
           xmlns="http://www.w3.org/2000/svg"

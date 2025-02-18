@@ -1,7 +1,7 @@
-import {useEffect, useState, useMemo, useRef} from 'react';
-import {getTicketStatusCount} from '../../../api/service/tickets';
-import {useUserStore} from '../../../store/store';
-import {useQuery, useQueryClient} from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { getTicketStatusCount } from '../../../api/service/tickets';
+import { useUserStore } from '../../../store/store';
 
 interface TicketFilterProps {
   onFilterChange: (type: string) => void;
@@ -75,7 +75,7 @@ export default function DashTicketFilter({onFilterChange, onCountUpdate}: Ticket
               refreshTicketCounts();
             }}
           >
-            <span
+            <div
               className={`${
                 item.type === '긴급'
                   ? selectedType === '긴급'
@@ -84,12 +84,12 @@ export default function DashTicketFilter({onFilterChange, onCountUpdate}: Ticket
                   : selectedType === item.type
                     ? 'text-main text-title-bold'
                     : 'text-gray-7 text-title-bold'
-              }`}
+              } flex items-center` }
             >
               {item.type}
-            </span>
+            </div>
             <div
-              className={`px-4 h-4 flex items-center rounded-full ${
+              className={`px-4 h-4 flex items-center rounded-full  ${
                 item.type === '긴급'
                   ? selectedType === '긴급'
                     ? 'bg-error'
@@ -97,15 +97,15 @@ export default function DashTicketFilter({onFilterChange, onCountUpdate}: Ticket
                   : selectedType === item.type
                     ? 'bg-main text-title-bold'
                     : 'bg-gray-500 text-title-bold'
-              } text-white`}
+              } text-white `}
             >
-              <span className="text-caption-bold text-white">{item.count}</span>
+              <span className=" text-caption-bold ">{item.count}</span>
             </div>
           </div>
         ))}
       </div>
       <div
-        className="absolute bottom-0 h-0.5 bg-black transition-all duration-300"
+        className="absolute bottom-0 h-0.5 bg-main transition-all duration-300"
         style={{
           left: `${indicatorStyle.left}px`,
           width: `${indicatorStyle.width}px`,
