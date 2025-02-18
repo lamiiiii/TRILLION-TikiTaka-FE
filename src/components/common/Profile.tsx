@@ -29,8 +29,8 @@ export default function Profile({userId, size = 'sm', isTopBar}: ProfileInitialP
 
   return (
     <div className="relative h-fit">
-      {!isTopBar && isPopupOpen && (
-        <div className="absolute top-full mt-4 mr-3 z-[999]" ref={popupRef}>
+      {isPopupOpen && (
+        <div className={`absolute top-full mt-4 mr-3 z-[999] ${isTopBar && 'left-1/2 transform -translate-x-1/2'}`} ref={popupRef}>
           {userDetail && <ProfilePopup userDetail={userDetail} />}
         </div>
       )}

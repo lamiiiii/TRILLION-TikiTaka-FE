@@ -4,6 +4,7 @@ import {DownIcon, LogoIcon} from './Icon';
 import {Link, useNavigate} from 'react-router-dom';
 import {postLogout} from '../../api/service/auth';
 import Profile from './Profile';
+import {useOutsideClick} from '../../hooks/useOutsideClick';
 
 export default function TopBar() {
   const {role, userId} = useUserStore();
@@ -12,6 +13,7 @@ export default function TopBar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const roleLabel = {manager: 'MANAGER', admin: 'ADMIN', user: 'USER'}[role?.toLowerCase()] || '';
+  const dropRef = useOutsideClick(() => setIsDropdownOpen(false));
 
   const onClickLogout = () => {
     try {
@@ -36,24 +38,25 @@ export default function TopBar() {
         </Link>
 
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 text-white cursor-pointer" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-            <div className="relative">
-              <Profile userId={userId} size="md" isTopBar />
-            </div>
+          <div className="">
+            <Profile userId={userId} size="md" isTopBar />
+          </div>
+          <div className="relative flex items-center text-white cursor-pointer" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
             <div className={`transform transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`}>
               <DownIcon />
             </div>
             {isDropdownOpen && (
-              <div className="absolute top-12 right-24 mt-4 bg-white border border-gray-3 rounded-md shadow-lg z-[60] ">
+              <div
+                className="absolute top-10 bg-white border border-gray-3 rounded-md shadow-lg z-[999] left-1/2 transform -translate-x-1/2"
+                ref={dropRef}
+              >
                 <ul>
-                  {role !== 'ADMIN' && (
-                    <li
-                      className="px-2 py-1.5 text-center cursor-pointer leading-none m-2 text-black text-caption-regular hover:bg-gray-1 hover:font-bold rounded-md"
-                      onClick={() => navigate(`/${role?.toLowerCase()}/pwdChange`)}
-                    >
-                      비밀번호 변경
-                    </li>
-                  )}
+                  <li
+                    className="px-2 py-1.5 text-center cursor-pointer leading-none m-2 text-black text-caption-regular hover:bg-gray-1 hover:font-bold rounded-md whitespace-nowrap"
+                    onClick={() => navigate(`/${role?.toLowerCase()}/pwdChange`)}
+                  >
+                    비밀번호 변경
+                  </li>
                   <li
                     className="px-2 py-1.5 text-center cursor-pointer leading-none m-2 text-black text-caption-regular hover:bg-gray-1 hover:font-bold rounded-md"
                     onClick={onClickLogout}
