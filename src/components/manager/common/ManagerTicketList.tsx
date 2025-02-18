@@ -9,24 +9,9 @@ import {toast} from 'react-toastify';
 import {getManagerList} from '../../../api/service/users';
 import {getCategoryList} from '../../../api/service/categories';
 import {RefreshIcon} from '../../common/Icon';
-import {pageSizeOptions, typeNameMapping} from '../../../constants/constants';
+import {ITEMS_PER_PAGE, mapFilterToStatus, pageSizeOptions, typeNameMapping} from '../../../constants/constants';
 import {ERROR_MESSAGES} from '../../../constants/error';
 import {motion} from 'framer-motion';
-
-const mapFilterToStatus = (filter: string): string | undefined => {
-  switch (filter) {
-    case '대기중':
-      return 'PENDING';
-    case '진행중':
-      return 'IN_PROGRESS';
-    case '검토 요청':
-      return 'REVIEW';
-    case '완료':
-      return 'DONE';
-    default:
-      return undefined;
-  }
-};
 
 interface TicketListProps {
   selectedFilter: string;
@@ -39,7 +24,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
-  const [pageSize, setPageSize] = useState(20);
+  const [pageSize, setPageSize] = useState(ITEMS_PER_PAGE);
   const [orderBy, setOrderBy] = useState('최신순');
   const queryClient = useQueryClient();
   const [isHovered, setIsHovered] = useState(false);
@@ -47,7 +32,6 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
   const [showTooltip, setShowTooltip] = useState(false);
 
   useEffect(() => {
-    setSelectedFilters({});
     setCurrentPage(1);
   }, [selectedFilter]);
 
@@ -92,7 +76,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
       'tickets',
       selectedFilter ?? '',
       currentPage ?? 1,
-      pageSize ?? 20,
+      pageSize ?? ITEMS_PER_PAGE,
       orderBy ?? '최신순',
       selectedFilters['담당자'],
       selectedFilters['1차 카테고리'],
@@ -116,7 +100,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
 
       const ticketData = await getTicketList({
         page: (currentPage ?? 1) - 1,
-        size: pageSize ?? 20,
+        size: pageSize ?? ITEMS_PER_PAGE,
         status: statusParam,
         managerId,
         firstCategoryId,
@@ -178,7 +162,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     if (data?.totalPages) {
       setTotalPages(data.totalPages);
     }
-  }, [data?.content, data?.totalPages]);
+  }, [data?.content, data?.totalPages, selectedFilter]);
 
   const selectedCount = Object.values(selectedFilters).some((filter) => filter)
     ? data?.totalElements || 0
@@ -225,7 +209,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     mutationFn: (ticketId: number) => approveTicket(ticketId),
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['tickets']});
-      toast.success(' 티켓이 승인되었습니다.');
+      toast.success('티켓이 승인되었습니다.');
     },
   });
 
@@ -233,7 +217,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     mutationFn: (ticketId: number) => rejectTicket(ticketId),
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['tickets']});
-      alert(' 티켓이 반려되었습니다.');
+      toast.success('티켓이 반려되었습니다.');
     },
   });
 
@@ -327,10 +311,10 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
 
         <div className="flex gap-4 py-2 text-gray-700 text-title-regular mt-5 mb-5 px-2">
           <div className="w-[6%]">티켓 ID</div>
-          <div className="w-[12%]">카테고리</div>
-          <div className={role === 'user' ? 'w-[51%]' : 'w-[36%]'}>요청 내용</div>
+          <div className="w-[14%]">카테고리</div>
+          <div className={role === 'user' ? 'w-[51%]' : 'w-[32%]'}>요청 내용</div>
           <div className="w-[12%]">생성 / 마감 기한</div>
-          <div className="w-[10%]">담당자</div>
+          <div className="w-[12%]">담당자</div>
           {role !== 'user' && <div className="w-[15%]">승인 여부</div>}
         </div>
 

@@ -1,6 +1,8 @@
 import {Link} from 'react-router-dom';
 // import {useUserStore} from '../../../store/store';
 import {AlertIcon} from '../../common/Icon';
+import {formatCreatedAt, removeHtmlTags, removeMarkdownTags} from '../../../utils/format';
+import {typeNameMapping} from '../../../constants/constants';
 
 interface UserTicketProps extends TicketListItem {
   detailLink: string;
@@ -34,31 +36,7 @@ export default function UserTicket({
   createdAt,
   detailLink,
 }: UserTicketProps) {
-  const typeNameMapping: Record<string, string> = {
-    CREATE: '생성',
-    DELETE: '삭제',
-    UPDATE: '수정',
-    ETC: '기타',
-  };
-
   const ticketClass = getTicketClass(urgent, status);
-
-  const removeHtmlTags = (content: string) => {
-    return content
-      .replace(/<[^>]+>/g, '')
-      .replace(/&nbsp;/g, ' ')
-      .trim();
-  };
-
-  const removeMarkdownTags = (content: string) => {
-    return content
-      .replace(/[#*_~`>+\-]/g, '')
-      .replace(/\[.*?\]\(.*?\)/g, '')
-      .replace(/!\[.*?\]\(.*?\)/g, '')
-      .replace(/\n/g, ' ')
-      .replace(/\s{2,}/g, ' ')
-      .trim();
-  };
 
   const sanitizeContent = (content: string) => {
     const withoutHtml = removeHtmlTags(content);
@@ -89,11 +67,11 @@ export default function UserTicket({
         </div>
       </Link>
       <Link to={detailLink} className="w-[18%] text-body-regular text-gray-15">
-        <span className="text-gray-5">{createdAt}</span>
+        <span className="text-gray-5">{formatCreatedAt(createdAt)}</span>
         <br />
         {deadline}
       </Link>
-      <div className="w-[18%] text-body-regular">{managerName}</div>
+      <div className="w-[18%] text-body-regular">{managerName ? managerName : 'all'}</div>
     </div>
   );
 }

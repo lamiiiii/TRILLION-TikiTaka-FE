@@ -3,14 +3,14 @@ import {XIcon} from '../../common/Icon';
 import Portal from '../../common/Portal';
 import {AnimatePresence, motion} from 'framer-motion';
 import {useState} from 'react';
-import {createCategory} from '../../../api/service/categories';
 import { toast } from 'react-toastify';
 
 interface ReqCateModalProps {
   onClose: () => void;
+  onCreate: (categoryName: string) => void;
 }
 
-export default function ReqCateModal({onClose}: ReqCateModalProps) {
+export default function ReqCateModal({onClose, onCreate}: ReqCateModalProps) {
   const [categoryName, setCategoryName] = useState(''); 
   const [loading, setLoading] = useState(false); 
   
@@ -23,13 +23,7 @@ export default function ReqCateModal({onClose}: ReqCateModalProps) {
   
     try {
       setLoading(true);
-      await createCategory(null, { name: categoryName }); 
-      toast.success('카테고리가 성공적으로 등록되었습니다.');
-  
-      setTimeout(() => {
-        window.location.reload(); 
-      }, 1000);
-      
+      await onCreate(categoryName); 
       onClose(); 
     } catch (error: any) {
       toast.error(error.message);

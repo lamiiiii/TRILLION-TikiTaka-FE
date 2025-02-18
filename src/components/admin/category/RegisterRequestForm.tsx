@@ -12,9 +12,10 @@ interface RegisterRequestFormProps {
   name: string;
   firstCategoryId: number;
   secondCategoryId: number;
+  onRequestFormCreated: (newForm: { mustDescription: string; description: string }) => void;
 }
 
-export default function RegisterRequestForm({onClose, name, firstCategoryId, secondCategoryId}: RegisterRequestFormProps) {
+export default function RegisterRequestForm({onClose, name, firstCategoryId, secondCategoryId, onRequestFormCreated}: RegisterRequestFormProps) {
   const [isClosing, setIsClosing] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [mustDescription, setMustDescription] = useState('');
@@ -38,17 +39,17 @@ export default function RegisterRequestForm({onClose, name, firstCategoryId, sec
   const handleSubmit = async () => {
     setIsConfirmOpen(false);
     try {
-      await createTicketForm(firstCategoryId, secondCategoryId, {
+      const newForm = {
         mustDescription: mustDescription.slice(0, 150),
         description: description.slice(0, 1000),
-      });
-      toast.success('요청 양식이 성공적으로 생성되었습니다.');
-      onClose();
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
+      };
+      await createTicketForm(firstCategoryId, secondCategoryId, newForm);
+      toast.success("요청 양식이 성공적으로 생성되었습니다.");
+      
+      onRequestFormCreated(newForm); 
+      onClose(); 
     } catch (error) {
-      toast.error('요청 양식 생성에 실패했습니다.');
+      toast.error("요청 양식 생성에 실패했습니다.");
     }
   };
 

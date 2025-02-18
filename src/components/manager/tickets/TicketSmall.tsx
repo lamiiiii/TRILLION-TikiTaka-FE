@@ -70,7 +70,7 @@ const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(
         <div className="flex items-start">
           <div className="text-body-bold bg-gray-18 border border-gray-2 rounded px-2 mr-4">#{id}</div>
           <Link className="group relative" to={`/manager/detail/${id}`}>
-            <h1 className="w-[240px] h-[40px] text-subtitle-regular group-hover:text-main hover:underline overflow-hidden text-ellipsis line-clamp-2">
+            <h1 className="w-[240px] h-[45px] text-subtitle-regular group-hover:text-main hover:underline overflow-hidden text-ellipsis line-clamp-2">
               [{typeNameMapping[typeName ?? '']}] {title}
             </h1>
           </Link>
@@ -105,7 +105,7 @@ const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(
               </div>
             )}
           </div>
-          <div className="w-full flex justify-between items-center mt-1">
+          <div className="w-full flex justify-between items-center">
             <div className="flex-shrink-0">
               <DropDown
                 label="진행 중"

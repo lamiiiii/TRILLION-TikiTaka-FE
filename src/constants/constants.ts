@@ -32,6 +32,21 @@ export const UPDATE_TYPE_MAP = {
   OTHER: '기타',
 };
 
+export const mapFilterToStatus = (filter: string): string | undefined => {
+  switch (filter) {
+    case '대기중':
+      return 'PENDING';
+    case '진행중':
+      return 'IN_PROGRESS';
+    case '검토 요청':
+      return 'REVIEW';
+    case '완료':
+      return 'DONE';
+    default:
+      return undefined;
+  }
+};
+
 export const typeNameMapping: Record<string, string> = {
   CREATE: '생성',
   DELETE: '삭제',
