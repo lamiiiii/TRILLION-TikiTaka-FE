@@ -7,6 +7,7 @@ import ManagerSelector from '../../common/selector/ManagerSelector';
 import {useCreateMutation} from '../../../api/hooks/useCreateMutation';
 import {updateTicketManager} from '../../../api/service/tickets';
 import {reverseStatusMapping, statusMapping, typeNameMapping} from '../../../constants/constants';
+import {formatCreatedAt, removeHtmlTags, removeMarkdownTags} from '../../../utils/format';
 
 interface DashTicketProps extends TicketListItem {
   detailLink: string;
@@ -43,7 +44,7 @@ export default function DashTicket({
   onStatusChange,
 }: DashTicketProps) {
   const role = useUserStore((state) => state.role).toLowerCase();
-  const [selectedAssignee] = useState(managerName ?? 'all');
+  const [selectedAssignee] = useState(managerName);
 
   const updateManagerMutation = useCreateMutation(
     (managerId: number) => updateTicketManager(ticketId, managerId),
@@ -57,23 +58,6 @@ export default function DashTicket({
 
   const ticketClass = getTicketClass(urgent, status);
 
-  const removeHtmlTags = (content: string) => {
-    return content
-      .replace(/<[^>]+>/g, '')
-      .replace(/&nbsp;/g, ' ')
-      .trim();
-  };
-
-  const removeMarkdownTags = (content: string) => {
-    return content
-      .replace(/[#*_~`>+\-]/g, '')
-      .replace(/\[.*?\]\(.*?\)/g, '')
-      .replace(/!\[.*?\]\(.*?\)/g, '')
-      .replace(/\n/g, ' ')
-      .replace(/\s{2,}/g, ' ')
-      .trim();
-  };
-
   const sanitizeContent = (content: string) => {
     const withoutHtml = removeHtmlTags(content);
     return removeMarkdownTags(withoutHtml);
@@ -86,12 +70,12 @@ export default function DashTicket({
       <Link to={detailLink} className="w-[6%] text-subtitle-regular text-gray-700 px-2">
         #{ticketId}
       </Link>
-      <Link to={detailLink} className="w-[12%] text-subtitle-regular">
+      <Link to={detailLink} className="w-[14%] text-subtitle-regular">
         <span>{firstCategoryName || '1차 카테고리 미지정'}</span>
         <br />
         <span className="text-gray-6 text-body-regular">{secondCategoryName || '2차 카테고리 미지정'}</span>
       </Link>
-      <Link to={detailLink} className={role === 'manager' ? 'w-[36%]' : 'w-[51%]'} style={{textAlign: 'left'}}>
+      <Link to={detailLink} className={role === 'manager' ? 'w-[32%]' : 'w-[51%]'} style={{textAlign: 'left'}}>
         <div className="flex items-center gap-1">
           {urgent && <AlertIcon className="text-error w-4 h-4 flex-shrink-0" />}
           <div className={`flex text-subtitle-regular truncate ${urgent ? 'text-error' : 'text-gray-15'}`}>
@@ -103,11 +87,11 @@ export default function DashTicket({
         </div>
       </Link>
       <Link to={detailLink} className="w-[12%] text-body-regular text-gray-15">
-        <span className="text-gray-5">{createdAt}</span>
+        <span className="text-gray-5">{formatCreatedAt(createdAt)}</span>
         <br />
         {deadline}
       </Link>
-      <div className="w-[10%]">
+      <div className="w-[12%]">
         <ManagerSelector selectedManagerName={selectedAssignee} onManagerSelect={handleManagerSelect} />
       </div>
       <div className="w-[15%] flex gap-2">
