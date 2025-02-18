@@ -89,7 +89,7 @@ export default function DashTicketFilter({onFilterChange, onCountUpdate}: Ticket
               {item.type}
             </div>
             <div
-              className={`px-4 h-4 flex items-center rounded-full  ${
+              className={`px-4 h-4 flex items-center rounded-full ${
                 item.type === '긴급'
                   ? selectedType === '긴급'
                     ? 'bg-error'
@@ -99,7 +99,7 @@ export default function DashTicketFilter({onFilterChange, onCountUpdate}: Ticket
                     : 'bg-gray-500 text-title-bold'
               } text-white `}
             >
-              <span className=" text-caption-bold ">{item.count}</span>
+              <span className="text-caption-bold">{item.count}</span>
             </div>
           </div>
         ))}
