@@ -7,6 +7,7 @@ import Modal from './Modal';
 import {patchUserPassword} from '../../api/service/users';
 import {EyeIcon, EyeOffIcon, ValidateIcon} from './Icon';
 import TopMenu from './TopMenu';
+import {useEnterKeyHandler} from '../../hooks/useEnterKeyHandler';
 
 export default function PwdChangeContainer() {
   const {role, userId} = useUserStore();
@@ -114,6 +115,8 @@ export default function PwdChangeContainer() {
       setModalState({open: true, type: 'error', message: errorMessage});
     }
   };
+
+  useEnterKeyHandler(onClickChange);
 
   return (
     <div className="top-container">

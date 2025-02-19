@@ -8,6 +8,7 @@ import {Link, useNavigate} from 'react-router-dom';
 import {postRegistration} from '../../../api/service/registration';
 import {termsContent} from '../../../constants/terms';
 import {useTokenStore} from '../../../store/store';
+import {useEnterKeyHandler} from '../../../hooks/useEnterKeyHandler';
 
 export default function SignUpContainer() {
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ export default function SignUpContainer() {
 
     const sanitizedEmail = DOMPurify.sanitize(email);
     const sanitizedId = DOMPurify.sanitize(id);
-  
+
     try {
       const response = await postRegistration({email: sanitizedEmail, username: sanitizedId});
       setModalTitle(response.status === 200 ? '계정 등록 신청' : '계정 등록 실패');
@@ -73,6 +74,8 @@ export default function SignUpContainer() {
     }
     setIsModalOpen(true);
   };
+
+  useEnterKeyHandler(onClickSubmit);
 
   const closeModal = () => {
     setEmail('');
