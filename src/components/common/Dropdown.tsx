@@ -29,7 +29,7 @@ export default function DropDown({
   disabled = false,
 }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState(defaultSelected);
+  const [selected, setSelected] = useState(value || defaultSelected);
   const [maxWidth, setMaxWidth] = useState(0);
   const optionsRef = useRef<HTMLDivElement[]>([]); // 타입 명시
 
@@ -48,6 +48,10 @@ export default function DropDown({
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    setSelected(value ?? defaultSelected);
+  }, [value, defaultSelected]);
+
   return (
     <div className="relative inline-block " ref={dropdownRef}>
       {/* 드롭다운 버튼 */}
@@ -61,7 +65,7 @@ export default function DropDown({
         onClick={() => setIsOpen(!isOpen)}
         disabled={disabled}
       >
-        <span className={`flex items-center truncate`}>{value || label}</span>
+        <span className={`flex items-center truncate`}>{selected || label}</span>
         <svg
           className={`w-4 h-4 transform transition-transform ml-auto ${isOpen ? 'rotate-180' : 'rotate-0'}`}
           xmlns="http://www.w3.org/2000/svg"

@@ -1,3 +1,4 @@
+import {ITEMS_PER_PAGE} from '../../constants/constants';
 import instance from '../axiosInstance';
 
 export async function createTicketForm(firstCategoryId: number, secondCategoryId: number, formData: CreateTicketFormData) {
@@ -86,13 +87,13 @@ export async function createTicket(formData: FormData) {
 
 export async function getTicketStatusCount(requesterId?: number) {
   try {
-    const params = requesterId ? { requesterId } : undefined; 
+    const params = requesterId ? {requesterId} : undefined;
 
-    const { data } = await instance.get<{ message: string; data: TicketStatusCount }>("/tickets/count", { params });
+    const {data} = await instance.get<{message: string; data: TicketStatusCount}>('/tickets/count', {params});
 
     return data.data;
   } catch (error) {
-    console.error("티켓 상태 조회 실패:", error);
+    console.error('티켓 상태 조회 실패:', error);
     throw error;
   }
 }
@@ -134,7 +135,7 @@ export async function getTicketList(params: TicketListParams = {}) {
     const {data} = await instance.get<{message: string; data: TicketListResponse}>('/tickets/list', {
       params: {
         page: params.page || 0,
-        size: params.size || 20,
+        size: params.size || ITEMS_PER_PAGE,
         status: params.status,
         firstCategoryId: params.firstCategoryId,
         secondCategoryId: params.secondCategoryId,
@@ -143,7 +144,7 @@ export async function getTicketList(params: TicketListParams = {}) {
         requesterId: params.requesterId,
         createdAt: params.createdAt,
         urgent: params.urgent,
-        sort: params.sort
+        sort: params.sort,
       },
     });
     return data.data;

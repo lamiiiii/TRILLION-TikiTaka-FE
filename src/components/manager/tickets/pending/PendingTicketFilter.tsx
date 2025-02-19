@@ -21,7 +21,7 @@ function FilterItem({type, count, isSelected, onClick}: {type: string; count: nu
       <span className={textColor}>{type}</span>
       {/* Count */}
       <div className={`px-4 h-[16px] flex place-items-center rounded-full ${bgColor} text-white`}>
-        <div className="text-caption-bold bottom-0">{count}</div>
+        <div className="text-caption-bold">{count}</div>
       </div>
     </div>
   );

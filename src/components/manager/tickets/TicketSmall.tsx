@@ -105,7 +105,7 @@ const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(
               </div>
             )}
           </div>
-          <div className="w-full flex justify-between items-center mt-1">
+          <div className="w-full flex justify-between items-center">
             <div className="flex-shrink-0">
               <DropDown
                 label="진행 중"

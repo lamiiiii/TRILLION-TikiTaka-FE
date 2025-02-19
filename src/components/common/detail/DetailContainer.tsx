@@ -167,9 +167,7 @@ export default function DetailContainer() {
                   {ticket && <TicketContent data={ticket} />}
                   {ticket?.attachments && ticket?.attachments.length > 0 && (
                     <div className="flex flex-col gap-1">
-                      <div className="w-64 mt-1 bg-gray-1 border border-gray-2 rounded-md py-1 px-3 text-xs text-gray-15 shadow-md">
-                        첨부된 이미지를 클릭하여 다운로드 가능합니다.
-                      </div>
+                      <div className="mt-4 tooltip w-fit">첨부된 이미지를 클릭하여 다운로드 가능합니다.</div>
                       <AttachmentList
                         attachments={ticket?.attachments}
                         onDeleteAttachment={handleDeleteAttachment}

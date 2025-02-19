@@ -45,9 +45,7 @@ export default function CategoryTicketStatus() {
     <div className="flex flex-col w-full h-[500px] bg-gray-18 p-5">
       <div className="flex items-center gap-4">
         <h1 className="text-title-bold">카테고리별 티켓 생성 현황</h1>
-        <div className="bg-gray-1 border border-gray-2 rounded-full py-1 px-4 text-body-bold w-fit">
-          1차 카테고리 Bar 클릭 시 2차 카테고리 데이터를 확인 가능합니다.
-        </div>
+        <div className="tooltip text-body-bold">1차 카테고리 Bar 클릭 시 2차 카테고리 데이터를 확인 가능합니다.</div>
       </div>
       <div className="flex flex-col bg-white rounded border border-gray-2 p-10 mt-4">
         <div className="flex items-start gap-10 w-full bg-gray-18 p-5">
@@ -61,19 +59,19 @@ export default function CategoryTicketStatus() {
                   width={240}
                   height={340}
                   data={primaryData}
-                  margin={{left: 10, right: 10, top: 10, bottom: 0}}
+                  margin={{left: 10, right: 10, top: 10, bottom: 10}}
                   barSize={30}
                   barGap={0}
                 >
                   <XAxis
                     dataKey="name"
-                    tick={{fontSize: 10, fontWeight: 700}}
+                    tick={{fontSize: 9, fontWeight: 700}}
                     axisLine={false}
                     tickLine={false}
                     angle={-45}
                     width={400}
                     height={120}
-                    padding={{left: 25}}
+                    padding={{left: 45}}
                     textAnchor="end"
                     tickFormatter={(tick: string) => tick}
                   />

@@ -34,12 +34,12 @@ export default function TicketAwaitingList() {
         <div className="flex items-center gap-2">
           <h1 className="text-title-bold">승인 대기</h1>
           {pendingApprovalCount && (
-            <div className={`px-4 h-[16px] flex place-items-center rounded-full bg-gray-9 text-white`}>
+            <div className={`px-4 h-[16px] flex place-items-center rounded-full bg-gray-9 text-white `}>
               <div className="text-caption-bold">{pendingApprovalCount?.allPendingTicket}</div>
             </div>
           )}
           {pendingApprovalCount && (
-            <div className={`px-4 h-[16px] flex place-items-center gap-1 rounded-full bg-error text-white`}>
+            <div className={`px-4 h-[16px] flex place-items-center gap-1 rounded-full bg-error text-white `}>
               <AlertIcon />
               <div className="text-caption-bold">{pendingApprovalCount?.urgentPendingTicket}</div>
             </div>

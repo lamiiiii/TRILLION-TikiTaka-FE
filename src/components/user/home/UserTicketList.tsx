@@ -10,7 +10,7 @@ import {RefreshIcon} from '../../common/Icon';
 import PageNations from '../../common/PageNations';
 import UserTicket from './UserTicket';
 import {ERROR_MESSAGES} from '../../../constants/error';
-import {ITEMS_PER_PAGE, pageSizeOptions, typeNameMapping} from '../../../constants/constants';
+import {ITEMS_PER_PAGE, mapFilterToStatus, pageSizeOptions, typeNameMapping} from '../../../constants/constants';
 
 const typeMapping: Record<string, string> = {CREATE: '생성', DELETE: '삭제', ETC: '기타', UPDATE: '수정'};
 
@@ -28,25 +28,11 @@ const REVERSE_STATUS_MAP = Object.entries(STATUS_MAP).reduce(
   {} as Record<string, string>
 );
 
-const mapFilterToStatus = (filter: string): string | undefined => {
-  switch (filter) {
-    case '대기중':
-      return 'PENDING';
-    case '진행중':
-      return 'IN_PROGRESS';
-    case '검토중':
-      return 'REVIEW';
-    case '완료':
-      return 'DONE';
-    default:
-      return undefined;
-  }
-};
 export default function UserTicketList({selectedFilter}: TicketListProps) {
   const role = useUserStore((state) => state.role).toLowerCase();
   const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(20);
+  const [pageSize, setPageSize] = useState(ITEMS_PER_PAGE);
   const [orderBy, setOrderBy] = useState('최신순');
   const listRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
@@ -85,7 +71,7 @@ export default function UserTicketList({selectedFilter}: TicketListProps) {
       'ticketList',
       selectedFilter ?? '',
       currentPage ?? 1,
-      pageSize ?? 20,
+      pageSize ?? ITEMS_PER_PAGE,
       orderBy ?? '최신순',
       selectedFilters['담당자'],
       selectedFilters['1차 카테고리'],

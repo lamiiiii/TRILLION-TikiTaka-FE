@@ -7,12 +7,14 @@ import TopMenu from '../../common/TopMenu';
 export default function ManagerHomeContainer() {
   const [selectedFilter, setSelectedFilter] = useState<TicketViewType>('전체');
   const [ticketCounts, setTicketCounts] = useState<TicketStatusCount | null>(null);
+
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = 'auto';
     };
   }, []);
+
   return (
     <div className="top-container">
       <div className="flex flex-col max-w-1200 mb-20">
