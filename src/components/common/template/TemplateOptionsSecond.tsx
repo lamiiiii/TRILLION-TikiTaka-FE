@@ -4,6 +4,7 @@ import DropDown from '../Dropdown';
 import {getTicketTypes} from '../../../api/service/tickets';
 import {useEffect, useState} from 'react';
 import {getManagerList} from '../../../api/service/users';
+import {typeNameMapping} from '../../../constants/constants';
 
 export default function TemplateOptionsSecond() {
   const {manager, ticketType, managerId, setManager, setTicketType} = useTemplateStore();
@@ -52,15 +53,13 @@ export default function TemplateOptionsSecond() {
         />
       </div>
       <div className="selection-2">
-        <div className="w-12">
-          유형
-        </div>
+        <div className="w-12">유형</div>
         <DropDown
           label="유형"
-          options={ticketTypes.map((t) => t.typeName)}
-          value={ticketType.typeName}
+          options={ticketTypes.map((t) => typeNameMapping[t.typeName] || t.typeName)}
+          value={typeNameMapping[ticketType.typeName] || ticketType.typeName}
           onSelect={(value) => {
-            const selectedType = ticketTypes.find((t) => t.typeName === value);
+            const selectedType = ticketTypes.find((t) => (typeNameMapping[t.typeName] || t.typeName) === value);
             if (selectedType) {
               setTicketType(selectedType);
             }
