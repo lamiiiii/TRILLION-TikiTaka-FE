@@ -11,6 +11,9 @@ import {createTicket} from '../../../api/service/tickets';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {useNavigate} from 'react-router-dom';
 import {MAX_FILE_SIZE, MAX_FILES} from '../../../constants/constants';
+import LoadingStatus from '../LoadingStatus';
+import Portal from '../Portal';
+import {motion} from 'framer-motion';
 
 export default function NewTicketContainer() {
   const navigate = useNavigate();
@@ -297,6 +300,13 @@ export default function NewTicketContainer() {
           }
         />
       )}
+      <Portal>
+        {mutation.status === 'pending' && (
+          <motion.div className="overlay" initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}}>
+            <LoadingStatus />
+          </motion.div>
+        )}
+      </Portal>
     </div>
   );
 }
