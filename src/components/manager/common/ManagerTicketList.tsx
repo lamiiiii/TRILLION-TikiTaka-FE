@@ -212,6 +212,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     mutationFn: (ticketId: number) => approveTicket(ticketId),
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['tickets']});
+      queryClient.invalidateQueries({queryKey: ['ticketStatusCounts']});
       toast.success('티켓이 승인되었습니다.');
     },
   });
@@ -220,6 +221,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     mutationFn: (ticketId: number) => rejectTicket(ticketId),
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['tickets']});
+      queryClient.invalidateQueries({queryKey: ['ticketStatusCounts']});
       toast.success('티켓이 반려되었습니다.');
     },
   });
@@ -228,12 +230,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     mutationFn: ({ticketId, newStatus}: {ticketId: number; newStatus: string}) => updateTicketStatus(ticketId, newStatus),
     onSuccess: (_, {newStatus}) => {
       queryClient.invalidateQueries({queryKey: ['tickets']});
-      queryClient.setQueryData(['ticketStatusCounts'], (prev: any) => ({
-        ...prev,
-        inProgress: newStatus === 'DONE' ? prev.inProgress - 1 : prev.inProgress,
-        reviewing: newStatus === 'DONE' ? prev.reviewing - 1 : prev.reviewing,
-        completed: newStatus === 'DONE' ? prev.completed + 1 : prev.completed,
-      }));
+      queryClient.invalidateQueries({queryKey: ['ticketStatusCounts']});
       const statusMessage: Record<string, string> = {
         PENDING: '티켓 상태가 대기중으로 변경되었습니다.',
         DONE: '티켓 상태가 완료로 변경되었습니다.',
@@ -248,6 +245,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
 
   const handleStatusChange = (ticketId: number, newStatus: string) => {
     updateStatusMutation.mutate({ticketId, newStatus});
+    queryClient.invalidateQueries({queryKey: ['ticketStatusCounts']});
   };
 
   return (

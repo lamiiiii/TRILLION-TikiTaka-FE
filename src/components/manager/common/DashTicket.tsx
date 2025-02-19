@@ -8,6 +8,7 @@ import {useCreateMutation} from '../../../api/hooks/useCreateMutation';
 import {updateTicketManager} from '../../../api/service/tickets';
 import {reverseStatusMapping, statusMapping, typeNameMapping} from '../../../constants/constants';
 import {formatCreatedAt, removeHtmlTags, removeMarkdownTags} from '../../../utils/format';
+import {useQueryClient} from '@tanstack/react-query';
 
 interface DashTicketProps extends TicketListItem {
   detailLink: string;
@@ -44,6 +45,7 @@ export default function DashTicket({
   onStatusChange,
 }: DashTicketProps) {
   const role = useUserStore((state) => state.role).toLowerCase();
+  const queryClient = useQueryClient();
   const [selectedAssignee] = useState(managerName);
 
   const updateManagerMutation = useCreateMutation(
@@ -54,6 +56,7 @@ export default function DashTicket({
 
   const handleManagerSelect = (managerId: number) => {
     updateManagerMutation.mutate(managerId);
+    queryClient.invalidateQueries({queryKey: ['ticketStatusCounts']});
   };
 
   const ticketClass = getTicketClass(urgent, status);
