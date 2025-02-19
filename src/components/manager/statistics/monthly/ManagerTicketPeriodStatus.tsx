@@ -2,6 +2,7 @@ import {useState} from 'react';
 import ManagerItem from './ManagerItem';
 import {useQuery} from '@tanstack/react-query';
 import {getMonthlyManagerTicketSummary} from '../../../../api/service/statistics';
+import LoadingStatus from '../../../common/LoadingStatus';
 
 interface ManagerData {
   userId: number;
@@ -29,7 +30,7 @@ export default function ManagerTicketPeriodStatus() {
     queryFn: () => getMonthlyManagerTicketSummary(currentYear, currentMonth),
   });
 
-  if (isLoading) return <div>로딩 중...</div>;
+  if (isLoading) return <LoadingStatus/>;
   if (error) return <div>에러가 발생했습니다.</div>;
 
   const totalPages = Math.ceil((managerData?.length || 0) / itemsPerPage);

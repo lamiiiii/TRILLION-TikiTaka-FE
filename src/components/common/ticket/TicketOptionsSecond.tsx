@@ -7,7 +7,7 @@ import {useEffect, useState} from 'react';
 import {getManagerList} from '../../../api/service/users';
 import {getTicketTemplate, getTicketTemplatesList} from '../../../api/service/ticketTemplates';
 import Modal from '../Modal';
-import { typeNameMapping } from '../../../constants/constants';
+import {typeNameMapping} from '../../../constants/constants';
 
 export default function TicketOpstionsSecond() {
   const {
@@ -88,6 +88,11 @@ export default function TicketOpstionsSecond() {
       }
     }
   }, [templateId, templates]);
+
+  useEffect(() => {
+    setTemplate(null);
+    setSelectedTemplateId(0);
+  }, [location.pathname]);
 
   const onTemplateSelect = (value: string) => {
     const selected = templates.find((t) => t.templateTitle === value);

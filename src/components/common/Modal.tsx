@@ -5,6 +5,7 @@ import {motion} from 'framer-motion';
 interface ModalProps {
   title?: string;
   content?: string;
+  warningContent?: string;
   backBtn?: string;
   onBackBtnClick: () => void;
   checkBtn?: string;
@@ -13,7 +14,7 @@ interface ModalProps {
   blockOutsideClick?: boolean;
 }
 
-export default function Modal({title, content, backBtn, onBackBtnClick, checkBtn, onBtnClick, children, blockOutsideClick}: ModalProps) {
+export default function Modal({title, content, warningContent, backBtn, onBackBtnClick, checkBtn, onBtnClick, children, blockOutsideClick}: ModalProps) {
   const ref = !blockOutsideClick ? useOutsideClick(onBackBtnClick) : null;
 
   return (
@@ -25,6 +26,7 @@ export default function Modal({title, content, backBtn, onBackBtnClick, checkBtn
             <div className="flex flex-col items-center gap-4 py-6">
               <div className="flex flex-col gap-2 text-center">
                 <span className={`whitespace-pre-wrap text-black text-title-bold `}>{title}</span>
+                <span className={`whitespace-pre-wrap text-error text-sm font-bold text-center`}>{warningContent}</span>
                 <span className={`whitespace-pre-wrap text-sm text-main font-regular `}>{content}</span>
               </div>
             </div>

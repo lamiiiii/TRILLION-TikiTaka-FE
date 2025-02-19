@@ -30,22 +30,7 @@ export default function DetailContainer() {
   const queryClient = useQueryClient();
   const {userId, role} = useUserStore();
 
-  const {
-    setTitle,
-    setContent,
-    setIsUrgent,
-    setFirstCategoryId,
-    setSecondCategoryId,
-    setTicketType,
-    setDueDate,
-    setDueTime,
-    setManagerId,
-    setFirstCategory,
-    setSecondCategory,
-    setManager,
-    isEditing,
-    setIsEditing,
-  } = useNewTicketStore();
+  const newData = useNewTicketStore();
 
   // 뒤로 가기
   const handleGoBack = () => navigate(-1);
@@ -86,30 +71,30 @@ export default function DetailContainer() {
 
   // 수정 버튼 클릭 시
   const handleEdit = () => {
-    setIsEditing?.(!isEditing);
-    if (!isEditing && ticket) {
-      setTitle(ticket.title);
-      setContent(ticket.description);
-      setIsUrgent(ticket.urgent);
-      setFirstCategoryId(ticket.firstCategoryId);
-      setSecondCategoryId(ticket.secondCategoryId);
-      setTicketType({typeId: ticket.typeId, typeName: ticket.typeName});
-      setDueDate(ticket.deadline.split(' ')[0]);
-      setDueTime(ticket.deadline.split(' ')[1]);
-      setManagerId(-1);
-    } else if (isEditing) {
-      setTitle('');
-      setContent('');
-      setIsUrgent(false);
-      setFirstCategoryId(0);
-      setSecondCategoryId(0);
-      setFirstCategory(null);
-      setSecondCategory(null);
-      setTicketType({typeId: 0, typeName: ''});
-      setDueDate('');
-      setDueTime('');
-      setManagerId(0);
-      setManager(null);
+    newData.setIsEditing?.(!newData.isEditing);
+    if (!newData.isEditing && ticket) {
+      newData.setTitle(ticket.title);
+      newData.setContent(ticket.description);
+      newData.setIsUrgent(ticket.urgent);
+      newData.setFirstCategoryId(ticket.firstCategoryId);
+      newData.setSecondCategoryId(ticket.secondCategoryId);
+      newData.setTicketType({typeId: ticket.typeId, typeName: ticket.typeName});
+      newData.setDueDate(ticket.deadline.split(' ')[0]);
+      newData.setDueTime(ticket.deadline.split(' ')[1]);
+      newData.setManagerId(-1);
+    } else if (newData.isEditing) {
+      newData.setTitle('');
+      newData.setContent('');
+      newData.setIsUrgent(false);
+      newData.setFirstCategoryId(0);
+      newData.setSecondCategoryId(0);
+      newData.setFirstCategory(null);
+      newData.setSecondCategory(null);
+      newData.setTicketType({typeId: 0, typeName: ''});
+      newData.setDueDate('');
+      newData.setDueTime('');
+      newData.setManagerId(0);
+      newData.setManager(null);
     }
   };
 
@@ -129,7 +114,7 @@ export default function DetailContainer() {
   };
 
   useEffect(() => {
-    setIsEditing(false);
+    newData.setIsEditing(false);
   }, [location.pathname]);
 
   if (role === 'USER' && ticket?.requesterId !== userId) {
@@ -156,9 +141,9 @@ export default function DetailContainer() {
             <StatusBar data={ticket} status={ticket?.status as 'PENDING' | 'IN_PROGRESS' | 'DONE' | 'REVIEW' | 'REJECTED' | undefined} />
           )}
           {ticket?.requesterId === userId && (
-            <div className={`flex justify-end gap-2 text-body-bold mt-3 ${isEditing && 'px-10'}`}>
+            <div className={`flex justify-end gap-2 text-body-bold mt-3 ${newData.isEditing && 'px-10'}`}>
               <button className="text-gray-5 hover:text-gray-15" onClick={handleEdit}>
-                {isEditing ? '수정 취소' : '수정'}
+                {newData.isEditing ? '수정 취소' : '수정'}
               </button>
               <button
                 className={`text-gray-5 ${ticket?.status == 'PENDING' ? 'hover:text-gray-15' : 'cursor-not-allowed'}`}
@@ -168,7 +153,7 @@ export default function DetailContainer() {
               </button>
             </div>
           )}
-          {isEditing && ticket ? (
+          {newData.isEditing && ticket ? (
             <>
               <div className="flex w-full">
                 <TicketEdit ticketData={ticket} />

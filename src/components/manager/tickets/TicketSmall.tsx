@@ -85,7 +85,7 @@ const TicketSmall = forwardRef<HTMLDivElement, TicketSmallProps>(
                 borderColor: priority ? PRIORITY_COLOR[priority as keyof typeof PRIORITY_COLOR] : 'transparent',
               }}
             >
-              {priority || <StarIcon color="#727586" />} {/* Show star icon only when priority is empty */}
+              {priority || <StarIcon color="#727586" />}
               <span className="absolute inset-[-10px]" aria-hidden="true" />
             </button>
             {showPriority && (

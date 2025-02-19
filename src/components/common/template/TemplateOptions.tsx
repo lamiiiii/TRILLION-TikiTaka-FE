@@ -5,6 +5,7 @@ import {useTemplateStore} from '../../../store/store';
 import {getCategoryList} from '../../../api/service/categories';
 import {useQuery} from '@tanstack/react-query';
 import TemplateOptionsSecond from './TemplateOptionsSecond';
+import LoadingStatus from '../LoadingStatus';
 
 export default function TemplateOptions() {
   const {firstCategory, secondCategory, firstCategoryId, secondCategoryId, setFirstCategory, setSecondCategory} = useTemplateStore();
@@ -47,7 +48,7 @@ export default function TemplateOptions() {
     }
   }, [categories, firstCategoryId, secondCategoryId, isLoading, setFirstCategory, setSecondCategory]);
 
-  if (isLoading) return null;
+  if (isLoading) return <LoadingStatus />;
   if (error) return null;
 
   const secondaryCategoryOptions = firstCategory ? (categories.find((cat) => cat.primary.id === firstCategory.id)?.secondaries ?? []) : [];

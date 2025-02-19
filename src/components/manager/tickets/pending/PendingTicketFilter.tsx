@@ -105,7 +105,6 @@ export default function PendingTicketFilter({selectedFilter, onFilterChange}: Pe
           }}
         />
       </div>
-      
     </div>
   );
 }

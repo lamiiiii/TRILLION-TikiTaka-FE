@@ -65,11 +65,16 @@ export default function SignInContainer() {
         const {accessToken, data} = response;
         if (accessToken) {
           login(accessToken);
-          if (data.passwordChangeNeeded) {
-            navigate(`/${data.role.toLowerCase()}/pwdchange`, {replace: true});
-          } else if (data.role && data.id) {
+          if (data.role && data.id) {
             setRole(data.role);
             setUserId(data.id);
+          }
+          if (data.passwordChangeNeeded) {
+            setModalTitle('비밀번호 변경 안내');
+            setModalMessage('비밀번호 변경이 필요합니다. 지금 변경하시겠습니까?');
+            setIsModalOpen(true);
+            return;
+          } else {
             navigate(redirectTo || `/${data.role.toLowerCase()}`, {replace: true});
           }
         }
@@ -81,6 +86,16 @@ export default function SignInContainer() {
     }
   };
   useEnterKeyHandler(onClickLogin);
+
+  const handleSkipPasswordChange = () => {
+    setIsModalOpen(false);
+    navigate(redirectTo || `/${useUserStore.getState().role.toLowerCase()}`, {replace: true});
+  };
+
+  const handleChangePasswordNow = () => {
+    setIsModalOpen(false);
+    navigate(`/${useUserStore.getState().role.toLowerCase()}/pwdchange`, {replace: true});
+  };
 
   const closeModal = () => {
     setId('');
@@ -160,7 +175,19 @@ export default function SignInContainer() {
           </div>
         </div>
       </div>
-      {isModalOpen && <Modal title={modalTitle} content={modalMessage} backBtn="확인" onBackBtnClick={closeModal} />}
+      {isModalOpen && (
+        <Modal
+          title={modalTitle}
+          content={modalMessage}
+          warningContent={
+            modalTitle.includes('비밀번호 변경') ? `임시 비밀번호 유출 방지를 위해\n최초 로그인 시 반드시 비밀번호를 변경해 주세요.` : ''
+          }
+          backBtn={modalTitle.includes('비밀번호 변경') ? '다음에 변경' : '확인'}
+          onBackBtnClick={modalTitle.includes('비밀번호 변경') ? handleSkipPasswordChange : closeModal}
+          checkBtn={modalTitle.includes('비밀번호 변경') ? '비밀번경 변경' : undefined}
+          onBtnClick={modalTitle.includes('비밀번호 변경') ? handleChangePasswordNow : undefined}
+        />
+      )}
     </InitialLayout>
   );
 }

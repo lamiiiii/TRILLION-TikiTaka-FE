@@ -1,27 +1,30 @@
 import {Navigate, Route, BrowserRouter as Router, Routes} from 'react-router-dom';
-import ManagerHome from './pages/manager/ManagerHome';
+import {Suspense, lazy} from 'react';
 import './global.css';
-import UserHome from './pages/user/UserHome';
-import ManagerTickets from './pages/manager/ManagerTickets';
-import ManagerStatistics from './pages/manager/ManagerStatistics';
-import NotFound from './pages/NotFound';
-import ManagerPwdChange from './pages/manager/ManagerPwdChange';
-import UserNewTicket from './pages/user/UserNewTicket';
-import SignIn from './pages/common/signin/SignIn';
-import SignUp from './pages/common/signin/SignUp';
-import ManagerTicketDetail from './pages/manager/ManagerTicketDetail';
-import AdminAccounts from './pages/admin/AdminAccounts';
-import AdminCategory from './pages/admin/AdminCategory';
-import AdminInquiry from './pages/admin/AdminInquiry';
-import ManagerHistories from './pages/manager/ManagerHistories';
-import UserPwdChange from './pages/user/UserPwdChange';
-import ManagerNewTicket from './pages/manager/ManagerNewTicket';
-import UserTicketDetail from './pages/user/UserTicketDetail';
-import Layout from './Layout';
-import ManagerManageTickets from './pages/manager/ManagerManageTickets';
-import UserInquiry from './pages/user/UserInquiry';
-import ManagerInquiry from './pages/manager/ManagerInquiry';
-import AdminPwdChange from './pages/admin/AdminPwdChange';
+import LoadingStatus from './components/common/LoadingStatus';
+
+const ManagerHome = lazy(() => import('./pages/manager/ManagerHome'));
+const UserHome = lazy(() => import('./pages/user/UserHome'));
+const ManagerTickets = lazy(() => import('./pages/manager/ManagerTickets'));
+const ManagerStatistics = lazy(() => import('./pages/manager/ManagerStatistics'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+const ManagerPwdChange = lazy(() => import('./pages/manager/ManagerPwdChange'));
+const UserNewTicket = lazy(() => import('./pages/user/UserNewTicket'));
+const SignIn = lazy(() => import('./pages/common/signin/SignIn'));
+const SignUp = lazy(() => import('./pages/common/signin/SignUp'));
+const ManagerTicketDetail = lazy(() => import('./pages/manager/ManagerTicketDetail'));
+const AdminAccounts = lazy(() => import('./pages/admin/AdminAccounts'));
+const AdminCategory = lazy(() => import('./pages/admin/AdminCategory'));
+const AdminInquiry = lazy(() => import('./pages/admin/AdminInquiry'));
+const ManagerHistories = lazy(() => import('./pages/manager/ManagerHistories'));
+const UserPwdChange = lazy(() => import('./pages/user/UserPwdChange'));
+const ManagerNewTicket = lazy(() => import('./pages/manager/ManagerNewTicket'));
+const UserTicketDetail = lazy(() => import('./pages/user/UserTicketDetail'));
+const Layout = lazy(() => import('./Layout'));
+const ManagerManageTickets = lazy(() => import('./pages/manager/ManagerManageTickets'));
+const UserInquiry = lazy(() => import('./pages/user/UserInquiry'));
+const ManagerInquiry = lazy(() => import('./pages/manager/ManagerInquiry'));
+const AdminPwdChange = lazy(() => import('./pages/admin/AdminPwdChange'));
 
 function App() {
   const managerRoutes = [
@@ -63,7 +66,19 @@ function App() {
           <Route path="*" element={<NotFound />} />
 
           {/* 레이아웃 있음 */}
-          <Route element={<Layout />}>
+          <Route
+            element={
+              <Suspense
+                fallback={
+                  <div>
+                    <LoadingStatus />
+                  </div>
+                }
+              >
+                <Layout />
+              </Suspense>
+            }
+          >
             {/* 담당자 */}
             <Route path="/manager">
               {managerRoutes.map(({path, element}) => (

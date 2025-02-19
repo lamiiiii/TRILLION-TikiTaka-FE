@@ -11,6 +11,9 @@ import {createTicket} from '../../../api/service/tickets';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {useNavigate} from 'react-router-dom';
 import {MAX_FILE_SIZE, MAX_FILES} from '../../../constants/constants';
+import LoadingStatus from '../LoadingStatus';
+import Portal from '../Portal';
+import {motion} from 'framer-motion';
 
 export default function NewTicketContainer() {
   const navigate = useNavigate();
@@ -28,26 +31,7 @@ export default function NewTicketContainer() {
   const [ticketId, setTicketId] = useState(0);
 
   const {role} = useUserStore();
-  const {
-    title,
-    content,
-    isUrgent,
-    firstCategory,
-    secondCategory,
-    ticketType,
-    dueDate,
-    dueTime,
-    manager,
-    setTitle,
-    setContent,
-    setIsUrgent,
-    setFirstCategory,
-    setSecondCategory,
-    setTicketType,
-    setDueDate,
-    setDueTime,
-    setManager,
-  } = useNewTicketStore();
+  const newData = useNewTicketStore();
   const {mustDescription, setDescription, setMustDescription} = useNewTicketFormStore();
 
   useEffect(() => {
@@ -56,30 +40,29 @@ export default function NewTicketContainer() {
         event.returnValue = '변경 사항이 저장되지 않았습니다. 계속 진행하시겠습니까?';
       }
     };
-
     window.addEventListener('beforeunload', handleBeforeUnload);
-
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, [hasChanges]);
 
   useEffect(() => {
-    if (title || content || isUrgent || firstCategory || secondCategory || ticketType || dueDate || dueTime || manager) {
+    if (newData) {
       setHasChanges(true);
     }
-  }, [title, content, isUrgent, firstCategory, secondCategory, ticketType, dueDate, dueTime, manager]);
+  }, [newData]);
 
   useEffect(() => {
-    setTitle('');
-    setContent('');
-    setIsUrgent(false);
-    setFirstCategory(null);
-    setSecondCategory(null);
-    setTicketType({typeId: 0, typeName: ''});
-    setDueDate('');
-    setDueTime('');
-    setManager(null);
+    newData.setTitle('');
+    newData.setContent('');
+    newData.setIsUrgent(false);
+    newData.setFirstCategory(null);
+    newData.setSecondCategory(null);
+    newData.setTicketType({typeId: 0, typeName: ''});
+    newData.setDueDate('');
+    newData.setDueTime('');
+    newData.setManager(null);
+    newData.setTemplateId(0);
     setDescription('');
     setMustDescription('');
     setFiles([]);
@@ -95,20 +78,20 @@ export default function NewTicketContainer() {
 
     if (selectedDate < today) {
       alert('마감기한은 오늘 이후 날짜를 선택해주세요.');
-      setDueDate('');
-      setDueTime('');
+      newData.setDueDate('');
+      newData.setDueTime('');
     } else {
-      setDueDate(e.target.value);
-      setDueTime('18:00');
+      newData.setDueDate(e.target.value);
+      newData.setDueTime('18:00');
     }
   };
 
   const onClickBtn = () => {
     const missingFields = [];
-    if (!ticketType.typeId) missingFields.push('유형');
-    if (!title) missingFields.push('요청 제목');
-    if (!content) missingFields.push('요청 내용');
-    if (!dueDate) missingFields.push('마감기한');
+    if (!newData.ticketType.typeId) missingFields.push('유형');
+    if (!newData.title) missingFields.push('요청 제목');
+    if (!newData.content) missingFields.push('요청 내용');
+    if (!newData.dueDate) missingFields.push('마감기한');
 
     if (missingFields.length > 0) {
       setModalMessage(`다음 필수 항목을 입력해주세요:\n${missingFields.join(', ')}`);
@@ -140,33 +123,34 @@ export default function NewTicketContainer() {
 
   const confirmSubmit = async () => {
     setIsModalOpen(!isModalOpen);
-    setTitle('');
-    setContent('');
-    setIsUrgent(false);
-    setFirstCategory(null);
-    setSecondCategory(null);
-    setTicketType({typeId: 0, typeName: ''});
-    setDueDate('');
-    setDueTime('');
-    setManager(null);
+    newData.setTitle('');
+    newData.setContent('');
+    newData.setIsUrgent(false);
+    newData.setFirstCategory(null);
+    newData.setSecondCategory(null);
+    newData.setTicketType({typeId: 0, typeName: ''});
+    newData.setDueDate('');
+    newData.setDueTime('');
+    newData.setManager(null);
     setDescription('');
     setMustDescription('');
+    newData.setTemplateId(0);
 
     if (ticketId) {
       navigate(`/${role.toLocaleLowerCase()}/detail/${ticketId}`, {replace: true});
     }
 
-    const formattedDueDate = `${dueDate} ${dueTime}`;
+    const formattedDueDate = `${newData.dueDate} ${newData.dueTime}`;
 
     const requestData = {
-      title: title.slice(0, 150),
-      description: content.slice(0, 5000),
-      urgent: isUrgent,
-      typeId: ticketType.typeId,
+      title: newData.title.slice(0, 150),
+      description: newData.content.slice(0, 5000),
+      urgent: newData.isUrgent,
+      typeId: newData.ticketType.typeId,
       deadline: formattedDueDate,
-      managerId: manager?.userId,
-      firstCategoryId: firstCategory?.id,
-      secondCategoryId: secondCategory?.id,
+      managerId: newData.manager?.userId,
+      firstCategoryId: newData.firstCategory?.id,
+      secondCategoryId: newData.secondCategory?.id,
     };
 
     const formData = new FormData();
@@ -213,7 +197,7 @@ export default function NewTicketContainer() {
         <div className="flex flex-col bg-bg-1 p-6 gap-8 min-w-[600px]">
           <TicketPreview />
           <TicketOptions />
-          {firstCategory && secondCategory && mustDescription && (
+          {newData.firstCategory && newData.secondCategory && mustDescription && (
             <div className="flex items-center text-body-regular gap-3">
               <ReferredIcon />
               필수 입력 사항:
@@ -225,13 +209,20 @@ export default function NewTicketContainer() {
               <div className="flex items-center gap-1">
                 마감 기한 <RequiredIcon />
               </div>
-              <div className={`flex items-center gap-5 p-2 px-8 bg-white border border-gray-2`}>
-                <input type="date" value={dueDate} onChange={handleDueDateChange} className="w-28 text-gray-6 text-body-regular" />
+              <div className={`flex items-center gap-5 p-2 px-8 bg-white border border-gray-2 focus:border-main`}>
+                <input
+                  type="date"
+                  value={newData.dueDate}
+                  onChange={handleDueDateChange}
+                  min={new Date().toISOString().split('T')[0]}
+                  className="w-28 text-main text-body-regular focus:border-main"
+                />
                 <input
                   type="time"
-                  value={dueTime}
-                  onChange={(e) => setDueTime(e.target.value)}
-                  className="w-24 text-gray-6 text-body-regular"
+                  value={newData.dueTime}
+                  onChange={(e) => newData.setDueTime(e.target.value)}
+                  min={new Date().toISOString().split('T')[0]}
+                  className="w-24 text-main text-body-regular"
                 />
               </div>
             </div>
@@ -309,6 +300,13 @@ export default function NewTicketContainer() {
           }
         />
       )}
+      <Portal>
+        {mutation.status === 'pending' && (
+          <motion.div className="overlay" initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}}>
+            <LoadingStatus />
+          </motion.div>
+        )}
+      </Portal>
     </div>
   );
 }

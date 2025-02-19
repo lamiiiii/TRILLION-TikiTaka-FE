@@ -36,24 +36,34 @@ export default function NewTicketContent() {
   }, [content]);
 
   useEffect(() => {
-    const fetchRequestForm = async () => {
-      if (firstCategory?.id && secondCategory?.id) {
+    if (firstCategory?.id && secondCategory?.id) {
+      const fetchRequestForm = async () => {
         try {
           const formData = await getTicketForm(firstCategory.id, secondCategory.id);
-          setMustDescription(formData.mustDescription);
-          setDescription(formData.description);
+          if (formData.mustDescription !== mustDescription) {
+            setMustDescription(formData.mustDescription);
+          }
+          if (formData.description !== description) {
+            setDescription(formData.description);
+          }
         } catch (error) {
           console.error('티켓 폼 조회 실패:', error);
         }
-      }
-    };
+      };
+      fetchRequestForm();
+    }
+  }, [firstCategory?.id, secondCategory?.id]);
 
-    fetchRequestForm();
-  }, [firstCategory?.id, secondCategory?.id, setMustDescription]);
+  const prevDescriptions = useRef({mustDescription, description});
 
   useEffect(() => {
-    if (mustDescription || description) {
+    if (
+      firstCategory?.id &&
+      secondCategory?.id &&
+      (prevDescriptions.current.mustDescription !== mustDescription || prevDescriptions.current.description !== description)
+    ) {
       setIsModalOpen(true);
+      prevDescriptions.current = {mustDescription, description};
     }
   }, [mustDescription, description]);
 
@@ -83,7 +93,7 @@ export default function NewTicketContent() {
             titleInput.setValue(sanitizedValue);
             setTitle(sanitizedValue);
           }}
-          className={`w-[660px] text-subtitle-regular border bg-white py-2 px-4  border-gray-2`}
+          className={`w-[660px] text-subtitle-regular border bg-white py-2 px-4 border-gray-2 focus:border-main`}
           placeholder="요청 사항에 대한 제목을 입력해주세요"
         />
       </div>
@@ -101,7 +111,7 @@ export default function NewTicketContent() {
             contentInput.setValue(sanitizedValue);
             setContent(sanitizedValue);
           }}
-          className={`w-[800px] min-h-48 text-subtitle-regular border bg-white py-2 px-4 resize-none border-gray-2`}
+          className={`w-[800px] min-h-48 text-subtitle-regular border bg-white py-2 px-4 resize-none border-gray-2 focus:border-main`}
           placeholder={`요청 내용을 자세히 입력해주세요. \nMarkdown 문법을 지원합니다. \n 예: # 제목, **강조**, - 리스트, [링크](https://example.com)**`}
         />
       </div>

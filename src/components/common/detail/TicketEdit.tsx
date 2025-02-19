@@ -14,30 +14,7 @@ interface TicketEditProps {
 export default function TicketEdit({ticketData}: TicketEditProps) {
   const queryClient = useQueryClient();
 
-  const {
-    title,
-    content,
-    isUrgent,
-    firstCategory,
-    secondCategory,
-    ticketType,
-    dueDate,
-    dueTime,
-    // manager,
-    setTitle,
-    setContent,
-    setIsUrgent,
-    setFirstCategoryId,
-    setSecondCategoryId,
-    setTicketType,
-    setDueDate,
-    setDueTime,
-    setManagerId,
-    setFirstCategory,
-    setSecondCategory,
-    setManager,
-    setIsEditing,
-  } = useNewTicketStore();
+  const newData = useNewTicketStore();
   const {mustDescription} = useNewTicketFormStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,22 +37,22 @@ export default function TicketEdit({ticketData}: TicketEditProps) {
   }, [hasChanges]);
 
   useEffect(() => {
-    if (title || content || isUrgent || firstCategory || secondCategory || ticketType || dueDate || dueTime) {
+    if (newData) {
       setHasChanges(true);
     }
-  }, [title, content, isUrgent, firstCategory, secondCategory, ticketType, dueDate, dueTime]);
+  }, [newData]);
 
   // 기존 데이터를 상태에 설정
   useState(() => {
-    setTitle(ticketData.title);
-    setContent(ticketData.description);
-    setIsUrgent(ticketData.urgent);
-    setFirstCategoryId(ticketData.firstCategoryId);
-    setSecondCategoryId(ticketData.secondCategoryId);
-    setTicketType({typeId: ticketData.typeId, typeName: ticketData.typeName});
-    setDueDate(ticketData.deadline.split(' ')[0]);
-    setDueTime(ticketData.deadline.split(' ')[1]);
-    setManagerId(-1);
+    newData.setTitle(ticketData.title);
+    newData.setContent(ticketData.description);
+    newData.setIsUrgent(ticketData.urgent);
+    newData.setFirstCategoryId(ticketData.firstCategoryId);
+    newData.setSecondCategoryId(ticketData.secondCategoryId);
+    newData.setTicketType({typeId: ticketData.typeId, typeName: ticketData.typeName});
+    newData.setDueDate(ticketData.deadline.split(' ')[0]);
+    newData.setDueTime(ticketData.deadline.split(' ')[1]);
+    newData.setManagerId(-1);
   });
 
   const handleDueDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,9 +62,9 @@ export default function TicketEdit({ticketData}: TicketEditProps) {
 
     if (selectedDate < today) {
       alert('마감기한은 오늘 이후 날짜를 선택해주세요.');
-      setDueDate('');
+      newData.setDueDate('');
     } else {
-      setDueDate(e.target.value);
+      newData.setDueDate(e.target.value);
     }
   };
 
@@ -96,18 +73,18 @@ export default function TicketEdit({ticketData}: TicketEditProps) {
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['ticketDetails', ticketData.ticketId]});
 
-      setTitle('');
-      setContent('');
-      setIsUrgent(false);
-      setFirstCategoryId(0);
-      setSecondCategoryId(0);
-      setFirstCategory(null);
-      setSecondCategory(null);
-      setTicketType({typeId: 0, typeName: ''});
-      setDueDate('');
-      setDueTime('');
-      setManagerId(0);
-      setManager(null);
+      newData.setTitle('');
+      newData.setContent('');
+      newData.setIsUrgent(false);
+      newData.setFirstCategoryId(0);
+      newData.setSecondCategoryId(0);
+      newData.setFirstCategory(null);
+      newData.setSecondCategory(null);
+      newData.setTicketType({typeId: 0, typeName: ''});
+      newData.setDueDate('');
+      newData.setDueTime('');
+      newData.setManagerId(0);
+      newData.setManager(null);
       setHasChanges(false);
 
       setModalMessage('티켓이 수정되었습니다.');
@@ -117,14 +94,15 @@ export default function TicketEdit({ticketData}: TicketEditProps) {
 
   // 저장 버튼 클릭 시 실행되는 함수
   const handleSubmit = () => {
+    console.log(newData.secondCategory?.id);
     const updatedTicket: UpdateTicketParams = {
-      title,
-      description: content,
-      urgent: isUrgent,
-      ticketTypeId: ticketType?.typeId,
-      firstCategoryId: firstCategory?.id,
-      secondCategoryId: secondCategory?.id,
-      deadline: `${dueDate} ${dueTime}`,
+      title: newData.title,
+      description: newData.content,
+      urgent: newData.isUrgent,
+      ticketTypeId: newData.ticketType?.typeId,
+      firstCategoryId: newData.firstCategory?.id,
+      secondCategoryId: newData.secondCategory?.id || 0,
+      deadline: `${newData.dueDate} ${newData.dueTime}`,
     };
 
     mutation.mutate(updatedTicket);
@@ -134,7 +112,7 @@ export default function TicketEdit({ticketData}: TicketEditProps) {
     <div className="flex flex-col gap-6 w-full px-10">
       <div className="flex flex-col bg-bg-1 p-20 pt-10 gap-8 min-w-[600px]">
         <TicketOptions />
-        {firstCategory && secondCategory && mustDescription && (
+        {newData.firstCategory && newData.secondCategory && mustDescription && (
           <div className="flex items-center text-body-regular gap-3">
             <ReferredIcon />
             필수 입력 사항:
@@ -147,11 +125,18 @@ export default function TicketEdit({ticketData}: TicketEditProps) {
               마감 기한 <RequiredIcon />
             </div>
             <div className={`flex items-center gap-5 p-2 px-8 bg-white border border-gray-2`}>
-              <input type="date" value={dueDate} onChange={handleDueDateChange} className="w-28 text-gray-6 text-body-regular" />
+              <input
+                type="date"
+                value={newData.dueDate}
+                onChange={handleDueDateChange}
+                min={new Date().toISOString().split('T')[0]}
+                className="w-28 text-gray-6 text-body-regular"
+              />
               <input
                 type="time"
-                value={dueTime}
-                onChange={(e) => setDueTime(e.target.value)}
+                value={newData.dueTime}
+                onChange={(e) => newData.setDueTime(e.target.value)}
+                min={new Date().toISOString().split('T')[0]}
                 className="w-24 text-gray-6 text-body-regular"
               />
             </div>
@@ -171,7 +156,7 @@ export default function TicketEdit({ticketData}: TicketEditProps) {
           backBtn="닫기"
           onBackBtnClick={() => {
             setIsModalOpen(false);
-            setIsEditing(false);
+            newData.setIsEditing(false);
           }}
         />
       )}

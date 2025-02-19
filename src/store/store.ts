@@ -94,5 +94,5 @@ export const useNewTicketFormStore = create<NewTicketFormStore>((set) => ({
   mustDescription: '',
   setMustDescription: (mustDescription) => set({mustDescription: mustDescription}),
   description: '',
-  setDescription: (description) => set({description}),
+  setDescription: (description) => set({description: description}),
 }));

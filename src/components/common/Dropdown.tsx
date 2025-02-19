@@ -22,10 +22,10 @@ export default function DropDown({
   onSelect,
   value,
   defaultSelected = label,
-  paddingX = 'px-4', // 기본 여백 값
+  paddingX = 'px-4',
   border = true,
-  backgroundColor = '', // ✅ 기본값 유지
-  textColor = 'text-gray-900', // ✅ 기본값 유지
+  backgroundColor = '',
+  textColor = 'text-gray-900',
   disabled = false,
 }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -65,7 +65,7 @@ export default function DropDown({
         onClick={() => setIsOpen(!isOpen)}
         disabled={disabled}
       >
-        <span className={`flex items-center leading-none truncate   ${width ? '' : 'max-w-[100px]'}`}>{selected || label}</span>
+        <span className={`flex items-center truncate`}>{selected || label}</span>
         <svg
           className={`w-4 h-4 transform transition-transform ml-auto ${isOpen ? 'rotate-180' : 'rotate-0'}`}
           xmlns="http://www.w3.org/2000/svg"
@@ -92,8 +92,8 @@ export default function DropDown({
               className={`px-4 py-1.5 text-center cursor-pointer leading-none m-2 whitespace-nowrap
                 ${
                   selected === option
-                    ? 'bg-gray-1 text-caption-bold rounded-md mx-2 border border-gray-2 text-gray-900'
-                    : 'text-gray-700 text-caption-regular hover:bg-gray-1 rounded-md'
+                    ? 'bg-gray-1 text-caption-bold rounded-md mx-2 border border-gray-2 text-gray-9'
+                    : 'text-gray-7 text-caption-regular hover:bg-gray-1 rounded-md'
                 }`}
               onClick={() => handleSelect(option)}
             >
