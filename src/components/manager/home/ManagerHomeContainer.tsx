@@ -14,7 +14,7 @@ export default function ManagerHomeContainer() {
       document.body.style.overflow = 'auto';
     };
   }, []);
-  
+
   return (
     <div className="top-container">
       <div className="flex flex-col max-w-1200 mb-20">

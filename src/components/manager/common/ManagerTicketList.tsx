@@ -30,16 +30,18 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
   const [isHovered, setIsHovered] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [isPageChanged, setIsPageChanged] = useState(false);
 
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedFilter]);
 
   useEffect(() => {
-    if (containerRef.current) {
+    if (isPageChanged && containerRef.current) {
       containerRef.current.scrollIntoView({behavior: 'smooth'});
+      setIsPageChanged(false); // 페이지 변경시에만 작동하도록 수정
     }
-  }, [currentPage]);
+  }, [isPageChanged]);
 
   useEffect(() => {
     if (selectedFilter === '긴급') {
@@ -152,7 +154,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     }
 
     setFilteredTickets(filtered);
-    setTotalPages(Math.ceil(filtered.length / pageSize));
+    setTotalPages(Math.ceil(filtered.length / pageSize)); // 이 부분을 추가/수정
   }, [selectedFilters, data?.content, pageSize]);
 
   useEffect(() => {
@@ -185,6 +187,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
+      setIsPageChanged(true);
     }
   };
 

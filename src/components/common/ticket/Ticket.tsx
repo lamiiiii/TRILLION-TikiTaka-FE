@@ -8,6 +8,7 @@ import ManagerSelector from '../selector/ManagerSelector';
 import {useCreateMutation} from '../../../api/hooks/useCreateMutation';
 import {updateTicketManager} from '../../../api/service/tickets';
 import {typeNameMapping} from '../../../constants/constants';
+import {formatCreatedAt} from '../../../utils/format';
 
 interface TicketProps extends TicketDataProps {
   onApprove?: () => void;
@@ -114,7 +115,7 @@ export default function Ticket({
 
         {/* 기한 */}
         <div className="w-[12%] text-body-regular text-gray-15">
-          <span className="text-gray-5">{createdAt}</span>
+          <span className="text-gray-5">{formatCreatedAt(createdAt)}</span>
           <br />
           {deadline}
         </div>

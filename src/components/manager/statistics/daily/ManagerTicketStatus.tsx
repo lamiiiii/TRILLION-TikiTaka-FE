@@ -39,7 +39,7 @@ export default function ManagerTicketStatus() {
             }}
           >
             {Array.from({length: totalPages}).map((_, pageIndex) => (
-              <div key={pageIndex} className="w-full flex flex-wrap justify-between mx-4">
+              <div key={pageIndex} className="w-full flex flex-wrap mx-4">
                 {managerData &&
                   managerData.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage).map((manager, index) => (
                     <div key={index} className="w-1/6 px-1 mb-4">
