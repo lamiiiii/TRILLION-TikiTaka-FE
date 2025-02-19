@@ -94,13 +94,14 @@ export default function TicketEdit({ticketData}: TicketEditProps) {
 
   // 저장 버튼 클릭 시 실행되는 함수
   const handleSubmit = () => {
+    console.log(newData.secondCategory?.id);
     const updatedTicket: UpdateTicketParams = {
       title: newData.title,
       description: newData.content,
       urgent: newData.isUrgent,
       ticketTypeId: newData.ticketType?.typeId,
       firstCategoryId: newData.firstCategory?.id,
-      secondCategoryId: newData.secondCategory?.id,
+      secondCategoryId: newData.secondCategory?.id || 0,
       deadline: `${newData.dueDate} ${newData.dueTime}`,
     };
 
