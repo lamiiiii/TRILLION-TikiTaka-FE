@@ -1,38 +1,56 @@
-import {useEffect, useState} from 'react';
+import { useState} from 'react';
 import CategoryCard from './CategoryCard';
 import SecCategoryCard from './SecCategoryCard';
-import {getCategoryList} from '../../../api/service/categories';
+import {createCategory, deleteCategory, getCategoryList, updateCategory} from '../../../api/service/categories';
 import RegCateModal from '../common/RegCateModal';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 
 export default function CategoryList() {
-  const [categories, setCategories] = useState<{primary: Category; secondaries: Category[]}[]>([]);
   const [isRegModalOpen, setIsRegModalOpen] = useState(false);
+  const queryClient = useQueryClient();
 
-  const openRegModal = () => {
-    setIsRegModalOpen(true); 
-  };
 
-  const closeRegModal = () => {
-    setIsRegModalOpen(false); 
-  };
+  const { data: categories = []} = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const primaryCategories = await getCategoryList();
+      const secondaryRequests = primaryCategories.map(async (primary) => {
+        const secondaries = await getCategoryList(primary.id);
+        return { primary, secondaries };
+      });
 
-  useEffect(() => {
-    getCategoryList()
-      .then((primaryCategories) => {
-        const secondaryRequests = primaryCategories.map((primary) =>
-          getCategoryList(primary.id).then((secondaries) => ({
-            primary,
-            secondaries, 
-          }))
-        );
+      return Promise.all(secondaryRequests);
+    },
+    staleTime: 1000 * 60 * 5, 
+  });
 
-        return Promise.all(secondaryRequests);
-      })
-      .then((fullCategoryData) => {
-        setCategories(fullCategoryData);
-      })
-      .catch((error) => console.error('카테고리 데이터를 불러오는데 실패했습니다.', error));
-  }, []);
+  const createCategoryMutation = useMutation({
+    mutationFn: (newCategory: { parentId: number | null; name: string }) => createCategory(newCategory.parentId, { name: newCategory.name }),
+    onSuccess: () => {
+      toast.success('카테고리가 성공적으로 등록되었습니다.');
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+    },
+    onError: (error: any) => toast.error(error.message),
+  });
+
+  const updateCategoryMutation = useMutation({
+    mutationFn: ({ id, name }: { id: number; name: string }) => updateCategory(id, { name }),
+    onSuccess: () => {
+      toast.success("카테고리가 수정되었습니다.");
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+    },
+    onError: () => toast.error("카테고리 수정에 실패했습니다."),
+  });
+
+  const deleteCategoryMutation = useMutation({
+    mutationFn: (id: number) => deleteCategory(id),
+    onSuccess: () => {
+      toast.success("카테고리가 삭제되었습니다.");
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+    },
+    onError: () => toast.error("카테고리 삭제에 실패했습니다."),
+  });
   
 
   return (
@@ -42,49 +60,31 @@ export default function CategoryList() {
           <div className="w-[36%]">카테고리 조회</div>
           <button
             className="w-[110px] main-btn px-2 py-1 bg-main text-body-bold text-white rounded flex justify-center items-center leading-5 cursor-pointer"
-            onClick={openRegModal}
+            onClick={() => setIsRegModalOpen(true)}
           >
             1차 카테고리 등록
           </button>
         </div>
-        {isRegModalOpen && <RegCateModal onClose={closeRegModal} />}
+        {isRegModalOpen && <RegCateModal onClose={() => setIsRegModalOpen(false)} onCreate={(categoryName) => createCategoryMutation.mutate({ parentId: null, name: categoryName })}/>}
         {categories.map(({primary, secondaries}) => (
           <div key={primary.id}>
-            <CategoryCard
+             <CategoryCard
               id={primary.id}
               name={primary.name}
-              onDelete={(categoryId) => {
-                setCategories((prev) => prev.filter(({primary}) => primary.id !== categoryId)); 
-              }}
-              onAddSubCategory={(primaryId, newSubCategory) => {
-                setCategories((prev) =>
-                  prev.map((category) =>
-                    category.primary.id === primaryId
-                      ? {
-                          ...category,
-                          secondaries: [...category.secondaries, { id: newSubCategory.id, name: newSubCategory.name, parentId: primaryId }],
-                        }
-                      : category
-                  )
-                );
-              }}
+              onEdit={(categoryId, newName) => updateCategoryMutation.mutate({ id: categoryId, name: newName })}
+              onDelete={() => deleteCategoryMutation.mutate(primary.id)}
+              onAddSubCategory={(categoryId,name) => createCategoryMutation.mutate({ parentId: categoryId, name })}
             />
 
             {secondaries.map((secondary) => (
               <SecCategoryCard
-                key={secondary.id}
-                id={secondary.id} 
-                parentId={primary.id}
-                name={secondary.name}
-                onDelete={(categoryId) => {
-                  setCategories((prev) =>
-                    prev.map(({primary, secondaries}) => ({
-                      primary,
-                      secondaries: secondaries.filter((sub) => sub.id !== categoryId), 
-                    }))
-                  );
-                }}
-              />
+              key={secondary.id}
+              id={secondary.id}
+              parentId={primary.id}
+              name={secondary.name}
+              onUpdate={(categoryId, newName) => updateCategoryMutation.mutate({ id: categoryId, name: newName })}
+              onDelete={() => deleteCategoryMutation.mutate(secondary.id)}
+            />
             ))}
           </div>
         ))}

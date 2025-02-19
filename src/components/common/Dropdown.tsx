@@ -60,7 +60,7 @@ export default function DropDown({
         ${width ? width : ''}
         ${value ? textColor : 'text-gray-6'} 
         ${backgroundColor}
-        rounded-md py-1 ${paddingX} text-body-regular flex items-center gap-3 
+        rounded-md py-0.5 ${paddingX} text-body-regular flex items-center gap-3 
         ${disabled ? 'bg-gray-1 text-gray-3 cursor-not-allowed' : ''}`}
         onClick={() => setIsOpen(!isOpen)}
         disabled={disabled}

@@ -19,7 +19,7 @@ function FilterItem({type, count, isSelected, onClick}: {type: TicketViewType; c
   return (
     <div className="flex gap-2 cursor-pointer" onClick={onClick}>
       <span className={textColor}>{type}</span>
-      <div className={`px-4 h-[16px] flex place-items-center rounded-full ${bgColor} text-white mb-0.5`}>
+      <div className={`px-4 h-[16px] flex place-items-center rounded-full ${bgColor} text-white`}>
         <div className="text-caption-bold h-full flex items-center">{count}</div>
       </div>
     </div>

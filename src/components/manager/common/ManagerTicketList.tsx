@@ -33,7 +33,6 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
   const [isPageChanged, setIsPageChanged] = useState(false);
 
   useEffect(() => {
-    setSelectedFilters({});
     setCurrentPage(1);
   }, [selectedFilter]);
 
@@ -165,7 +164,7 @@ export default function ManagerTicketList({selectedFilter, ticketCounts}: Ticket
     if (data?.totalPages) {
       setTotalPages(data.totalPages);
     }
-  }, [data?.content, data?.totalPages]);
+  }, [data?.content, data?.totalPages, selectedFilter]);
 
   const selectedCount = Object.values(selectedFilters).some((filter) => filter)
     ? data?.totalElements || 0
