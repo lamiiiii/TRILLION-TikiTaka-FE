@@ -75,7 +75,7 @@ export default function PendingTicketList({selectedFilter}: TicketListProps) {
   });
 
   const dropdownData = [
-    {label: '담당자', options: userData?.map((user: any) => user.username)},
+    // {label: '담당자', options: userData?.map((user: any) => user.username)},
     {label: '1차 카테고리', options: categories.map((cat: any) => cat.primary.name)},
     {
       label: '2차 카테고리',
