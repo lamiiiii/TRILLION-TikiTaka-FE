@@ -47,6 +47,7 @@ export default function NewTicketContainer() {
     setDueDate,
     setDueTime,
     setManager,
+    setTemplateId,
   } = useNewTicketStore();
   const {mustDescription, setDescription, setMustDescription} = useNewTicketFormStore();
 
@@ -82,6 +83,7 @@ export default function NewTicketContainer() {
     setMustDescription('');
     setFiles([]);
     setFileNames([]);
+    setTemplateId(0);
     setHasChanges(false);
   }, [location.pathname]);
 
@@ -149,6 +151,7 @@ export default function NewTicketContainer() {
     setManager(null);
     setDescription('');
     setMustDescription('');
+    setTemplateId(0);
 
     if (ticketId) {
       navigate(`/${role.toLocaleLowerCase()}/detail/${ticketId}`, {replace: true});

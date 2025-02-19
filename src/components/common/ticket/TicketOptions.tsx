@@ -51,6 +51,7 @@ export default function TicketOptions() {
           setSecondCategory(selectedSecondCategory);
         }
       }
+      
     }
   }, [categories, firstCategoryId, secondCategoryId, isLoading, setFirstCategory, setSecondCategory]);
 

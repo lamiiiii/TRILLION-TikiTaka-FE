@@ -85,6 +85,9 @@ export default function TemplateCreateView({onCancel, templateId}: TemplateCreat
       setSecondCategoryId(0);
       setTicketType({typeId: 0, typeName: ''});
       setManagerId(0);
+      setFirstCategory(null);
+      setSecondCategory(null);
+      setManager(null);
     } else {
       setTemplateTitle(templates.templateTitle);
       setTitle(templates.title);

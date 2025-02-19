@@ -36,24 +36,34 @@ export default function NewTicketContent() {
   }, [content]);
 
   useEffect(() => {
-    const fetchRequestForm = async () => {
-      if (firstCategory?.id && secondCategory?.id) {
+    if (firstCategory?.id && secondCategory?.id) {
+      const fetchRequestForm = async () => {
         try {
           const formData = await getTicketForm(firstCategory.id, secondCategory.id);
-          setMustDescription(formData.mustDescription);
-          setDescription(formData.description);
+          if (formData.mustDescription !== mustDescription) {
+            setMustDescription(formData.mustDescription);
+          }
+          if (formData.description !== description) {
+            setDescription(formData.description);
+          }
         } catch (error) {
           console.error('티켓 폼 조회 실패:', error);
         }
-      }
-    };
+      };
+      fetchRequestForm();
+    }
+  }, [firstCategory?.id, secondCategory?.id]);
 
-    fetchRequestForm();
-  }, [firstCategory?.id, secondCategory?.id, setMustDescription]);
+  const prevDescriptions = useRef({mustDescription, description});
 
   useEffect(() => {
-    if (mustDescription || description) {
+    if (
+      firstCategory?.id &&
+      secondCategory?.id &&
+      (prevDescriptions.current.mustDescription !== mustDescription || prevDescriptions.current.description !== description)
+    ) {
       setIsModalOpen(true);
+      prevDescriptions.current = {mustDescription, description};
     }
   }, [mustDescription, description]);
 

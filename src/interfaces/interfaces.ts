@@ -41,7 +41,7 @@ export interface NewTicketStore {
   setContent: (content: string) => void;
   setManager: (manager: UserListResponse['users'][number] | null) => void;
   setTicketType: (ticketType: {typeId: number; typeName: string}) => void;
-  setTemplate: (template: TemplateListItem) => void;
+  setTemplate: (template: TemplateListItem | null) => void;
   setDueDate: (date: string) => void;
   setDueTime: (time: string) => void;
 
