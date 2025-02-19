@@ -35,13 +35,16 @@ export default function InquiryList() {
           <div className="w-[20%] ">문의 상태</div>
         </div>
 
-        <div className="flex flex-col gap-4">
-          {Array.isArray(inquiries) &&
-            inquiries.map((inquiry) => (
-              <InquiryCard key={inquiry.inquiryId} {...inquiry} onReplyClick={() => setSelectedInquiry(inquiry)} />
-            ))}
-        </div>
-
+        {inquiries.length > 0 ? (
+          <div className="flex flex-col gap-4">
+            {Array.isArray(inquiries) &&
+              inquiries.map((inquiry) => (
+                <InquiryCard key={inquiry.inquiryId} {...inquiry} onReplyClick={() => setSelectedInquiry(inquiry)} />
+              ))}
+          </div>
+        ) : (
+          <div className="text-center text-gray-500 py-8">문의가 없습니다.</div>
+        )}
         {inquiries.length > 0 && <PageNations currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />}
       </div>
 
