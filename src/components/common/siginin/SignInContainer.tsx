@@ -184,7 +184,7 @@ export default function SignInContainer() {
           }
           backBtn={modalTitle.includes('비밀번호 변경') ? '다음에 변경' : '확인'}
           onBackBtnClick={modalTitle.includes('비밀번호 변경') ? handleSkipPasswordChange : closeModal}
-          checkBtn={modalTitle.includes('비밀번호 변경') ? '비밀번경 변경' : undefined}
+          checkBtn={modalTitle.includes('비밀번호 변경') ? '비밀번호 변경' : undefined}
           onBtnClick={modalTitle.includes('비밀번호 변경') ? handleChangePasswordNow : undefined}
         />
       )}
