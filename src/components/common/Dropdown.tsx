@@ -22,10 +22,10 @@ export default function DropDown({
   onSelect,
   value,
   defaultSelected = label,
-  paddingX = 'px-4', // 기본 여백 값
+  paddingX = 'px-4',
   border = true,
-  backgroundColor = '', // ✅ 기본값 유지
-  textColor = 'text-gray-900', // ✅ 기본값 유지
+  backgroundColor = '',
+  textColor = 'text-gray-900',
   disabled = false,
 }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
