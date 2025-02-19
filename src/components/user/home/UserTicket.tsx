@@ -31,6 +31,7 @@ export default function UserTicket({
   firstCategoryName,
   secondCategoryName,
   managerName,
+  status,
   urgent,
   deadline,
   createdAt,
