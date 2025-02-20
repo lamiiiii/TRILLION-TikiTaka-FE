@@ -42,6 +42,23 @@
 - ESLint 8.57.1
 - Prettier 3.4.2
 
+### Node.js 버전
+- Node.js 버전: v20.12.0
+
+### 패키지 매니저
+- 사용된 패키지 매니저: npm
+
+## 환경 변수
+
+프로젝트 실행을 위해 다음 환경 변수를 설정해야 합니다:
+
+1. `.env` 파일을 프로젝트 루트 디렉토리에 생성하고 아래와 같이 설정합니다:
+
+```env
+MODE=development
+PORT=3000
+REACT_APP_BASE_URL=https://tikitaka.kr
+
 #### 작업 관리 툴
 
 - 버전 및 이슈관리 : Jira, Github Issues
