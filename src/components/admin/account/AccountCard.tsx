@@ -38,7 +38,7 @@ export default function AccountCard({registrationId, username, email, status, ro
       updateRegistrationStatus({
         registrationId,
         status: 'APPROVED',
-        role: roleDisplayToApi[selectedRole], 
+        role: roleDisplayToApi[selectedRole],
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['registrationAccounts']});
@@ -100,12 +100,14 @@ export default function AccountCard({registrationId, username, email, status, ro
           {status === 'PENDING' ? (
             <>
               <button
+                type="button"
                 onClick={() => setShowApproveModal(true)}
                 className="px-4 py-1 text-subtitle-regular border rounded hover:bg-gray-8 hover:text-white whitespace-nowrap"
               >
                 승인
               </button>
               <button
+                type="button"
                 onClick={() => setShowRejectModal(true)}
                 className="px-4 py-1 text-subtitle-regular border rounded hover:bg-error/80 hover:text-white"
               >
@@ -131,26 +133,26 @@ export default function AccountCard({registrationId, username, email, status, ro
 
       {showRejectModal && (
         <Modal
-        title="계정 등록 신청 거절"
-        children={
-          <>
-            <p className="text-gray-800 flex justify-center mt-[-10px]">정말로 ({username}) 계정 등록을 거절하시겠습니까?</p>
-            <textarea
-              className="w-full mt-3 p-2 border border-gray-300 text-subtitle-regular rounded resize-none"
-              placeholder="거절 사유를 입력해주세요."
-              value={rejectReason}
-              onChange={(e) => setRejectReason(e.target.value)}
-            />
-          </>
-        }
-        backBtn="취소"
-        onBackBtnClick={() => {
-          setShowRejectModal(false);
-          setRejectReason(''); 
-        }}
-        checkBtn="거절"
-        onBtnClick={handleReject}
-      />
+          title="계정 등록 신청 거절"
+          children={
+            <>
+              <p className="text-gray-800 flex justify-center mt-[-10px]">정말로 ({username}) 계정 등록을 거절하시겠습니까?</p>
+              <textarea
+                className="w-full mt-3 p-2 border border-gray-300 text-subtitle-regular rounded resize-none"
+                placeholder="거절 사유를 입력해주세요."
+                value={rejectReason}
+                onChange={(e) => setRejectReason(e.target.value)}
+              />
+            </>
+          }
+          backBtn="취소"
+          onBackBtnClick={() => {
+            setShowRejectModal(false);
+            setRejectReason('');
+          }}
+          checkBtn="거절"
+          onBtnClick={handleReject}
+        />
       )}
     </>
   );

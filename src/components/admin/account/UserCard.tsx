@@ -75,12 +75,12 @@ export default function AccountCard({ userId, username, email, role }: UserCardP
       </div>
       <div className="w-[20%] flex gap-2">승인</div>
       <div className="absolute right-[40px] mt-1">
-        <button onClick={() => setShowMenu(!showMenu)}>
+        <button type="button" onClick={() => setShowMenu(!showMenu)}>
           <DotIcon />
         </button>
         {showMenu && (
           <div className="absolute right-0 mt-1 w-[100px] bg-white shadow-md rounded border text-center">
-            <button onClick={() => setShowDeleteModal(true)} className="w-full rounded py-2 text-[12px] font-semibold">
+            <button type="button" onClick={() => setShowDeleteModal(true)} className="w-full rounded py-2 text-[12px] font-semibold">
               <div className="hover:bg-gray-1 text-[12px] rounded-md mx-2 hover:border hover:border-gray-2 text-gray-15">계정 삭제</div>
             </button>
           </div>

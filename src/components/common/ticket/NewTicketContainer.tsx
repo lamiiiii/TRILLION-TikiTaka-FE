@@ -68,6 +68,7 @@ export default function NewTicketContainer() {
     setFiles([]);
     setFileNames([]);
     setHasChanges(false);
+    setTicketId(0);
   }, [location.pathname]);
 
   const handleDueDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -289,6 +290,7 @@ export default function NewTicketContainer() {
           backBtn="닫기"
           onBackBtnClick={() => {
             setIsModalOpen(false);
+            setTicketId(0);
           }}
           checkBtn={
             modalMessage.includes('입력해주세요') || modalMessage.includes('마감기한') || modalMessage.includes('잘못') ? undefined : '확인'

@@ -65,18 +65,22 @@ export default function CategoryCard({id, name, onEdit, onDelete, onAddSubCatego
           <span className="text-subtitle-regular">{name}</span>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => setIsEditing(true)}>
+          <button type="button" onClick={() => setIsEditing(true)}>
             <PlusCircle />
           </button>
-          <button onClick={() => setIsMenuOpen((prev) => !prev)}>
+          <button type="button" onClick={() => setIsMenuOpen((prev) => !prev)}>
             <VerticalDotIcon />
           </button>
           {isMenuOpen && (
             <div ref={menuRef} className="absolute top-[32px] right-[16px] bg-white border border-gray-300 shadow-md rounded-md z-10">
-              <button className="w-full px-4 py-2 text-body-bold hover:bg-gray-100" onClick={() => setIsEditModalOpen(true)}>
+              <button type="button" className="w-full px-4 py-2 text-body-bold hover:bg-gray-100" onClick={() => setIsEditModalOpen(true)}>
                 수정
               </button>
-              <button className="w-full px-4 py-2 text-body-bold text-error hover:bg-gray-100" onClick={() => setIsDeleteModalOpen(true)}>
+              <button
+                type="button"
+                className="w-full px-4 py-2 text-body-bold text-error hover:bg-gray-100"
+                onClick={() => setIsDeleteModalOpen(true)}
+              >
                 삭제
               </button>
             </div>
@@ -111,14 +115,15 @@ export default function CategoryCard({id, name, onEdit, onDelete, onAddSubCatego
               onChange={(e) => setNewCategoryName(e.target.value)}
             />
             <div className="flex justify-end mt-4 gap-2">
-              <button className="px-4 py-2 bg-gray-200 rounded" onClick={() => setIsEditModalOpen(false)}>
+              <button type="button" className="px-4 py-2 bg-gray-200 rounded" onClick={() => setIsEditModalOpen(false)}>
                 취소
               </button>
               <button
+                type="button"
                 className="px-4 py-2 bg-main text-white rounded"
                 onClick={() => {
                   onEdit(id, newCategoryName);
-                  setIsEditModalOpen(false); 
+                  setIsEditModalOpen(false);
                 }}
               >
                 확인
