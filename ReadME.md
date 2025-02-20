@@ -42,27 +42,53 @@
 - ESLint 8.57.1
 - Prettier 3.4.2
 
-### Backend Stack
-- Back-end : 제공된 API 활용
-
+#### 작업 관리 툴
 
 - 버전 및 이슈관리 : Jira, Github Issues
 - 협업 툴 : Discord, Notion, Jira
 - 서비스 배포 환경 : https://www.tikitaka.kr
 - 디자인 : [Figma](https://www.figma.com/file/fAisC2pEKzxTOzet9CfqML/README(oh-my-code)?node-id=39%3A1814)
-- [코드 컨벤션](https://github.com/likelion-project-README/README/wiki/%EC%BD%94%EB%93%9C-%EC%BB%A8%EB%B2%A4%EC%85%98)
+- [코드 컨벤션](https://www.notion.so/Code-Convention-181c54f24ef5802ebc2bc1e416439384)
 - [기술 선정 배경](https://nova-sheep-66e.notion.site/ff35997f14984273b7ada28eb04ca520?pvs=73)
 
 
 ## ⭐ 프로젝트 주요 기능
 
 - **담당자 티켓 대시보드** : 담당자는 티켓을 상태별, 담당자별, 카테고리별, 유형별로 대시보드에서 조회 가능
-![image](https://github.com/user-attachments/assets/a8849b3f-f1eb-47a1-bfbe-806a4aa22566)
+![image](https://github.com/user-attachments/assets/309da5da-54e4-4380-aba8-fad40cde61af)
+<br/>
+
+- **담당자 티켓 관리** : 담당자는 본인 티켓을 관리 가능
+![image](https://github.com/user-attachments/assets/c00d05eb-f094-49dc-bbc7-f8f4af8e1ebf)
+<br/>
+
+- **담당자 통계 관리** : 담당자는 일별 / 월별로 티켓 통계 조회 가능
+![image](https://github.com/user-attachments/assets/28aefd53-155b-4398-9718-ec7b44dd0773)
+<br/>
+
+- **사용자 티켓 대시보드** : 사용자는 본인이 생성한 티켓을 상태별, 담당자별, 카테고리별, 유형별로 대시보드에서 조회 가능
+![image](https://github.com/user-attachments/assets/bcb5d399-8276-4fcc-b379-d7e8835e6950)
+<br/>
+
+- **티켓 생성** : 사용자는 본인이 작성한 템플릿을 불러와 티켓을 생성 가능
+![image](https://github.com/user-attachments/assets/d11b8e02-a41f-4d2c-bb33-0bbfd7ebd77b)
+<br/>
+
+- **관리자 계정 관리** : 관리자는 계정 등록 신청을 승인/거절 가능하고 등록된 유저 목록 조회 가능
+![image](https://github.com/user-attachments/assets/ea670cca-9f5d-4137-8934-01bf3190e565)
+<br/>
+
+- **관리자 카테고리 관리** : 관리자는 카테고리를 생성/수정/삭제 가능하고 카테고리별 요청 양식을 생성/수정/삭제 가능
+![image](https://github.com/user-attachments/assets/8eedb150-3776-475e-b362-e44c2f1a75a8)
+<br/>
+
+- **관리자 문의/요청 관리** : 관리자는 사용자들의 문의 및 요청 사항에 답변을 등록하고 관리 가능
+![image](https://github.com/user-attachments/assets/23e4ccb2-1159-4275-902b-b8371a040a88)
+<br/>
 
 
 
-## 🔨 프로젝트 구조 
-- 프로젝트 폴더 구조 기입 예정
+
 ## 🔧 프로젝트 아키텍쳐 
 <img width="926" alt="아키텍처" src="https://github.com/user-attachments/assets/f2fbfcc3-fe2c-4340-b45b-2571c5f3e634" />
 
