@@ -18,7 +18,7 @@ interface TicketListProps {
   selectedFilter: TicketViewType;
 }
 
-const STATUS_MAP = {PENDING: '대기중', IN_PROGRESS: '진행중', REVIEW: '검토', DONE: '완료', REJECTED: '반려'};
+const STATUS_MAP = {PENDING: '대기중', IN_PROGRESS: '진행중', REVIEW: '검토 요청', DONE: '완료', REJECTED: '반려'};
 
 const REVERSE_STATUS_MAP = Object.entries(STATUS_MAP).reduce(
   (acc, [key, value]) => {

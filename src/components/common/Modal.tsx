@@ -10,7 +10,7 @@ interface ModalProps {
   onBackBtnClick: () => void;
   checkBtn?: string;
   onBtnClick?: () => void;
-  children?: React.ReactNode; // 드롭다운/텍스트
+  children?: React.ReactNode; 
   blockOutsideClick?: boolean;
 }
 

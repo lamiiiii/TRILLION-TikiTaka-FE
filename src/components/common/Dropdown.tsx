@@ -2,16 +2,16 @@ import {useEffect, useRef, useState} from 'react';
 import {useOutsideClick} from '../../hooks/useOutsideClick';
 
 interface DropdownProps {
-  width?: string; // width 값 (Tailwind 클래스)
+  width?: string; // width 값 
   label: string; // 드롭다운 버튼에 표시될 텍스트
   options: string[]; // 드롭다운 메뉴 항목
   onSelect: (value: string) => void; // 선택 시 호출되는 함수
   value?: string; // 현재 선택된 값
   defaultSelected?: string; // 기본 선택된 값
-  paddingX?: string; // 좌우 여백 (Tailwind 클래스)
+  paddingX?: string; // 좌우 여백 
   border?: boolean; // 테두리 여부
-  textColor?: string; // 텍스트 색상 (Tailwind 클래스)
-  backgroundColor?: string; // 배경 색상 (Tailwind 클래스)
+  textColor?: string; // 텍스트 색상 
+  backgroundColor?: string; // 배경 색상 
   disabled?: boolean; // 비활성화 여부
 }
 

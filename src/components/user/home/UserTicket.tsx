@@ -1,5 +1,4 @@
 import {Link} from 'react-router-dom';
-// import {useUserStore} from '../../../store/store';
 import {AlertIcon} from '../../common/Icon';
 import {formatCreatedAt, removeHtmlTags, removeMarkdownTags} from '../../../utils/format';
 import {typeNameMapping} from '../../../constants/constants';

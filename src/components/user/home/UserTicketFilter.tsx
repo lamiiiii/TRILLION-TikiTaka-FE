@@ -48,10 +48,10 @@ export default function UserTicketFilter({onFilterChange}: TicketFilterProps) {
       {type: '전체' as TicketViewType, count: ticketCounts.total || 0},
       {type: '대기중' as TicketViewType, count: ticketCounts.pending || 0},
       {type: '진행중' as TicketViewType, count: ticketCounts.inProgress || 0},
-      {type: '검토중' as TicketViewType, count: ticketCounts.reviewing || 0},
+      {type: '검토 요청' as TicketViewType, count: ticketCounts.reviewing || 0},
       {type: '완료' as TicketViewType, count: ticketCounts.completed || 0},
       {type: '긴급' as TicketViewType, count: ticketCounts.urgent || 0},
-    ].filter((item) => ['전체', '대기중', '진행중','검토중', '완료', '긴급'].includes(item.type));
+    ].filter((item) => ['전체', '대기중', '진행중','검토 요청', '완료', '긴급'].includes(item.type));
   }, [ticketCounts]);
 
   useEffect(() => {
