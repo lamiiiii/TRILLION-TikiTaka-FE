@@ -72,7 +72,7 @@ REACT_APP_BASE_URL=https://tikitaka.kr
 - 버전 및 이슈관리 : Jira, Github Issues
 - 협업 툴 : Discord, Notion, Jira
 - 서비스 배포 환경 : https://www.tikitaka.kr
-- 디자인 : [Figma](https://www.figma.com/file/fAisC2pEKzxTOzet9CfqML/README(oh-my-code)?node-id=39%3A1814)
+- 디자인 : [Figma](https://www.figma.com/design/thuLRItFgpXsQCvar1PNcv/TikiTaka?node-id=1-2&t=QVZw96DEQ4ZCN3SA-1)
 - [코드 컨벤션](https://nova-sheep-66e.notion.site/c01ae7bcd64f49a7b84e939445885c2d?pvs=4)
 - [기술 선정 배경](https://nova-sheep-66e.notion.site/ff35997f14984273b7ada28eb04ca520?pvs=73)
 <br>
