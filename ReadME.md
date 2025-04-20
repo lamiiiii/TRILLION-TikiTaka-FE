@@ -63,7 +63,6 @@
 ```env
 MODE=development
 PORT=3000
-REACT_APP_BASE_URL=https://tikitaka.kr
 ```
 <br>
 
